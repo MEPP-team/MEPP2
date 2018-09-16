@@ -1,0 +1,30 @@
+#ifndef DialogCurvature1_H
+#define DialogCurvature1_H
+////////////////////////////////////////////////////////////////////////////////
+#include <QDialog>
+////////////////////////////////////////////////////////////////////////////////
+namespace Ui {
+class DialogCurvature1;
+}
+////////////////////////////////////////////////////////////////////////////////
+namespace FEVV {
+
+class DialogCurvature1 : public QDialog
+{
+  Q_OBJECT
+
+public:
+  explicit DialogCurvature1(QWidget *parent = 0);
+  ~DialogCurvature1();
+
+  void setCurvature(bool geod, double radius);
+  void getCurvature(bool &geod, double &radius);
+
+private:
+  Ui::DialogCurvature1 *ui;
+};
+
+} // namespace FEVV
+
+////////////////////////////////////////////////////////////////////////////////
+#endif // DialogCurvature1_H

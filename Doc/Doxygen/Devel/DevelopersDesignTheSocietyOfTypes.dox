@@ -1,0 +1,121 @@
+/**
+
+@page DevelopersDesignTheSocietyOfTypesPage The society of types (design notes)
+
+## Design problem: how to organize the flow of concepts ?
+MEPP offers to deal with data/objects through four central [concepts](http://liris.cnrs.fr/mepp/doc/nightly/_concepts_page.html): [Geometry](http://liris.cnrs.fr/mepp/doc/nightly/_geometry_concept_page.html) (on which others concepts "rely" to represent spatial coordinates), [Halfedge Graph](http://liris.cnrs.fr/mepp/doc/nightly/_half_face_graph_concept_page.html), [Cell Incidence Graph](http://liris.cnrs.fr/mepp/doc/nightly/_cell_incidence_graph_concept_page.html) and [Point Cloud](http://liris.cnrs.fr/mepp/doc/nightly/_point_cloud_concept_page.html).
+
+Single concept minded [treatments](https://github.com/MEPP-team/MEPP2/wiki/Vocabulary) can be written on top of their concept of concern. But some treatments might require more than a single concept: for example
+ * converters from one concept to another e.g. from a CellIncidence graph to a Halfedge graph (obviously lossy)
+ * [graphical viewers](http://liris.cnrs.fr/mepp/doc/nightly/class_f_e_v_v_1_1_simple_viewer.html) requiring the simultaneous display of objects belonging to different concepts
+ * reconstruction [treatments](https://github.com/MEPP-team/MEPP2/wiki/Vocabulary) like [Poisson surface reconstruction](http://doc.cgal.org/latest/Poisson_surface_reconstruction_3/) that some concepts as input in order to promote it to some possibly enriched other concept.
+ * [treatments](https://github.com/MEPP-team/MEPP2/wiki/Vocabulary) that by nature take heterogeneous concepts as input in order to produce some results. For example a reconstruction treatment might feed on sources of data belonging to heterogeneous concepts in order to produce a result (possibly respecting an even different concept).
+
+Treatments can thus be conceived as relating concepts in order to form a [society of concepts](https://en.wikipedia.org/wiki/Society_of_Mind). We just need to understand such relationships in order for example to design the how to flow concepts within the implementation.
+
+## Feeding on the SimpleViewer example
+In order to understand how to organize such concept relationships, one can consider the evolution of design of FEVV graphical viewers that we describe in the following.
+
+#### The initial design
+The initial design was flowing the type just where needed that is only to the template member requiring it:
+```
+class SimpleViewer {
+  template<typename HalfedgeGraph>
+    void draw(const HalfedgeGraph& graph);
+};
+```
+
+The limit of this design was that a `SimpleViewer` was unable to store one or many   graph occurrences within a container of graphs. The simultaneous display of graphs belonging to the considered concept was thus impossible.
+
+#### Storing occurrences
+The design that came next tried to answer the initial design limitation. The difficulty was that the **concrete types complying to the HalfedgeGraph concept ([LCC](http://doc.cgal.org/latest/Linear_cell_complex/index.html), [OpenMesh](https://www.openmesh.org/), [Polyhedron_3](http://doc.cgal.org/latest/Polyhedron/index.html)...) bare no common type relationship**. In particular they do not share a common base-class which forbids an implementation based on polymorphism. The resulting implementation was thus of the form:
+```
+class SimpleViewer {
+  std::vector< LCC >          m_LCC;
+  std::vector< Polyhedron_3 > m_Polyhedron3;
+  std::vector< OpenMesh >     m_OpenMesh;
+    ...                       // Provide all known types
+  template<typename T>
+    void add(const T& graph);
+  void draw();
+};
+```
+Although this enabled the simultaneous display of graphs including graphs of heterogeneous implementations, this design had the following drawbacks:
+ * pervasive dynamic casts where required in order to ventilate data at runtime (to the type ad-hoc container),
+ * Adding a new implementing type required to extend the `SimpleViewer` class for this new comer,
+ * the minor inconvenience of having empty containers empty most of the time (think of displaying a single type of e.g. graphs)
+
+#### Reducing expectancies
+[Variadic templates](https://en.wikipedia.org/wiki/Variadic_template) were considered a too heavy syntax for solving the drawbacks of version 2. Eventually it was decided to fold back to the following simpler version, while renouncing to the simultaneous display of heterogeneous types feature:
+```
+// SimpleViewer< HEG > design (HEG: acronym of Half Edge Graph)
+template< class HEG >
+class SimpleViewer {
+  std::vector< HEG >  m_objects;
+  void add(const HEG& object);
+  void draw();
+};
+```
+
+#### Additionnal use case: simulatenous usage of (different) concepts
+At this stage the following (undocumented) **additionnal use cases** were introduced within FEVV:
+ 1. **PC use case**: FEVV should deal properly with the PointCloud concept (and the types complying to it)
+ 2. **HEG/PC use case**: it shoud be possible to realize **simultaneously displays of objects complying to heterogeneous concepts** (simultaneous means inside a single viewer). For example one should be able to display a point could with some associated graph reconstruction (in some kind of overlay fashion).
+
+#### Dealing with the newcoming PointCloud concept
+Graphs, that is objects of types complying with the HalfedgeGraph (HEG) concept, and point clouds differ in at least two ways:
+ * walking on their constituents (points, vertices, edges, faces...) require different APIs
+ * in order to be efficient (large sets) their graphical rendering cannot share a common implementation. Rendering efficiency immediatly rules out an implementation that would consider a point cloud as a graph degenerated to its vertices.
+
+It was thus not possible to specialize `SimpleViewer< HEG >` for PC (Point Cloud) types. Besides HEG and PC are concepts and not types and there is no straightfoward way of doing "concept specialization". Instead we want to create a new viewer for a whole new category of types that comply with the newly intoduced PointCloud concept.
+What was done was thus to introduce the new **`SimpleViewerPC< PC >`** templated class (mind the P trailing PC within the name) which code is based on the assumption that it would be instantiated only with types complying with the PointCloud concept.
+
+Alas some technical reason ([SimpleAdapterVisu](http://liris.cnrs.fr/mepp/doc/nightly/class_f_e_v_v_1_1_simple_adapter_visu.html), the class that relates the "QT-window" with the "OSG window" must have a one to one relationship with a viewer) prevented a viewer from simultaneously displaying a point could and graph. The above mentioned "HEG/PC use case" was thus not possible.
+
+#### Pairing the HEG and PC concepts
+In order to enable the "HEG/PC use case", the following implementation was realized
+```
+template< class HEG, class PC = PC_Default >
+class SimpleViewer {
+  std::vector< HEG > m_HEG;
+  std::vector< PC  > m_PC;
+  //
+  void draw< HEG >;
+  void draw< PC >;
+};
+```
+where `PC_Default` is a hollow shell (dummy) implementation complying with of the PointCloud concept. Note that this new implementation was done by manually modifying the code of `SimpleViewer< HEG >` in order to blend it with the implementation of `SimpleViewerPC< PC>` (see below for alternative, and more modular, implementation).
+
+The expected advantage is to satisfy the HEG/PC use case (simultaneously display of point clouds and graphs) with the syntactic sugar (trickery) backward compatibility with expressions like `SimpleViewer< HEG >`.
+The attached **drawbacks** are as follows
+ * (minor) the instantiation of a viewer limite to given type of point cloud gets polluted with some HEG implementing dummy type (`HEG_Dummy`): one needs to write `SimpleViewer< HEG_Dummy, MyPointCloudType >`. A simple syntactic helper could be to provide a \ref WrapperDefinition "wrapper" of the form `SimpleViewerPC< PC >:SimpleViewer< HEG_Dummy, PC >`.
+ * (major) respective codes of `SimpleViewer< HEG >` and `SimpleViewerPC< PC> and now blended that the historical separation will blur with coding entropy which will offuscate things
+
+#### Final version: HEG and PC on demand
+The final design (which is not implemented yet) avoid all the above mentionned drawbacks.
+It goes as follows:
+ * Keep `SimpleViewer< HEG>`, `SimpleViewerPC< PC>` as separated implementations (that can thus be used independently.
+ * Realize a wrapping class that brings together the two implementations
+```
+template< class HEG, class PC >
+SimpleViewer< HEG, PC >
+{
+  SimpleViewer  < HEG> m_HEGViewer;
+  SimpleViewerPC< PC > m_PCViewer;
+  std::vector< HEG > m_HEG;
+  std::vector< PC  > m_PC;
+  //
+  void draw< HEG >;
+  void draw< PC >;
+}
+```
+Note that it is key not to use a double inheritance in order to avoid a messy [diamond problem](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem) (both `SimpleViewer< HEG>`, `SimpleViewerPC< PC>` share some code within a shared base class).
+
+<b>Drawback</b>: the only drawback comes from the history of the current implementation. Indeed there might be some code duplication (historical reason) between `SimpleViewer< HEG>` and `SimpleViewerPC< PC>`. Nevertheless this replicated code could be "factorized" (brought back) to the already exisging common base class.
+
+### Conclusion: separation of concepts...whenever possible
+We follow the [separation of concenrs principle](https://en.wikipedia.org/wiki/Separation_of_concerns) and head for an aggregating scheme:
+ - design separated base components using the single concept they work on and only them.
+ - components requiring blending concepts are created on top (through aggregation) of the single concept components
+
+*/

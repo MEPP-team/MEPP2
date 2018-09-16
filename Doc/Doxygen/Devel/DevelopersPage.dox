@@ -1,0 +1,14 @@
+/**
+
+@page DevelopersPage Developers central
+
+ - @subpage DevelopersInceptionPage
+ - @subpage DevelopersCodingStyleGeneralitiesPage
+ - @subpage DevelopersCodingStyleSpecificitiesPage
+ - @subpage DevelopersAIFCellsAndPropertyMapsPage
+ - Design notes
+   - @subpage DevelopersDesignCMakeFilesPage
+   - @subpage DevelopersDesignTheSocietyOfTypesPage
+   - @subpage DevelopersDesignGenericPropertyMapsPage
+   - @subpage DevelopersDesignWhyPartiallyCopyingSomeCGALHeadersPage
+*/

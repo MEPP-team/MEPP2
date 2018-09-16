@@ -1,0 +1,87 @@
+/**
+
+@page CellIncidenceGraphHalfedgeAdaptorPage Halfedge Adaptor of CellIncidenceGraph
+
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::PropertyGraph"  
+    [ URL=" http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html"];
+
+  "boost::PropertyGraph" -> "boost::Graph" [ arrowhead="open", label="refines" ];
+
+  label = "Boost";
+}
+
+subgraph cluster_cgal {
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+
+  "CGAL::HalfedgeGraph" -> "boost::PropertyGraph"
+                           [ arrowhead="open", label="refines" ];
+  "CGAL::FaceGraph"     -> "CGAL::HalfedgeGraph" 
+                           [ arrowhead="open", label="refines" ];
+
+  label = "CGAL";
+} 
+
+subgraph cluster_fevv {
+
+  CellIncidenceGraph    -> "boost::Graph"      [ arrowhead="open", label="uses" ];
+  HalfedgeGraphAdapter  -> CellIncidenceGraph  [ arrowhead="open", label="uses" ];
+  HalfedgeGraphAdapter  -> "CGAL::FaceGraph"   [ arrowhead="open", label="uses" ];
+
+  label = "FEVV";
+}
+
+}
+@enddot
+
+Diagram reference:
+[CGAL and BGL concepts diagram](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)
+
+<b>CellIncidenceGraph Halfedge Adaptor</b>
+
+The purpose of the Halfedge Adaptor of a CellIncidenceGraph is for a 
+CellIncidenceGraph to provide, through an
+[adaptor](https://en.wikipedia.org/wiki/Adapter_pattern), a partial implementation of 
+[CGAL's halfedge concept](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html).
+Although the halfedge is well suited to manifold surfaces, and not general enough
+to handle non-manifold cases (refer to \link CellIncidenceGraphConceptPage \endlink),
+this adaptor still enables simple walks on the non-manifold which in turn permit
+to abstract the vizualization code.
+
+<b>Notations</b>
+ - `G` A type that is a model of HalfedgeGraphAdapter. 
+ - `g` An object of type `G`. 
+ - `h` A halfedge descriptor.
+
+| Expression         | Reference             | Returns              | Description  |
+|--------------------|-----------------------|----------------------|--------------|
+| **HalfedgeGraph**  | | | |
+| `next(h, g)`       | [HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html) | `halfedge_descriptor` | The next halfedge around its face. |
+| `prev(h, g)`       | [HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html) | `halfedge_descriptor` | The previous halfedge around its face. |
+| `faces(h,g)`       | Generalization of [FaceGraph's](http://doc.cgal.org/latest/BGL/classFaceGraph.html) `face(h, g,)` |`std::pair<face_iterator, face_iterator>`|  Returns an iterator-range providing access to the incident faces edge `e` in graph `g`. Note: when the ordering of faces is a partial order then the ordering criteria is unspecified and can change arbitrarily.|
+| **To be discussed**| | | |
+| `boost::graph_traits<G>::null_halfedge()`| [HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html) | `halfedge_descriptor` | Returns a special halfedge that is not equal to any other halfedge. |
+
+FIXME:
+ - How does one access an halfedge out of an CellIncidenceGraph instance ? (constructor out of an edge)
+ - Do we need source, target, ...
+
+Design notes:
+ - An halfedge `h` of a HalfedgeGraphAdapter can be implemented as a triplet
+   of references
+   - a reference to a cell-vertex `v` of the wrapped CellIncidenceGraph
+   - a reference to an cell-edgea `e` of the wrapped CellIncidenceGraph
+   - a reference to an cell-face  `f` of the wrapped CellIncidenceGraph
+   where `f` is incident to `e` and `e` is incident to `v`.
+ 
+*/

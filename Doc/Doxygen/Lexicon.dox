@@ -1,0 +1,37 @@
+/**
+
+@page LexiconPage Lexicon
+
+This page gathers informal definitions of the terms (and jargon) used within
+FEVV code and documentation
+
+\anchor ConceptDefinition
+ - **Concept**: a concept (as defined by [BCCL](http://www.boost.org/doc/libs/1_66_0/libs/concept_check/concept_check.htm#introduction)) is a set of requirements (valid expressions, associated types, semantic invariants, complexity guarantees, etc.) that a type must fulfil to be correctly used as arguments in a call to a [generic algorithm](https://en.wikipedia.org/wiki/Generic_programming). A concept can be thought as a form of [API](https://en.wikipedia.org/wiki/Application_programming_interface)
+ (in the context of [generic algorithms](https://en.wikipedia.org/wiki/Generic_programming)). Refer to /ref ConceptsPage "FEVV concepts page" for more. 
+
+\anchor FilterDefinition
+ - **Filter**: a data processing software component that receives data
+   from other components, modifies the data in some way, and then delivers
+   the modified data as output to be used by other components. Filters may
+   e.g. extract some portion of a large mesh or point cloud, subsample data
+   to coarser resolution, interpolate data to a finer resolution,
+   merge/combine multiple inputs into a combined output, compute derived
+   geometrical or topological information. The filter notion is imported
+   from <a href="https://github.com/Kitware/VTK/">VTK</a>.
+
+\anchor GenericDefinition
+ - **Generic**: within FEVV, generic code (e.g. function, helpers) is code that is independent from any mesh data structure.
+
+\anchor OperatorDefinition
+ - **Operator**: an Operator is a software component that acts on
+    a Data Structure (DS) and that does local modifications (either
+    topological and/or geometrical) of that DS or computes derived
+    information (including predicates) of that DS.<br>
+    For example the \ref split_edge.hpp is an operator that modifies
+    the local topology and \ref triangle_area() derives geometrical
+    information (area) out of the vertices geometry.
+
+\anchor WrapperDefinition
+ - **Wrapper**: a [wrapper](https://en.wikipedia.org/wiki/Wrapper_library) of a (software) component is an abstraction layer that enables to promote the component in order to be used in compliance with a given (third party) interface (i.e. a collection of operations). FEVV main objective is to offer a (\ref ConceptsPage "concept based") abstraction layer to allow mesh developers to produce algorithm/filters that can be used (instantiated) over a variety of mesh implementations. For another example of wrappers, within the context of mesh data structures, refer to [CGAL's BGL wrappers documentation](https://doc.cgal.org/latest/BGL/index.html).
+
+**/

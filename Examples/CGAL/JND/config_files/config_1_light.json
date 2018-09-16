@@ -1,0 +1,9 @@
+{
+   "screen_width":1920,
+   "screen_height":1080,
+   "screen_size":55.0,
+   "user_dist":50.0,
+   "scene_width":1080,
+   "scene_fov":0.3333,
+   "number_of_lights":1
+}

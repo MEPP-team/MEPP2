@@ -1,0 +1,69 @@
+#pragma once
+
+#include <boost/graph/graph_traits.hpp>
+
+#include "FEVV/Wrappings/Geometry_traits.h"
+#include "FEVV/Operators/Generic/Manifold/calculate_face_tangent.hpp"
+#include "FEVV/Filters/Generic/Manifold/normalize_vertices_tangent.hpp"
+
+
+namespace FEVV {
+namespace Filters {
+
+/**
+ * \brief  Calculate the mesh's tangents from its vertices.
+ *
+ * \param  g    the halfedge graph from which we take the mesh's informations.
+ * \param  pm   point map containing vertices' positions.
+ * \param  vum  vertex UV map containing vertices' texture coordinates.
+ * \param  vtm  vertex tangent map to be filled with computed tangents.
+ *
+ * \sa     calculate_halfedges_tangent() to compute tangents from halfedges.
+ *
+ * \ingroup  GenericManifoldFilters
+ */
+template< typename HalfedgeGraph,
+          typename PointMap,
+          typename VertexUVMap,
+          typename VertexTangentMap >
+void
+calculate_vertices_tangent(const HalfedgeGraph &g,
+                           const PointMap &pm,
+                           const VertexUVMap &vum, /// provided vertex UVs
+                           VertexTangentMap &vtm)
+{
+  using GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph >;
+  using Vector = typename GeometryTraits::Vector;
+
+  using GraphTraits = typename boost::graph_traits< HalfedgeGraph >;
+  using face_iterator = typename GraphTraits::face_iterator;
+
+  using halfedge_descriptor =
+      typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor;
+
+  const GeometryTraits gt(g);
+
+  face_iterator fb, fe;
+  for(boost::tie(fb, fe) = faces(g); fb != fe; ++fb)
+  {
+    halfedge_descriptor half_edge = halfedge(*fb, g);
+
+    const Vector uv1 = get(vum, target(half_edge, g));
+    const Vector uv2 = get(vum, source(half_edge, g));
+    const Vector uv3 = get(vum, target(next(half_edge, g), g));
+
+    Operators::calculate_face_tangent(*fb, g, pm, uv1, uv2, uv3, vtm);
+
+    // RM: may be better to use
+    //   CGAL::halfedges_around_source(typename boost::graph_traits< Graph
+    //   >::vertex_descriptor v, const Graph &g)
+    //   ->
+    //   https://doc.cgal.org/latest/BGL/group__PkgBGLIterators.html#gac257da1842bab20293c1db108cda75e5
+    // and to compute tangent with each pair of halfedges
+  }
+
+  Filters::normalize_vertices_tangent(g, vtm, gt);
+}
+
+} // namespace Filters
+} // namespace FEVV

@@ -1,0 +1,315 @@
+/**
+
+@page DevelopersCodingStyleGeneralitiesPage Coding Style : generalities
+
+## Coding style : general remarks
+ * **CGAL coding style immitation game**
+   The general/default rule is as follows: **stick with [CGAL coding style](http://doc.cgal.org/latest/Manual/devman_code_format.html)** unless an explicit rule is given below.
+ * The project uses [C++11](https://en.wikipedia.org/wiki/C%2B%2B11): make sure to use [C++ contemporary features](http://www.stroustrup.com/C++11FAQ.html) (as opposed to C stylish code)
+ * You might want to check the Wiki for possible
+ [ongoing discussions](https://github.com/MEPP-team/MEPP2/wiki/CodingStyle) concerning the coding style.
+ * The Wiki also has a [**good practices** page](https://github.com/MEPP-team/MEPP2/wiki/GoodPractices).
+
+## Format coding style
+
+### Namespace code should not be indented
+Even for nested namespaces, namespaces are never indented (we here follow the [CGAL way](http://doc.cgal.org/latest/Manual/devman_namespaces.html), among others).
+```
+#include <something>
+namespace FEVV
+{
+struct MyStruct        // OK
+{                      // OK
+  int a;               // OK (indentation within code block)
+};                     // OK
+
+namespace MATH         // OK: even when nested, no indentation
+{
+   class MyClass       // Wrong: should not be indented
+   {                   // Wrong: ditto
+      int b:           // Wrong: extra indentation
+   };                  // Wrong: should not be indented
+
+} // namespace MATH    // OK
+} // namespace FEVV
+```
+
+### No `using namespace`
+
+Note: this coding style rule applies to `using namespace` but **does not** apply to the `using` expression. The usage of the `using` directive for [type alias](http://en.cppreference.com/w/cpp/language/type_alias) remains a must for [templated type alias](https://stackoverflow.com/questions/6907194/how-to-typedef-a-template-class).
+
+Exception: By default the usage of `using namespace` is forbidden. Yet, when visibility is _really_ compromised then the usage of `using namespace` will be simply frown upon (as opposed to forbidden) when restricted to the block where it is used (as opposed to file scope).
+For example code like
+```
+void SomeFunction(void)
+{
+  ...
+  bool result = FEVV::Math::Vector::DotProduct<FaceGraph, GeometryTraits>(Vector(interp[0] - a[0], interp[1] - a[1], interp[2] - a[2]), vab) >= 0) &&
+                FEVV::Math::Vector::DotProduct<FaceGraph, GeometryTraits>(Vector(b[0] - interp[0], b[1] - interp[1], b[2] - interp[2]), vab) >= 0;
+}
+```
+can be "beautified" (beauty is in the eye of the observer) to
+```
+void SomeFunction(void)
+{
+  using namespace FEVV::Math::Vector;
+  ...
+  bool result = DotProduct<FaceGraph, GeometryTraits>(Vector(interp[0] - a[0], interp[1] - a[1], interp[2] - a[2]), vab) >= 0) &&
+                DotProduct<FaceGraph, GeometryTraits>(Vector(b[0] - interp[0], b[1] - interp[1], b[2] - interp[2]), vab) >= 0);
+}
+```
+
+### No space close to the parenthesis of an expression with parenthesis
+Notes:
+ - "Close" means after the opening parenthesis and before the closing parenthesis.
+ - This applies to function, control flow instructions,...
+
+<b>Functions:</b>
+```
+void Function1(int a)    // OK
+{
+  Function2(a);          // OK
+  Function2( a );        // Wrong: extra whitespaces
+  Function3( a, a );     // Wrong: ditto
+}
+
+void Function2( float b )// Wrong: no space before float and after b
+{...}
+```
+
+<b>Control flow instruction:</b>
+```
+if(a < b)     // OK
+  ...
+while(b < c)  // OK
+  ...
+if( a < b )   // Wrong
+  ...
+```
+
+### No whitespace between a keyword or a function and the opening parenthesis of a control flow instruction
+<b>Keywords</b>
+```
+if(a < b)        // OK
+  ...
+if (b < c)       // Wrong: extra space after the "if"
+  ...
+```
+
+<b>Functions</b>
+```
+void Function1(int a)  // OK
+{
+   Function2(a);       // OK
+   Function2 (a);      // Wrong: extra whitespace after "Function2"
+}
+void Function2 (int a) // Wrong: ditto
+{...}
+```
+
+### Whitespace after coma
+
+```
+void Function1(int a, int b)   // OK
+{
+   Function2(a, b);            //OK
+   Function3(a,b,b);           //Wrong: missing two whitespaces
+}
+```
+
+### Whitespace around binary operators
+
+```
+int foo = a + b;    // OK
+int bar = a +b;     // Wrong: missing a whitespace after +
+int sna = a+ b;     // Wrong: missing a whitespace before +
+
+if(a < b)           // OK
+  ...
+if(a<b)             // Wrong: missing two whitespaces around "<"
+  ...
+if(a < b && c > d)  // OK
+  ...
+if(a < b&&c > d)    // Wrong: missing two whitespaces around "&&"
+```
+
+### Whitespace around affectation operator (=)
+
+```
+int sum = a + b;     // OK
+int bar= a + b;      // Wrong: missing a whitespace before =
+int sna =a + b;      // Wrong: missing a whitespace after =
+```
+
+### Opening brace wrapped to next line and aligned with the block
+
+```
+if(a < b)
+{              // OK
+  ...
+}
+if(i == 1){    // Wrong: brace should be on next line
+  ...
+}
+if(i == 0) {   // Still wrong: adding a space before the "{"
+  ...          // doesn't help. The brace should be on next line.
+}
+```
+
+### Keep spaces in uniform initialization and initializer lists
+When folding lines, and as a general rule, argument alignment should be encouraged.
+```
+void Function()
+{
+    vector<int> numbers = {  1,  2,  3,
+                            10, 20, 30 };   // OK
+}
+
+void Function()
+{
+    vector<int> numbers = { 1, 2, 3,
+        10, 20, 30 };                       // Wrong:
+}
+```
+
+### No whitespaces before and after member operator
+
+```
+void Function(vector<int> &numbers)
+{
+    numbers.push_back(0);    // OK
+    numbers . push_back(1);  // Wrong: two extra whitespaces
+}
+```
+
+### Whitespaces should be after semi-colon ";" and not before
+
+```
+for(int i = 1; i <= a; i++)   // OK
+  ...
+for(int i = 1 ;i <= a ;i++)   // Wrong: two misplaced whitespaces
+   ...
+for(int i = 1;i <= a;i++)     // Wrong: two missing whitespaces
+   ...
+std::cout << "foo" << endl;    // OK
+std::cout << "bar" << endl ;   // Wrong: misplaced whitespace
+```
+Note: there should be no whitespace after a semi-colon when this is the last character of the instruction.
+
+### Spaces vs. Tabs
+ - **Use only spaces, and indent 2 spaces at a time. We use spaces for indentation. Do not use tabs in your code.** You should set your editor to emit spaces when you hit the tab key. [More...](https://google.github.io/styleguide/cppguide.html#Spaces_vs._Tabs)
+ - Exception to the indentation rule: namespaces should not be indented (at all), refer above.
+ - References: [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html#Spaces_vs._Tabs) (from which the above quote is taken), [Tabs vs spaces](https://www.jwz.org/doc/tabs-vs-spaces.html), [Death to the space infidels](http://blog.codinghorror.com/death-to-the-space-infidels/).
+
+### Encoding and non-ASCII Characters
+Encoding must be done in [ASCII](https://en.wikipedia.org/wiki/ASCII) (the plain good old seven-bit, 128 characters one).
+**Non-ASCII characters should be rare (and duly justified), and must use UTF-8 formatting.** [More...](https://google.github.io/styleguide/cppguide.html#Non-ASCII_Characters)
+
+### Comments
+**Comments should be in English.** This avoids french (or Japanese, or Arabic...) non-ascii characters and will provide useful when diffusing the code outside our organization.
+
+### Text file line endings
+**Use LF to store line endings** (text files). **Do not use CR nor CRLF.**  Either set your editor to do so or configure [git to handle the conversion](http://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/) (git internal encoding uses LF).
+
+### Line length
+**Each line of text in your code should be at most 80 characters long** (except for a very reduced set of... [exceptions](https://google.github.io/styleguide/cppguide.html#Line_Length)). We recognize that this rule is controversial, but so much existing code already adheres to it, and we feel that consistency is important. [More...](https://google.github.io/styleguide/cppguide.html#Line_Length)
+
+References: [Mind the end of your line](http://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/),
+[The great newline schism](https://blog.codinghorror.com/the-great-newline-schism/), [Github's dealing with line endings](https://help.github.com/articles/dealing-with-line-endings/), [CRLF strategy with git (StackOverflow)](http://stackoverflow.com/questions/170961/whats-the-best-crlf-carriage-return-line-feed-handling-strategy-with-git).
+
+### References:
+ * [QT coding Style](https://wiki.qt.io/Qt_Coding_Style)
+ * [ITK coding Style Guide](http://www.vtk.org/Wiki/ITK/Coding_Style_Guide)
+ * [CGAL](http://doc.cgal.org/latest/Manual/devman_code_format.html#seccode_format)...
+ * [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
+
+## Naming variables
+Names follow [CGAL coding style](http://doc.cgal.org/latest/Manual/devman_code_format.html) rules, among which
+ - **Words in the names of everything except concepts should be separated by underscores**
+ - **Words in the names of concepts** (e.g., template parameters) **should be separated using capital letters** (and thus without using an underscore as separator). For example (code encountered in `FEVV/Filters/calculate_vertex_normals.h`)
+```
+    template<typename HalfedgeGraph,
+            typename PointMap,
+            typename GeometryTraits=FEVV::Geometry_traits<HalfedgeGraph> >
+    void
+    calculate_face_normal(...){...}
+```
+
+ - **The first word of a class or enumeration name should be capitalized** (e.g. `Class_name`)
+ - **Function names are in lowercase** (e.g., `is_zero`)
+ - **Boolean function names should begin with a verb**. For example, use `is_empty()` instead of simply `empty()`
+ - **Names of class data members should be prepended with `m_`**. In order to distinguish arguments flowing in, out or in/ouy **respect [const correcteness](https://en.wikipedia.org/wiki/Const_(computer_programming))**.
+ - [Preprocessor include guard names](https://en.wikipedia.org/wiki/Include_guard) should be build by prepending `FEVV_` to the considered filename. For example for a file named `DataStructures_cgal.h` the include guard lines should be
+```
+    #ifndef FEVV_DATASTRUCTURES_CGAL_H
+    #define FEVV_DATASTRUCTURES_CGAL_H
+    ...
+    #endif //FEVV_DATASTRUCTURES_CGAL_H
+```
+
+## Naming files
+ * Use `.h` and `.cpp` extensions for non templated code
+ * Use `.hpp` and `.cpp` extensions for templated code
+ * Using `.inl` extensions for files holding implementation of template functions (refer [here](https://stackoverflow.com/questions/1208028/significance-of-a-inl-file-in-c)) is tolerated.
+
+
+## Miscelaneous
+
+### Use repository relative include paths
+When including include files **refrain from using path file names that are relative to the inclusion file**. For example avoid writing `#include "../../Src/dir/file.h"` (that is a notation relative to the including file). Prefer writing `#include "dir/file.h"` (relative to repository root or one of its sub-directory). Then use Cmake's `include_directories( ${PROJECT_SOURCE_DIR}/...)` to provide the required path information to the pre-processor.
+This method
+ * simplifies the relocation of the included code (in some cases only the CMakeLists.txt has to be adapted)
+ * enables to compile both in the developing directory layout context and in a post-installation directory layout.
+
+### Avoid using/writing code that is dimension specific
+When some code is bound to a dimension then respect CGAL's rule to explicitly **have the dimension suffix** (e.g. `_2`, `_3` ...`_dim`)
+
+### Avoid using macros
+Nevertheless if you have a _really_ good reason (code cosmetics is clearly not sufficient) to define some macro then **prefix the macro name with `FEVV_`**.
+
+## File/directory layout
+
+### Layout of a given filter subdirectory
+Consider a filter named `CurvatureListFilter` that computes some kind of normalsat the vertices of a mesh. The type of the computed normals (named e.g. `ListNormType`) is thus introduced by the internal necessity of `CurvatureListFilter` that will expect to retrieve such a type among the property_map that it will be handled over.
+Indeed it will the caller responsability to create such a `property_map` with code of the form (refer e.g. to [cf generic_reader.h](https://github.com/MEPP-team/MEPP2/blob/master/FEVV/Filters/Generic/generic_reader.hpp#L188)
+```
+auto vn_pm = make_property_map(FEVV::vertex_ListNormType, g);
+```
+There is thus the necessity for a filter (just as for the kernel) to specialize the properties "local to" (or introduced by) a filter for every type of mesh data structure that wishes to use this filter.
+
+The structure of the `CurvatureListFilter` filter directory should thus be of the form:
+```
+FEVV/Filters/CurvatureListFilter
+  |--- CurvatureListFilter.cxx
+  |--- CurvatureListProperties.hxx            # generic definition of the expected type)
+  |--- CurvatureListProperties_Polyhedron.hxx # CGAL::Polyhedron specialization)
+  |--- CurvatureListProperties_<...>.hxx      # other mesh type specializations)
+```
+
+### Layout of the `Filters` directory
+Filters can be sorted out
+  * either by the mesh type offering their implementation e.g.
+```
+    FEVV/Filters/
+      |--- OpenMesh/
+            |---  OpenMeshSpecificFilter
+            |---  OpenMeshOtherFilter
+            |---  ...
+      |--- CGAL
+      |--- ...
+```
+    where OpenMesh refers to the eponymous data strucuture
+  * or sorted out by their name and then specialized with the various data structures (refer to chapter concerning the layout of a given filter subdirectory")
+```
+    FEVV/Filters/
+      |--- ...
+      |--- Generic/
+         |--- CurvatureFilter
+            |--- CurvatureListFilter.cxx
+            |--- CurvatureListProperties.hxx
+            |--- CurvatureListProperties_Polyhedron.hxx
+```
+
+This choice (between either pushing forward the name of the data structure or promoting the name of the filter) is left to the developer introducing a new filter and both Filter naming conventions are accepted within `FEVV/Filters/` directory.
+
+**/

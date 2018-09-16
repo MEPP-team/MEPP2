@@ -1,0 +1,20 @@
+/**
+
+@page DevelopersDesignWhyPartiallyCopyingSomeCGALHeadersPage why copy CGAL's BGL OpenMesh wrappers ? (design notes)
+
+A central initial objective of FEVV was to offer a concept based abstraction layer to allow mesh developers to produce algorithm/filters that could be used (instantiated) over a variety of mesh implementations. In order to achive this objective, and in order not to reinvent the wheel, it was decided to re-use (conform to) CGAL's choice to adopt the BGL concept as abstraction layer for the graph connectivity manipulations.
+Nevetheless when realizing FEVV, this objective became combined with another requirement for FEVV: FEVV should not be [GPL contaminant](https://en.wikipedia.org/wiki/GPL_linking_exception) in order for the end users to adopt FEVV without legal constraint (specifically if one wished to use FEVV on industrial purposes).
+It was thus decided to illustrate FEVV "partial independance" from CGAL by allowing FEVV to be used without any installation of CGAL (thus using either OpenMesh implementation  of FEVV's internal AIF implementation) that includes modules that **are** GPL: keeping a clear cut between GPL and LGPL when using CGAL requires some cautious practice and some module usage tracking (which can prove difficult because of tangled header inclusiong practices). Yet, in order to avoid the [NIH syndrome](https://en.wikipedia.org/wiki/Not_invented_here) (or was it plain lazyness? ;-) an  attempt was made to re-use CGAL's BGL wrapper implementation while stripping it from everything (included headers) that was strictly required for those wrappers to be effective. The result are the `FEVV/Wrappings/CGAL_*` files (see also the comments concerning those files in `FEVV/Wrappings/Readme.md`).
+
+
+### Writing filters: why copy CGAL's Euler operators ?
+Having at hand the BGL graph abstraction (together with a concrete implementation) writing filters was now possible. But it soon appeared that even simple mesh rewiring implied quite some tedious efforts as illustrated by the number of lines required required by FEVV generic implementation of an edge collapse (refer to FEVV/Operators/Generic/Manifold/collapse_edge.hpp).
+CGAL's independence wish was thus damped down by accepting to copy the implementation of CGAL's Euler operators. This ended up in the creation of the `External/CGAL-4.11` directory (refer to `External/CGAL-4.11/Readme.md` for the technical details).
+The CGAL independence taboo was (twice) broken and code ended up in two different sub-directories.
+
+### The process when updating FEVV's CGAL partial copy
+For both CGAL BGL wrappers and Euler operator components:
+ 1. Assert that the CGAL component not directly or indirectly (recursively) include any GPL code (use the https://github.com/MEPP-team/MEPP2/blob/master/Tools/list_cgal_dependencies.sh shell script)
+ 2. Realize a deep copy (all the headers together with their required headers) of CGAL LGPL component (use the https://github.com/MEPP-team/MEPP2/blob/master/Tools/import_cgal_headers.sh shell script)
+
+*/

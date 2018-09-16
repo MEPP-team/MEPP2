@@ -1,0 +1,416 @@
+/**
+
+@page ConceptsPage Concepts
+
+Quick links
+ - @subpage CheatSheetConceptsPage
+ - @subpage GeometryConceptPage
+ - @subpage GenericPropertyMapConceptPage
+ - @subpage HalfFaceGraphConceptPage
+ - @subpage ListGraphExtensionsConceptPage
+ - @subpage CellIncidenceGraphConceptPage
+ - @subpage PointCloudConceptPage
+ - @subpage CGALHalfedgeDataStructuresConceptCompliancePage
+
+@section ConceptIntroductionSection Why concepts ?
+
+A \ref ConceptDefinition "concept" (as defined by [BCCL](http://www.boost.org/doc/libs/1_66_0/libs/concept_check/concept_check.htm#introduction))
+is a set of requirements (valid expressions, associated types, semantic
+invariants, complexity guarantees, etc.) that a type must fulfil to be
+correctly used as arguments in a call to a generic algorithm.
+A concept can be thought as a form of
+[API](https://en.wikipedia.org/wiki/Application_programming_interface)
+(in the context of generic algorithm).
+
+Concepts can take the informal form of a convention i.e.
+something concerning template parameters that is collectively known within a
+community of programmers (and shared through e.g. documentation).
+It is thus the responsibility of the programmer (both for FEVV users and
+FEVV developers) to assert and guarantee that the provided code complies
+to such informal concepts.
+But within the context of C++, concepts can also take the precise form of
+[formal concepts (definitions)](https://en.wikipedia.org/wiki/Concepts_(C%2B%2B))
+(refer to the [Boost Concept Check Library (BCCL) motivations](http://www.boost.org/doc/libs/1_59_0/libs/concept_check/concept_check.htm#motivating-example)
+or to [ITK's concept checking introduction](http://www.itk.org/Wiki/ITK/Proposals:Concept_Checking#Introduction)).
+Formal concepts (concept checking) allow to explicitly document the
+functions/operators required by a template type of an algorithm but also
+to ease (compile time) syntax debugging and also be used on testing
+purposes (e.g. CGAL's
+[graph_concept_OpenMesh.cpp](https://github.com/CGAL/cgal/blob/master/BGL/test/BGL/graph_concept_OpenMesh.cpp)
+or
+[graph_concept_Polyhedron_3.cpp](https://github.com/CGAL/cgal/blob/master/BGL/test/BGL/graph_concept_Polyhedron_3.cpp)).
+
+Within FEVV the concepts, to which the considered set of
+\ref CGALHalfedgeDataStructuresConceptCompliancePage "implementations are complying",
+are informally defined through the present documentation.
+Nevertheless concept checking (formal concepts) is internally used within
+FEVV for the limited usage of expressing regression tests.
+
+@subsection ConceptIntroductionGeometrySection Concept for vertex access and vertex manipulation
+
+This concept, that focuses on vertex coordinates and its derivative concepts
+is described on the separate \ref GeometryConceptPage "geometry concept page".
+
+@subsection ConceptCGALApproachSection CGAL and BGL concepts for surfaces
+
+Among the CGAL community the standard manipulation interface
+([Create, Read, Update, Delete (CRUD)](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+of [polygon mesh](https://en.wikipedia.org/wiki/Polygon_mesh)
+(a.k.a. "surfacic mesh") is the [HalfEdgeGraph concept](https://doc.cgal.org/latest/BGL/classHalfedgeGraph.html).
+Because a part of the topological aspects of polygon mesh can be described
+as a graph, the
+[CGAL's HalfEdgeGraph concept](https://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)
+was defined as a refinement of
+[BGL's Graph concept](http://www.boost.org/doc/libs/1_66_0/libs/graph/doc/Graph.html).
+This refinement of BGL's concept conveniently allows to re-use some of BGL
+algorithms on CGAL surfacic data structures as provided by
+[CGAL's "BGL wrappers"](http://doc.cgal.org/latest/BGL/group__PkgBGLTraits.html#BGLSMGT)).
+
+Once this design choice of the wishful CGAL-BGL connection is recalled,
+we can now consider the whole set of concepts (of those respective libraries)
+that are related with CGAL's HalfEdgeGraph and BGL's Graph concepts.
+The resulting integrated system of concepts is depicted in the following
+fairly detailed diagram (references:
+[boost::Graph concepts diagram](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/graph_concepts.html)
+and
+[CGAL and BGL concepts diagram](http://doc.cgal.org/latest/BGL/group__PkgBGLConcepts.html)):
+
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  label = "Boost Concepts";
+  "boost::BidirectionalGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/BidirectionalGraph.html"]
+  "boost::EdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/EdgeListGraph.html"];
+  "boost::EdgeMutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeMutableGraph.html"];
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::IncidenceGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/IncidenceGraph.html"];
+  "boost::MutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html"];
+  "boost::PropertyGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html"];
+  "boost::VertexAndEdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexAndEdgeListGraph.html"];
+  "boost::VertexListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexListGraph.html"];
+  "boost::VertexMutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexMutableGraph.html"];
+
+  "boost::BidirectionalGraph"     -> "boost::IncidenceGraph"
+                                     [ arrowhead="open" ];
+  "boost::EdgeListGraph"          -> "boost::Graph"
+                                     [ arrowhead="open", label="refines" ];
+  "boost::EdgeMutableGraph"       -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::IncidenceGraph"         -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::MutableGraph"           -> "boost::EdgeMutableGraph"
+                                     [color=blue, label=<<font color='blue'><b>Undocumented<br/>relationship</b></font>>];
+  "boost::MutableGraph"           -> "boost::VertexMutableGraph"
+                                     [color=blue];
+  "boost::PropertyGraph"          -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::EdgeListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::VertexListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexListGraph"        -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::VertexMutableGraph"     -> "boost::Graph"
+                                     [ arrowhead="open" ];
+}
+
+subgraph cluster_cgal_concepts {
+  label = "CGAL Concepts";
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::HalfedgeListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+  "CGAL::FaceListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceListGraph.html"];
+  "CGAL::MutableFaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html"];
+  "CGAL::MutableHalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html"];
+
+  "CGAL::HalfedgeGraph"        -> "boost::IncidenceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeListGraph"    -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeGraph"        -> "boost::PropertyGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceGraph"            -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceListGraph"        -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::MutableHalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableHalfedgeGraph" -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+}
+
+// Missfiting concepts:
+"CGAL::MutableHalfedgeGraph" -> "boost::MutableGraph"
+                                 [color=red,
+                                 label=<<font color='red'><b>Non existing<br/> refinement relationship</b></font>>];
+
+}
+@enddot
+
+Ideally a programmer working on polygon mesh could thus hope to have at
+hand all the above depicted concepts if he/she wishes to rip the benefit of
+all the algorithms (CGAL and BGL) based on the availability of such concepts
+for the considered mesh centric data structures.
+But the reality of the implementations makes the picture a bit more complicated
+as some limitations appear.
+For example:
+  - [CGAL's "BGL wrappers"](http://doc.cgal.org/latest/BGL/group__PkgBGLTraits.html#BGLSMGT) mentions that CGAL provides **partial** specialisation for the classes [CGAL::Surface_mesh](http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html), [CGAL::Polyhedron_3](http://doc.cgal.org/latest/Polyhedron/classCGAL_1_1Polyhedron__3.html) and [OpenMesh::PolyMesh_ArrayKernelT](http://www.openmesh.org/media/Documentations/OpenMesh-Doc-Latest/a00217.html) so that it is a model of the graph concepts [BidirectionalGraph](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/BidirectionalGraph.html) and [VertexAndEdgeListGraph](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexAndEdgeListGraph.html) and of the concept [MutableFaceGraph](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html). The key word in the previous sentence is of course "partial"...
+  - [CGAL::MutableHalfedgeGraph](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html) and [boost::MutableGraph](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) concepts differ too much for CGAL::MutableHalfedgeGraph to (fully) refine boost::MutableGraph (refer to the red arrow on above diagram). For example
+     - CGAL::MutableHalfedgeGraph offers `set_target(h, v, g)`, `set_halfedge(v, h, g)` and `set_next(h1, h2, g)` that boost::MutableGraph misses, whereas
+     - boost::MutableGraph offers `add_edge(u, v, g)`, `remove_edge(u, v, g)`, `clear_vertex(u, g)`, `remove_edge(iter, g)`, `remove_edge_if(p, g)`, `remove_out_edge_if(u, p, g)` and `remove_in_edge_if(u, p, g)` and `clear_vertex(u, g)` that CGAL::MutableHalfedgeGraph misses.
+  - [CGAL's Surface Mesh data structure documentation](http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html) mentions that it is a model of [CGAL::MutableFaceGraph](http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html) and [CGAL::FaceListGraph](http://doc.cgal.org/latest/BGL/classFaceListGraph.html).Yet the ["BGL wrappers"](http://doc.cgal.org/latest/BGL/group__PkgBGLTraits.html#BGLSMGT) do not offer CGAL::Surface_Mesh to be a model of [boost::MutableGraph ](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) (this limitation is also valid for [CGAL::Polyhedron_3](http://doc.cgal.org/latest/Polyhedron/classCGAL_1_1Polyhedron__3.html)).
+  - many of the above mentioned polygon mesh data structures, as well as [OpenMesh](http://www.openmesh.org/) miss to fully implement the [boost::PropertyGraph](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html concept).
+
+When writing generic algorithm working on polygon mesh, the general approach
+is thus to use a limited, yet stable, subset of the possibly available
+concepts (refer to \ref CGALHalfedgeDataStructuresConceptCompliancePage "for a summary of concept compliance").
+
+For example when modifying a polygon mesh topology a CGAL programmer will
+favour the
+[CGAL::MutableHalfedgeGraph concept](https://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html)
+(that are the reference API for manipulating triangulations within CGAL)
+possibly together with the
+[Euler operations](https://doc.cgal.org/latest/BGL/group__PkgBGLEulerOperations.html)
+(as implemented by CGAL) over the
+[boost::MutableGraph concept ](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html).
+Although it might also be that for optimisation reasons a "real" CGAL
+programmers might also consider that the Euler operators (e.g.
+[`CGAL::Euler::collapse_edge(v0v1, g)`](https://doc.cgal.org/latest/BGL/group__PkgBGLEulerOperations.html))
+is a too high level operations and will resolve to use "under the hood"
+low level pointer manipulations (e.g. building on
+[`MutableHalfedgeGraph::remove_edge(e, g)`](https://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html)
+at the cost of loosing cross data structure (e.g. OpenMesh) portability...
+
+@subsection ConceptFEVVApproachSection FEVV recommended concept usage for polygon mesh
+
+FEVV concept usage recommendation boils down to
+  - use FEVV proper concepts
+  - use CGAL concepts
+  - use BGL concepts when in the specific graph context which includes using a BGL algorithm
+  - avoid BGL mutability related concepts (whenever if possible)
+  - avoid BGL PropetyGraph concept (and favor FEVV::Property)
+
+This recommendation can be summarised by the following diagram
+
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10, color=green];
+  compound=true;
+  rankdir=BT
+
+subgraph cluster_not_for_fevv {
+  label = "Concepts not recommended for FEVV usage";
+
+  "boost::AdjacencyGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/AdjacencyGraph.html",
+    color=red];
+  "boost::EdgeMutableGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/EdgeMutableGraph.html",
+    color=red];
+  "boost::MutableGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/MutableGraph.html",
+    color=red];
+  "boost::PropertyGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/PropertyGraph.html",
+    color=red];
+  "boost::VertexMutableGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/VertexMutableGraph.html",
+    color=orange];
+
+  "boost::MutableGraph"           -> "boost::EdgeMutableGraph"
+                                     [ arrowhead="open" ];
+  "boost::MutableGraph"           -> "boost::VertexMutableGraph"
+                                     [ arrowhead="open" ];
+}
+
+subgraph cluster_boost {
+  label = "FEVV usable graph context concepts (Boost)";
+  "boost::BidirectionalGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/BidirectionalGraph.html",
+      color=cyan]
+  "boost::EdgeListGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/EdgeListGraph.html",
+      color=cyan];
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html",
+      color=cyan];
+  "boost::IncidenceGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/IncidenceGraph.html",
+      color=cyan];
+  "boost::VertexAndEdgeListGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/VertexAndEdgeListGraph.html",
+      color=cyan];
+  "boost::VertexListGraph"
+    [ URL="http://www.boost.org/libs/graph/doc/VertexListGraph.html",
+      color=cyan];
+
+  "boost::BidirectionalGraph"     -> "boost::IncidenceGraph"
+                                     [ arrowhead="open" ];
+  "boost::EdgeListGraph"          -> "boost::Graph"
+                                     [ arrowhead="open", label="refines" ];
+  "boost::IncidenceGraph"         -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::PropertyGraph"          -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::EdgeListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::VertexListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexListGraph"        -> "boost::Graph"
+                                     [ arrowhead="open" ];
+}
+
+// Arrows that belong to cluster_not_for_fevv cluster but that needs to be
+// defined after cluster cluster_boost for the "boost::Graph" node to
+// correctly appear within cluster_boost (otherwise the "boost::Graph" node
+// appears in cluster_not_for_fevv)
+"boost::AdjacencyGraph"         -> "boost::Graph"
+                                   [ arrowhead="open" ];
+"boost::EdgeMutableGraph"       -> "boost::Graph"
+                                   [ arrowhead="open" ];
+"boost::VertexMutableGraph"     -> "boost::Graph"
+                                   [ arrowhead="open" ];
+
+subgraph cluster_cgal_concepts {
+  label = "FEVV usable surface concepts (CGAL)";
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::HalfedgeListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+  "CGAL::FaceListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceListGraph.html"];
+  "CGAL::MutableFaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html"];
+  "CGAL::MutableHalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html"];
+  "CGAL::EulerOperations"
+    [ URL="https://doc.cgal.org/latest/BGL/group__PkgBGLEulerOperations.html"];
+
+  "CGAL::HalfedgeGraph"        -> "boost::IncidenceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeListGraph"    -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeGraph"        -> "boost::PropertyGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceGraph"            -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceListGraph"        -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::MutableHalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableHalfedgeGraph" -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+}
+
+subgraph cluster_fevv_concepts {
+  label = "FEVV proper concepts";
+  "FEVV::Geometry"            [ URL="\ref GeometryConceptPage"];
+  "FEVV::Property"            [ URL="\ref GenericPropertyMapConceptPage"];
+  "FEVV::ListGraphExtensions" [ URL="\ref ListGraphExtensionsConceptPage"];
+}
+
+  "FEVV usable concepts" ->  "boost::BidirectionalGraph"
+                             [lhead=cluster_boost];
+  "FEVV usable concepts" ->  "CGAL::FaceListGraph"
+                             [lhead=cluster_cgal_concepts];
+  "FEVV usable concepts" ->  "FEVV::Geometry"
+                             [lhead=cluster_fevv_concepts];
+}
+@enddot
+
+@dot
+digraph G {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  subgraph cluster_legend {
+    label = "Legend";
+
+    "Brain damaged concept"
+      [ URL="_c_g_a_l_halfedge_data_structures_concept_compliance_page.html",
+        color=red];
+    "Working yet to avoid concept"
+      [ URL="_c_g_a_l_halfedge_data_structures_concept_compliance_page.html",
+        color=orange];
+    "Graph context concept" [ color=cyan];
+    "Usable concept" [ color=green];
+  }
+}
+@enddot
+
+In turn, this diagram summarizes to the following task oriented ordered
+list of concepts
+ - for **accessing/manipulating the geometry** of a surface use the
+    \ref GeometryConceptPage "FEVV::Geometry concept"
+ - for **manipulating associated properties** of a surface use the
+    \ref GenericPropertyMapConceptPage "FEVV::Property concept"
+ - for **reading/walking** on the surface use
+    - [Iterators and Circulators (CGAL)](https://doc.cgal.org/latest/BGL/group__PkgBGLIterators.html)
+    - [CGAL::HalfedgeGraph](https://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)
+    - [CGAL::HalfedgeListGraph](https://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html) (<span style="color:red">except for AIF</span> for which this concept cannot be applied)
+    - [CGAL::FaceGraph](https://doc.cgal.org/latest/BGL/classFaceGraph.html)
+    - [CGAL::FaceListGraph](https://doc.cgal.org/latest/BGL/classFaceListGraph.html)
+    - \ref ListGraphExtensionsConceptPage "FEVV::ListGraphExtensions concept"
+ - for **surface manipulation** (mutable operations i.e. creating, modifying
+   or deleting elements of a polygon mesh)
+    - high level interface (concise code) use the
+      [Euler operations](https://doc.cgal.org/latest/BGL/group__PkgBGLEulerOperations.html)
+    - lower level interface (more verbose code but possibly faster) use the
+      - [CGAL::MutableHalfedgeGraph concept](https://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html),
+      - [CGAL::MutableFaceGraph concept](https://doc.cgal.org/latest/BGL/classMutableFaceGraph.html)
+
+When **in a graph oriented context** (you need to write an algorithm that strips
+down the surface to being a graph) or when you wish to use a BGL provided
+algorithm) possibly use
+  - [boost::Graph concept](http://www.boost.org/libs/graph/doc/Graph.html)
+  - [boost::IncidenceGraph concept](http://www.boost.org/libs/graph/doc/IncidenceGraph.html)
+  - [boost::BidirectionalGraph](http://www.boost.org/libs/graph/doc/BidirectionalGraph.html)
+  - [boost::VertexListGraph concept](http://www.boost.org/libs/graph/doc/VertexListGraph.html)
+  - [boost::EdgeListGraph concept](http://www.boost.org/libs/graph/doc/EdgeListGraph.html)
+  -  [boost::VertexAndEdgeListGraph](http://www.boost.org/libs/graph/doc/VertexAndEdgeListGraph.html) is "purely conceptual" (doesn't offer types nor expressions)
+
+Eventually, and unless some BGL algorithm that you need requires
+it, **avoid writing** FEVV generic code using the following concepts:
+  - [boost::AdjacencyGraph concept](http://www.boost.org/libs/graph/doc/AdjacencyGraph.html)
+  -
+  [boost::VertexMutableGraph concept](http://www.boost.org/libs/graph/doc/VertexMutableGraph.html)
+  - [boost::EdgeMutableGraph concept](http://www.boost.org/libs/graph/doc/EdgeMutableGraph.html)
+  - [boost::MutableGraph concept](http://www.boost.org/libs/graph/doc/MutableGraph.html)
+  - [boost::PropertyGraph concept](http://www.boost.org/libs/graph/doc/PropertyGraph.html)
+
+If you are cornered down to using this last category of concepts make sure
+to check the
+\ref CGALHalfedgeDataStructuresConceptCompliancePage "compliance page"
+since some of those concepts will fail for some or many surface datastructures.
+
+
+@section DynamicGraphConceptSection DynamicGraph concept: dynamic mesh
+Open question: how is this different from sequences of meshes (with an implicit timestep) or hash tables of meshes with a timestamp key ?
+
+<b>Note</b>
+ - The concept description format follows [CGAL's concept template](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)
+
+*/

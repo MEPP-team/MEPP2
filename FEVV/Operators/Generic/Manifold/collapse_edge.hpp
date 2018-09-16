@@ -1,0 +1,91 @@
+#ifndef COLLAPSE_EDGE_H
+#define COLLAPSE_EDGE_H
+
+#include <boost/graph/graph_traits.hpp>
+#include <CGAL/boost/graph/iterator.h>
+#include "FEVV/Operators/Generic/Manifold/delete_edge_if_parallel.hpp"
+
+namespace FEVV {
+namespace Filters {
+
+/**
+ * \brief Collapse an edge of the graph.
+ *        The edge to collapse is given as a halfedge.
+ *        The halfedge source vertex is kept, and the halfedge
+ *        target vertex is removed from the graph.
+ *
+ * Template parameters:
+ *           MutableFaceGraph: a Mesh type that provides
+ *                 a Model of the MutableFaceGraph Concept
+ *                 through a boost::graph_traits<> specialization.
+ */
+template< typename MutableFaceGraph >
+void
+collapse_edge_keep_source(
+    MutableFaceGraph &g,
+    typename boost::graph_traits< MutableFaceGraph >::halfedge_descriptor &h)
+{
+  typedef boost::graph_traits< MutableFaceGraph > GraphTraits;
+  typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
+  typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+  typedef CGAL::Halfedge_around_target_iterator< MutableFaceGraph >
+      halfedge_around_target_iterator;
+
+  if(h == boost::graph_traits< MutableFaceGraph >::null_halfedge())
+    return;
+
+  // deal with vertex geometry
+  vertex_descriptor vs = source(h, g);
+  vertex_descriptor vt = target(h, g);
+
+  halfedge_around_target_iterator hi, he;
+  for(boost::tie(hi, he) = CGAL::halfedges_around_target(h, g); hi != he; ++hi)
+    set_target(*hi, vs, g);
+  remove_vertex(vt, g);
+
+  // change edge connectivity
+  halfedge_descriptor hn = next(h, g);
+  halfedge_descriptor hp = prev(h, g);
+  halfedge_descriptor ho = opposite(h, g);
+  halfedge_descriptor hon = next(ho, g);
+  halfedge_descriptor hop = prev(ho, g);
+  set_next(hp, hn, g);
+  set_next(hop, hon, g);
+  remove_edge(edge(h, g), g);
+
+  // remove parallel edges
+  FEVV::Operators::delete_edge_if_parallel(g, hn);
+  FEVV::Operators::delete_edge_if_parallel(g, hop);
+}
+
+/**
+ * \brief Collapse an edge of the graph.
+ *        The edge to collapse is given as a halfedge.
+ *        The halfedge target vertex is kept, and the halfedge
+ *        source vertex is removed from the graph.
+ *
+ * Template parameters:
+ *           MutableFaceGraph: a Mesh type that provides
+ *                 a Model of the MutableFaceGraph Concept
+ *                 through a boost::graph_traits<> specialization.
+ */
+template< typename MutableFaceGraph >
+void
+collapse_edge_keep_target(
+    MutableFaceGraph &g,
+    typename boost::graph_traits< MutableFaceGraph >::halfedge_descriptor &h)
+{
+  typedef boost::graph_traits< MutableFaceGraph > GraphTraits;
+  typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
+
+  halfedge_descriptor ho = opposite(h, g);
+  collapse_edge_keep_source(g, ho);
+  // TODO
+  // calling collapse_edge_keep_source(g, opposite(h, g))
+  // doesn't compile. WHY ?
+}
+
+} // namespace Filters
+} // namespace FEVV
+
+#endif // COLLAPSE_EDGE_H

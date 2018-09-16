@@ -1,0 +1,100 @@
+/**
+
+@page DevelopersDesignCMakeFilesPage CMakeFiles (design notes)
+
+### 001: Handling "internalised" CGAL header copies vs CGAL package includes
+When using FEVV with a full (package) installation of CGAL library, two sets of CGAL headers are at hand:
+ 1. the partial copy of CGAL code located in the `External/CGAL-<version_number>` subdirectory. We shall refer to this code as the **CGAL-library-copy**. Note: refer to \ref DevelopersDesignWhyPartiallyCopyingSomeCGALHeadersPage "why copy CGAL's BGL OpenMesh wrappers ?" for more concerning the existence of such a copy.
+ 2. the (package) installed library that we shall refer to as **CGAL-original-library**.
+
+Let us further consider the following three different FEVV **terminal codes** (i.e. codes that actually instantiate some mesh implementation as opposed to generic filters):
+ 1. **Pure-CGAL code**: this is code that only uses CGAL mesh implementations (e.g. LCC)
+ 2. **Pure-OpenMesh code**: this is code that only uses OpenMesh mesh instantiations (and thus is devoid of CGAL mesh instantiations). Note that this code uses CGAL BGL wrappers and might use CGAL's operators but it does _not_ use any CGAL native mesh implementation. Further notice that we took OpenMesh as a representative of the non-CGAL implementations, but this code might as well be based on AIF.
+ 3. **Blended code**: this is code that blends CGAL mesh instantiations together with non native CGAL mesh implementations.
+
+For each of those code categories (pure-CGAL, pure-OpenMesh and blended)
+we now consider the following question: should the considered code be build
+against the CGAL-library-copy or the CGAL-original-library ?
+The answer goes:
+ 1. Both **Pure-CGAL code** and **Blended code** require the implementation of native CGAL data structures and must thus be built against CGAL-original-library.
+ 2. For **Pure-OpenMesh code** we are left with the choice:
+    - build against the CGAL-library-copy: this is the typical and usual
+      use case that follows "FEVV's partial independence from CGAL" design
+      choice where one wishes to use FEVV without depending on a (full)
+      CGAL installation.
+    - build against CGAL-original-library: the use case is the one of a FEVV
+      developer that wishes to test the compatibility of FEVV against a new
+      release of CGAL.
+
+Now, formally, they are three combinations of configuration/host contexts that a user might encounter when building FEVV:
+  1. explicitly requiring CGAL support (cmake build variable `BUILD_USE_CGAL=ON`)
+  2. explicitly rejecting CGAL support (cmake build variable `BUILD_USE_CGAL=OFF`).
+     This building configuration branches in two sub-contexts:
+     1. CGAL is not (natively/host-wide) installed on the considered host and there is no possible conflict.
+     2. CGAL is installed on the considered host and we have a possible conflict.
+
+They are thus two configuration/host building contexts where `CGAL` is package
+installed and where disambiguation (between the two available versions of CGAL) is a must:
+  1. `BUILD_USE_CGAL=ON` (CGAL must be package installed for things to work)
+  2. `BUILD_USE_CGAL=OFF` and CGAL was package installed (although we don't need the package)
+
+We thus have the following configuration table and possible design choices
+
+|| BUILD_USE_CGAL=ON | BUILD_USE_CGAL=OFF <br> CGAL-package installed|
+|--------------------|---------------------|-------------|
+| **Pure-CGAL code**  or **Blended code**  |  cgal-ORIGINAL-library    | Code not compiled. |
+| **Pure-OpenMesh code** | cgal-ORIGINAL-library OR cgal-library-COPY |  cgal-library-COPY OR cgal-ORIGINAL-library |
+
+In order to decide which behavior we wish the CMakeFile to implement, we can choose among the following logics:
+  - privilege "FEVV's partial independence from CGAL": always use cgal-library-COPY for building pure-OpenMesh code (whatever the configuration/package-context might be),
+  - privilege CGAL's package version (when available): when cmake detects a package-installed version of CGAL use that version (i.e. use cgal-ORIGINAL-library).
+  - don't be dogmatic and leave the choice to the cmake configuring person.
+
+We choose to leave the choice open. We also notice that there is no need for
+a new (cmake) configuration flag to do so: it suffice to follow/re-use the
+value of `BUILD_USE_CGAL`. In short, the logic goes: if the (cmake)
+configuring person explicitly asked for CGAL, well, have CMake fulfil
+that request and provide what was asked for.
+
+The final configuration table is thus:
+
+|| BUILD_USE_CGAL=ON | BUILD_USE_CGAL=OFF <br> CGAL-package installed|
+|------------------------|---------------------------|---------------------|
+| **Pure-CGAL code**  or **Blended code**  |  cgal-ORIGINAL-library    | Code not compiled. |
+| **Pure-OpenMesh code** | cgal-ORIGINAL-library | cgal-library-COPY  |
+
+
+<b>Conclusion</b>: for pure OpenMesh code _and_ when `BUILD_USE_CGAL` is turned `OFF` we shall use `include_directories( BEFORE ${PROJECT_SOURCE_DIR}/External/CGAL-X.YY )`.
+
+Note that this `include_directories` directive is bound to the type of the code
+and thus can not be located at the top level CMakeFile.
+
+### 002: avoiding to link against CGAL library when linking non CGAL code
+Assume you are building (compile and link) some pure non CGAL terminal code (that is code that doesn't instantiate any CGAL's mesh implementation) that still uses CGAL's BGL imported wrappers or CGAL's imported Euler operators. Then building this code should not need to be linked against CGAL (static/dynamic) libraries. Still by default one is still required to link against CGAL (-lCGAL) because of CGAL calls to CGAL's debugging/assertion utilities (e.g. CGAL::assertion_fail() ).
+
+In the considered case of pure non CGAL terminal code and in order to avoid such a strong unnecessary linking stage dependence we need to instruct CGAL to inhibit its debug utilities. If we were to systematically disable such CGAL functionality then we could prevent FEVV portions of code that uses CGAL mesh implementation from benefiting from their usual debugging tools.
+
+<b>Conclusion</b>: we condition CGAL debug utilities inhibition to the case where CGAL is (package) installed AND localize it to pure non CGAL terminal code (refer to Testing/OpenMesh/CMakeLists.txt for an example) by using
+```
+if ( BUILD_USE_CGAL )
+  target_compile_definitions( myPureNonCGALTarget PRIVATE CGAL_NDEBUG )
+endif()
+```
+for a single target (refer to `example_accessing_geometry` target in `Examples/CMakeLists.txt`) or
+```
+if ( BUILD_USE_CGAL )
+  add_definitions( -DCGAL_NDEBUG )
+endif()
+```
+for a complete directory (and recursively its possible sub-directories: refer to Testing/OpenMesh/CMakeLists.txt for an example).
+
+### 003: inhibit CGAL auto-linking when not building with CGAL
+Assume you are building code **without** requesting the usage of CGAL (that is `BUILD_USE_CGAL` is turned off) which somehow is the inverse situation of the above case 002. Obviously the code that is being build doesn't depend on CGAL implementations. But still because it uses the BGL wrappers (or the Euler operators) we need to disabling the `AUTOLINK` "feature" of CGAL.
+But this time (as opposed to the above case 002) we can do it globally (at the cmake project level) and use
+```
+if ( NOT BUILD_USE_CGAL )
+  add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
+endif()
+```
+
+*/

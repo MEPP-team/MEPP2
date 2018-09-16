@@ -1,0 +1,164 @@
+#pragma once
+
+#include <osg/io_utils>
+//#include <osgText/Text>
+
+//#include <sstream>
+
+namespace FEVV {
+
+// class to handle events with a pick
+template< typename HalfedgeGraph >
+class PickHandler : public osgGA::GUIEventHandler
+{
+public:
+  PickHandler(FEVV::SimpleViewer< HalfedgeGraph > *smpViewer,
+              osgText::Text *updateText)
+      : _smpViewer(smpViewer), _updateText(updateText)
+  {
+  }
+
+  ~PickHandler() {}
+
+  bool handle(const osgGA::GUIEventAdapter &ea, osgGA::GUIActionAdapter &aa);
+
+  virtual void pick(osgViewer::View *view, const osgGA::GUIEventAdapter &ea);
+
+  void setLabel(const std::string &name)
+  {
+    if(_updateText.get())
+      _updateText->setText(name);
+  }
+
+protected:
+  osg::ref_ptr< osgText::Text > _updateText;
+  FEVV::SimpleViewer< HalfedgeGraph > *_smpViewer = nullptr;
+};
+
+template< typename HalfedgeGraph >
+bool
+PickHandler< HalfedgeGraph >::handle(const osgGA::GUIEventAdapter &ea,
+                                     osgGA::GUIActionAdapter &aa)
+{
+  if(ea.getModKeyMask() == osgGA::GUIEventAdapter::MODKEY_SHIFT)
+  {
+    switch(ea.getEventType())
+    {
+    case(osgGA::GUIEventAdapter::PUSH):
+    {
+      osgViewer::View *view = dynamic_cast< osgViewer::View * >(&aa);
+      if(view)
+        pick(view, ea);
+      return false;
+    }
+    /*case(osgGA::GUIEventAdapter::KEYDOWN):
+    {
+        if (ea.getKey()=='c')
+        {
+            osgViewer::View* view = dynamic_cast<osgViewer::View*>(&aa);
+            osg::ref_ptr<osgGA::GUIEventAdapter> event = new
+    osgGA::GUIEventAdapter(ea); event->setX((ea.getXmin()+ea.getXmax())*0.5);
+            event->setY((ea.getYmin()+ea.getYmax())*0.5);
+            if (view) pick(view,*event);
+        }
+        return false;
+    }*/
+    default:
+      return false;
+    }
+  }
+
+  return false;
+}
+
+template< typename HalfedgeGraph >
+void
+PickHandler< HalfedgeGraph >::pick(osgViewer::View *view,
+                                   const osgGA::GUIEventAdapter &ea)
+{
+  osgUtil::LineSegmentIntersector::Intersections intersections;
+
+  osg::ref_ptr< osg::Node > node;
+
+  std::string gdlist = "";
+
+  if(view->computeIntersections(ea, intersections))
+  {
+    for(osgUtil::LineSegmentIntersector::Intersections::iterator hitr =
+            intersections.begin();
+        hitr != intersections.end();
+        ++hitr)
+    {
+      std::ostringstream os;
+
+      if(!hitr->nodePath.empty() && !(hitr->nodePath.back()->getName().empty()))
+      {
+        // the geodes are identified by name.
+        os << "Object \"" << hitr->nodePath.back()->getName() << "\""
+           << std::endl;
+
+        if(hitr->nodePath.back()->getName().compare(0, 4, "Mesh") == 0)
+        {
+          std::cout << "Object \"" << hitr->nodePath.back()->getName() << "\""
+                    << std::endl;
+
+          node = hitr->drawable->getParent(0);
+
+          // ------------------------------------------------------------------------------------------
+          if(!_smpViewer->isNodeSelected(
+                 node)) // [PICK] : IMPORTANT test --> see keyword [PICK] in
+                        // SimpleWindow.inl
+          {
+            std::vector< osg::Geode * > geodes =
+                _smpViewer->getSelectedGeodes();
+            for(unsigned i = 0; i < geodes.size(); i++)
+            {
+              _smpViewer->setNodeSelected(geodes[i], false);
+              // std::cout << "FALSE  : " << geodes[i]->getName() << " - " <<
+              // geodes[i] << std::endl;
+            }
+
+            _smpViewer->setNodeSelected(node, true);
+            // std::cout << "TRUE   : " << node->getName() << " - " << node <<
+            // std::endl;
+
+            FEVV::SimpleWindow *sw =
+                dynamic_cast< FEVV::SimpleWindow * >(_smpViewer->getWindow());
+            sw->update(true);
+          }
+
+          // std::cout << std::endl;
+          // ------------------------------------------------------------------------------------------
+
+          break; // TEMP : add for only one intersection
+        }
+      }
+      else if(hitr->drawable.valid())
+      {
+        os << "Object \"" << hitr->drawable->className() << "\"" << std::endl;
+
+        // std::cout<<"Object \""<<hitr->drawable->className()<<"\""<<std::endl;
+      }
+
+      os << "        local coords vertex(" << hitr->getLocalIntersectPoint()
+         << ")"
+         << "  normal(" << hitr->getLocalIntersectNormal() << ")" << std::endl;
+      os << "        world coords vertex(" << hitr->getWorldIntersectPoint()
+         << ")"
+         << "  normal(" << hitr->getWorldIntersectNormal() << ")" << std::endl;
+
+      const osgUtil::LineSegmentIntersector::Intersection::IndexList &vil =
+          hitr->indexList;
+      for(unsigned int i = 0; i < vil.size(); ++i)
+      {
+        os << "        vertex indices [" << i << "] = " << vil[i] << std::endl;
+      }
+
+      gdlist += os.str();
+    }
+  }
+
+  setLabel(gdlist);
+}
+
+} // namespace FEVV

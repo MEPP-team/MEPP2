@@ -1,0 +1,296 @@
+language: cpp
+
+os:
+  - linux
+  - osx # default : Xcode 6.1b under Mavericks (OS X 10.9) -> NOW very too old !
+
+sudo: required # need by trusty
+dist: trusty # Ubuntu 14.04 LTS
+#group: deprecated-2017Q4
+
+osx_image: xcode9.3 # Xcode 9.3 under High Sierra (OS X 10.13)
+#osx_image: xcode9.2 # Xcode 9.2 under Sierra (OS X 10.12)
+#osx_image: xcode8.3 # Xcode 8.3.3 under Sierra (OS X 10.12)
+#osx_image: xcode7.3 # Xcode 7.3.1 under El Capitan (OS X 10.11)
+#osx_image: xcode6.4 # Xcode 6.4 under Yosemite (OS X 10.10)
+
+compiler:
+  - clang
+  - gcc
+
+cache: apt # this feature is available only for private repositories
+
+env:
+# new matrix
+
+# [Debug] : VTK and PCL set to OFF in Debug configuration (because of time limitations)
+
+# [Debug] only cgal
+- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+# [Debug] only openmesh
+- BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+# [Debug] only aif
+- BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+# [Debug] all
+- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+
+# [Release] : VTK and PCL set to ON in Release configuration, except for 'all'
+
+# [Release] only cgal
+- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+# [Release] only openmesh
+- BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+# [Release] only aif
+- BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+#
+# [Release] all
+- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+
+# doc
+- GENDOC="true" # ---> https://liris.cnrs.fr/mepp/doc/nightly/ <---
+
+#-------------------------------------------------------------------------
+# matrix details :
+#-------------------------------------------------------------------------
+#   - 8x clang  under Linux trusty 14.04 LTS    (debug and release)
+#
+#   - 2x gcc    under Linux trusty 14.04 LTS    (debug and release)
+#-------------------------------------------------------------------------
+#   - 2x clang  under OS X with Apple LLVM      (debug and release)
+#   - 1x clang  under OS X with Apple LLVM      (release - DOCUMENTATION)
+#-------------------------------------------------------------------------
+matrix:
+  fast_finish: true
+  exclude:
+# exclude gcc-osx
+    - os: osx
+      compiler: gcc
+# exclude 'doc' under clang-linux and under gcc-linux
+    - os: linux
+      compiler: clang
+      env: GENDOC="true"
+    - os: linux
+      compiler: gcc
+      env: GENDOC="true"
+# exclude 'only cgal' under clang-osx and under gcc-linux
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+# exclude 'only openmesh' under clang-osx and under gcc-linux
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+# exclude 'only aif' under clang-osx and under gcc-linux
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: osx
+      compiler: clang
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
+    - os: linux
+      compiler: gcc
+      env: BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+
+addons:
+  apt:
+    packages:
+      - libboost-dev
+      - libboost-thread-dev
+      - libboost-system-dev
+      - libboost-filesystem-dev
+      - libboost-iostreams-dev
+      - libgmp-dev
+      - libmpfr-dev
+      - libqt4-dev
+      - libqt4-opengl-dev # or group: deprecated-2017Q2
+      - libopenscenegraph-dev
+      - libeigen3-dev
+      - libflann-dev
+      - libqhull-dev
+#      - libvtk5-dev
+      - doxygen
+      - graphviz
+      - cmake # or group: deprecated-2017Q4
+
+install:
+  - export TRAVIS=YES
+  - export QT_X11_NO_MITSHM=1
+  - cmake --version
+  - DOC="false"
+#
+# linux :
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then openssl aes-256-cbc -K $encrypted_4773da525e46_key -iv $encrypted_4773da525e46_iv -in .travis/mepp-mt.enc -out .travis/mepp-mt -d; chmod 600 .travis/mepp-mt; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ls -al .travis; fi
+# ---> because under trusty cgal is v4.2 !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip cgal-releases-CGAL-4.11-src-bug-patched.zip; cd cgal-releases-CGAL-4.11; mkdir buildR && cd buildR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make && sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; cd cgal-releases-CGAL-4.11-bug-patched/buildR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/cgal-releases-CGAL-4.11-bug-patched /tmp/cgal-releases-CGAL-4.11; fi # because we changed the name of the folder with rsync because of the bug corrected...
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/cgal-releases-CGAL-4.11-bug-patched/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+# ---> because no openmesh package under linux...
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://www.openmesh.org/media/Releases/6.3/OpenMesh-6.3.tar.gz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-6.3.tar.gz; cd OpenMesh-6.3; mkdir buildR && cd buildR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make && sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/OpenMesh-6.3.travis-trusty.tgz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-6.3.travis-trusty.tgz; cd OpenMesh-6.3/buildR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/OpenMesh-6.3/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+# ---> because under trusty OSG is v3.2.0-rc1 !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.5.4-JPEG-patched.tgz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenSceneGraph-3.5.4-JPEG-patched.tgz; cd OpenSceneGraph-OpenSceneGraph-3.5.4; mkdir buildR && cd buildR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DOSG_USE_QT=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#v354#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/OpenSceneGraph-3.5.4.travis-trusty.tgz; fi
+#v354#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenSceneGraph-3.5.4.travis-trusty.tgz; cd OpenSceneGraph-3.5.4/buildR; fi
+#v354#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/OpenSceneGraph-3.5.4 /tmp/OpenSceneGraph-OpenSceneGraph-3.5.4; fi # because we changed the name of the folder with rsync...
+#v354#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/OpenSceneGraph-3.5.4/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#v354#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo cp -R /usr/local/lib64/* /usr/local/lib; fi # because the build system of OpenSceneGraph is configured to install libraries to /usr/local/lib64
+# ---> because no PCL package under linux 14.04 !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/pcl-pcl-1.7.2-no_more_c99_warning.zip; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip pcl-pcl-1.7.2-no_more_c99_warning.zip -d /tmp; cd /tmp/pcl-pcl-1.7.2; mkdir buildR && cd buildR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/pcl-pcl-1.7.2.travis-trusty.tgz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.7.2.travis-trusty.tgz; cd pcl-pcl-1.7.2/buildR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/pcl-pcl-1.7.2/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+# ---> because libvtk5-dev package is not allowed above under trusty for now...
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libvtk5-dev; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get remove -y libvtk5-qt4-dev; fi
+# ---> because under trusty VTK is v5.8 !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://www.vtk.org/files/release/6.3/VTK-6.3.0.tar.gz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf VTK-6.3.0.tar.gz; cd VTK-6.3.0; mkdir buildR && cd buildR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/VTK-6.3.0.travis-trusty.tgz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf VTK-6.3.0.travis-trusty.tgz; cd VTK-6.3.0/buildR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/VTK-6.3.0/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#
+# osx :
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
+#
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade cgal; fi # to install cgal 4.12 (for test)
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink cgal; fi # ---> unlink cgal 4.11
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv cgal.rb cgal.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/cgal4111/cgal.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cgal; fi # ---> install cgal 4.11.1
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
+# -> BEGIN patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/include/CGAL/boost/graph; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv io.h io.h.old; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+# -> END patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
+#
+# ---> because we want osg34 under osx !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # important to avoid yet another possible homebrew auto-update since the first 'brew update' above
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv wget.rb wget.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/wget119/wget.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv open-scene-graph.rb open-scene-graph.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/osg34/open-scene-graph.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install open-scene-graph; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install open-mesh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install doxygen graphviz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 100 brew install cartr/qt4/qt-legacy-formula; fi # but, travis_wait -> in fact : https://github.com/travis-ci/docs-travis-ci-com/pull/439 :-( -> so force Sierra for cartr/qt4 !
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install Caskroom/cask/xquartz; fi # only for Yosemite (OS X 10.10) !
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install open-scene-graph --with-qt; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install eigen; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap homebrew/science; fi # to create homebrew-science folder (for ftp below...) # no need now since vtk is again in homebrew-core
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # important to avoid yet another possible homebrew auto-update since the first 'brew update' above
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv vtk.rb vtk.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/vtk800/vtk.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then rm '/usr/local/include/c++'; fi # -> because PB with gcc...
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install vtk; fi # -> after more than 4 years vtk is now BACK from homebrew/science to homebrew-core !!!???
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # important to avoid yet another possible homebrew auto-update since the first 'brew update' above
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-science; mv pcl.rb pcl.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/pcl180_7/pcl.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install homebrew/science/pcl --without-vtk --without-apps; fi
+#- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install pcl; fi # -> pcl is now in homebrew-core and no more in homebrew/science
+#
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake --version; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cmake; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew switch cmake 3.0.2; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/cmake-3.4.3-Darwin-x86_64.tar.gz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar zxvf cmake-3.4.3-Darwin-x86_64.tar.gz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#
+# documentation :
+  - if [[ "$GENDOC" == "true" ]]; then if [[ "$Mepp_Original_Repo" == "true" ]]; then if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then DOC="true"; echo "---> DOCUMENTATION <---"; fi; fi; fi
+  - if [[ "$DOC" == "true" ]]; then openssl aes-256-cbc -K $encrypted_cda36b364544_key -iv $encrypted_cda36b364544_iv -in .travis/mepp.enc -out .travis/mepp -d; chmod 600 .travis/mepp; fi
+
+script:
+  - mkdir build && cd build
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
+#
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j 3; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
+#
+  - ctest -j 3 --output-on-failure
+#
+# linux only (add qt5 after qt4 in the same job) :
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
+#
+# osx only (add qt5 after qt4 in the same job) :
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink qt@4; fi # ---> now unlink qt4
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link qt --force; fi # ---> now link qt5
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ctest -j 3 --output-on-failure; fi
+#
+# building the documentation
+after_success:
+  - if [[ "$DOC" == "true" ]]; then cd ../build; fi # if we build with qt5
+#
+  - if [[ "$DOC" == "true" ]]; then make doc; fi
+  - if [[ "$DOC" == "true" ]]; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no -i ../.travis/mepp' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/; fi

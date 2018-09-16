@@ -1,0 +1,67 @@
+This script is intended for compiling and testing a pre-defined set of
+MEPP2 configurations, inspired from Travis and Appveyor configurations.
+The results of the builds and tests are displayed in an html page.
+
+
+1. Linux
+--------
+
+Prerequisites:
+- all the necessary to compile MEPP2 is supposed to be installed, aka
+  mainly git, cmake and gcc/clang
+- Python 2.7.x, which is natively installed on most Linux
+
+Initial configuration:
+- copy the file 'multibuild.conf' to 'multibuild.conf.local'
+- edit the file 'multibuild.conf.local' and fix the lines 'CGAL_DIR ='
+  and 'OPENMESH_DIR =' according to your installation paths
+
+Usage:
+- open a terminal
+- 'cd' to the MEPP directory (required)
+- run the following command
+    python  Tools/Multibuild/multibuild.py  path_to_multibuild.conf.local
+- after a few seconds the browser will open an html page that displays
+  the build progress
+
+
+2. Windows
+----------
+
+Prerequisites:
+- all the necessary to compile MEPP2 is supposed to be installed, aka
+  mainly git (from https://git-scm.com/download/win), cmake and MSVC++
+- download Python 2.7.x from https://www.python.org/downloads/windows
+- install Python 2.7.x, no need to make a system wide install, no need
+  to change the PATH
+
+Initial configuration:
+- copy the file 'multibuild.conf' to 'multibuild.conf.local'
+- edit the file 'multibuild.conf.local' and fix the lines 'KIT_ROOT =',
+  'GIT_PATH =' and 'MSBUILD_PATH =' according to your installation paths
+
+Usage:
+- open a Windows terminal
+- 'cd' to the MEPP directory
+- run the following command
+    python.exe  Tools\Multibuild\multibuild.py   path_to_multibuild.conf.local
+- after a few seconds the browser will open an html page that displays
+  the build progress
+
+
+3. Mac OSX
+----------
+
+Same as Linux.
+
+
+4. F.A.Q
+--------
+
+- How can I change the build configurations ?
+
+Edit the file 'multibuild.py' and change/add/remove the lines 
+'configurations.append(...)' according to the configurations you want
+to build and test.
+
+

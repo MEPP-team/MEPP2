@@ -1,0 +1,230 @@
+/**
+
+@page CGALHalfedgeDataStructuresConceptCompliancePage Concepts compliance page
+
+@dot
+digraph example {
+  graph [compound=true];
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  label = "Boost Concepts";
+  "boost::BidirectionalGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/BidirectionalGraph.html"]
+  "boost::EdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/EdgeListGraph.html"];
+  "boost::EdgeMutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeMutableGraph.html"];
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::IncidenceGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/IncidenceGraph.html"];
+  "boost::MutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html"];
+  "boost::PropertyGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html"];
+  "boost::VertexAndEdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexAndEdgeListGraph.html"];
+  "boost::VertexListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexListGraph.html"];
+  "boost::VertexMutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexMutableGraph.html"];
+
+  "boost::BidirectionalGraph"     -> "boost::IncidenceGraph"
+                                     [ arrowhead="open" ];
+  "boost::EdgeListGraph"          -> "boost::Graph"
+                                     [ arrowhead="open", label="refines" ];
+  "boost::EdgeMutableGraph"       -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::IncidenceGraph"         -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::MutableGraph"           -> "boost::EdgeMutableGraph"
+                                     [ arrowhead="open" ];
+  "boost::MutableGraph"           -> "boost::VertexMutableGraph"
+                                     [ arrowhead="open" ];
+  "boost::PropertyGraph"          -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::EdgeListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexAndEdgeListGraph" -> "boost::VertexListGraph"
+                                     [ arrowhead="open" ];
+  "boost::VertexListGraph"        -> "boost::Graph"
+                                     [ arrowhead="open" ];
+  "boost::VertexMutableGraph"     -> "boost::Graph"
+                                     [ arrowhead="open" ];
+}
+
+subgraph cluster_cgal_concepts {
+  label = "CGAL Concepts";
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::HalfedgeListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+  "CGAL::FaceListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceListGraph.html"];
+  "CGAL::MutableFaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html"];
+  "CGAL::MutableHalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html"];
+
+  "CGAL::HalfedgeGraph"        -> "boost::IncidenceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeListGraph"    -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::HalfedgeGraph"        -> "boost::PropertyGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceGraph"            -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::FaceListGraph"        -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::FaceGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::MutableHalfedgeGraph"
+                                  [ arrowhead="open" ];
+  "CGAL::MutableHalfedgeGraph" -> "CGAL::HalfedgeGraph"
+                                  [ arrowhead="open" ];
+
+  "FEVV::MutableHalfedgeFaceListGraph" -> "CGAL::MutableFaceGraph"
+                                          [ arrowhead="open" ];
+  "FEVV::MutableHalfedgeFaceListGraph" -> "CGAL::HalfedgeListGraph"
+                                          [ arrowhead="open" ];
+  "FEVV::MutableHalfedgeFaceListGraph" -> "CGAL::FaceListGraph"
+                                          [ arrowhead="open" ];
+}
+
+subgraph cluster_cgal_data_structures {
+  label = "CGAL Data Structures";
+  "CGAL::Surface_mesh";
+  "CGAL::LCC";
+
+  // If we were to draw the full set of arrows coming from the three
+  // cluster nodes (SurfaceMesh, LCC and Polyhedron_3) the graphic would
+  // become an overweighted mess. We thus use ltail so that the arrows
+  // appear as coming from the cluster frame (when they are defined to
+  // be coming from Polyhedron_3).
+  // This alleviation of the visual load is only possible because the
+  // three implementation comply in a similar manner.
+  "CGAL::Polyhedron_3"   -> "boost::BidirectionalGraph"
+                           [ arrowhead="open", color=green,
+                             ltail=cluster_cgal_data_structures ];
+  "CGAL::Polyhedron_3"   -> "boost::EdgeMutableGraph"
+                           [ arrowhead="open", color=red,
+                             ltail=cluster_cgal_data_structures ];
+  "CGAL::Polyhedron_3"   -> "boost::MutableGraph"
+                           [ arrowhead="open", style="dotted", color=red,
+                             ltail=cluster_cgal_data_structures ];
+  "CGAL::Polyhedron_3"   -> "boost::PropertyGraph"
+                           [ arrowhead="open", color=red,
+                             ltail=cluster_cgal_data_structures ];
+  "CGAL::Polyhedron_3"   -> "boost::VertexAndEdgeListGraph"
+                           [ arrowhead="open", color=green,
+                             ltail=cluster_cgal_data_structures ];
+  "CGAL::Polyhedron_3"   -> "FEVV::MutableHalfedgeFaceListGraph"
+                           [ arrowhead="open", color=green,
+                             ltail=cluster_cgal_data_structures ];
+}
+
+subgraph cluster_openmesh_data_structure {
+  label = "OpenMesh Data Structure";
+  "OpenMesh" -> "boost::BidirectionalGraph"
+                [ arrowhead="open", color=green ];
+  "OpenMesh" -> "boost::EdgeMutableGraph"
+                [ arrowhead="open", color=red ];
+  "OpenMesh" -> "boost::MutableGraph"
+                [ arrowhead="open", style="dotted", color=red ];
+  "OpenMesh" -> "boost::PropertyGraph"
+                [ arrowhead="open", color=red ];
+  "OpenMesh" -> "boost::VertexAndEdgeListGraph"
+                [ arrowhead="open", color=green ];
+  "OpenMesh" -> "FEVV::MutableHalfedgeFaceListGraph"
+                [ arrowhead="open", color=green ];
+}
+
+subgraph cluster_fevv {
+  label = "FEVV";
+
+  HalfedgeGraphAdapter  -> CellIncidenceGraph
+                           [ arrowhead="open", label="uses" ];
+  //HalfedgeGraphAdapter -> "CGAL::FaceGraph"   [ arrowhead="open", label="uses" ];
+}
+
+}
+@enddot
+
+@dot
+digraph G {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  subgraph cluster_legend {
+    label = "Legend";
+    d -> 4 [label="refines"]
+    c -> 3 [label="indirect failing implements", color=red, style="dotted" ]
+    b -> 2 [label="failing implements", color=red]
+    a -> 1 [label="implements", color=green ]
+  }
+}
+@enddot
+
+Diagram references:
+ - general: [CGAL and BGL concepts diagram](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)
+ - [CGLAL::Polyhedron_3](http://doc.cgal.org/latest/Polyhedron/classCGAL_1_1Polyhedron__3.html): no additional documented information
+ - [Linear Cell Complex](http://doc.cgal.org/latest/Linear_cell_complex/group__PkgLinearCellComplex.html): no found documented information
+
+Respective compliances are asserted through the following concept checking tests:
+ - Linear Cell Complex (`CGAL::Linear_cell_complex`): \ref test_complying_concepts_linear_cell_complex.cpp
+ - OpenMesh: \ref test_complying_concepts_openmesh.cpp
+ - Polyhedron (`CGAL::Polyhedron_3`): \ref test_complying_concepts_polyhedron.cpp
+ - Surface Mesh (`CGAL::Surface_mesh`): \ref test_complying_concepts_surfacemesh.cpp
+
+| Expression | CGAL::LCC | CGAL::Surface_mesh | CGAL::Polyhedron | OpenMesh | AiF |
+|------------|-----------|--------------------|------------------|----------|-----|
+| **[IncidenceGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/IncidenceGraph.html)** | OK | OK | OK | OK | OK |
+| **[BidirectionalGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/BidirectionalGraph.html)** | OK | OK | OK | OK | OK |
+| **[VertexListGraph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexListGraph.html)** | OK | OK | OK | OK | OK |
+| **[EdgeListGraph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/EdgeListGraph.html)** | OK | OK | OK | OK | OK |
+| **[VertexMutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexMutableGraph.html)** | OK | OK | OK | OK | OK |
+| **[HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)** | OK  |  OK  |  OK  |  OK  | OK |
+| **[HalfedgeListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)** | OK | OK | OK | OK | <span style="color:red">NP</span> |
+| **[FaceGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceGraph.html)** | OK  |  OK  |  OK  |  OK  | OK |
+| **[FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)** | OK | OK | OK | OK | OK |
+| **[MutableHalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html)** | OK | OK | OK | OK | OK |
+| **[MutableFaceGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html)** | OK | OK | OK | OK | OK |
+
+Additional partially or totally <span style="color:red">FAILING</span> concepts
+| Expression | CGAL::LCC | CGAL::Surface_mesh | CGAL::Polyhedron | OpenMesh | Aif |
+|------------|-----------|--------------------|------------------|----------|-----|
+| **[EdgeMutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeMutableGraph.html)** | | | | | |
+| `add_edge(u, v, g)`    | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | OK |
+| `remove_edge(u, v ,g)` | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | OK |
+| `remove_edge(e, g)`    | OK | OK                                  |  OK                                 |  OK                                 | OK |
+| `clear_vertex(u, g)`   | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | OK |
+| **[MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html)** | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | OK |
+| `remove_edge(iter, g)`        | <span style="color:red">FAIL</span> | NT | <span style="color:red">FAIL</span> | NT | NT |
+| `remove_out_edge_if(u, p, g)` | <span style="color:red">FAIL</span> | NT | <span style="color:red">FAIL</span> | NT | NT |
+| `remove_edge_if(p, g)`        | <span style="color:red">FAIL</span> | NT | <span style="color:red">FAIL</span> | NT | NT |
+| `remove_in_edge_if(u, p, g)`  | <span style="color:red">FAIL</span> | NT | <span style="color:red">FAIL</span> | NT | NT |
+| **[AdjacencyGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/AdjacencyGraph.html)** | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | <span style="color:red">FAIL</span> | NT | OK |
+| **[PropertyGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html)** on `vertex_point_t` | | | | | |
+| `get(p, g)`       | OK | OK | OK |  OK                                 | OK |
+| `get(p, g, x)`    | OK | OK | OK | <span style="color:red">FAIL</span> | OK |
+| `put(p, g, x, v)` | OK | OK | OK | <span style="color:red">NT</span>   | OK |
+| **[PropertyGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html)** on `halfedge_index_t` or `face_index_t `| | | | | |
+| `get(p, g)`       | NT | NT | NT | NT | NT |
+| `get(p, g, x)`    | NT | NT | NT | NT | NT |
+| `put(p, g, x, v)` | NT | NT | NT | NT | NT |
+| **[ReadablePropertyMap (boost)](http://www.boost.org/doc/libs/1_60_0/libs/property_map/doc/ReadablePropertyMap.html)** | | | | | vertex_index_t |
+
+
+Legend:
+ - NP: Not Possible either because against the implementation design or not implemented.
+ - NT: Not Tested
+ - FAIL: currently failing in the test suite
+
+
+Open topics:
+ - [CGAL::HalfedgeGraph](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html) documentation announces that it refines (boost::)PropertyGraph. Yet we are unable (not good enough) to assert the concept with any of the data structures at hand...
+ - No data structure at hand complies with boost:EdgeMutableGraph and thus with boost::MutableGraph. Refer to the notes (below) for the discrepancies between CGAL::MutableHalfedgeGraph and boost::MutableGraph concepts.
+
+*/

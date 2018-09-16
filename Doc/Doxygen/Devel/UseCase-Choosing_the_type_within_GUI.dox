@@ -1,0 +1,32 @@
+/**
+
+@page UseCaseChoosingTheTypeWithinGUIPage Use case : Choosing the data structure type within GUI
+
+## Opening a mesh file from the GUI
+### Use case
+Within the GUI a user wishes to load some mesh file.
+Let us assume the user already knows the type/format of mesh file.
+What should be the interface process be (in order to load the file) ?
+
+### Design choice
+The user is not asked for the format of the file but only to designate the mesh file.
+The default reader shall be AIF reader.
+The AIF reader determines whether the considered mesh file represents a manifold or a non manifold mesh structure.
+When the mesh file happens to represent a manifold mesh a manifold reader reloads the file.
+At this stage the interface will present the available manifold datastructures and the user shall select his favorite data structure (whe he has one).
+"Surface Mesh" shall be selected by default.
+
+Design notes: if on usage this double pass loading strategy proves to introduce too much waiting time, the interface could choose to invert the process and always require a target data structure prior to loading.
+If the load fails (e.g. because the mesh was non manifold or a corrupted manifold) it would be the user's responsability to switch to AIF.
+
+## Using a filter from the GUI
+### Use case
+A user as at hand some mesh internally represented by the GUI with some given Data Structure (DS) named `DS1`.
+`DS1` can be the resulting from loading a mesh file or the output DS type of some previously applied filter.
+The user now wishes to apply a filter that doesn't accept the `DS1` type as input but only `DS2`.
+
+### Design choice
+When the users chooses the filter to apply to `DS1`, the interface notifies that this filter cannot be applied to `DS1` type meshes and that the filter can only treat `DS2` type meshes.
+It is now the user responsiblity to manually (possibly through the GUI) convert the considered mesh from `DS1` to the expected `DS2` type, prior to invocating the filter again.
+
+**/

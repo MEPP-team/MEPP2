@@ -1,0 +1,11 @@
+/**
+
+@page HowToUseUbuntuInstallScriptsPage Using script to install FEVV on Ubuntu
+
+ 1. Dans votre distribution Debian (GNU/Linux), créer un dossier (e.g. MEPP) dans lequel vous mettrez tous les scripts. 
+ 2. Depuis un terminal pointant dans le dossier en question (Ctrl+Alt+T, et ensuite cd bonne adresse), faites la commande `./install.sh` pour installer la première fois MEPP2 sur votre distribution Debian.
+ 3. Depuis ce même terminal, faites `./test.sh` pour compiler et tester votre solution depuis votre repository GitHub ou celui en commun (modifier la 5 ème ligne de test.sh en conséquence); le script test.sh lancera automatiquement le script testclang.sh .
+ 
+ Si vous avez des problèmes de fin de ligne (fins de ligne Windows à remplacer par des fins de ligne Linux), la commande dos2unix fera l'affaire.
+
+**/

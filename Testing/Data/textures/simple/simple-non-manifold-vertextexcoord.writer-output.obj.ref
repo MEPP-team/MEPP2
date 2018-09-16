@@ -1,0 +1,29 @@
+# OBJ File produced by MEPP2
+# The M2Disco Framework
+#
+# Mesh with :
+# 	5 vertex positions
+# 	3 faces
+# 	9 UV coordinates
+# 	0 vertex normals
+
+mtllib test_generic_writer_obj_non-manifold_with_vertex-texture.mtl
+v 0 0 0 
+v 1 0 0 
+v 0 1 0 
+v 1 1 0 
+v 1 0 1 
+
+vt 0 0 
+vt 0.99 0 
+vt 0 0.99 
+vt 0.99 0 
+vt 0.99 0.99 
+vt 0 0.99 
+vt 0.99 0 
+vt 0 0.99 
+vt 0.5 0.99 
+usemtl Gradient
+f 1/1 2/2 3/3 
+f 2/4 4/5 3/6 
+f 2/7 3/8 5/9 

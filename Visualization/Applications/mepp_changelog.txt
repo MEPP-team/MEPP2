@@ -1,0 +1,55 @@
+v0.7.1 - 29/07/2018 :
+ - add GLSL130-GL3.0 shaders
+ - disable vsync
+
+v0.7.0 - 21/07/2018 :
+ - set the draw and read buffers up for a double buffered window with rendering going to back buffer
+ - add ability to recalculate normals and tangents for a redraw
+
+v0.6.7 - 14/07/2018 :
+ - first support for FBX format (geometry, materials and textures)
+
+v0.6.6 - 12/07/2018 :
+ - fix problem with some intel graphic cards (only) under Linux
+ - minor small internal modifications
+
+v0.6.5 - 11/07/2018 :
+ - primary support for FBX format (only geometry)
+
+v0.6.4 - 09/07/2018 :
+ - fix for Shaders Indirect Lighting, now properly camera based
+ - fix texture sampling under Legacy rendering
+
+v0.6.3 - 28/06/2018 :
+ - fix the calculation of tangents
+ - choose Viewer instead of CompositeViewer (osg)
+ - fix an exception in debug mode under Windows for shaders renderings with textures
+ - add support for flat/smooth in shaders renderings
+ - fix normals in flat mode under Legacy, Shaders Direct Lighting and Shaders Indirect Lighting renderings
+
+v0.6.2 - 18/06/2018 :
+ - disable grid and gizmo by default
+ - fix z-fighting in superimpose edges mode
+ - finally enable superimpose bigger vertices mode under Legacy rendering :
+ now superimpose vertices (normal & bigger) are homogeneous under Legacy, Shaders Direct Lighting and Shaders Indirect Lighting renderings
+
+v0.6.1 - 15/06/2018 :
+ - fixes for Physical Base Rendering and shaders
+ - add cursors and infos in status bar to differentiate distinct parts (read mesh, normals & tangents, osg objects, render mesh)
+
+v0.6.0 - 12/06/2018 :
+ - add support for Physical Base Rendering and shaders (Direct Lighting and Indirect Lighting)
+ - add support for flat/smooth in Legacy rendering
+
+v0.5.2 - 27/04/2018 :
+ - add support for specific (i.e. from filter or from plugin) superimpose edge colors in viewer
+ - now always calculate vertex normals if not provided, and use them for drawing (drastic FPS performance update) and with that :
+		- smooth drawing is now OK
+		- problems under all ATI cards and also under all (old) INTEL graphic cards are now solved
+
+v0.5.1 - 12/04/2018 :
+ - add support for superimpose edges in viewer
+ - add support for superimpose vertices in viewer
+
+v0.5.0 - 26/03/2018 :
+ - initial version

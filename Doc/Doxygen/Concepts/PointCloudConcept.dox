@@ -1,0 +1,96 @@
+/**
+
+@page PointCloudConceptPage Point Cloud concept
+
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  "boost::MultiPassInputIterator"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/utility/MultiPassInputIterator.html"];
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::MutableGraph"  
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html"];
+  "boost::VertexListGraph"  
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html"];
+
+  "boost::MutableGraph"       -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::VertexListGraph"    -> "boost::Graph" [ arrowhead="open", label="refines" ];
+
+  label = "Boost";
+}
+
+subgraph cluster_fevv {
+  PointCloud -> "boost::MutableGraph"           [ arrowhead="open", label="uses" ];
+  PointCloud -> "boost::MultiPassInputIterator" [ arrowhead="open", label="uses" ];
+  PointCloud -> "boost::VertexListGraph"        [ arrowhead="open", label="uses" ];
+
+  label = "FEVV";
+}
+
+}
+@enddot
+
+<b>Introduction</b>
+
+The objective of the PointCloud concept is to enable the manipulation
+of Point Cloud (PC) objects within the geometrical context of mesh
+manipulations. Point Clouds can be conceived as the geometric information
+of more general concepts like meshes or cell-sets. The PointCloud concept
+offers the ability to manipulate such point clouds independently from such
+other concepts for example when working on point cloud data coming from
+specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)) 
+or in
+
+<b>Notations</b>
+ - `PC` A type that is a model of `PointCloud`.
+ - `pc` An object of type `PC`.
+ - `u`,`v`, `w` Vertex descriptors.
+
+<b>Associated types</b>
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| `vertex_size_type`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | The unsigned integer type used to represent the number of point in the point cloud.  |
+| `vertex_descriptor` | [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | A vertex descriptor corresponds to a unique node in a Point Cloud instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+| `vertex_iterator`   | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | A vertex iterator (obtained via `vertices(g)`) provides access to all of the vertices in a point cloud. A vertex iterator type must meet the requirements of [MultiPassInputIterator](http://www.boost.org/doc/libs/1_60_0/libs/utility/MultiPassInputIterator.html). The value type of the vertex iterator must be the vertex descriptor of the point cloud. |
+
+<b>Valid expressions</b>
+
+| Expression         | Reference             | Returns              | Description  |
+|--------------------|-----------------------|----------------------|--------------|
+| **Traversals**     | | | |
+| `vertices(pc)`     | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the points in the point cloud `pc`.|
+| `num_vertices(g)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertex_size_type`                         | Returns the number of vertices in the graph `g`.|
+| **Mutability**        | | | |
+| `add_vertex(pc)`       | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `vertex_descriptor`                | Add a new vertex to the point cloud. The vertex_descriptor for the new vertex is returned. |
+| `remove_vertex(v, pc)`  | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `void`                             | Remove `v` from the vertex set of point cloud.|
+| **Miscelaneous**      | | | |
+| `null_vertex()`| [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | | Returns a special `vertex_descriptor` object which does not refer to any vertex of point cloud object which type is PC. |
+
+OPEN QUESTIONS:
+ - Should other FEVV concepts be defined as refining this PointCLoud concept ? If not please do provide a clear reason not to do so !
+ - Should we avoid the vertex word in favor of point in order
+   - for the concept to be closer to the one of a **point** cloud
+   - to be compatible with the associated/underlying Geometry concept ? (there will be awkward pieces of code where will will walk on vertices and use them as points when accessing their geometry (BTW this way of naming things is already like that in FEVV).
+   Or should we stick with vertex in order to make it closer to other mesh related FEVV concepts which use the vertex terminology for their geometry ?
+ - Concerning the Geometry (refer to \ref GeometryConceptPage "Geometry concept"):
+   - Concerning the <b>form</b> (syntax of usage) of the geometrical information we have three possibilites:
+     1. Keep it as an "external" trait (with a "Geometry_Traits< PC >" syntax) just as it is done for meshes. Choosing this possibility would be a bit strange for PC since point clounds have no topology (as opposed to meshes). Hence separating the notion of vertex from the notion of geometry of that vertex looks a bit awkward/artificial when considering the PC concept in isolation from other FEVV concepts. Keeping a "Geometry_Traits< PC >" pulls the semantics towards a notational unification of meshes and point clouds conceived as degenerated meshes with no topology. When choosing this option, a big caveat emptor should be placed in the documentation in order to users not to remain baffled with such a notation.
+     2. Integrate, with a nested approach, the Geometry_Traits within the PointCloud concept. The exposed geometry related types would here be defined in the form"PC::Geometry::Point".
+     3. Integrate, with a flatening out approach, the Geometry_Traits within the PointCloud concept. The exposed geometry related types would here be defined in the form "PC::Point" or "PC::Scalar".
+   - Concerning the <b>content</b> of the geometrical information
+     - We have to offer the types "Point"  and  "Scalar" (this is the base) as well as "pc.get_x( p a)" and the corresponding y and z declination that all return a "Scalar".
+     - But should we offer the full Geometry concept i.e. also offer the "Vector" type and the expressions "unit_normal( p1, p2, p3)", "normal( p1, p2, p3)" and "length( v )" as well ?
+     - Note that for geometricians (mathematicians) the notion of the normal of a point of a set of points is a valid notion (that may have many definitions e.g. the normal is as null vector for vertices lying inside the convex hull and the normal to the conver hull for vertices lying on it) (a unit normal of a degenerated normal might be harder though). But the offered operator are for computing a normal starting out of three point which is a different concern...
+
+Design notes:
+ - They are three sources of influence for this PointCloud concept:
+   - higher level FEVV concepts like \ref CellIncidenceGraphConceptPage "Cell Incidence Graph concept" or the \ref CellIncidenceGraphHelpersConceptPage "Cell Incidence Graph Helpers concept",
+   - FEVV's geometry concept (refer to \ref GeometryConceptPage "Geometry concept",
+   - the [Point Cloud Library]([Point Clouds](http://www.pointclouds.org/) (see also [PCL](https://github.com/PointCloudLibrary)). Although PCL is a specific implementation, its dominance (are they some alternatives?) makes it a relevant source of inspiration on condition to to be cautious not to introduce a too strong flavor of PCL (or even dependency towards PCL implementation).
+
+*/

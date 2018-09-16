@@ -1,0 +1,71 @@
+/**
+
+@page GeometryConceptPage Geometry concept
+
+
+<b>Introduction</b>
+The Geometry concept can be thought as capturing the notions
+of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
+(including its [associated vector space](https://en.wikipedia.org/wiki/Affine_space#Definition)).
+
+<b>Associated types</b>
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| `G::Scalar`        | [Affine coordinates](https://en.wikipedia.org/wiki/Affine_space#Affine_coordinates) | A type used to represent the coordinate of a `Point`. |
+| `G::Point`         | [Point of affine space](https://en.wikipedia.org/wiki/Affine_space#Definition)  | The type "aggregating" `Scalar` coordinates. |
+| `G::Vector`        | [Affine "substraction"](https://en.wikipedia.org/wiki/Affine_space#Subtraction_and_Weyl.27s_axioms) | The type of an element of the associated vector space. |
+
+<b>Notations</b>
+ - `G` A type that is a model of `Geometry`.
+ - `g` An object of type `G`.
+ - `p`,`q`, `r`  Objects of type `Point`.
+ - `x`, `y`, `z` Objects of type `Scalar`
+ - `v` An object of type `Vector`
+
+<b>Geometry related valid expressions</b> (ON GOING WORK: refer to `Geometry_traits`)
+| Expression         | Returns              | Description  |
+|--------------------|----------------------|--------------|
+| `q(p)`             | `Point`   | `Point` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
+| `Point(x, y, z)`   | `Point`   | Constructor of the `Point` defined its respective given coordinates. |
+| `g.get_x( p )`     | `Scalar`  | Returns the first coordinate of point `p`.|
+| `g.get_y( p )`     | `Scalar`  | Returns the second coordinate of point `p`.|
+| `g.get_z( p )`     | `Scalar`  | Returns the third coordinate of point `p`.|
+| `g.normal(p, q, r);`       | `Vector`   | Returns a vector that is normal to the plane passing through points `p`, `q` and `r`.|
+| `g.unit_normal(p, q, r);`  | `Vector`   | Returns a unit vector that is normal to the plane passing through points `p`, `q` and `r`.|
+| `g.length(v)`      | `Scalar`  | Returns the length of vector `v`.|
+
+Notes:
+ - The concept checking tests \ref Testing/Concepts/GeometryConceptCheck.h
+   (you need to follow the link to the source on that page)
+   of the \ref Geometry_traits illustrate all above expressions.
+ - Refer to \ref Geometry_traits_documentation_dummy for implementation details
+ - The current implementation misses to enable the following expressions
+   - `p + q` which returns a Point (because it is hard to implement as CGAL wrappers ?)
+   - `p - q` which returns a Vector
+   - `p + v` which returns a Point
+
+<b>Relating meshes with "their" geometry</b>
+
+The following code snippet (refer to
+<a href=accessing__geometry_8cpp_source.html>Examples/OpenMesh/accessing_geometry.cpp</a>) illustrates how to "walk" on the vertices geometries of a given
+mesh :
+\snippet OpenMesh/accessing_geometry.cpp Snippet Accessing Geometry
+
+<b>Design notes</b>:
+ - Although foreseen at some point, the `next(v, e, g)` and `prev(v, e, g)`
+   expresssions were eventually disregarded since their result can be obtained
+   through other means.
+ - `remove_out_edge_if(u, p, g)` and `remove_out_edge_if(u, p, g)` (mutability)
+   were droped because edges are non oriented.
+
+\todo
+  The expression `Point( Scale, Scale, Scale)` is missing from
+  \ref Testing/Concepts/GeometryConceptCheck.h. Yet it is illustrated
+  \ref FEVV/Filters/Generic/translation.hpp (in `translate()` free
+  templated function).
+
+
+This documentation generated from GeometryConcept.dox file.
+
+*/

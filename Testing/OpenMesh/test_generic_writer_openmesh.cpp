@@ -1,0 +1,85 @@
+#define CGAL_USE_OM_POINTS
+#include "FEVV/Wrappings/Geometry_traits_openmesh.h" // Always in first position for MVS 4996 warnings
+#include <OpenMesh/Core/IO/MeshIO.hh>
+// force usage of OpenMesh native Point type instead of CGAL Point type
+// in point map in properties_PolyMesh_ArrayKernelT.h
+#include <CGAL/boost/graph/graph_traits_PolyMesh_ArrayKernelT.h>
+#include <CGAL/boost/graph/properties_PolyMesh_ArrayKernelT.h>
+#include "FEVV/Wrappings/Graph_traits_extension_openmesh.h"
+
+#include "FEVV/Wrappings/properties_openmesh.h"
+#include "FEVV/Filters/Generic/generic_reader.hpp"
+#include "FEVV/Filters/Generic/generic_writer.hpp"
+
+#include "FEVV/Tools/IO/FileUtilities.hpp"
+#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_identical_text_based_files.h"
+
+#include <iostream>
+#include <string>
+
+
+using MeshT = OpenMesh::PolyMesh_ArrayKernelT< /*MyTraits*/ >;
+
+
+int
+main(int argc, const char **argv)
+{
+  if(argc != 4)
+  {
+    std::cout << "Load a mesh from an input file using the generic reader, "
+                 "write it to an output file using the generic writer, then "
+                 "compare the output file with a reference file."
+              << std::endl;
+    std::cout << "Usage: " << argv[0]
+              << "  input_mesh_file  output_mesh_file  reference_mesh_file"
+              << std::endl;
+    std::cout << "Example: " << argv[0]
+              << "  airplane.off airplane.out.obj airplane.ref.obj"
+              << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::string input_file_path = argv[1];
+  std::string output_file_path = argv[2];
+  std::string reference_file_path = argv[3];
+
+  //--------------------------------------------------
+
+  // read mesh from file
+  MeshT m;
+  FEVV::PMapsContainer pmaps;
+  FEVV::Filters::read_mesh(input_file_path, m, pmaps);
+
+  // write mesh to file
+  FEVV::Filters::write_mesh(output_file_path, m, pmaps);
+
+  // check output file
+  std::cout << "Comparing output file '" << output_file_path
+            << "' with reference file '" << reference_file_path << "'..."
+            << std::endl;
+
+  if(FEVV::FileUtils::has_extension(output_file_path, ".off") ||
+     FEVV::FileUtils::has_extension(output_file_path, ".coff"))
+  {
+    // use OFF file comparator
+    if(!are_meshes_equal(output_file_path, reference_file_path, false))
+    {
+      std::cout << "Files are different!" << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+  else
+  {
+    // use text file comparator
+    if(!identical_text_based_files(output_file_path, reference_file_path))
+    {
+      std::cout << "Files are different!" << std::endl;
+      return EXIT_FAILURE;
+    }
+  }
+
+  std::cout << "Files are identical." << std::endl;
+
+  return 0;
+}

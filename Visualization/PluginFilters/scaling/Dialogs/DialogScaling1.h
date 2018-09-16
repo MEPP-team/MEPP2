@@ -1,0 +1,30 @@
+#ifndef DialogScaling1_H
+#define DialogScaling1_H
+////////////////////////////////////////////////////////////////////////////////
+#include <QDialog>
+////////////////////////////////////////////////////////////////////////////////
+namespace Ui {
+class DialogScaling1;
+}
+////////////////////////////////////////////////////////////////////////////////
+namespace FEVV {
+
+class DialogScaling1 : public QDialog
+{
+  Q_OBJECT
+
+public:
+  explicit DialogScaling1(QWidget *parent = 0);
+  ~DialogScaling1();
+
+  void setScale(double x, double y, double z);
+  void getScale(double &x, double &y, double &z);
+
+private:
+  Ui::DialogScaling1 *ui;
+};
+
+} // namespace FEVV
+
+////////////////////////////////////////////////////////////////////////////////
+#endif // DialogScaling1_H

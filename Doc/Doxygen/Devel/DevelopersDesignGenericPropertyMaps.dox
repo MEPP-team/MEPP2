@@ -1,0 +1,65 @@
+/**
+
+@page DevelopersDesignGenericPropertyMapsPage  Generic property maps (design notes)
+
+Quick links:
+ - an \ref OpenMesh/hello_world_filter.cpp "OpenMesh based example"
+ - a \ref CGAL/hello_world_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
+
+### Property maps management and implementation
+
+#### Generic reader needs generic property maps
+
+With the native readers, the properties read from the mesh file (like vertex color, vertex normal, face color, texture coordinates...) are stored inside the datastructure itself. Using a generic reader, we don't have anymore access to the datastructure internal storage. So we need to store the properties somewhere outside the datastructure in so called "generic" property maps.
+
+The generic property maps are created when the mesh file is read by the generic reader, according to the properties that are present in the mesh file. We don't want to create unused property maps by default, because once a property map is created, there is no way to know if it is empty or not.
+
+#### Store the generic property maps in a unique place
+
+To make variable number of property maps easier to manage the property maps are stored in a unique container. This container is a std::map. The key is a string that identifies the property map, like "v:color" for vertex color.
+
+Because each property map is of a different type (the type depends on the vertex/halfedge/face type and the stored value type), the property maps are stored as boost::any objects in the container. The boost::any object masks the real type of the property map to the container, which sees only boost::any objects. The drawback is that the property map must be casted in its real type when it is retrieved from the container.
+
+#### Retrieve the property map type
+
+To avoid the cast operation when a property map is retrieved from the container, a unique type is associated with each standard property. For example the vertex_color_t type is associated to the vertex color property. A property maps trait (PMap_traits) is used to deduce the real property map type from the property type.
+
+This make it possible to retrieve a property map without an explicit cast, in the same way that the 'get(boost::vertex_point, mesh)' returns the geometry property map.
+
+#### Default property maps type depends on the datastructure
+
+Associative property maps (based on boost::associative_property_maps) are used by default because they are compatible with all datastructures currently used (Polyhedron, Surface_mesh, LCC, OpenMesh, AIF). But this kind of property maps is much slower than vector property maps. The comparison between vector and associative property maps in Compression Valence filter shows a 4-time performance gain in favor of vector property maps with Surface_mesh and Openmesh.
+
+To adress this performance issue, the PMap_traits is specialized for some datastructures (Surface_mesh and Openmesh at the moment) in order to use faster vector property maps with datastructures that support them.
+
+Also a mechanism is provided to create new non-standard property maps in a generic way. For example, a property map may be needed inside a filter to temporary store some value attached to the vertices. We need a way to create such a property map using the default property map type associated with the datastructure.
+
+
+Note: vector property maps (boost::vector_property_maps) don't work with
+Polyhedron and AIF. Using boost::vector_property_maps with Polyhedron makes
+the program crash at run time because Polyhedron indices are not properly
+initialized.
+
+#### Implementation
+
+The above explained mechanism above is implemented in
+\ref FEVV/Wrappings/properties.h.
+
+The respective `FEVV/Wrappings/properties_<datastructure>.h` files are used to
+isolate the generic code of properties.h from the various datastructure
+dedicated code specialisations.
+Hence `FEVV/Wrappings/properties.h` must be included in generic code (for
+example in \ref FEVV/Filters/Generic/generic_reader.hpp) whereas
+\ref FEVV/Wrappings/properties_<datastructure>.h must be included in
+applications (for example in \ref Examples/OpenMesh/hello_world_filter.cpp).
+
+`FEVV/Wrappings/properties_<datastructure>.h` is also the file where to place
+the PMap_traits specialization for a specific `<datastructure>` datastructure.
+
+#### See also
+
+Some early design discussions and notes about property maps can be found here:
+ - [MEPP2 project issue 111](https://github.com/MEPP-team/MEPP2/issues/111)
+ - [This MEPP2 project work-session](https://github.com/MEPP-team/MEPP2/wiki/Property_map_Worksession_2017_02_027)
+
+*/

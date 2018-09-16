@@ -1,0 +1,177 @@
+/**
+
+@page DevelopersAIFCellsAndPropertyMapsPage How are cells and property maps managed in AIF ?
+
+
+###  How are cells (vertices/edges/faces) managed in AIF ?
+
+AIF cells (aka vertices/edges/faces) are stored in separate containers (std::vector) inside AIF datastructure. One container stores all vertices, a second container stores all edges, and a third container stores all faces (see AIFCellContainer.h and AIFMesh.hpp).
+
+One possible choice to manage the cells is to decide that the cell index inside the container is its identifier, and must not vary in time. As a consequence, the cells must not move inside their container. When a cell is removed from the mesh, its slot inside the container becomes empty, and can not be used for another cell. The drawback are:
+ - we have to keep trace of the indices of the removed cells inside the container, 
+ - when we want to walk through all the mesh cells, we have to check each container slot to ensure it contains a valid (aka not removed) cell,
+ - the more cells are removed, the more containers slots are empty, the more memory is vasted,
+ - new cells are added at the end of the container, thus generating an always growing containers,
+ - a compacting feature should be added to fix the last point, but it would be very costy to run (must change and fix all cells identifiers).
+
+Considering these drawbacks, the decision was made to use another solution for AIF: we use the cell memory address as identifier, and so the cell can be moved inside the container because it is not attached to a fixed index. When a cell is removed from the mesh, it is just swapped with the last cell in the container, and the last container slot is marked as empty. New cells are always added at the last container slot.
+
+Example:
+
+ 1. a mesh with 5 faces:
+
+        Faces container:
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #2  |  face #3  |  face #4  |  face #5  |
+        +-----------+-----------+-----------+-----------+-----------+
+
+ 2. face #2 is removed:
+
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #2  |  face #3  |  face #4  |  face #5  |
+        +-----------+-----------+-----------+-----------+-----------+
+                         /|\                                  /|\
+                          |               swap                 |
+                          +------------------------------------+
+
+
+        New faces container:
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #5  |  face #3  |  face #4  |   empty   |
+        +-----------+-----------+-----------+-----------+-----------+
+                         ^^^                                 ^^^
+
+ 3. a new face is created
+
+        New faces container:
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #5  |  face #3  |  face #4  |  face #6  |
+        +-----------+-----------+-----------+-----------+-----------+
+                                                             ^^^
+
+
+The main advantage of this solution are:
+ - the cell containers are compact, they use less memory and are not always growing,
+ - the cell containers can be fully compacted at a low cost (the cost of a std::vector::shrink_to_fit() operation) compared to the previous solution,
+ - the valid data in the cells container are always contiguous, so walking through the mesh doesn't require to check if each slot is valid or not.
+
+Note: halfedges are not persitent in AIF. One halfedge is just a tuple (vertex_descriptor, vertex_descriptor, face_descriptor). The halfedges are not stored in a container, unlike the other cells.
+
+
+###  How are property maps managed in AIF ?
+
+AIF property maps implementation is inspired from CGAL Surface_mesh property maps in CGAL 4.7.
+
+A property map contains the property values associated to each mesh cell. For example the face normal property map contains the normal associated with each face of the mesh.
+For performance concern, we decided to use an indexed container (boost::vector_property_map which uses internally a std::vector) to store the property values, rather than an associative container. As a consequence, the storage key of the property map must be an index. This is a problem because the cell identifer is a memory address, not an index. So we choose to store the property value of a particular cell at the same index as the cell is stored in the cell container, as illustrated below: 
+
+        Faces container:
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #2  |  face #3  |  face #4  |  face #5  |
+        +-----------+-----------+-----------+-----------+-----------+
+
+        Face-normal property map: 
+        +-----------+-----------+-----------+-----------+-----------+
+        | normal #1 | normal #2 | normal #3 | normal #4 | normal #5 |
+        +-----------+-----------+-----------+-----------+-----------+
+
+As explained before, when we remove a cell, we swap it with the last cell in the cells container. To keep the property map coherent with the cell container, we have to do the same with the property map.
+
+Example: removing face #2
+
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #2  |  face #3  |  face #4  |  face #5  |
+        +-----------+-----------+-----------+-----------+-----------+
+                         /|\                                  /|\
+                          |               swap                 |
+                          +------------------------------------+
+
+                          +------------------------------------+
+                          |               swap                 |
+                         \|/                                  \|/
+        +-----------+-----------+-----------+-----------+-----------+
+        | normal #1 | normal #2 | normal #3 | normal #4 | normal #5 |
+        +-----------+-----------+-----------+-----------+-----------+
+
+                                      |
+                                      |
+                                     \|/
+
+        New faces container:
+        +-----------+-----------+-----------+-----------+-----------+
+        |  face #1  |  face #5  |  face #3  |  face #4  |   empty   |
+        +-----------+-----------+-----------+-----------+-----------+
+                         ^^^                                 ^^^
+
+        New face-normal property map: 
+        +-----------+-----------+-----------+-----------+-----------+
+        | normal #1 | normal #5 | normal #3 | normal #4 |   empty   |
+        +-----------+-----------+-----------+-----------+-----------+
+                         ^^^                                 ^^^
+
+So the AIF datastructure must update all the property maps attached to a given cell type when one cell of this type is removed. In order to achieve this, all the property maps related to one cell type are stored in one property maps container. There are three property maps container: one for vertices-related property maps, one for edges-related property maps and one for faces-related property maps.
+
+The property maps container are associative container. The property maps are identified by a name (aka a std::string). See AIFProperties.h.
+
+One property map is an instance of a templated boost::vector_property_map. The full property map type is like boost::vector_property_map<property_value_type>. It is not possible to store several property maps containing different value_type in the same (basic) associative container because the property maps don't have the same type. To solve this issue, all the property maps derive from a common, non templated, base class. The property maps container then stores pointers to the base class (see  AIFProperties.h). Note: this is the solution used in CGAL::Surface_mesh.
+
+
+### AIF Property maps implementation details and usage (May 2016)
+
+The property maps organization in AIF is inspired by CGAL::SurfaceMesh.
+
+The property maps implementation involves 4 classes: AIFMesh, AIFPropertiesHelpers, PropertyMapContainer, PropertyMap, illustrated below:
+
+<table border="0" style="border-spacing:30px">
+  <tr>
+    <td>\image html AIFPropertyMaps-AIFMesh.png "AIFMesh"</td>
+    <td>\image html AIFPropertyMaps-AIFPropertiesHelpers.png "AIFPropertiesHelpers"</td>
+    <td>\image html AIFPropertyMaps-AIFPropertyMapContainer.png "PropertyMapContainer"</td>
+    <td>\image html AIFPropertyMaps-AIFPropertyMap.png "PropertyMap"</td>
+  </tr>
+</table> 
+
+The property maps are managed at the <b>AIFMesh</b> class level.
+
+A property map is identified by its name. It is stored in a container according to the type of the cell (vertex/edge/face/volume) it applies to. There are 3 containers in AIFMesh for the moment:
+ - m_VertexPropertyMaps: container of the maps that apply to vertices
+ - m_EdgePropertyMaps: container of the maps that apply to edges
+ - m_FacePropertyMaps: container of the maps that apply to faces
+
+The <b>AIFMesh</b> class contains property maps management functions:
+ - GetPropertyMap(const std::string& mapName) to get an existing property map
+ - AddPropertyMap(const std::string& mapName) to create a new property map
+ - IsPropertyMap(const std::string& mapName) to test if a property map exists
+ - RemovePropertyMap(const std::string& mapName) to delete a property map
+
+The class also contains functions to get and set the property value of a particular cell  :
+ - GetProperty(const std::string& mapName, int cellId)
+ - SetProperty(const std::string& mapName, int cellId, T value)
+
+All this functions are templated by the type of the cell the map apply to.
+
+Principle of use:
+
+    PropertyMap<Vector> *normals = mesh.AddPropertyMap<AIFMesh::FACE_KEY, Vector>("f:normal");
+    mesh.SetProperty<AIFMesh::FACE_KEY, Vector>("f:normal", faceId, Vector(1,0,0));
+     or
+    (*normals)[faceId] = Vector(1,0,0);
+
+A property map name "v:point" is created by default to store the coordinates of the vertices.
+
+The <b>AIFPropertiesHelpers</b> class provides helpers functions to directly access the vertices coordinates property maps:
+
+    GetPoint(...) to get the coordinates of a vertex
+    SetPoint(...) to set the coordinates of a vertex
+
+It also contains functions that were previously defined at AIFVertex and AIFEdge level:
+ - ComputeNormal() computes the normal to 3 points or vertices
+ - Length() computes the length of an edge
+
+Because an AIFVertex has not any more access to its own coordinates, the calculation that involves vertex coordinates (and property maps in general) need to be moved at a higher level.
+
+The <b>PropertyMapContainer</b> class manages a container of property maps that apply to a given cell type. It must be manipulated through AIFMesh and AIFPropertiesHelpers interface.
+
+The <b>PropertyMap</b> class manages a property map. It is based on boost::vector_property_map class. It extends boost::vector_property_map by overlading operator[] so that it can take a vertex descriptor or an edge descriptor as a key of the property map, and thus allow expression like <i>prop_mat[vertex_descriptor1] = ...</i>.
+
+*/

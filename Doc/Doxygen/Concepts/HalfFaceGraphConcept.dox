@@ -1,0 +1,30 @@
+/**
+
+@page HalfFaceGraphConceptPage HalfFaceGraph concept: volume mesh
+
+<b>Refines</b> 
+  [HalfedgeGraph](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html) (CGAL's manifold surface)
+
+<b>Notations</b>
+ - `G` A type that is a model of `HalfFaceGraph`.
+ - `g` An object of type `G`.
+ - `h` A halfedge descriptor.
+ - `f` An face descriptor ? FIXME
+ - `vol` FIXME
+
+<b>Valid expressions</b>:
+
+| Expression     | Returns    | Description  |
+|----------------|------------|--------------|
+| `volumes(g)`           | | |
+| `degree(f,g)`          | | |
+| `codegree(vol,g)`      | | |
+| `remove_volume(vol,g)` | | |
+| `num_volumes(g)`       | | |
+| `boost::graph_traits<G>::``null_volume()`  | | |
+| `half_edge(vol,g)`     | | |
+| `opposite_vol(h,g)`    | | |
+
+This page generated from the HalfFaceGraphConcept.dox file.
+
+*/

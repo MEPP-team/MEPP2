@@ -1,0 +1,29 @@
+// Notes:
+//  - group summary pages appear in the Modules tab entry of the generated
+//    project page.
+//  - the addgroup mechanism does not allow members (like functions) to be
+//    put in multiple groups. But (full) files are allowed.
+//    Hence, it suffice to place the file where a filter (template) function
+//    (and set aside its helpers or sub-function is other files) is defined
+//    within multiple groups to use Doxygen the addgroup as a tagging mechanism.
+//    Reference:
+//      https://stackoverflow.com/questions/16817596/doxygen-how-to-include-an-element-in-multiple-groups
+
+/** \defgroup GenericManifoldFilters Generic manifold filters
+ *  This group gathers filters that are Generic to Manifold surfaces.
+ *  It assumes that the FaceGraph template argument complies with
+ *  the ... concept.
+ */
+
+/** \defgroup GeometricFilters Geometric filters
+ *  This group gathers filters that only act on the geometry of a mesh
+ *  as opposed to topological changes.
+ */
+
+/** \defgroup AIFFilters AIF filters
+ *  This group gathers filters that only operate the AIF mesh data structure.
+ *  Although the AIF filters are most often written in a generic manner (i.e.
+ *  they do not refer to the AIF specific implementation) they can only be
+ *  applied to non-manifold data structures (of which AIF is presently the
+ *  only available instance within FEVV).
+ */

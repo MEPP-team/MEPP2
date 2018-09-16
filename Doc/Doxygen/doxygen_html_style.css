@@ -1,0 +1,9 @@
+div.image img[src="CellIncidence-Graph.png"]{ 
+    width:500px; 
+}
+div.image img[src="CellIncidence-CellMesh.png"]{ 
+    width:300px; 
+}
+div.image img[src="CellIncidence-Graph_in_out_edges.png"]{ 
+    width:600px; 
+}

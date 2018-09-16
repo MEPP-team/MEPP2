@@ -1,0 +1,56 @@
+/**
+
+\mainpage FEVV documentation Home Page
+
+\section Shortcuts
+ - \ref GeneralIntroductionSection "General introduction"
+ - \ref InstallWrapperPage         "Installation instructions"
+ - \ref CategorizedExamplesPage    "A set of categorized examples"
+ - \ref DevelopersInceptionPage    "Developers inception"
+ - \ref ConceptsPage               "Concepts gateway page"
+ - [Nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
+
+\section GeneralIntroductionSection General introduction
+
+FEVV is a C++ written (
+[generic programming](https://en.wikipedia.org/wiki/Generic_programming) oriented)
+[SDK](https://en.wikipedia.org/wiki/Software_development_kit)
+aiming at developing **portable algorithms** working on
+ - [polygonal mesh](https://en.wikipedia.org/wiki/Polygon_mesh) (in 3D),
+ - [volumic mesh](https://en.wikipedia.org/wiki/Volume_mesh),
+ - [point cloud](https://en.wikipedia.org/wiki/Point_cloud) (someday hopefully).
+
+In addition to cross-platform, portability should be understood
+as **interoperability over third party data structure** implementations like
+ - [OpenMesh](http://www.openmesh.org/),
+ - [CGAL's Surface Mesh](http://doc.cgal.org/latest/Surface_mesh/index.html) or
+ - [CGAL's Polyhedral Surface](http://doc.cgal.org/latest/Polyhedron/index.html).
+
+FEVV offers:
+ - **Abstraction layers** (aka [wrappers](https://en.wikipedia.org/wiki/Wrapper_library)) allowing to indifferently use the considered third party
+implementations.
+ - **[Data structures](https://en.wikipedia.org/wiki/Data_structure)** implementations like
+     - the non manifold [Adjacency and Incidence Framework (AIF)](http://ldc.usb.ve/~vtheok/papers/tesis/A_data_structure_for_eficient_and_fast_management_of_multire.pdf) \ref FEVV::DataStructures::AIF::AIFMesh "(more)"
+     - compact mesh representations
+ - Generic **mesh treatments** (aka filters) written on top of the wrappers
+ - **Visualization components** like an
+     [OpenSceneGraph](http://www.openscenegraph.org/) based ([QT widgets](http://doc.qt.io/qt-5/qtwidgets-index.html)) component for
+       - building derived GUI applications.
+       - the production of article oriented illustrations
+ - **Tools**
+   - [CLI oriented](https://en.wikipedia.org/wiki/Command-line_interface):
+     - examples and demos of filters
+     - scripting tools allowing for quick macro-filters authoring as well as
+       filter execution and [batch processing](https://en.wikipedia.org/wiki/Batch_processing)
+   - [GUI oriented](https://en.wikipedia.org/wiki/Graphical_user_interface) applications like a [QT based](https://www.qt.io/) mesh "debugger".
+
+FEVV mainly **targets**
+ - **researchers** and/or **Phd students**, looking for **portable tools**
+   allowing them to
+   - develop mesh implementation independent (on top of various mesh concrete representations), portable (across platforms), robust and [re-usable](https://en.wikipedia.org/wiki/Code_reuse) mesh treatments,
+   - quickly compare algorithms and their implementations through [benchmarking](https://en.wikipedia.org/wiki/Benchmarking),
+   - establishing mesh statistics (or quality indicators).
+   - realize mesh treatments
+ - **Application developers** wishing to embed mesh treatments within specific industry tool chain, platform specific interfaces, or full featured applications dedicated to mesh non specialist end users.
+
+*/

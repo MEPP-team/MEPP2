@@ -1,0 +1,7 @@
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/compression_valence/compression_valence.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/curvature/curvature.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/decompression_valence/decompression_valence.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/jnd/jnd.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/msdm2/msdm2.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/processing/processing.cmake" )
+include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/scaling/scaling.cmake" )

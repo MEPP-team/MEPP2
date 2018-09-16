@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DialogCompressionValence1</class>
+ <widget class="QDialog" name="DialogCompressionValence1">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Compression Valence</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QFrame" name="frame_2">
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <!-- start of parameters section -->
+         <!-- title -->
+         <item>
+          <widget class="QLabel" name="label_Process">
+           <property name="text">
+            <string>Parameters:</string>
+           </property>
+          </widget>
+         </item>
+         <!-- 1st parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_1st_param">
+           <item>
+            <widget class="QLabel" name="label_1st_param">
+             <property name="text">
+              <string>compressed file name (.p3d) [optional]</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="p3dFilePath"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonBrowse">
+             <property name="text">
+              <string>browse</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <!-- 2nd parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2nd_param">
+           <item>
+            <widget class="QLabel" name="label_2nd_param">
+             <property name="text">
+              <string>with adaptative quantization</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="with_adaptative_quantization"/>
+           </item>
+          </layout>
+         </item>
+         <!-- 3rd parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3rd_param">
+           <item>
+            <widget class="QLabel" name="label_3rd_param">
+             <property name="text">
+              <string>quantization bits</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="quantization_bits"/>
+           </item>
+          </layout>
+         </item>
+         <!-- 4th parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4th_param">
+           <item>
+            <widget class="QLabel" name="label_4th_param">
+             <property name="text">
+              <string>max vertices</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="max_vertices"/>
+           </item>
+          </layout>
+         </item>
+         <!-- end of parameters section -->
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>DialogCompressionValence1</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>DialogCompressionValence1</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

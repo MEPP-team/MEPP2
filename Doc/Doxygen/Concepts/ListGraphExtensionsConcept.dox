@@ -1,0 +1,45 @@
+/**
+
+@page ListGraphExtensionsConceptPage List Graph Extensions concept
+
+<b>Introduction</b>
+
+The ListGraphExtensions concept extends boost's "ListGraph" concepts (namely
+[boost::VertexListGraph concept](http://www.boost.org/libs/graph/doc/VertexListGraph.html),
+[CGAL::HalfedgeListGraph](https://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html),
+[boost::EdgeListGraph concept](http://www.boost.org/libs/graph/doc/EdgeListGraph.html),
+and
+[CGAL::FaceListGraph](https://doc.cgal.org/latest/BGL/classFaceListGraph.html)).
+
+Reference: the following features are provided by
+\ref FEVV/Wrappings/Graph_traits_extension.h "FEVV Graph_traits_extension.h file".
+
+
+<b>Associated types</b>
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| `boost::graph_traits<G>::vertices_size_type` | [VertexListGraph (boost)](http://www.boost.org/libs/graph/doc/VertexListGraph.html) | The unsigned integer type used to represent the number of vertices in the graph. |
+| `boost::graph_traits<G>::halfedges_size_type` | [HalfedgeListGraph (CGAL)](https://doc.cgal.org/latest/BGL/classHalfedgeListGraph.html)? | A size type. |
+| `boost::graph_traits<G>::edges_size_type` | [EdgeListGraph (boost)](http://www.boost.org/libs/graph/doc/EdgeListGraph.html)| The unsigned integer type used to represent the number of edges in the graph. |
+| `boost::graph_traits<G>::faces_size_type` | [FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)? | Unsigned integer type for number of faces. |
+
+
+<b>Notations</b>
+ - `MeshT` A type that is a model of `Mesh`.
+ - `m` An object of type `MeshT`.
+
+<b>Valid expressions</b>
+
+| Expression         | Returns              | Description  |
+|--------------------|----------------------|--------------|
+| `size_of_vertices(m)` | `boost::graph_traits<MeshT>::vertices_size_type` | Returns the exact number of vertices in the mesh (as opposed to \ref CheatSheetSurfaceGraphConceptsSection "boost::num_vertices(m)" that returns an upper bound of the number or vertices). |
+| `size_of_halfedges(m)` | `boost::graph_traits<MeshT>::halfedges_size_type` | Returns the exact number of halfedges in the mesh (as opposed to \ref CheatSheetSurfaceCoreConceptsReadingWalkingSection "boost::num_halfedges(m)" that returns an upper bound of the number or halfedges). |
+| `size_of_edges(m)` | `boost::graph_traits<MeshT>::edges_size_type` | Returns the exact number of edges in the mesh (as opposed to \ref CheatSheetSurfaceGraphConceptsSection "boost::num_edges(m)" that returns an upper bound of the number or edges). |
+| `size_of_faces(m)` | `boost::graph_traits<MeshT>::faces_size_type` | Returns the exact number of faces in the mesh (as opposed to \ref CheatSheetSurfaceCoreConceptsReadingWalkingSection "boost::num_faces(m)" that returns an upper bound of the number or faces). |
+
+
+
+This documentation generated from ListGraphExtensionsConcept.dox file.
+
+*/

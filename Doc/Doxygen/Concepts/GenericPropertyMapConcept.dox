@@ -1,0 +1,158 @@
+/**
+
+@page GenericPropertyMapConceptPage Generic property map concept
+
+Quick links:
+ - an \ref OpenMesh/hello_world_filter.cpp "OpenMesh based example"
+ - a \ref CGAL/hello_world_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
+ - \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes"
+
+<b>Introduction</b>
+
+The original need for what FEVV refers to as "generic" property maps arises
+from contexts where one needs to have the warranty that storing/accessing
+a property map associated to some mesh will function even if such property
+map is not natively supported by the native mesh datastructure.
+For example when using the native readers, the properties read from the mesh
+file (like vertex color, vertex normal, face color, texture coordinates...)
+are stored inside the datastructure itself.
+But when using a generic reader, we don't have anymore access to the
+datastructure internal storage.
+"Generic" property maps provide such location for storing mesh properties
+outside from any native datastructure.
+
+
+Note that the geometry of a mesh (the coordinates of the vertices) is always
+stored natively in the mesh datastructure (and thus is NOT a "generic"
+property map).
+The property map holding the geometry of a mesh can always be retrieved within
+\code{.cpp}
+auto pm = get(boost::vertex_point, m);
+\endcode
+
+Refer to the \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes" for more concerning the motivation and the implementation
+design.
+
+<b>Definitions</b>
+
+`FEVV::PMap_traits< PropertyTag, MeshT>`
+is the traits class that produces the type for a
+[property map](http://www.boost.org/libs/property_map/doc/property_map.html)
+object for a particular mesh type `MeshT`.
+
+The property is specified by the `PropertyTag` template parameter.
+By convention (in fact by construction) each `PropertyTag` (type) is
+associated with a corresponding property enumerator (of type `PropertyTag`).
+For convenience, and also by convention, a property name of
+`<mesh_element>_<property_nature>` is associated with a the
+`<mesh_element>_<property_nature>_t` `PropertyTag` (constructed by postponing a trailing `_t` as a short for type) where:
+  - `<mesh_element>` is to be chosen among `vertex`, `halfedge` and `face`
+  - `<property_nature>` is typically `normal`, `color`, `texcoord` (short
+    for texture coordinate)...
+
+For example the `PropertyTag` named `vertex_normal_t` is associated with
+the property-type name of `"vertex_normal"` (see below for usage examples).
+
+The most usual property tags are pre-defined in \ref FEVV/Wrappings/properties.h
+ e.g.
+  - `FEVV::vertex_normal_t` (associated to the `FEVV::vertex_normal` name)
+  - `FEVV::vertex_texcoord_t` (associated to the `FEVV::vertex_texcoord` name)
+  - `FEVV::vertex_color_t` (associated to the `FEVV::vertex_color` name)
+  - `FEVV::halfedge_normal_t` (...)
+  - `FEVV::halfedge_texcoord_t`
+  - `FEVV::face_normal_t`
+  - `FEVV::face_color_t`
+  - `FEVV::texture_filename_t`
+  - ...
+
+Notes:
+  - The `FEVV::PMap_traits` traits class can be seen as a direct use case
+    (specialisation) of the
+    [boost property map library](http://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/property_map.html)
+    on top of which is based.
+  - the implementation of `PMap_traits` doesn't rely on the native (proper
+    to each datastructure) property maps of the mesh datastructures.
+
+`FEVV::PMapsContainer` is a type of container dedicated to the storage
+of mesh property maps.
+\ref FEVV/Wrappings/properties.h defines `FEVV::PMapsContainer` as
+\code{.cpp}
+typedef std::map<std::string, boost::any> PMapsContainer;
+\endcode
+
+<b>Associated types</b>
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| `PM::pmap_type`    | e.g. \ref _PMap_traits::pmap_type | The type stored within the property map of type PM. |
+
+
+<b>Notations</b>
+ - `PM` A type that is a model of `FEVV::PMap_traits`.
+ - `pm` An object of type `PM`.
+ - `pmaps_bag` An object of type `FEVV::PMapsContainer`.
+ - `pmap_name` An object of type `PropertyTag` holding the name of a property map (e.g. `FEVV::vertex_normal`, `FEVV::halfedge_texcoord`, `FEVV::face_color`...)
+ - `M` A type that is a model of mesh (e.g. `CGAL::Surface_mesh< >`,
+   `CGAL::Polyhedron_3< , >`, `OpenMesh::PolyMesh_ArrayKernelT< >;`).
+ - m An object of type `M`.
+
+
+<b>Property maps related valid expressions</b>
+
+| Expression         | Returns              | Description  |
+|--------------------|----------------------|--------------|
+| `make_property_map(pmap_name, m)`            | `PM`     | Constructs and return a property map named `pmap_name` associated to the `m` mesh instance. |
+| `has_map(pmaps_bag, pmap_name)`              | `bool`   | Returns `true` when the `pmaps_bag` property map bag holds a property map named `pmap_name` (e.g. `vertex_normal`, `face_color`...), `false` otherwise |
+| `put_property_map(pmap_name, m, pmaps_bag, pm)`  | `void` | Stores a weak reference to property map `pm` (that is associated to `m` mesh instance) within the `pmaps_bag` property map bag. |
+| `get_property_map(pmap_name, m, pmaps_bag)`  | `PM`     | Returns the property map named `pmap_name` associated to the `m` mesh instance and held within `pmaps_bag` property maps bag. |
+
+#### Create, store and retrieve a standard generic property map
+
+\code{.cpp}
+// example: create a standard property map to store a color per vertex
+
+// defines vertex_color_map as the property map type designated to hold/store
+// colors at (each) vertex of a mesh to type MeshT.
+using vertex_color_map = typename FEVV::PMap_traits<FEVV::vertex_color_t, MeshT>::pmap_type;
+
+vertex_color_map vertex_color_pm = make_property_map(FEVV::vertex_color, g);
+
+// store the property map in an existing FEVV::PMapsContainer
+FEVV::PMapsContainer pmaps_bag;     // property maps container
+put_property_map(FEVV::vertex_color, g, pmaps_bag, vertex_color_pm);
+
+// later retrieve the property map from the container
+auto vertex_color_pm = get_property_map(FEVV::vertex_color, g, pmaps_bag);
+\endcode
+
+#### Create, store and retrieve a non standard property map
+A mechanism is provided to extend the FEVV defined standard property maps (the
+property tags that are defined in \ref FEVV/Wrappings/properties.h).
+It allows to create new "non-standard" property maps, to store user defined properties, in a generic way.
+For example, a property map may be needed inside a filter to temporary
+store some value attached to the vertices.
+
+\code{.cpp}
+// example: create a user defined property map to store a label per face
+
+// defines face_label_pmap_type as the property map type designated to
+// hold/store a label (string) at (each) face of a mesh to type MeshT.
+typedef  std::string                                   value_type;
+typedef  typename FEVV::Face_pmap<MeshT, value_type>   face_label_pmap_type;
+
+face_label_pmap_type  face_label_pmap;
+face_label_pmap = FEVV::make_face_property_map<MeshT, value_type>(Mesh);
+
+// store the property map in an existing FEVV::PMapsContainer
+FEVV::PMapsContainer pmaps_bag;     // property maps container
+pmaps_bag["f:label"] = face_label_pmap;
+
+// later retrieve the property map from the container
+// explicit cast needed here
+face_label_pmap_type pm = boost::any_cast<face_label_pmap_type>(pmaps_bag.at("f:label"));
+\endcode
+
+
+This documentation is generated from the GenericPropertyMapConcept.dox file.
+
+*/

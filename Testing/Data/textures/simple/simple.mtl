@@ -1,0 +1,2 @@
+newmtl Gradient
+	map_Kd gradient.png

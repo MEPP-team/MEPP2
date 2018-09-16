@@ -1,0 +1,250 @@
+/**
+
+@page CellIncidenceGraphHelpersConceptPage Helpers of CellIncidenceGraph
+
+<b>CellIncidenceGraphHelpers</b>
+
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  "boost::AdjacencyGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/AdjacencyGraph.html"];
+  "boost::EdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeListGraph.html"]
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::PropertyGraph"
+    [ URL=" http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html"];
+  "boost::VertexListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html"];
+
+  "boost::AdjacencyGraph"     -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::EdgeListGraph"      -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::PropertyGraph"      -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::VertexListGraph"    -> "boost::Graph" [ arrowhead="open", label="refines" ];
+
+  label = "Boost";
+}
+
+subgraph cluster_cgal {
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+  "CGAL::FaceListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceListGraph.html"];
+
+  "CGAL::HalfedgeGraph"        -> "boost::PropertyGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::FaceGraph"            -> "CGAL::HalfedgeGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::FaceListGraph"        -> "CGAL::FaceGraph"
+                                   [ arrowhead="open", label="refines" ];
+
+  label = "CGAL";
+}
+
+subgraph cluster_fevv {
+
+  IncidenceGraph -> "boost::Graph"    [ arrowhead="open", label="uses" ];
+  Helpers -> IncidenceGraph           [ arrowhead="open", label="uses" ];
+
+  Helpers -> "CGAL::HalfedgeGraph"    [ arrowhead="open", label="uses" ];
+  Helpers -> "boost::AdjacencyGraph"  [ arrowhead="open", label="uses" ];
+  Helpers -> "boost::VertexListGraph" [ arrowhead="open", label="uses" ];
+  Helpers -> "boost::EdgeListGraph"   [ arrowhead="open", label="uses" ];
+  Helpers -> "CGAL::FaceListGraph"    [ arrowhead="open", label="uses" ];
+
+  label = "FEVV";
+}
+
+}
+@enddot
+
+Diagram reference:
+[CGAL and BGL concepts diagram](http://doc.cgal.org/latest/BGL/group__PkgBGLConcepts.html)
+
+<b>Introduction to helpers of CellIncidenceGraph</b>
+
+Helpers of the CellIncidenceGraph offers a cell-mesh oriented conceptual
+re-interpretation of the CellIncidenceGraph concept. A low level description
+would be to consider the helpers as an interface for cell mesh programmers
+using a data structure which topology is expressed through the CellIncidenceGraph
+concept.
+
+The CellIncidenceGraphHelpers concept regroups two concerns
+ - topology related expressions that can be derived from the CellIncidenceGraph
+   concept. Such expressions can be generically implemented out of expressions
+   of CellIncidenceGraph.
+ - cell-mesh oriented concerns, like providing vertex, edge, face, volume
+   functionality.
+
+CellIncidenceGraphHelpers expressions will be used in cell-mesh oriented context
+whereas CellIncidenceGraph expressions will tend be used in a context wishing
+to modify a topology.
+
+Note that the semantics associated to `vertex_descriptor` differ between the
+CellIncidenceGraph and CellIncidenceGraphHelpers concepts:
+ - within the CellIncidenceGraph concept a `vertex_descriptor` represents a node
+   and suffice to work on the topological structure.
+ - within the CellIncidenceGraphHelpers concept a `vertex_descriptor` represents
+   a vertex of a cell-mesh i.e. a zero dimensionnal geometrical object. Yet in
+   order to access the represented vertex out a `vertex_descriptor` one needs
+   an associative data structure which only purpose is to encode this
+   correspondance. Within CGAL, for example, such an associative mean can be a property
+   map (most often internal) for CGAL::vertex_point_t i.e. a property map with the
+   points (geometrical vertices) associated to the nodes (identified with their
+   `vertex_descriptor`) of CellIncidenceGraph (refer e.g. to
+   [CGAL::Polygon_mesh_processing::compute_face_normal()](http://doc.cgal.org/latest/Polygon_mesh_processing/group__PkgPolygonMeshProcessing.html#gaa76c6d307b9d3e48cafacd7b77b2c043)
+   method).
+
+<b>Notations</b>
+ - `G` A type that is a model of `CellIncidenceGraphHelpers`.
+ - `g` An object of type `G`.
+ - `u`,`v` Vertex descriptors.
+ - `e` An edge descriptor.
+ - `f` A face descriptor.
+
+<b>Associated types</b>
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| `boost::graph_traits<G>::vertex_descriptor` | [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | A vertex descriptor corresponds to a unique vertex in a graph instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+| `boost::graph_traits<G>::vertex_iterator`   | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | A vertex iterator (obtained via `vertices(g)`) provides access to all of the vertices in a graph. A vertex iterator type must meet the requirements of MultiPassInputIterator. The value type of the vertex iterator must be the vertex descriptor of the graph. |
+| `boost::graph_traits<G>::edge_descriptor`   | [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | An edge descriptor corresponds to a unique edge `(u,v)` in a graph. An edge descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+| `boost::graph_traits<G>::edge_iterator`     | [EdgeListGraph (boot)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeListGraph.html) | An edge iterator (obtained via `edges(g)`) provides access to all of the edges in a graph. An edge iterator type must meet the requirements of MultiPassInputIterator. The value type of the edge iterator must be the same as the edge descriptor of the graph. |
+| `boost::graph_traits<G>::face_descriptor`   | [FaceListGraph (boost)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html) | A face_descriptor corresponds to a unique face in a graph. Must be DefaultConstructible, Assignable, EqualityComparable and LessThanComparable.  |
+| `boost::graph_traits<G>::face_iterator`     | [FaceListGraph (boost)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html) | Iterator over all faces. |
+
+<b>Valid expressions</b>
+
+| Expression         | Reference             | Returns              | Description  |
+|--------------------|-----------------------|----------------------|--------------|
+| **Local traversals** | | | |
+| `next(u, v, f, g)` | Inspired by [`next(h, g)` of HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)| `edge_descriptor` | Returns the "next" (that is other from `(u,v)`) edge in the face `f` which is incident to `v` in graph `g`. Note: if `vertices(f,g)` and/or `edges(f,g)` get implemented they should be [syntactic sugar](https://en.wikipedia.org/wiki/Syntactic_sugar) on top of this `next()`.|
+| `prev(u, v, f, g)`|  Inspired by [`prev(h, g)` of HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)| `edge_descriptor` | Returns the "previous" (that is other from `(u,v)`) edge in the face `f` which is incident to `u` in graph `g`.|
+| `adjacent_vertices(v,g)`| [AdjacencyGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/AdjacencyGraph.html)| `std::pair<adjacency_iterator, adjacency_iterator>`| Returns an iterator-range providing access to the vertices adjacent to vertex `v` in graph `g`.|
+| **Global traversals** | | | |
+| `vertices(g)`    | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the vertices in the graph `g`.|
+| `edges(g)`       | [EdgeListGraph (boot)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeListGraph.html)      | `std::pair<edge_iterator, edge_iterator>`    | Returns an iterator-range providing access to all the edges in the graph `g`.|
+| `faces(g)`       | [FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)                      | `std::pair<face_iterator, face_iterator>`    | An iterator range over all faces.|
+| `num_vertices(g)`| [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns the number of vertices in the graph `g`.|
+| `num_edges(g)`   | [EdgeListGraph (boot)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeListGraph.html)      | `edges_size_type`                            | Returns the number of edges in the graph `g`.|
+| `num_faces(g)`   | [FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)                      | `faces_size_type`                            | Returns the number of faces in the graph `g`. |
+
+The following are **scheduled for removal**:
+| Expression         | Reference             | Returns              | Description  |
+|--------------------|-----------------------|----------------------|--------------|
+| `add_face(g)`         | [CGAL::Surface_mesh](http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html) defines an `Face_index add_face()`| | |
+| `remove_face(f,g)`    | [CGAL::Surface_mesh](http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html) defines a `void remove_face (Face_index f)`| | |
+
+Design notes:
+ - Although foreseen at some point the `next(v, e, g)` and `prev(v, e, g)`
+   expresssions were eventually disregarded since their result can be obtained
+   through other means.
+ - `remove_out_edge_if(u, p, g)` and `remove_out_edge_if(u, p, g)` (mutability)
+   were droped because edges are non oriented.
+ - There is little semantical advantage in distinguishing the `vertices_size_type`,
+   `edges_size_type` and `faces_size_type` types. Additionnally the associated values
+   will be of the same order of magnitude (hence there is little hope in reducing
+   the memory footprint through this distinction).
+
+This documentation generated from CellIncidenceGraphConcept.dox file.
+
+<hr>
+
+Following diagram to be removed when work is finished.
+@dot
+digraph example {
+  node [shape=record, fontname=Helvetica, fontsize=10];
+  rankdir=BT
+
+subgraph cluster_boost {
+  "boost::AdjacencyGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/AdjacencyGraph.html"];
+  "boost::AdjacencyMatrix"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/AdjacencyMatrix.html"];
+  "boost::BidirectionalGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/BidirectionalGraph.html"]
+  "boost::EdgeListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/EdgeListGraph.html"]
+  "boost::Graph"
+    [ URL="http://www.boost.org/libs/graph/doc/Graph.html"];
+  "boost::IncidenceGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/IncidenceGraph.html"];
+  "boost::MutableGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html"];
+  "boost::PropertyGraph"
+    [ URL=" http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/PropertyGraph.html"];
+  "boost::VertexListGraph"
+    [ URL="http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html"];
+
+  "boost::AdjacencyGraph"     -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::AdjacencyMatrix"    -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::EdgeListGraph"      -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::IncidenceGraph"     -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::BidirectionalGraph" -> "boost::IncidenceGraph" [ arrowhead="open", label="refines" ];
+  "boost::MutableGraph"       -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::PropertyGraph"      -> "boost::Graph" [ arrowhead="open", label="refines" ];
+  "boost::VertexListGraph"    -> "boost::Graph" [ arrowhead="open", label="refines" ];
+
+  label = "Boost";
+}
+
+subgraph cluster_cgal {
+  "CGAL::HalfedgeGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html"];
+  "CGAL::FaceGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceGraph.html"];
+  "CGAL::FaceListGraph"
+    [ URL="http://doc.cgal.org/latest/BGL/classFaceListGraph.html"];
+  "CGAL::MutableFaceGraph"
+    [ URL="http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html"];
+  "CGAL::SurfaceMesh"
+    [ URL="http://doc.cgal.org/latest/Surface_mesh/classCGAL_1_1Surface__mesh.html"];
+
+  "CGAL::HalfedgeGraph"        -> "boost::Graph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::HalfedgeGraph"        -> "boost::PropertyGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::FaceGraph"            -> "CGAL::HalfedgeGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::FaceListGraph"        -> "CGAL::FaceGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::FaceGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::MutableFaceGraph"     -> "CGAL::MutableHalfedgeGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::MutableHalfedgeGraph" -> "CGAL::HalfedgeGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::SurfaceMesh"          -> "CGAL::FaceListGraph"
+                                   [ arrowhead="open", label="refines" ];
+  "CGAL::SurfaceMesh"          -> "CGAL::MutableFaceGraph"
+                                   [ arrowhead="open", label="refines" ];
+
+  label = "CGAL";
+}
+
+subgraph cluster_fevv {
+  AIF -> "boost::AdjacencyGraph"     [ arrowhead="open", label="uses" ];
+  AIF -> "boost::AdjacencyMatrix"    [ arrowhead="open", label="uses" ];
+  AIF -> "boost::EdgeListGraph"      [ arrowhead="open", label="uses" ];
+  AIF -> "boost::BidirectionalGraph" [ arrowhead="open", label="uses" ];
+  AIF -> "boost::IncidenceGraph"     [ arrowhead="open", label="uses" ];
+  AIF -> "boost::MutableGraph"       [ arrowhead="open", label="uses" ];
+  AIF -> "boost::VertexListGraph"    [ arrowhead="open", label="uses" ];
+
+  AIF -> "CGAL::HalfedgeGraph"    [ arrowhead="open", label="uses" ];
+  AIF -> "CGAL::FaceListGraph"    [ arrowhead="open", label="uses" ];
+  AIF -> "CGAL::SurfaceMesh"      [ arrowhead="open", label="uses" ];
+
+  label = "FEVV";
+}
+
+}
+@enddot
+
+*/

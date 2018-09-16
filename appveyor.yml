@@ -1,0 +1,204 @@
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
+#
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+# Operating system (build VM template)
+image:
+- Visual Studio 2015
+#- Visual Studio 2017
+
+# environment variables
+environment:
+#
+  KIT_ROOT: C:\local_vs2015_64
+#
+  matrix:
+# new matrix
+#
+# all (qt5 and qt4)
+  - B_USE_CGAL: ON
+    B_USE_OM:   ON
+    B_USE_AIF:  ON
+    B_USE_QT5:  ON    # so we use Qt5 here for UI
+  - B_USE_CGAL: ON
+    B_USE_OM:   ON
+    B_USE_AIF:  ON
+    B_USE_QT5:  OFF   # so we use Qt4 here for UI
+# only cgal (qt4 only)
+  - B_USE_CGAL: ON
+    B_USE_OM:   OFF
+    B_USE_AIF:  OFF
+    B_USE_QT5:  OFF   # so we use Qt4 here for UI
+# only openmesh (qt4 only)
+  - B_USE_CGAL: OFF
+    B_USE_OM:   ON
+    B_USE_AIF:  OFF
+    B_USE_QT5:  OFF   # so we use Qt4 here for UI
+# only aif (qt4 only)
+  - B_USE_CGAL: OFF
+    B_USE_OM:   OFF
+    B_USE_AIF:  ON
+    B_USE_QT5:  OFF   # so we use Qt4 here for UI
+
+# this is how to allow failing jobs in the matrix
+matrix:
+  fast_finish: true # set this flag to immediately finish build once one of the jobs fails
+#  allow_failures:
+
+# build cache to preserve files/folders between builds
+#cache:
+# - %KIT_ROOT% # don't work !?
+#  - C:\local_vs2015_64 # cached folder size cannot exceed 500 MB, so OFF for the moment...
+
+# scripts that are called at very beginning, before repo cloning
+init:
+#  - set
+#  - msbuild /version
+#
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" set CMAKE_GENERATOR="Visual Studio 14 2015 Win64" # vs_2015
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set CMAKE_GENERATOR="Visual Studio 15 2017 Win64" # vs_2017
+#  - echo %CMAKE_GENERATOR%
+  - cmake --version
+#
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" set BOOST_ROOT=C:\Libraries\boost_1_67_0 # vs_2015
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set BOOST_ROOT=C:\Libraries\boost_1_67_0 # vs_2017
+#  - echo %BOOST_ROOT%
+  - dir C:\Libraries
+#
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" set QT5_DIR=C:\Qt\5.6\msvc2015_64 # vs_2015
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set QT5_DIR=C:\Qt\5.9\msvc2017_64 # vs_2017
+#  - echo %QT5_DIR%
+  - dir C:\Qt
+#
+  - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin\osgPlugins-3.4.0;%KIT_ROOT%\PCL\pcl-1.7.2\bin;%KIT_ROOT%\PCL\flann-1.8.4\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
+#  - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin # for vs_2015 dumpbin (todo: check path for vs_2017 dumpbin)
+  - set APPVEYOR=TRUE
+  - set CACHE=FALSE
+  - set APPVEYOR_BUILD_WORKER_CLOUD=pro-lw # switch to "LiquidWeb Central US" (Michigan) instead of "Rackspace San Antonio" (Texas) AppVeyor datacenter/servers -> solution for curl errors 28 and 56
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build Configuration, i.e. Debug, Release, etc
+configuration:
+  - Debug
+  - Release
+
+# MSBuild verbosity level
+#  verbosity: quiet|minimal|normal|detailed
+
+# scripts to run before build
+before_build:
+#  - tracert download.gforge.liris.cnrs.fr
+#
+  - echo %CMAKE_GENERATOR%
+  - echo %BOOST_ROOT%
+  - echo %QT5_DIR%
+#
+  - IF EXIST %KIT_ROOT% SET CACHE=TRUE
+#
+  - echo %CACHE%
+  - IF %CACHE%==FALSE echo CACHE_IS_FALSE
+  - IF %CACHE%==TRUE echo CACHE_IS_TRUE
+#
+  - IF %CACHE%==FALSE mkdir %KIT_ROOT%
+  - IF %CACHE%==FALSE cd %KIT_ROOT%
+# wget -> wget.exe from https://eternallybored.org/misc/wget/
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/bin/wget.rar
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -o wget.rar https://mycore.core-cloud.net/index.php/s/3XoDkeXScMoGFIM/download
+  - IF %CACHE%==FALSE 7z x wget.rar > nul
+# boost
+# vs_2015
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" ren C:\Libraries\boost_1_67_0\lib64-msvc-14.0 lib
+# vs_2017
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" ren C:\Libraries\boost_1_67_0\lib64-msvc-14.1 lib
+## (temp)
+#  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE cd C:\Libraries\boost_1_65_1\boost\config\compiler
+#  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE ren visualc.hpp visualc_org.hpp
+#  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/src/boost1651/visualc.hpp # suppress warnings
+#  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE cd %KIT_ROOT%
+# old (for old versions of cgal...)
+#  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/boost_1_59_0.7z
+#  - IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=14dGyWNFF2vRY1Gj4RsgUu8xGBtyIfHQ4" -O boost_1_59_0.7z 2> nul
+#  - IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/r03k7cl62xneuv4/boost_1_59_0.7z 2> nul
+#  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/MHZfXTW4ZmrMwOb/download -O boost_1_59_0.7z 2> nul
+#  - IF %CACHE%==FALSE 7z x boost_1_59_0.7z > nul
+# CGAL
+# vs_2015
+  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE 7z x CGAL-4.11-bug-patched-CV.7z > nul
+# vs_2017
+  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE 7z x CGAL-4.11-bug-patched-CV.7z > nul
+# OpenMesh
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
+  #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1jyy_J_O7EMXZBPmIo9oV9EftMw1_4GQx" -O OpenMesh-6.2.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/e6gelvzlcxbtq4q/OpenMesh-6.2.rar 2> nul
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OiJFwZHvIBIRWiB/download -O OpenMesh-6.2.rar 2> nul
+  - IF %CACHE%==FALSE 7z x OpenMesh-6.2.rar > nul
+# Qt4
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/qt-4.8.7-x64-msvc2015-moc_patched.7z
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/jNeqWUtzabmQr8w/download -O qt-4.8.7-x64-msvc2015-moc_patched.7z 2> nul
+  - IF %CACHE%==FALSE 7z x qt-4.8.7-x64-msvc2015-moc_patched.7z > nul
+# OSG
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/redo/osg-3.4.0.7z
+  #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1q-ifPbzMvWxz_UFSlQvMMYCvnoMGpscu" -O osg-3.4.0.7z 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/ylnkrgal3cfeezg/osg-3.4.0.7z 2> nul
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CW6VrwTfIDu2EKM/download -O osg-3.4.0.7z 2> nul
+  - IF %CACHE%==FALSE 7z x osg-3.4.0.7z > nul
+# osg-3rdparty-runtime (libpng - zlib)
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/osg-3rdparty-runtime.rar
+  #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1_eee96-twiZ93Rc6ZqrjLlzjaOR0f8Az" -O osg-3rdparty-runtime.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/5z3hljvu3ch68oy/osg-3rdparty-runtime.rar 2> nul
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/EcY1smUJxwzHRkF/download -O osg-3rdparty-runtime.rar 2> nul
+  - IF %CACHE%==FALSE 7z x osg-3rdparty-runtime.rar > nul
+# eigen
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/eigen-3.2.8.rar
+  #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1QFpKt3_iGRvcEyBLQe_sDBZPQUlbv_VX" -O eigen-3.2.8.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/qz2vytifk5io9la/eigen-3.2.8.rar 2> nul
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/ibSGyso5bX2fSgf/download -O eigen-3.2.8.rar 2> nul
+  - IF %CACHE%==FALSE 7z x eigen-3.2.8.rar > nul
+# PCL, flann, qhull
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.7.2.7z
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1JYliMDB6oiTiG0DG-0URR-8cY0LKAOEC" -O PCL-1.7.2.7z 2> nul
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/gpacri5co33pbw4/PCL-1.7.2.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/hQsCduXmtXJjsnt/download -O PCL-1.7.2.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.7.2.7z > nul
+# VTK
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1dyNslEtQrkf2I1YwVvXDZNOezZoh7YDi" -O kitware-VTK-7.0.0.7z 2> nul
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/xeqzki5insnads1/kitware-VTK-7.0.0.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/JzJrjVGjvz7oNKX/download -O kitware-VTK-7.0.0.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x kitware-VTK-7.0.0.7z > nul
+# FBX
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/FBX_SDK.7z
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/VRjcORdpqE5hU18/download -O FBX_SDK.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x FBX_SDK.7z > nul
+#
+  - cd %APPVEYOR_BUILD_FOLDER%
+# VTK, PCL and FBX set to ON in Release configuration
+  - IF %CONFIGURATION%==Release cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_EXAMPLES=ON
+# VTK, PCL and FBX set to OFF in Debug configuration because of time limitations: "all plans have 60 minutes quota per build job"
+  - IF %CONFIGURATION%==Debug cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_EXAMPLES=ON
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+# NUMBER_OF_PROCESSORS=2
+# msbuild /m => parallel
+#
+  - msbuild /m MEPP2.sln # parallel now OK !
+#  - msbuild MEPP2.sln
+
+# to run your custom scripts instead of automatic tests
+test_script:
+  - ctest -j 2 --output-on-failure
+#  - dumpbin /dependents "C:\projects\mepp2\Testing\Visualization\Release\mepp.exe" # here for Release mode !

@@ -1,0 +1,21 @@
+#
+# Lilith.mtl
+#
+
+newmtl Mati_Lilith_Head
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd Lilith_Head_D.bmp
+
+newmtl Mati_Lilith_Body
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd Lilith_Body_D.bmp

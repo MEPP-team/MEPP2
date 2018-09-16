@@ -1,0 +1,242 @@
+/**
+
+@page CheatSheetConceptsPage Cheat sheet for concepts used in FEVV
+
+Refer to
+ - \ref ConceptsPage for a general picture on FEVV concepts
+ - \ref ConceptCGALApproachSection for a general diagram of the concepts.
+
+ @section CheatSheetSurfaceCoreConceptsSection Surface oriented concepts
+
+
+@subsection CheatSheetSurfaceCoreConceptsNotationsSection Notations
+ - `G` A type that is a model of desired concept
+ - `g` An object of type `G`.
+ - `u`, `v`  Objects of type `boost::graph_traits<G>::vertex_descriptor`
+ - `e` An object of type `boost::graph_traits<G>::edge_descriptor`.
+ - `f` An object of type `boost::graph_traits<G>::face_descriptor`.
+ - `h`, `h1`, `h2` Halfedge descriptors.
+ - `vr` An set of vertices represented as a `VertexRange`.
+ - `iter` is an object of type `boost::graph_traits<G>::out_edge_iterator`.
+ - `p` is an object of a type that models [Predicate](http://www.sgi.com/tech/stl/Predicate.html) and whose argument type matches the `edge_descriptor` type.
+
+@subsection CheatSheetSurfaceCoreConceptsReadingWalkingSection Walking on/reading a mesh
+
+<b>Valid expressions</b>
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+| **[Iterators and circulators (CGAL)](https://doc.cgal.org/latest/BGL/group__PkgBGLIterators.html)** | | |
+|`halfedges_around_source(h, g)` | `Iterator_range< Halfedge_around_source_iterator<G> >`| Returns an iterator range over all halfedges with vertex `source(h,g)` as source. |
+|`halfedges_around_source(v, g)` |  `Iterator_range< Halfedge_around_source_iterator<G> >`| Returns an iterator range over all halfedges with vertex `v` as source. |
+|`halfedges_around_target(h, g)` | `Iterator_range< Halfedge_around_target_iterator<G> >` | Returns an iterator range over all halfedges with vertex `target(h,g)` as target. |
+|`halfedges_around_target(v, g)` | `Iterator_range< Halfedge_around_target_iterator<G> >` | Returns an iterator range over all halfedges with vertex `v` as target. |
+|`halfedges_around_face( h, g)` | `Iterator_range< Halfedge_around_face_iterator<G> >` | Returns an iterator range over all halfedges incident to the same face or border as `h`. |
+|`faces_around_target(h, g)` | `Iterator_range< Face_around_target_iterator<G> >` | Returns an iterator range over all faces around vertex `target(h,g)`. |
+|`faces_around_face( h, g)` | `Iterator_range< Face_around_face_iterator<G> >` | Returns an iterator range over all edge-adjacent faces to the same face `face(h,g)`. |
+|`vertices_around_target(h, g)` | `Iterator_range< Vertex_around_target_iterator<G> >` | Returns an iterator range over all vertices adjacent to the vertex `target(h,g)`. |
+| `vertices_around_face(h, g)` | `Iterator_range< Vertex_around_target_iterator<G> >` | Returns an iterator range over all vertices adjacent to the face `face(h,g)`. |
+| **[Handles and circulators (CGAL)](https://doc.cgal.org/latest/Circulator/group__PkgHandlesAndCirculatorsFunctions.html)** | | |
+|`CGAL_For_all(ic1, ic2)`| `#define` | A macro simplifying the writing simple loops. `ic1` and `ic2` can be either iterators or circulators. The macro loops through the range `[ic1, ic2)`. It increments `ic1` until it reaches `ic2`.|
+|`CGAL_For_all_backwards(ic1, ic2)`| `#define` | Similar to `CGAL_For_all(ic1, ic2)` except that the macro decrements `ic2` until it reaches `ic1`.|
+|`circulator_distance(c1, c2)`| `C::difference_type` | The number of elements in the range `[c1, c2)` where `c1` and `c2` are circulators. |
+|`circulator_size(c)` | `C::size_type ` | The size the data structure referred by circulator `c`. |
+|`is_empty_range(ic1, ic2)` | `bool` | For `i` and `j` being either iterators or circulators, returns `true` if the range `[i, j)` is empty, `false` otherwise.` |
+|`iterator_distance(ic1, ic2)`|`iterator_traits<IC>::difference_type`| Returns the distance between either two iterators or two circulators.|
+|`query_circulator_or_iterator(it)`|`Iterator_tag`| Matches for type of `it` if the iterator category of this type belongs to an iterator. |
+|`query_circulator_or_iterator(c)` |`Circulator_tag`| Matches for the type of `c` if the iterator category of this type belongs to a circulator. |
+
+
+<b>Associated types</b>
+ | Type | Description |
+ |------|-------------|
+ |[Graph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/Graph.html)| |
+ | `boost::graph_traits<G>::vertex_descriptor`      | A vertex descriptor corresponds to a unique node in a graph instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+ | `boost::graph_traits<G>::edge_descriptor`        | An edge descriptor corresponds to a unique edge `(u,v)` in a graph. An edge descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+ |[HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)| |
+ | `boost::graph_traits<G>::halfedge_descriptor` | A halfedge_descriptor corresponds to a halfedge in a graph. |
+ | **[HalfedgeListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)**: <span style="color:red">Not applicable to AIF</span>| |
+ | `boost::graph_traits<G>::halfedge_iterator`   | A [BidirectionalIterator](http://www.boost.org/doc/libs/1_44_0/libs/fusion/doc/html/fusion/iterator/concepts/bidirectional_iterator.html) over all halfedges in a graph. |
+ | `boost::graph_traits<G>::halfedges_size_type` | A size type. |
+ | **[EdgeListGraph (boost)](http://www.boost.org/libs/graph/doc/EdgeListGraph.html)** | |
+ | `boost::graph_traits<G>::edges_size_type` | The unsigned integer type used to represent the number of edges in the graph. |
+ | **[FaceGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceGraph.html)** | |
+ | `boost::graph_traits<G>::face_descriptor` | A face_descriptor corresponds to a unique face in a graph. |
+ | **[FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)** | |
+ | `boost::graph_traits<G>::face_iterator` | Iterator over all faces. |
+ | `boost::graph_traits<G>::faces_size_type` | Unsigned integer type for number of faces. |
+ | **[VertexListGraph (boost)](http://www.boost.org/libs/graph/doc/VertexListGraph.html)** | |
+ | `boost::graph_traits<G>::vertices_size_type` | The unsigned integer type used to represent the number of vertices in the graph. |
+
+<b>Valid expressions</b>
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+| **[HalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)** | | |
+| `edge(h, g)`        | `edge_descriptor`     | The edge corresponding to `h` and `opposite(h)`. |
+| `halfedge(e, g)`    | `halfedge_descriptor` | One of the halfedges corresponding to `e`. |
+| `halfedge(v, g)`    | `halfedge_descriptor` | A halfedge with target `v`. |
+| `halfedge(u, v, g)` | `std::pair<halfedge_descriptor,bool>` | The halfedge with source `u` and target `v`. The Boolean is `true`, iff this halfedge exists. |
+| `opposite(h, g)`    | `halfedge_descriptor` | The halfedge with source and target swapped. |
+| `source(h, g)`      | `vertex_descriptor`   | The source vertex of `h`. |
+| `target(h, g)`      | `vertex_descriptor`   | The target vertex of `h`. |
+| `next(h, g)`        | `halfedge_descriptor` | The next halfedge around its face. |
+| `prev(h, g)`        | `halfedge_descriptor` | The previous halfedge around its face. |
+| `boost::graph_traits<G>::null_halfedge()` | `halfedge_descriptor` | Returns a special halfedge that is not equal to any other halfedge. |
+| **[HalfedgeListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classHalfedgeGraph.html)**: <span style="color:red">Not applicable to AIF</span>| | |
+| `num_halfedges(g)`  | `halfedges_size_type` | An upper bound of the number of halfedges of the graph. See also \ref ListGraphExtensionsConceptPage "FEVV::size_of_halfedges(g)". |
+| `halfedges(g)`      | `std::pair<halfedge_iterator,halfedge_iterator>` | An iterator range over the halfedges of the graph. |
+| **[FaceGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceGraph.html)** | | |
+| `face(h, g)`        | `face_descriptor`     | The face incident to halfedge `h`. |
+| `halfedge(f, g)`    | `halfedge_descriptor` | A halfedge incident to face `f`. |
+| `degree(f,g)`       | `degree_size_type`    | The number of halfedges, incident to face `f`. |
+| `boost::graph_traits<G>::null_face()` | `face_descriptor` | Returns a special face that is not equal to any other face. |
+| **[FaceListGraph (CGAL)](http://doc.cgal.org/latest/BGL/classFaceListGraph.html)** | | |
+| `faces(g)` | `std::pair<face_iterator, face_iterator>`  | An iterator range over all faces. |
+| `num_faces(g)` |  `faces_size_type` | An upper bound of the number of faces of the graph.  See also \ref ListGraphExtensionsConceptPage "FEVV::size_of_faces(g)". |
+| \ref ListGraphExtensionsConceptPage "ListGraphExtensions (FEVV)" | | |
+| `size_of_vertices(g)` | `vertices_size_type` | Returns the exact number of vertices in the mesh (as opposed to \ref CheatSheetSurfaceGraphConceptsSection "boost::num_vertices(g)" that returns an upper bound of the number or vertices). |
+| `size_of_halfedges(g)` | `halfedges_size_type` | Returns the exact number of halfedges in the mesh (as opposed to \ref CheatSheetSurfaceCoreConceptsReadingWalkingSection "boost::num_halfedges(g)" that returns an upper bound of the number or halfedges). |
+| `size_of_edges(g)` | `edges_size_type` | Returns the exact number of edges in the mesh (as opposed to \ref CheatSheetSurfaceGraphConceptsSection "boost::num_edges(g)" that returns an upper bound of the number or edges). |
+| `size_of_faces(g)` | `faces_size_type` | Returns the exact number of faces in the mesh (as opposed to \ref CheatSheetSurfaceCoreConceptsReadingWalkingSection "boost::num_faces(g)" that returns an upper bound of the number or faces). |
+
+\todo Document \ref GeometryConceptPage "FEVV::Geometry concept",
+               \ref ListGraphExtensionsConceptPage "FEVV::ListGraphExtensions concept"
+               and
+               \ref GenericPropertyMapConceptPage "FEVV::Property concept"
+
+@subsection CheatSheetSurfaceCoreConceptsEditingSectionHigh Mesh manipulation/edition : high level (Euler operations)
+
+<b>Valid expressions</b>
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+|**[Euler Operations (CGAL)](https://doc.cgal.org/latest/BGL/group__PkgBGLEulerOperations.html)** | | |
+| `Euler::join_vertex(h, g)` | `halfedge_descriptor`   | Joins the two vertices incident to `h`, (that is `source(h, g)` and `target(h, g)`) and removes `source(h,g)`. |
+| `Euler::split_vertex(h1, h2, g)` | `halfedge_descriptor`   | Splits the target vertex `v` of `h1` and `h2`, and connects the new vertex and `v` with a new edge. |
+| `Euler::split_edge(h, g)` | `halfedge_descriptor`   | Splits the halfedge `h` into two halfedges inserting a new vertex that is a copy of `vertex(opposite(h,g),g)`. |
+| `Euler::join_face(h, g)` | `halfedge_descriptor`   | Joins the two faces incident to `h` and `opposite(h,g)`. |
+| `Euler::split_face(h1, h2, g)` | `halfedge_descriptor`   | Splits the face incident to `h1` and `h2`. |
+| `Euler::join_loop(h1, h2, g)` | `halfedge_descriptor`   | Glues the cycle of halfedges of `h1` and `h2` together. |
+| `Euler::split_loop(h1, h2, h3, g)` | `halfedge_descriptor`   | Cuts the graph along the cycle `(h1,h2,h3)` changing the genus. |
+| `Euler::remove_face(h, g)` | `void`  | Removes the incident face of `h` and changes all halfedges incident to the face into border halfedges or removes them from the graph if they were already border halfedges. |
+| `Euler::add_edge(u, v, g)` | `edge_descriptor` | Adds and returns the edge `e` connecting `u` and `v`, `halfedge(e, g)` has `u` as source and `v` as target. |
+| `Euler::add_face(vr, g)` | `face_descriptor` | Adds a new face defined by a range of vertices (identified by their `VertexRange` of `vertex_descriptor`). |
+| `Euler::make_hole(h, g)` | `void` | Removes the incident face of `h` and changes all halfedges incident to the face into border halfedges. |
+| `Euler::fill_hole(h, g)` | `void` | Fills the hole incident to `h`. |
+| `Euler::add_center_vertex(h, g)` | `halfedge_descriptor` | Creates a barycentric triangulation of the face incident to `h`. |
+| `Euler::remove_center_vertex(h, g)` | `halfedge_descriptor` | Removes the vertex `target(h, g)` and all incident halfedges thereby merging all incident faces. |
+| `Euler::add_vertex_and_face_to_border(h1, h2, g)` | `halfedge_descriptor` | Appends a new face to the border halfedge `h2` by connecting the tip of `h2` with the tip of `h1` with two new halfedges and a new vertex and creating a new face that is incident to `h2`. |
+| `Euler::add_face_to_border(h1, h2, g)` | `halfedge_descriptor` | Appends a new face incident to the border halfedge `h1` and `h2` by connecting the vertex `target(h2,g)`` and the vertex `target(h1,g)`` with a new halfedge, and filling this separated part of the hole with a new face, such that the new face is incident to `h2`. |
+| `Euler::collapse_edge( v0v1, g)` | `vertex_descriptor` | Collapses the edge `v0v1` replacing it with `v0` or `v1`... |
+| `Euler::collapse_edge( v0v1, g, Edge_is_constrained_map)` | `vertex_descriptor` | Collapses the edge v0v1 replacing it with v0 or v1, and guarantees that an edge e2, for which `get(edge_is_constrained_map, e2)==true`, is not removed after the collapse. |
+| `Euler::flip_edge(h, g)` |  `void`  | Performs an edge flip, rotating the edge pointed by `h` by one vertex in the direction of the face orientation. |
+| `Euler::does_satisfy_link_condition (e,	g)`| `bool` | `true` if `e` satisfies the link condition, which guarantees that the surface is also 2-manifold after the edge collapse. |
+
+@subsection CheatSheetSurfaceCoreConceptsEditingSectionLow Mesh manipulation/edition : low level
+
+<b>Valid expressions</b>
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+| **[MutableHalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html)** | | |
+| `add_vertex(g)`       | `vertex_descriptor` | Adds a new vertex to the graph without initializing the connectivity. Note: signature shared with [VertexMutableGraph (boost)](http://www.boost.org/libs/graph/doc/VertexMutableGraph.html). |
+| `remove_vertex(u, g)` | `void`              | Remove `u` from the graph. Note: signature shared with [VertexMutableGraph (boost)](http://www.boost.org/libs/graph/doc/VertexMutableGraph.html). |
+| `add_edge(g)`         | `edge_descriptor`   | Adds two opposite halfedges to the graph without initializing the connectivity. |
+| `remove_edge(e, g)`   | `void`              | Removes the two halfedges corresponding to `e` from the graph. Note: signature shared with [EdgeMutableGraph (boost)](http://www.boost.org/libs/graph/doc/EdgeMutableGraph.html). |
+| `set_target(h, v, g)` | `void`              | Sets the target vertex of `h` and the source of `opposite(h)` to `v`. |
+| `set_halfedge(v, h, g)` | `void`            | Sets the halfedge of `v` to `h`. The target vertex of `h` must be `v`. |
+| `set_next(h1, h2, g)` | `void`              | Sets the successor of `h1` around a face to `h2`, and the prededecessor of `h2` to `h1`. |
+| **[MutableFaceGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableFaceGraph.html)** | | |
+| `add_face(g)`         | `face_descriptor`   | Adds a new face to the graph without initializing the connectivity. |
+| `remove_face(f, g)`   | `void`              | Removes `f` from the graph. |
+| `set_face(h, f, g)`   | `void`              | Sets the corresponding face of `h` to `f`. |
+| `set_halfedge(f, h, g)` | `void`            | Sets the corresponding halfedge of `f` to `h`. |
+
+@subsection CheatSheetSurfaceGraphConceptsSection Mesh in a graph oriented context
+
+<b>Associated types</b>
+
+| Type | Description |
+|------|-------------|
+|[Graph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/Graph.html)| |
+| `boost::graph_traits<G>::vertex_descriptor`      | A vertex descriptor corresponds to a unique node in a graph instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+| `boost::graph_traits<G>::edge_descriptor`        | An edge descriptor corresponds to a unique edge `(u,v)` in a graph. An edge descriptor must be Default Constructible, Assignable, and Equality Comparable. |
+| `boost::graph_traits<G>::directed_category`      | This type shall be convertible to `directed_tag` or `undirected_tag`.  |
+| `boost::graph_traits<G>::edge_parallel_category` | This describes whether the graph class allows the insertion of parallel edges (edges with the same source and target). The two tags are `allow_parallel_edge_tag` and `disallow_parallel_edge_tag`.  |
+| `boost::graph_traits<G>::traversal_category`     | This describes the ways in which the vertices and edges of the graph can be visited. The choices are `incidence_graph_tag`, `adjacency_graph_tag`, `bidirectional_graph_tag`, `vertex_list_graph_tag`, `edge_list_graph_tag`, and `adjacency_matrix_tag`. |
+|[IncidenceGraph (boost)](http://www.boost.org/libs/graph/doc/IncidenceGraph.html)| |
+| `boost::graph_traits<G>::out_edge_iterator`  | An out-edge iterator for a vertex v provides access to the out-edges of the vertex. As such, the value type of an out-edge iterator is the edge descriptor type of its graph. An out-edge iterator must meet the requirements of [MultiPassInputIterator](http://www.boost.org/libs/utility/MultiPassInputIterator.html). |
+| `boost::graph_traits<G>::degree_size_type`   | The unsigned integral type used for representing the number out-edges or incident edges of a vertex. |
+|[BidirectionalGraph (boost)](http://www.boost.org/libs/graph/doc/BidirectionalGraph.html)| |
+| `boost::graph_traits<G>::in_edge_iterator`   | An in-edge iterator for a vertex `v` provides access to the in-edges of `v`. As such, the value type of an in-edge iterator is the edge descriptor type of its graph. An in-edge iterator must meet the requirements of [MultiPassInputIterator](http://www.boost.org/libs/utility/MultiPassInputIterator.html). |
+|[VertexListGraph (boost)](http://www.boost.org/libs/graph/doc/VertexListGraph.html)| |
+| `boost::graph_traits<G>::vertex_iterator`    | A vertex iterator (obtained via `vertices(g)`) provides access to all of the vertices in a graph. A vertex iterator type must meet the requirements of [MultiPassInputIterator](http://www.boost.org/libs/utility/MultiPassInputIterator.html). The value type of the vertex iterator must be the vertex descriptor of the graph.  |
+| `boost::graph_traits<G>::vertices_size_type` | The unsigned integer type used to represent the number of vertices in the graph. |
+|[EdgeListGraph (boost)](http://www.boost.org/libs/graph/doc/EdgeListGraph.html)| |
+| `boost::graph_traits<G>::edge_iterator`      | An edge iterator (obtained via `edges(g)`) provides access to all of the edges in a graph. An edge iterator type must meet the requirements of [MultiPassInputIterator](http://www.boost.org/libs/utility/MultiPassInputIterator.html). The value type of the edge iterator must be the same as the edge descriptor of the graph. |
+| `boost::graph_traits<G>::edges_size_type`    | The unsigned integer type used to represent the number of edges in the graph. |
+
+
+Notes:
+ - The repetitions of `boost::graph_traits<G>::traversal_category` (mentionned in each Graph refinement) were ommitted.
+ - The [boost::VertexAndEdgeListGraph](http://www.boost.org/libs/graph/doc/VertexAndEdgeListGraph.html) was ommitted from the above and below tables because it provides neither associated types nor valid expressions (i.e. it is "purely abstract" concept).
+
+<b>Valid expressions</b>
+
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+|**[Graph (boost)](http://www.boost.org/libs/graph/doc/Graph.html)** | | |
+| `null_vertex()` | (special) `vertex_descriptor` | Returns a special `vertex_descriptor` object which does not refer to any vertex of graph object which type is G. |
+| **[IncidenceGraph (boost)](http://www.boost.org/libs/graph/doc/IncidenceGraph.html)** | | |
+| `source(e,g)`      | `vertex_descriptor`              | Returns the node descriptor for node `u` of the edge `(u,v)` represented by `e`. |
+| `target(e,g)`      | `vertex_descriptor`              | Returns the node descriptor for node `v` of the edge `(u,v)` represented by `e`. |
+| `out_edges(u, g)`  | `std::pair<out_edge_iterator, out_edge_iterator>`| Returns an iterator-range providing access to the incident edges of node `u` in graph `g`.|
+| `out_degree(u, g)` | `degree_size_type`               | Returns the number of out-edges of node `u` in graph `g`. |
+| **[BidirectionalGraph (boost)](http://www.boost.org/libs/graph/doc/BidirectionalGraph.html)** | | |
+| `in_edges(v, g)`   |`std::pair<in_edge_iterator, in_edge_iterator>`| Returns an iterator-range providing access to the in-edges (CellIncidenceGraph being a directed graph) of node `v` in graph `g`. The target of an out-edge is required to be vertex `v` and the source is required to be a vertex that is adjacent to `v`. |
+| `in_degree(v, g)`  | `degree_size_type`               | Returns the number of in-edges of node `v` in graph `g`. |
+| `degree(v,g)`      | `degree_size_type`               | Returns the number of incident edges of node `v` in graph `g`.|
+| **[VertexListGraph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/VertexListGraph.html)** | | |
+| `vertices(g)`      | `std::pair<vertex_iterator, vertex_iterator>` | Returns an iterator-range providing access to all the vertices in the graph `g`. |
+| `num_vertices(g)`  | `vertices_size_type` | Returns an upper bound of number of vertices in the graph `g`. See also \ref ListGraphExtensionsConceptPage "FEVV::size_of_vertices(g)". |
+| **[EdgeListGraph (boost)](http://www.boost.org/doc/libs/1_62_0/libs/graph/doc/EdgeListGraph.html)** | | |
+| `edges(g)`         | `std::pair<edge_iterator, edge_iterator>` | Returns an iterator-range providing access to all the edges in the graph `g`. |
+| `num_edges(g)`     | `edges_size_type`    | Returns the number of edges in the graph `g`. See also \ref ListGraphExtensionsConceptPage "FEVV::size_of_edges(g)". |
+| `source(e, g)`     | `vertex_descriptor`  | Returns the vertex descriptor for `u` of the edge `(u,v)` represented by `e`. |
+| `target(e, g)`     | `vertex_descriptor`  | Returns the vertex descriptor for `v` of the edge `(u,v)` represented by `e`. |
+
+
+ @subsection CheatSheetSurfaceGraphConceptsToAvoidSection Concepts that should be avoided within FEVV
+
+ <b>Associated types to avoid (whenever possible)</b>
+
+| Type | Description |
+|------|-------------|
+|[AdjacencyGraph (boost)](http://www.boost.org/libs/graph/doc/AdjacencyGraph.html)| |
+| `boost::graph_traits<G>::adjacency_iterator` | An adjacency iterator for a vertex v provides access to the vertices adjacent to v. |
+|[PropertyGraph (boost)](http://www.boost.org/libs/graph/doc/PropertyGraph.html)| |
+| `boost::property_map<G, PropertyTag>::type`       | The type of the property map for the property specified by PropertyTag. This type must be a model of [ReadWritePropertyMap](http://www.boost.org/libs/property_map/doc/ReadWritePropertyMap.html) with a key type the same as the graph's vertex or edge descriptor type.  |
+| `boost::property_map<G, PropertyTag>::const_type` | The type of the const property map for the property specified by PropertyTag. This type must be a model of [ReadWritePropertyMap](http://www.boost.org/libs/property_map/doc/ReadWritePropertyMap.html) with a key type the same as the graph's vertex or edge descriptor type.  |
+
+ <b>Valid expressions to avoid (whenever possible)</b>
+
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+|[AdjacencyGraph (boost)](http://www.boost.org/libs/graph/doc/AdjacencyGraph.html)| | |
+| `adjacent_vertices(v, g)` |`std::pair<adjacency_iterator, adjacency_iterator>` | Returns an iterator-range providing access to the vertices adjacent to vertex `v`. |
+| **[VertexMutableGraph (boost)](http://www.boost.org/libs/graph/doc/VertexMutableGraph.html)** | | |
+| `add_vertex(g)`    | `vertex_descriptor` | Add a new vertex to the graph. The `vertex_descriptor` for the new vertex is returned. Note: signature shared with [MutableHalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html). |
+| `remove_vertex(u, g)` | `void`  | Remove `u` from the vertex set of the graph. Note: signature shared with [MutableHalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html). |
+| **[EdgeMutableGraph (boost)](http://www.boost.org/libs/graph/doc/EdgeMutableGraph.html)** | | |
+| `add_edge(u, v, g)`   | `std::pair<edge_descriptor, bool>` | Inserts the edge `(u,v)` into the graph, and returns an edge descriptor pointing to the new edge. When the edge `(u,v)` is already present in the graph, then the bool flag returned is false. Note that parallel edges are not allowed. |
+| `remove_edge(u, v ,g)` | `void` | Remove the edge `(u,v)` from the graph. If the graph were to allow parallel edges then this would remove all occurrences of `(u,v)`.|
+| `remove_edge(e, g)`   | `void` | Remove the edge `e` from the graph `g`. Note: signature share with [MutableHalfedgeGraph (CGAL)](http://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html). |
+| `clear_vertex(u, g)`  | `void` | Remove all edges to and from vertex `u` from the graph. |
+| **[MutableGraph (boost)](http://www.boost.org/libs/graph/doc/MutableGraph.html)** | | |
+| `remove_edge(iter, g)`| `void` | Remove the edge pointed to by `iter` from the graph `g`. |
+| `remove_edge_if(p, g)`| `void` | Remove all edges of graph `g` for which the predicate `p` returns true.|
+| `remove_out_edge_if(u, p, g)` | `void` | Remove all the out-edges of vertex `u` for which the predicate `p` returns true. This expression is only required when the graph also models [IncidenceGraph (boost)](http://www.boost.org/libs/graph/doc/IncidenceGraph.html).  |
+| `remove_in_edge_if(u, p, g)` | `void` | Remove all the in-edges of vertex `u` for which the predicate `p` returns true. This expression is only required when the graph also models [IncidenceGraph (boost)](http://www.boost.org/libs/graph/doc/IncidenceGraph.html). |
+| **[PropertyGraph (boost)](http://www.boost.org/libs/graph/doc/PropertyGraph.html)** | | |
+| `get(p, g)`    | `boost::property_map<G, PropertyTag>::type` if `g` is mutable and `boost::property_map<G, PropertyTag>::const_type` otherwise. | Returns the property map for the property specified by the `PropertyTag` type. The object `p` is only used to carry the type. |
+| `get(p, g, x)` | `boost::property_traits<Map>::value_type` | Returns the property value (specified by the `PropertyTag` type) associated with object `x` (a vertex or edge). The object `p` is only used to carry the type. This function is equivalent to: `get(get(p, g), x)`. |
+| `put(p, g, x, v)` | `void` | Set the property (specified by the `PropertyTag` type) associated with object `x` (a vertex or edge) to the value `v`. The object `p` is only used to carry the type. This function is equivalent to `pmap = get(p, g);`  |
+
+*/

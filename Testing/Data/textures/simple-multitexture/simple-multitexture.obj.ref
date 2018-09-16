@@ -1,0 +1,25 @@
+# OBJ File produced by MEPP2
+# The M2Disco Framework
+#
+# Mesh with :
+# 	4 vertex positions
+# 	2 faces
+# 	6 UV coordinates
+# 	0 vertex normals
+
+mtllib test_generic_writer_obj_with_multitexture.mtl
+v 0 0 0 
+v 1 0 0 
+v 0 1 0 
+v 1 1 0 
+
+vt 0 0 
+vt 0.8 0 
+vt 0 0.8 
+vt 0.99 0.2 
+vt 0.99 0.99 
+vt 0.2 0.99 
+usemtl Cat1
+f 1/1 2/2 3/3 
+usemtl Cat2
+f 2/4 4/5 3/6 

@@ -1,0 +1,7 @@
+# MTL File produced by MEPP2
+newmtl Cat1
+    map_Kd cat1.png
+
+newmtl Cat2
+    map_Kd cat2.png
+
