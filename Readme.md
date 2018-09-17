@@ -1,12 +1,10 @@
-Linux / Mac OS X (under Travis CI) : [![Build Status](https://travis-ci.com/MEPP-team/MEPP2.svg?token=VziJs6Czy6qf56qaNAjr&branch=master)](https://travis-ci.com/MEPP-team/MEPP2)
+Linux / Mac OS X (under Travis CI) : [![Build Status](https://travis-ci.org/MEPP-team/MEPP2.svg?branch=master)](https://travis-ci.org/MEPP-team/MEPP2)
 
-Windows (under AppVeyor) : [![Build status](https://ci.appveyor.com/api/projects/status/dlib6qwhowwdvigo/branch/master?svg=true)](https://ci.appveyor.com/project/MEPPteam/mepp2)
+Windows (under AppVeyor) : [![Build status](https://ci.appveyor.com/api/projects/status/wrlfantide2fwcpj/branch/master?svg=true)](https://ci.appveyor.com/project/MEPPteam/mepp2)
 
 Documentation : [![img](https://img.shields.io/badge/Documentation-nightly-brightgreen.svg)](http://liris.cnrs.fr/mepp/doc/nightly/)
 
 # Introduction to MEPP2
-The following is a coarse early version of [MEPP2 mission statement](https://github.com/MEPP-team/MEPP2/wiki/MEP-04%3A-Establish-MEPP2-mission-statement).
-
 The MEPP2 software is a [generic programming](https://en.wikipedia.org/wiki/Generic_programming) oriented [SDK](https://en.wikipedia.org/wiki/Software_development_kit) focusing on both [volumic mesh](https://en.wikipedia.org/wiki/Volume_mesh) and [polygonal mesh](https://en.wikipedia.org/wiki/Polygon_mesh) (in 3D).
 
 MEPP2 [SDK](https://en.wikipedia.org/wiki/Software_development_kit) offers:
