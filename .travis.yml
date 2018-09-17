@@ -280,17 +280,17 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # osx only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink qt@4; fi # ---> now unlink qt4
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link qt --force; fi # ---> now link qt5
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ctest -j 3 --output-on-failure; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi # ---> now unlink qt4
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew install qt; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi # ---> now link qt5
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi
 #
 # building the documentation
 after_success:
   - if [[ "$DOC" == "true" ]]; then cd ../build; fi # if we build with qt5
 #
   - if [[ "$DOC" == "true" ]]; then make doc; fi
-  - if [[ "$DOC" == "true" ]]; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no -i ../.travis/mepp' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/; fi
+#  - if [[ "$DOC" == "true" ]]; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no -i ../.travis/mepp' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/; fi
