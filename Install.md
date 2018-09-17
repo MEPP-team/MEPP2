@@ -177,8 +177,11 @@ Optional dependencies:
   $ brew tap-pin cartr/qt4
   $ brew install qt@4
 
-  # OpenSceneGraph
+  # OpenSceneGraph (version 3.4.x !)
   $ brew install open-scene-graph
+  $ brew info open-scene-graph
+  # if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
+  # compile the good version directly from this source : https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
 
   # Doxygen and Graphviz
   $ brew install doxygen graphviz
