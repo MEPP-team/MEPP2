@@ -180,8 +180,12 @@ Optional dependencies:
   # OpenSceneGraph (version 3.4.x !)
   $ brew install open-scene-graph
   $ brew info open-scene-graph
-  # if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
-  # compile the good version directly from this source : https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
+  # -> if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
+  # compile the good version directly from this source : https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz with
+  $ cd /tmp; wget https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
+  $ tar zxf OpenSceneGraph-3.4.1-JPEG-patched.tgz; cd OpenSceneGraph-OpenSceneGraph-3.4.1; mkdir buildR && cd buildR
+  $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DOSG_USE_QT=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.4.1
+  $ make -j && make install && cd
 
   # Doxygen and Graphviz
   $ brew install doxygen graphviz
