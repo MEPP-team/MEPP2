@@ -8,7 +8,9 @@ sudo: required # need by trusty
 dist: trusty # Ubuntu 14.04 LTS
 #group: deprecated-2017Q4
 
-osx_image: xcode9.3 # Xcode 9.3 under High Sierra (OS X 10.13)
+osx_image: xcode10 # Xcode 10.0 under High Sierra (OS X 10.13)
+#osx_image: xcode9.4 # Xcode 9.4.1 under High Sierra (OS X 10.13)
+#osx_image: xcode9.3 # Xcode 9.3 under High Sierra (OS X 10.13)
 #osx_image: xcode9.2 # Xcode 9.2 under Sierra (OS X 10.12)
 #osx_image: xcode8.3 # Xcode 8.3.3 under Sierra (OS X 10.12)
 #osx_image: xcode7.3 # Xcode 7.3.1 under El Capitan (OS X 10.11)
@@ -217,12 +219,12 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cgal; fi # ---> install cgal 4.11.1
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
 # -> BEGIN patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/include/CGAL/boost/graph; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv io.h io.h.old; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/include/CGAL/boost/graph; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv io.h io.h.old; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 # -> END patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
 #
 # ---> because we want osg34 under osx !!!
@@ -273,20 +275,20 @@ script:
   - ctest -j 3 --output-on-failure
 #
 # linux only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # osx only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi; fi # ---> now unlink qt4
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew install qt; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi; fi # ---> now link qt5
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi # ---> travis_wait 60 make ?
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi; fi # ---> now unlink qt4
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew install qt; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi; fi # ---> now link qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi # ---> travis_wait 60 make ?
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # building the documentation
 after_success:
