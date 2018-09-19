@@ -122,6 +122,7 @@ Scripting commands for compiling Mepp2:
   # compile with CGAL, GUI and FBX
   $ export FBX_DIR="$HOME/FBX_SDK/2019.0"
   $ cmake -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ make
 
   # generate the documentation
   $ cmake -DBUILD_DOCUMENTATION=ON ..
@@ -208,7 +209,7 @@ Optional dependencies:
 ````
 
 ### Build stage
-For the majority of the commandes refer to the above Linux section. The only difference might be that positionning environment variables is not necessary for OSX (since all dependencies are installed with the packaging system). For example building Mepp2 with CGAL, OpenMesh and GUI support is reduces to:
+For the majority of the commandes refer to the above Linux section. The only difference might be that positionning environment variables is not necessary for OSX (since all dependencies are installed with the packaging system). For example building Mepp2 with CGAL, OpenMesh and GUI is reduced to:
 ````
   $ cmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
@@ -218,6 +219,14 @@ Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this
 ````
   $ export FBX_DIR="/Applications/Autodesk/FBX SDK/2019.0"
   $ cmake -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ make
+````
+
+Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JPEG-patched above) can be done like this:
+````
+  $ export DYLD_LIBRARY_PATH=$HOME/osg-3.4.1/lib
+  $ cmake -DBUILD_USE_GUI=ON -DOSG_DIR=$HOME/osg-3.4.1 -DCMAKE_BUILD_TYPE=Release ..
+  $ make
 ````
 
 ### Run tests
