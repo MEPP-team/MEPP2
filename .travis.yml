@@ -275,20 +275,20 @@ script:
   - ctest -j 3 --output-on-failure
 #
 # linux only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # osx only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi; fi # ---> now unlink qt4
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew install qt; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi; fi # ---> now link qt5
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi # ---> travis_wait 60 make ?
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi; fi # ---> now unlink qt4
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew install qt; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi; fi # ---> now link qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_osx_qt5 && cd build_osx_qt5 && /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE -DBUILD_USE_QT5=YES -DQT5_DIR=/usr/local/opt/qt5; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi # ---> travis_wait 60 make ?
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # building the documentation
 after_success:
