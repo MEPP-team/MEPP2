@@ -12,7 +12,7 @@ This distinction is due to respect the \ref DevelopersCodingStyleGeneralitiesPag
 
  - Copy the folder &nbsp;<small><i>Visualization/PluginFilters/processing</i></small>&nbsp; to your newly created &nbsp;<small><i>Visualization/PluginFilters/<your_process_name></i></small>&nbsp;. Make sure to use a lowercase name for &nbsp;<small><i><your_process_name></i></small>&nbsp;.
 
- - Within &nbsp;<small><i><your_process_name></i></small>&nbsp; folder rename the files &nbsp;<small><i>ProcessingPlugin.*</i></small>&nbsp; to &nbsp;<small><i><Your_process_name>Plugin.*</i></small>&nbsp;
+ - Within &nbsp;<small><i><your_process_name></i></small>&nbsp; folder rename the files &nbsp;<small><i>ProcessingPlugin.*</i></small>&nbsp; to &nbsp;<small><i><Your_process_name>Plugin.*</i></small>&nbsp; and rename the file &nbsp;<small><i>processing.cmake</i></small>&nbsp; to &nbsp;<small><i><your_process_name>.cmake</i></small>&nbsp;
 
  - Within &nbsp;<small><i><your_process_name>/Dialogs</i></small>&nbsp; subfolder rename the files &nbsp;<small><i>DialogProcessing*.*</i></small>&nbsp; to &nbsp;<small><i>Dialog<Your_process_name>*.*</i></small>&nbsp;
 
@@ -31,19 +31,16 @@ This distinction is due to respect the \ref DevelopersCodingStyleGeneralitiesPag
    - replace &nbsp;<small><i> DialogProcessing</i></small>&nbsp; with &nbsp;<small><i> Dialog<Your_process_name></i></small>&nbsp;
    - replace &nbsp;<small><i> Process</i></small>&nbsp; with &nbsp;<small><i> <Your_process_name></i></small>&nbsp;
 
-### Modification of CMakeLists.txt
+### Modification of \<your_process_name\>.cmake and Visualization/PluginFilters/PluginFilters.cmake
 
-Edit &nbsp;<small><i> Testing/Visualization/CMakeLists.txt</i></small>&nbsp; in order to
- - duplicate the content of the bloc starting with the line<br>
-   &nbsp;<small><i> # --> ProcessingPlugin : QtPlugin [BEGIN]</i></small>&nbsp;<br>
-   and the line<br>
- 	 &nbsp;<small><i> # --> ProcessingPlugin : QtPlugin [END]</i></small>&nbsp;
-
- - Within THIS new bloc (<b>reminder</b> : case sensitivity matters)
+ - Edit &nbsp;<small><i><your_process_name>.cmake</i></small>&nbsp; in order to (<b>reminder</b> : case sensitivity matters)
     - replace &nbsp;<small><i>ProcessingPlugin</i></small>&nbsp; with &nbsp;<small><i><Your_process_name>Plugin</i></small>&nbsp;
     - replace &nbsp;<small><i> DialogProcessing</i></small>&nbsp; with &nbsp;<small><i> Dialog<Your_process_name></i></small>&nbsp;
     - replace &nbsp;<small><i> Processing_Qt_Plugin</i></small>&nbsp; with &nbsp;<small><i> <Your_process_name>_Qt_Plugin</i></small>&nbsp;,
     - replace &nbsp;<small><i> processing</i></small>&nbsp; with &nbsp;<small><i> <your_process_name></i></small>&nbsp; (caution : lowercase)
+
+ - Edit &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp; and add this line to the file (in alphabetical order please):<br>
+    &nbsp;<small><i>include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/<your_process_name>/<your_process_name>.cmake" )</i></small>&nbsp;
 
 ### Call your filter code (corresponding to your process)
  - Within &nbsp;<small><i> <your_process_name>/<Your_process_name>Plugin.h</i></small>&nbsp;, find the comment line
