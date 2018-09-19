@@ -1,29 +1,10 @@
-##### Boost is a must unless when building the documentation only
-if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
-  find_package(Boost COMPONENTS thread system filesystem REQUIRED)
-  if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-  endif(Boost_FOUND)
-endif()
-
-##### EIGEN3
-if (WIN32)
-	if(DEFINED ENV{EIGEN3_INCLUDE_DIR})
-		SET( EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR} )
-	ENDIF()
-endif (WIN32)
-# Eigen is needed except for the documentation
-if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
-	FIND_PACKAGE(Eigen3)
-	if(EIGEN3_FOUND)
-	  INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
-	ELSE(EIGEN3_FOUND)
-	  MESSAGE(FATAL_ERROR
-			  "Eigen3 not found. Please set EIGEN3_INCLUDE_DIR to the root directory of your Eigen3 installation.")
-	endif(EIGEN3_FOUND)
-endif()
 
 ##### CGAL package finding
+# Caveat emptor: for some undocummented reason CGAL package detection messes
+#     up (it clears it completely at least on OSX) the content of the
+#     Boot_LIBRAIRES variable as set up by the Boot package detection.
+#     In order to avoid this side effect, CGAL package detection must be
+#     placed BEFORE Boost package detection.
 if( BUILD_USE_CGAL )
   add_definitions( -DCGAL_EIGEN3_ENABLED ) ##### SOME CGAL FUNCTIONALITIES DEPEND ON EIGEN3
 
@@ -62,6 +43,31 @@ else()
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
   add_definitions( -DCGAL_NDEBUG )
   message ( STATUS "Use local LGPL CGAL")
+endif()
+
+##### Boost is a must unless when building the documentation only
+if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
+  find_package(Boost COMPONENTS thread system filesystem REQUIRED)
+  if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+  endif(Boost_FOUND)
+endif()
+
+##### EIGEN3
+if (WIN32)
+	if(DEFINED ENV{EIGEN3_INCLUDE_DIR})
+		SET( EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR} )
+	ENDIF()
+endif (WIN32)
+# Eigen is needed except for the documentation
+if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
+	FIND_PACKAGE(Eigen3)
+	if(EIGEN3_FOUND)
+	  INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+	ELSE(EIGEN3_FOUND)
+	  MESSAGE(FATAL_ERROR
+			  "Eigen3 not found. Please set EIGEN3_INCLUDE_DIR to the root directory of your Eigen3 installation.")
+	endif(EIGEN3_FOUND)
 endif()
 
 ##### OpenMesh package finding
