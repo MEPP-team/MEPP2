@@ -1,8 +1,7 @@
-
 ##### CGAL package finding
-# Caveat emptor: for some undocummented reason CGAL package detection messes
+# Caveat emptor: for some undocumented reason CGAL package detection messes
 #     up (it clears it completely at least on OSX) the content of the
-#     Boot_LIBRAIRES variable as set up by the Boot package detection.
+#     Boost_LIBRARIES variable as set up by the Boost package detection.
 #     In order to avoid this side effect, CGAL package detection must be
 #     placed BEFORE Boost package detection.
 if( BUILD_USE_CGAL )
