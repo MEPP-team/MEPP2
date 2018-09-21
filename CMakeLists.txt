@@ -66,3 +66,116 @@ add_subdirectory( Testing )
 add_subdirectory( Examples )
 add_subdirectory( Visualization )
 add_subdirectory( Doc )
+
+
+# create UseMEPP2.cmake file
+
+function(init_use_file  use_file_name)
+  file( WRITE "${use_file_name}"
+        "#\n"
+        "# This file can be included in a project to set the needed compiler and linker\n"
+        "# settings to use MEPP2 in a program.\n"
+        "#\n"
+        )
+  set( USE_MEPP2_FILE "${use_file_name}" PARENT_SCOPE )
+endFunction()
+
+function(append_var_to_use_file  variable_name  variable_value)
+  file( APPEND "${USE_MEPP2_FILE}"
+        "\nset( ${variable_name} \"${variable_value}\" )\n"
+        )
+endFunction()
+
+init_use_file( "${PROJECT_BINARY_DIR}/UseMEPP2.cmake" )
+
+append_var_to_use_file( "MEPP2_DIR" "${PROJECT_SOURCE_DIR}" )
+append_var_to_use_file( "MEPP2_BUILD_DIR" "${PROJECT_BINARY_DIR}" )
+append_var_to_use_file( "CMAKE_BUILD_TYPE" "${CMAKE_BUILD_TYPE}" )
+
+# to know which DS is present and
+# to know if plugins can be built (need GUI)
+append_var_to_use_file( "BUILD_USE_CGAL" "${BUILD_USE_CGAL}" )
+append_var_to_use_file( "BUILD_USE_OPENMESH" "${BUILD_USE_OPENMESH}" )
+append_var_to_use_file( "BUILD_USE_AIF" "${BUILD_USE_AIF}" )
+append_var_to_use_file( "BUILD_USE_GUI" "${BUILD_USE_GUI}" )
+append_var_to_use_file( "BUILD_USE_QT5" "${BUILD_USE_QT5}" )
+
+append_var_to_use_file( "CMAKE_CXX_FLAGS" "${CMAKE_CXX_FLAGS}" )
+append_var_to_use_file( "CMAKE_CXX_FLAGS_DEBUG" "${CMAKE_CXX_FLAGS_DEBUG}" )
+append_var_to_use_file( "CMAKE_CXX_FLAGS_MINSIZEREL"
+                        "${CMAKE_CXX_FLAGS_MINSIZEREL}" )
+append_var_to_use_file( "CMAKE_CXX_FLAGS_RELEASE"
+                        "${CMAKE_CXX_FLAGS_RELEASE}" )
+append_var_to_use_file( "CMAKE_CXX_FLAGS_RELWITHDEBINFO"
+                        "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" )
+append_var_to_use_file( "CMAKE_EXE_LINKER_FLAGS"
+                        "${CMAKE_EXE_LINKER_FLAGS}" )
+append_var_to_use_file( "CMAKE_MODULE_LINKER_FLAGS"
+                        "${CMAKE_MODULE_LINKER_FLAGS}" )
+append_var_to_use_file( "CMAKE_SHARED_LINKER_FLAGS"
+                        "${CMAKE_SHARED_LINKER_FLAGS}" )
+append_var_to_use_file( "CMAKE_STATIC_LINKER_FLAGS"
+                        "${CMAKE_STATIC_LINKER_FLAGS}" )
+append_var_to_use_file( "CMAKE_EXE_LINKER_FLAGS_RELEASE"
+                        "${CMAKE_EXE_LINKER_FLAGS_RELEASE}" )
+append_var_to_use_file( "CMAKE_MODULE_LINKER_FLAGS_RELEASE"
+                        "${CMAKE_MODULE_LINKER_FLAGS_RELEASE}" )
+append_var_to_use_file( "CMAKE_SHARED_LINKER_FLAGS_RELEASE"
+                        "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}" )
+append_var_to_use_file( "CMAKE_STATIC_LINKER_FLAGS_RELEASE"
+                        "${CMAKE_STATIC_LINKER_FLAGS_RELEASE}" )
+#!!! see Visu/App/CMakeLists.txt for other CMAKE_.*_FLAGS changed for GUI apps
+
+append_var_to_use_file( "MEPP2_CGAL_INCLUDE_DIRECTORIES"
+                        "${MEPP2_CGAL_INCLUDE_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_CGAL_LIBRARIES"
+                        "${MEPP2_CGAL_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_CGAL_LINK_LIBRARIES"
+                        "${MEPP2_CGAL_LINK_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_CGAL_LINK_DIRECTORIES"
+                        "${MEPP2_CGAL_LINK_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_CGAL_COMPILE_DEFINITIONS"
+                        "${MEPP2_CGAL_COMPILE_DEFINITIONS}" )
+
+append_var_to_use_file( "MEPP2_AIF_INCLUDE_DIRECTORIES"
+                        "${MEPP2_AIF_INCLUDE_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_AIF_LIBRARIES"
+                        "${MEPP2_AIF_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_AIF_LINK_LIBRARIES"
+                        "${MEPP2_AIF_LINK_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_AIF_LINK_DIRECTORIES"
+                        "${MEPP2_AIF_LINK_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_AIF_COMPILE_DEFINITIONS"
+                        "${MEPP2_AIF_COMPILE_DEFINITIONS}" )
+
+append_var_to_use_file( "MEPP2_OPENMESH_INCLUDE_DIRECTORIES"
+                        "${MEPP2_OPENMESH_INCLUDE_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_OPENMESH_LIBRARIES"
+                        "${MEPP2_OPENMESH_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_OPENMESH_LINK_LIBRARIES"
+                        "${MEPP2_OPENMESH_LINK_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_OPENMESH_LINK_DIRECTORIES"
+                        "${MEPP2_OPENMESH_LINK_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_OPENMESH_COMPILE_DEFINITIONS"
+                        "${MEPP2_OPENMESH_COMPILE_DEFINITIONS}" )
+
+append_var_to_use_file( "MEPP2_GUI_INCLUDE_DIRECTORIES"
+                        "${MEPP2_GUI_INCLUDE_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_GUI_LIBRARIES"
+                        "${MEPP2_GUI_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_GUI_LINK_LIBRARIES"
+                        "${MEPP2_GUI_LINK_LIBRARIES}" )
+append_var_to_use_file( "MEPP2_GUI_LINK_DIRECTORIES"
+                        "${MEPP2_GUI_LINK_DIRECTORIES}" )
+append_var_to_use_file( "MEPP2_GUI_COMPILE_DEFINITIONS"
+                        "${MEPP2_GUI_COMPILE_DEFINITIONS}" )
+
+append_var_to_use_file( "MEPP2_osgQt_SRC"
+                        "${MEPP2_osgQt_SRC}" )
+append_var_to_use_file( "MEPP2_CPP_PLUGIN_FILES"
+                        "${MEPP2_CPP_PLUGIN_FILES}" )
+append_var_to_use_file( "MEPP2_GUISRC_PLUGIN"
+                        "${MEPP2_GUISRC_PLUGIN}" )
+
+message("++ ${USE_MEPP2_FILE} file created.")
+

@@ -345,3 +345,83 @@ include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/PluginFilters.cmake" )
 #foreach(dir ${dirs})
 #  message(STATUS "dir='${dir}'")
 #endforeach()
+
+
+##TODO-elo make a function
+## variables to be exported to external projects
+
+# include dirs
+get_property( INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY INCLUDE_DIRECTORIES
+              )
+set( MEPP2_GUI_INCLUDE_DIRECTORIES
+     "${INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# system include dirs
+get_property( SYSTEM_INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY SYSTEM_INCLUDE_DIRECTORIES
+              )
+set( MEPP2_GUI_SYSTEM_INCLUDE_DIRECTORIES
+     "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+message("++ SYSTEM_INCLUDE_DIRECTORIES_TMP = ${SYSTEM_INCLUDE_DIRECTORIES_TMP}")
+
+# libraries to link with
+set( MEPP2_GUI_LIBRARIES
+     ${GUILIB_DEMO}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link libraries (to link all target with, silently!)
+get_property( LINK_LIBRARIES_TMP
+              DIRECTORY
+              PROPERTY LINK_LIBRARIES
+              )
+set( MEPP2_GUI_LINK_LIBRARIES
+     "${LINK_LIBRARIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link dirs
+get_property( LINK_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY LINK_DIRECTORIES
+              )
+set( MEPP2_GUI_LINK_DIRECTORIES
+     "${LINK_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# compilation flags and define
+get_property( COMPILE_DEFINITIONS_TMP
+              DIRECTORY
+              PROPERTY COMPILE_DEFINITIONS
+              )
+set( MEPP2_GUI_COMPILE_DEFINITIONS
+     ${COMPILE_DEFINITIONS_TMP}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+## extra variables to be exported to external projects
+## specific to plugins
+
+set( MEPP2_osgQt_SRC
+     ${osgQt_SRC}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+set( MEPP2_CPP_PLUGIN_FILES
+     ${CPP_PLUGIN_FILES}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+set( MEPP2_GUISRC_PLUGIN
+     ${GUISRC_PLUGIN}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
