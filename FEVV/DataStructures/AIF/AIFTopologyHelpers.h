@@ -2439,12 +2439,14 @@ public:
   static bool
   is_e_one_ring_connected(edge_descriptor e,
                           const T &container_of_edge_one_ring,
-                          bool allow_multiple_incident_edges = false)
+                          bool allow_multiple_incident_edges = false, 
+                          bool ensure_e_belongs_to_container = true)
   {
     // First ensure that e is an element of container_of_edge_one_ring
-    if(std::find(container_of_edge_one_ring.begin(),
+    if(ensure_e_belongs_to_container && 
+      (std::find(container_of_edge_one_ring.begin(),
                  container_of_edge_one_ring.end(),
-                 e) == container_of_edge_one_ring.end())
+                 e) == container_of_edge_one_ring.end()))
       return false;
     // Then check if e is one-ring connected to its one ring
     bool another_edge_incident_to_e_v1 = false,
@@ -2575,6 +2577,8 @@ public:
               //    its second vertex not incident
               //       to any of one-ring edges (remaining notSortedOneRing and
               //       already used ones)
+              //    => If this fails, look for an edge adjacent to last edge 
+              //    with lowest degree for common vertex
               // 3) if there are only edge(>=2) with second vertex incident to
               // one of remaining edge, then
               //    select the first
@@ -2588,23 +2592,43 @@ public:
               auto it2 = it;
               ++it2;
 
+              bool neverEnter = true, atLeastOneAnotherAdjacent = false;
               for(; it2 != ite; ++it2)
               {
-                if(are_adjacent(*it2, nextEdgeTmp) &&
-                   are_adjacent(*it2, nextEdge))
+                if (are_adjacent(*it2, nextEdgeTmp))
                 {
-                  // 2)
-                  vertex_descriptor common_v = common_vertex(nextEdgeTmp, *it2);
-                  vertex_descriptor other_v = opposite_vertex(*it2, common_v);
-                  auto it3 = it;
-                  ++it3;
-                  for(; it3 != ite; ++it3)
-                    if((it3 != it2) && are_incident(*it3, other_v))
+                  atLeastOneAnotherAdjacent = true;
+                  if (are_adjacent(*it2, nextEdge))
+                  {
+                    neverEnter = false;
+                    // 2)
+                    vertex_descriptor common_v = common_vertex(nextEdgeTmp, *it2);
+                    vertex_descriptor other_v = opposite_vertex(*it2, common_v);
+                    auto it3 = it;
+                    ++it3;
+                    for (; it3 != ite; ++it3)
+                      if ((it3 != it2) && are_incident(*it3, other_v))
+                      {
+                        break; /// \todo  Should not break in case of a dangling polyline
+                      }
+                    if ((it3 == ite) && (!is_e_one_ring_connected(*it2, notSortedOneRingSave, true, true) ||
+                      is_e_one_ring_connected(nextEdge, notSortedOneRingSave, true, true) && is_e_one_ring_connected(*it2, result, true, false)))
                     {
+                      nextEdge = *it2;
                       break;
                     }
-                  if((it3 == ite) &&
-                     !is_e_one_ring_connected(*it2, notSortedOneRingSave, true))
+                  }
+                }
+              }
+              ///////////////////////////////////////////////////////////////
+              if (atLeastOneAnotherAdjacent && neverEnter)
+              {
+                it2 = it;
+                ++it2;
+
+                for (; it2 != ite; ++it2)
+                {
+                  if (are_adjacent(*it2, nextEdgeTmp) && degree(common_vertex(nextEdgeTmp, nextEdge))>degree(common_vertex(nextEdgeTmp, *it2)))
                   {
                     nextEdge = *it2;
                     break;
@@ -2953,7 +2977,13 @@ public:
 
         if(std::find(oneR.begin(), oneR.end(), lastVertex) != oneR.end())
         {
-          if((i + 2 == nbE) && !is_e_one_ring_connected(
+          if ((i + 1 == nbE) && !is_e_one_ring_connected(
+                                orderedOneRing[0], orderedOneRing, true))
+          {
+            oneR.push_back(lastVertex);
+            continue;
+          }
+          else if((i + 2 == nbE) && !is_e_one_ring_connected(
                                    orderedOneRing[i + 1], orderedOneRing, true))
           {
             oneR.push_back(lastVertex);
@@ -2965,13 +2995,6 @@ public:
         oneR.push_back(lastVertex);
       }
     }
-
-    // manage the case of orderedOneRing starting or ending by a danging edge
-    // (dangling polylines not yet managed)
-    // if(!is_e_one_ring_connected(orderedOneRing.back(), orderedOneRing, true)
-    // || !is_e_one_ring_connected(orderedOneRing.front(), orderedOneRing, true))
-    //  if (opposite_vertex(orderedOneRing.back(), oneR.back()) != oneR.front())
-    //    oneR.push_back(opposite_vertex(orderedOneRing.back(), oneR.back()));
 
     m_One_Ring_Vertices = vertex_container_in_vertex(oneR.begin(), oneR.end());
     v->m_Is_One_Ring_Vertices_Computed = true;
