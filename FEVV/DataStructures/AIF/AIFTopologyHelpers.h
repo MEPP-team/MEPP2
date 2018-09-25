@@ -482,6 +482,42 @@ public:
     }
   }
 
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, ComparatorType cmp)
+  {
+    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp);
+    return mesh->GetVertices();
+  }
+
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, ComparatorType cmp)
+  {
+    return sort_vertices<ComparatorType>(mesh.get(), cmp);
+  }
+
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, ComparatorType cmp)
+  {
+    return sort_vertices<ComparatorType>(&mesh, cmp);
+  }
   //////////////////////////////////	Edge AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -915,6 +951,43 @@ public:
 
     return is_2_manifold_vertex(edge->get_first_vertex()) &&
            is_2_manifold_vertex(edge->get_second_vertex());
+  }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, ComparatorType cmp)
+  {
+    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp);
+    return mesh->GetEdges();
+  }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, ComparatorType cmp)
+  {
+    return sort_edges<ComparatorType>(mesh.get(), cmp);
+  }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, ComparatorType cmp)
+  {
+    return sort_edges<ComparatorType>(&mesh, cmp);
   }
   //////////////////////////////////	Face AIFTopologyHelpers
   /////////////////////////////////////
@@ -3054,6 +3127,69 @@ public:
   }
   // End of one-ring stuff
   /////////////////////////////////
+  /*!
+  * 			Get the edge of the face'incident edges after the prev_edge
+  * \param	face	The face for which incident edges are retrieved.
+  * \param	prev_edge	The edge located before the returned edge.
+  */
+  static edge_descriptor get_edge_of_face_after_edge(face_descriptor face, 
+                                                     edge_descriptor prev_edge)
+  {
+    std::vector< edge_descriptor >::iterator
+      it = face->m_Incident_PtrEdges.begin(),
+      ite = face->m_Incident_PtrEdges.end();
+    for (; it != ite; ++it)
+    {
+      if ((((*it)->get_first_vertex() == prev_edge->get_first_vertex()) &&
+        ((*it)->get_second_vertex() == prev_edge->get_second_vertex())) ||
+        (((*it)->get_first_vertex() == prev_edge->get_second_vertex()) &&
+        ((*it)->get_second_vertex() == prev_edge->get_first_vertex())))
+      {
+        ++it;
+        if (it == ite)
+          it = face->m_Incident_PtrEdges.begin();
+        break;
+      }
+    }
+
+    if (it == ite)
+      throw std::invalid_argument("Helpers::get_edge_of_face_after_edge(f, pe) -> prev_edge does not belong to input face.");
+
+    return *it;
+  }
+  /*!
+  * 			Get the edge of the face'incident edges before the next_edge
+  * \param	face	The face for which incident edges are retrieved.
+  * \param	next_edge	The edge located after the returned edge.
+  */
+  static edge_descriptor get_edge_of_face_before_edge(face_descriptor face, 
+                                                      edge_descriptor next_edge)
+  {
+    std::vector< edge_descriptor >::iterator
+      it = face->m_Incident_PtrEdges.begin(),
+      ite = face->m_Incident_PtrEdges.end();
+    for (; it != ite; ++it)
+    {
+      if ((((*it)->get_first_vertex() == next_edge->get_first_vertex()) && 
+        ((*it)->get_second_vertex() == next_edge->get_second_vertex())) ||
+        (((*it)->get_first_vertex() == next_edge->get_second_vertex()) && 
+        ((*it)->get_second_vertex() == next_edge->get_first_vertex())))
+      {
+        if (it == face->m_Incident_PtrEdges.begin())
+        {
+          it = ite;
+        }
+        --it;
+        break;
+      }
+    }
+
+    if (it == ite)
+      throw std::invalid_argument("Helpers::get_edge_of_face_before_edge(f, ne) -> next_edge does not belong to input face.");
+
+    return *it;
+  }
+
   /*!
    * 			Add the edge to the face'incident edges after the prev_edge
    * without any check. Update caching information for face' incident vertices.

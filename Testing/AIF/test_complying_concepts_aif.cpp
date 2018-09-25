@@ -80,7 +80,7 @@ main(int narg, char **argv)
                                   typename graph_traits< G >::vertex_descriptor,
                                   boost::vertex_point_t >));
 
-  // The following cannor work (is expected to fail) since boost::vertex_index_t
+  // The following cannot work (is expected to fail) since boost::vertex_index_t
   // should not be modifiable (as opposed to vertex positions FAIL
   // BOOST_CONCEPT_ASSERT(
   //        (WritablePropertyMapConcept<
