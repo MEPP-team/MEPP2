@@ -295,4 +295,4 @@ after_success:
   - if [[ "$DOC" == "true" ]]; then cd ../build; fi # if we build with qt5
 #
   - if [[ "$DOC" == "true" ]]; then make doc; fi
-#  - if [[ "$DOC" == "true" ]]; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no -i ../.travis/mepp-public' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/; fi
+  - if [[ "$DOC" == "true" ]]; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no -i ../.travis/mepp-public' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/; fi
