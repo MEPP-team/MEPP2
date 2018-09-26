@@ -1254,7 +1254,38 @@ public:
         adFaces.end()); // note that it is a non-sens to manage a memory caching
                         // as adjacent faces can be quickly computed
   }
+  
+  /*!
+  * 			Reverse the incident edge order of the given face.
+  * \param	face	The involved face
+  */
+  static void reverse_face_orientation(face_descriptor face)
+  {
+    auto edge_range = incident_edges(face);
+    std::reverse(edge_range.begin(), edge_range.end());
+    face->clear_vertex_incidency();
+  }
 
+  /*!
+  * 			First common face between two edges
+  * \param	edge1	The first involving edge
+  * \param	edge2	The second involving edge
+  * \return	The first common face between edge1 and edge2.
+  *         Note that if there is no (even partial) duplicate face,
+  *         then there is either one or zero common face.
+  */
+  static face_descriptor common_face(edge_descriptor edge1, edge_descriptor edge2)
+  {
+    typedef face_container_in_edge::const_iterator it_type;
+
+    boost::iterator_range<it_type> faces_range = incident_faces(edge1);
+
+    for (it_type it = faces_range.begin(); it != faces_range.end(); ++it) {
+      if (are_incident(*it, edge2))
+        return *it;
+    }
+    return null_face();
+  }
   //////////////////////////////////	Mesh AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -2561,9 +2592,9 @@ public:
   are_adjacent_edges_one_ring_connected(edge_descriptor e,
                                         const T &container_of_edge_one_ring)
   {
-    auto edgeRange = adjacent_edges(e);
-    auto iter = edgeRange.begin();
-    for(; iter != edgeRange.end(); ++iter)
+    auto edge_range = adjacent_edges(e);
+    auto iter = edge_range.begin();
+    for(; iter != edge_range.end(); ++iter)
     {
       if((std::find(container_of_edge_one_ring.begin(),
                     container_of_edge_one_ring.end(),
