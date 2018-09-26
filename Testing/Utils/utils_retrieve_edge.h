@@ -39,3 +39,28 @@ retrieve_edge(MutableFaceGraph &g, int source_index, int target_index)
 
   return result;
 }
+
+/*
+ * \brief Utility functions that retrieves the edge out
+ *        of its index.
+ * \tparam MutableFaceGraph Any mesh type having a boost::graph_traits
+ *                    specialisation.
+ * \param g           The graph which which to search for.
+ * \param edge_index  The index of the edge.
+ * \return            When found, the edge with index edge_index.
+ */
+template<typename MutableFaceGraph>
+typename boost::graph_traits<MutableFaceGraph>::edge_descriptor
+retrieve_edge(MutableFaceGraph& g,
+              int edge_index)
+{
+  typedef boost::graph_traits<MutableFaceGraph>     GraphTraits;
+  typedef typename GraphTraits::edge_iterator       edge_iterator;
+  typedef typename GraphTraits::edge_descriptor     edge_descriptor;
+
+  edge_iterator e = edges(g).first; 
+
+  edge_descriptor result = *boost::next(e, edge_index);
+
+  return result;
+}
