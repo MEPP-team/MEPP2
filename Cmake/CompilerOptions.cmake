@@ -76,6 +76,6 @@ if(MSVC)
 
 	# --> better for future use : https://cmake.org/cmake/help/v3.0/command/source_group.html
 
-	include("${PROJECT_SOURCE_DIR}/${CMAKE_INCLUDE_INVOCATION_DIR}/Cmake/msvc/kit.cmake")
+	include("${CMAKE_CURRENT_LIST_DIR}/msvc/kit.cmake")
 endif()
 #------------------------------------------------------------------------------
