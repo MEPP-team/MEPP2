@@ -10,7 +10,6 @@ namespace FEVV {
 namespace Operators {
 
 /**
- * \ingroup AIFFilters
  * \brief Replace the old_edge incident edge of face by the new_edge if old_edge
  *        and new_edge were similar/parallel edges.
  *
@@ -43,7 +42,6 @@ replace_similar_edges(typename boost::graph_traits<
 }
 
 /**
- * \ingroup AIFFilters
  * \brief For all faces incident to e_to_remove, if e_to_keep and e_to_remove
  *        were similar/parallel edges then these faces are made incident to
  *        e_to_keep by replacing e_to_remove by e_to_keep among their incident
@@ -79,7 +77,6 @@ merge_similar_edges(
 }
 
 /**
- * \ingroup AIFFilters
  * \brief Remove/resolve similar/parallel edges for all incident edges of
  * v_to_keep vertex.
  *
@@ -127,7 +124,6 @@ resolve_similar_incident_edges(
 }
 
 /**
- * \ingroup AIFFilters
  * \brief Remove/resolve similar faces for all incident faces of v_to_keep
  *        vertex.
  *
@@ -192,7 +188,6 @@ resolve_similar_incident_faces(
 }
 
 /**
- * \ingroup AIFFilters
  * \brief Remove/resolve similar faces for all incident faces of v_to_keep
  *        vertex.
  *

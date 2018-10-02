@@ -56,7 +56,7 @@ test_collapse_edge_open_mesh(std::string filename,
   std::cout << "Collapsing edge " << source_index << " to " << target_index
             << "." << std::endl;
   // DBG FEVV::Filters::print_points(m, get(CGAL::vertex_point, m));
-  FEVV::Filters::collapse_edge_keep_target_euler(m, h);
+  FEVV::Operators::collapse_edge_keep_target_euler(m, h);
   // DBG FEVV::Filters::print_points(m, get(CGAL::vertex_point, m));
 
   // Write result to file

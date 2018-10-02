@@ -22,7 +22,7 @@
 #include <cassert>
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief Split an edge of the graph.
@@ -165,7 +165,7 @@ split_edge(
   }
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined SplitEdgeNonManifoldFilter_h

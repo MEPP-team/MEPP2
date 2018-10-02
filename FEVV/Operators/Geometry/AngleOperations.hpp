@@ -8,9 +8,9 @@
 #define RAD2DEG(rad) (rad * (180.f / M_PI))
 
 namespace FEVV {
-namespace Math {
+namespace Operators {
 
-namespace Angle {
+namespace Geometry {
 
 /// sine can be either a float, a double or a long double
 template< class T >
@@ -30,7 +30,7 @@ template< class T >
 static T
 asin_degree(T sine)
 {
-  return RAD2DEG(Angle::asin< T >(sine));
+  return RAD2DEG(Geometry::asin< T >(sine));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -51,11 +51,11 @@ template< class T >
 inline T
 acos_degree(T cosine)
 {
-  return RAD2DEG(Angle::acos< T >(cosine));
+  return RAD2DEG(Geometry::acos< T >(cosine));
 }
-} // namespace Angle
+} // namespace Geometry
 
-} // namespace Math
+} // namespace Operators
 } // namespace FEVV
 
 #endif /* __AngleOperations_hxx */

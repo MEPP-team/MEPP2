@@ -6,8 +6,8 @@
 #include "FEVV/Tools/Math/MatrixOperations.hpp" // MACH_EPS_DOUBLE
 
 namespace FEVV {
-namespace Functionals {
-namespace Polygons {
+namespace Operators {
+namespace Geometry {
 /**
  * \brief   Compute the angle of a triangle (given by 3 points).
  *
@@ -43,11 +43,11 @@ triangle_rad_angle(const typename GeometryTraits::Point &a,
 
   Scalar cosabc = gt.dot_product(ba, bc);
 
-  return FEVV::Math::Angle::acos(cosabc);
+  return FEVV::Operators::Geometry::acos(cosabc);
 }
 
-} // namespace Polygons
-} // namespace Functionals
+} // namespace Geometry
+} // namespace Operators
 } // namespace FEVV
 
 #endif // TRIANGLE_RAD_ANGLE_HXX

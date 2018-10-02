@@ -22,7 +22,7 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief   Split an edge of the graph.
@@ -237,7 +237,7 @@ split_edge(
   }
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined SplitEdgeFilter_h

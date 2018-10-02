@@ -16,7 +16,7 @@
 // DBG #include "FEVV/Filters/print_points.h"
 
 using namespace FEVV;
-using namespace FEVV::Filters;
+using namespace FEVV::Operators;
 
 /*
  * \brief  Tests the \link collapse_edge_keep_target test \endlink
@@ -54,7 +54,7 @@ test_collapse_edge_polyhedron(std::ifstream &in,
   std::cout << "Collapsing edge " << source_index << " to " << target_index
             << "." << std::endl;
   // DBG FEVV::Filters::print_points(p, get(CGAL::vertex_point, p));
-  FEVV::Filters::collapse_edge_keep_target_euler(p, h);
+  FEVV::Operators::collapse_edge_keep_target_euler(p, h);
   // DBG FEVV::Filters::print_points(p, get(CGAL::vertex_point, p));
 
   std::ofstream os(output_file_name);

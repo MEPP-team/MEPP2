@@ -518,6 +518,147 @@ public:
   {
     return sort_vertices<ComparatorType>(&mesh, cmp);
   }
+  /*!
+  * 			Sort incident edges and return incidence relations with edges
+  * \param	vertex	The involving vertex
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges(vertex_descriptor vertex, ComparatorType cmp)
+  {
+    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
+    return incident_edges(vertex);
+  }
+
+  /*!
+  * 			Sort incident edges starting with given incident edge and return incidence relations with edges
+  * \param	vertex	The involving vertex
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	edge  	The involving incident edge to vertex
+  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, ComparatorType cmp, edge_descriptor edge)
+  {
+    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
+    /////////////////////////////////////////////////////////////////////////
+    std::list<edge_descriptor> ltmp, ltmpnext;
+    edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
+      ite = vertex->m_Incident_PtrEdges.end();
+    while (it != ite && *it != edge)
+    {
+      ltmpnext.push_back(*it);
+      ++it;
+    }
+    while (it != ite)
+    {
+      ltmp.push_back(*it);
+      ++it;
+    }
+    /////////////////////////////////////////////////////////////////////////
+    vertex->m_Incident_PtrEdges.clear();
+    vertex->m_Incident_PtrEdges.insert(vertex->m_Incident_PtrEdges.end(), ltmp.begin(), ltmp.end());
+    vertex->m_Incident_PtrEdges.insert(vertex->m_Incident_PtrEdges.end(), ltmpnext.begin(), ltmpnext.end());
+    /////////////////////////////////////////////////////////////////////////
+    return incident_edges(vertex);
+  }
+
+  static std::vector<edge_descriptor> get_incident_hole_border_edges(vertex_descriptor vertex)
+  {
+    std::vector<edge_descriptor> res;
+    if (is_isolated_vertex(vertex)) return res;
+
+    typedef edge_container_in_vertex::const_iterator it_type;
+    boost::iterator_range<it_type> edges_range = incident_edges(vertex);
+
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) {
+      if ((is_surface_border_edge(*it) && 
+          (degree((*it)->get_first_vertex())>2) && 
+          (degree((*it)->get_second_vertex())>2)) ||
+          (is_dangling_edge(*it) && 
+          (degree((*it)->get_first_vertex()) >= 2) && 
+          (degree((*it)->get_second_vertex()) >= 2))
+        )
+        res.push_back(*it);
+    }
+    if (res.size() == 1)
+    {
+      std::vector<edge_descriptor> res_init(res.begin(), res.end());
+      for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) {
+        if (std::find(res_init.begin(), res_init.end(), *it) == res_init.end())
+        {
+          auto iter = res_init.begin();
+          for (; iter != res_init.end(); ++iter)
+          {
+            if (are_adjacent(opposite_vertex(*it, vertex), opposite_vertex(*iter, vertex)))
+            {
+              res.push_back(*it);
+              break;
+            }
+          }
+        }
+      }
+    }
+    return res;
+  }
+
+  /*!
+  * 			Return a vector of incident edges to vertex except edge_to_remove
+  * \param	vertex	The involving vertex
+  * \param	edge_to_remove    The involving edge to remove from incident edges
+  * \return	A std::vector of incident edges to vertex except edge_to_remove.
+  * \see get_incident_hole_border_edges
+  */
+  static std::vector<edge_descriptor> get_incident_hole_border_edges_except_one_edge(vertex_descriptor vertex, edge_descriptor edge_to_remove)
+  {
+    std::vector<edge_descriptor> res = get_incident_hole_border_edges(vertex);
+
+    auto iter = std::find(res.begin(), res.end(), edge_to_remove);
+    if (iter != res.end())
+      res.erase(iter);
+
+    return res;
+  }
+
+  /*!
+  * 			First common edge between a vertex and a face
+  * \param	vertex	The involving vertex
+  * \param	face    The involving face
+  * \return	The first common edge between vertex and face.
+  */
+  static  edge_descriptor common_edge(vertex_descriptor vertex, face_descriptor face)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+
+    boost::iterator_range<it_type> edges_range = incident_edges(vertex); // we need to use the first vertex (the source in concept!!)
+
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) {
+      if (are_incident(face, *it))
+        return *it;
+    }
+    return null_edge();
+  }
+
+  /*!
+  * 			First common edge between a vertex and a face except not_that_edge
+  * \param	vertex	The involving vertex
+  * \param	face    The involving face
+  * \param	not_that_edge The involving edge
+  * \return	The first common edge between vertex and face except not_that_edge.
+  */
+  static  edge_descriptor common_edge(vertex_descriptor vertex, face_descriptor face, edge_descriptor not_that_edge)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+
+    boost::iterator_range<it_type> edges_range = incident_edges(vertex); // we need to use the first vertex (the source in concept!!)
+
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) {
+      if (are_incident(face, *it) && (*it != not_that_edge))
+        return *it;
+    }
+    return null_edge();
+  }
   //////////////////////////////////	Edge AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -1060,6 +1201,64 @@ public:
     for(; it != edges_range.end(); ++it)
     {
       if(!is_2_manifold_edge(*it))
+        return false;
+    }
+    return true;
+  }
+
+  /*!
+  * 			Function determining if the argument face is dangling (not isolated and without any adjacent face sharing and edge)
+  * \param	face	The involving face
+  * \return	true if the argument face is dangling, false otherwise.
+  */
+  static bool is_dangling_face(face_descriptor face)
+  {
+    bool at_least_one_vertex_with_degree_greater_than_2 = false;
+    auto edges_range = incident_edges(face);
+    auto it = edges_range.begin();
+    for (; it != edges_range.end(); ++it) {
+      if (degree(*it) > 1)
+        return false;
+      if (!at_least_one_vertex_with_degree_greater_than_2 && 
+          ((degree((*it)->get_first_vertex()) > 2) || 
+           (degree((*it)->get_second_vertex()) > 2)))
+        at_least_one_vertex_with_degree_greater_than_2 = true;
+    }
+    return at_least_one_vertex_with_degree_greater_than_2;
+  }
+
+  /*!
+  * 			Function determining if the argument face has only incident edges with degree equals to 1
+  * \param	face	The involving face
+  * \return	true if the argument face has only incident edges with degree equals to 1.
+  */
+  static bool face_has_only_incident_edges_with_degree_1(face_descriptor face)
+  {
+    auto edges_range = incident_edges(face);
+    auto it = edges_range.begin();
+    for (; it != edges_range.end(); ++it) {
+      if (degree(*it) > 1)
+        return false;
+    }
+    return true;
+  }
+
+  /*!
+  * 			Function determining if the argument face has adjacent faces only along one incident edge
+  * \param	face	The involving face
+  * \param	edge	The involving edge
+  * \return	true if the argument face has only the edge edge with degree greater than 1.
+  */
+  static bool face_has_only_that_edge_with_degree_greater_than_1(face_descriptor face, edge_descriptor edge)
+  {
+    auto edges_range = incident_edges(face);
+    auto it = edges_range.begin();
+    if (!are_incident(face, edge))
+      return false;
+    if (degree(edge) <= 1)
+      return false;
+    for (; it != edges_range.end(); ++it) {
+      if ((degree(*it) > 1) && (*it != edge))
         return false;
     }
     return true;

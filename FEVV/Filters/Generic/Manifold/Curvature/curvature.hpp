@@ -65,7 +65,7 @@ triangle_area(const HalfedgeGraph &g,
   Point3d q = get(pm, target(next(*p_halfedge, g), g));
   Point3d r = get(pm, target(next(next(*p_halfedge, g), g), g));
 
-  return FEVV::Functionals::Polygons::triangle_area< GeometryTraits >(
+  return FEVV::Operators::Geometry::triangle_area< GeometryTraits >(
       p, q, r, gt);
 }
 
@@ -132,7 +132,7 @@ principal_curvature_per_vert(const HalfedgeGraph &g,
         ps_cp_xedge /
         len_edge; // = (CGAL::cross_product(normal1,normal2)*edge)/len_edge; //
                   // TODO BETTER
-    double beta = FEVV::Math::Angle::asin(sine);
+    double beta = FEVV::Operators::Geometry::asin(sine);
 
     // compute edge * edge^t * coeff, and add it to current matrix
     double p_vector_edge[3] = {edge[0], edge[1], edge[2]};
@@ -202,7 +202,7 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
              0.0) // if (v==pVertex || vec * (P - O) > 0.0) // TODO BETTER
       {
         bool isect =
-            FEVV::Math::Clipping::sphere_clip_vector(o, radius, p, vec, gt);
+            FEVV::Operators::Geometry::sphere_clip_vector(o, radius, p, vec, gt);
 
         if(!CGAL::is_border_edge(*h, g))
         {
@@ -229,7 +229,7 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
           double sine =
               ps_cpx_v / len_edge; // = (CGAL::cross_product(normal1,
                                    // normal2)*vec) / len_edge; // TODO BETTER
-          double beta = FEVV::Math::Angle::asin(sine);
+          double beta = FEVV::Operators::Geometry::asin(sine);
 
           // compute edge * edge^t * coeff, and add it to current matrix
           double p_vector_edge[3] = {vec[0], vec[1], vec[2]};

@@ -50,7 +50,7 @@ test_collapse_edge_aif(const std::string &input_file_path,
 
   std::cout << "Collapsing edge " << source_index << " to " << target_index
             << "." << std::endl;
-  FEVV::Filters::collapse_edge_keep_target(m, h);
+  FEVV::Operators::collapse_edge_keep_target(m, h);
 
   // write mesh to file
   FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag);

@@ -50,7 +50,7 @@ test_split_edge_aif(const std::string &input_file_path,
 
   std::cout << "Splitting edge " << source_index << " to " << target_index
             << "." << std::endl;
-  FEVV::Filters::split_edge(m, get(boost::vertex_point, m), h);
+  FEVV::Operators::split_edge(m, get(boost::vertex_point, m), h);
 
   // write mesh to file
   FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag);

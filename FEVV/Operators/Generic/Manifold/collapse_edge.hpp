@@ -6,7 +6,7 @@
 #include "FEVV/Operators/Generic/Manifold/delete_edge_if_parallel.hpp"
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief Collapse an edge of the graph.
@@ -85,7 +85,7 @@ collapse_edge_keep_target(
   // doesn't compile. WHY ?
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // COLLAPSE_EDGE_H

@@ -25,7 +25,7 @@
 #include "FEVV/Operators/Generic/Manifold/flip_edge.hpp"
 
 using namespace FEVV;
-using namespace FEVV::Filters;
+using namespace FEVV::Operators;
 
 void
 test_split_edge_polyhedron(std::string input_file_path,

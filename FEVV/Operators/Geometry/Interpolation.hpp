@@ -1,21 +1,13 @@
-/**
- * \file		Interpolation.hxx
- * \author		Vincent Vidal
- * \date     	2015-04-14
- */
-
 #ifndef __Interpolation_hxx
 #define __Interpolation_hxx
 #include <vector>
 
 namespace FEVV {
-namespace Math {
-
-namespace Barycentric {
-namespace Tetrahedron {
+namespace Operators {
+namespace Geometry {
 template< class P, class V >
 static inline bool
-isInTetrahedron(const P &a, const P &b, const P &c, const P &d, const P &Pos)
+is_in_tetrahedron(const P &a, const P &b, const P &c, const P &d, const P &Pos)
 {
   V vap = Pos - a, vbp = Pos - b,
     // vcp = Pos - c,
@@ -186,12 +178,11 @@ trilinear_interpolation(const P &a,
 
   return res;
 };
-} // namespace Tetrahedron
-namespace Triangle {
+
 //------------------------------------------------------------------------------------------------
 template< typename GeometryTraits >
 static inline bool
-isOverSegment(const typename GeometryTraits::Point &a,
+is_over_segment(const typename GeometryTraits::Point &a,
               const typename GeometryTraits::Point &b,
               const typename GeometryTraits::Point &Pos,
               typename GeometryTraits::Vector &diff,
@@ -227,7 +218,7 @@ isOverSegment(const typename GeometryTraits::Point &a,
 // is the projection of point Pos on the triangle plane in the triangle (a,b,c)?
 template< typename GeometryTraits >
 static inline bool
-isInTriangle(const typename GeometryTraits::Point &a,
+is_in_triangle(const typename GeometryTraits::Point &a,
              const typename GeometryTraits::Point &b,
              const typename GeometryTraits::Point &c,
              const typename GeometryTraits::Point &Pos,
@@ -341,9 +332,7 @@ bilinear_interpolation(
 
   return res;
 };
-} // namespace Triangle
-} // namespace Barycentric
-
-} // namespace Math
+} // namespace Geometry
+} // namespace Operators
 } // namespace FEVV
 #endif

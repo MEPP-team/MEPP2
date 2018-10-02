@@ -18,7 +18,7 @@
 // DBG #include "FEVV/Filters/Generic/print_points.hpp"
 
 using namespace FEVV;
-using namespace FEVV::Filters;
+using namespace FEVV::Operators;
 
 //------------------------------------------------------------------------------
 

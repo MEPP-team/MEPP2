@@ -49,7 +49,7 @@ test_flip_edge_aif(const std::string &input_file_path,
 
   std::cout << "Flipping edge " << source_index << " to " << target_index << "."
             << std::endl;
-  FEVV::Filters::flip_edge(m, h);
+  FEVV::Operators::flip_edge(m, h);
 
   // write mesh to file
   FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag);

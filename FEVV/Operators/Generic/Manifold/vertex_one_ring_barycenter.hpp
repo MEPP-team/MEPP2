@@ -48,7 +48,7 @@ vertex_one_ring_barycenter(
 
   std::vector< typename boost::graph_traits< FaceGraph >::vertex_descriptor >
       qv;
-  Tools::extract_1_ring_not_including_v< FaceGraph, GeometryTraits >(v, g, qv);
+  Operators::extract_1_ring_not_including_v< FaceGraph, GeometryTraits >(v, g, qv);
 
   Point center(0, 0, 0);
   unsigned int cpt = 0;

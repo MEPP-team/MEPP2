@@ -18,8 +18,6 @@ namespace Operators {
  * \param  uv3                 third vertex's texture coordinates.
  *
  * \return  calculated face tangent.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename Point, typename Vector >
 Vector

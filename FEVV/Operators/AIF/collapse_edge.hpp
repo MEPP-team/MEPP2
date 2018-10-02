@@ -22,7 +22,7 @@
 #include <cassert>
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 
 typedef FEVV::DataStructures::AIF::AIFTopologyHelpers AIFHelpers;
@@ -202,7 +202,7 @@ template<
   }
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined CollapseEdgeNonManifoldFilter_h

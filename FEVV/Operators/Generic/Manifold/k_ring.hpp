@@ -19,7 +19,7 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 
 namespace FEVV {
-namespace Tools {
+namespace Operators {
 
 
 // extract vertices which are at most k (inclusive)
@@ -165,11 +165,11 @@ extract_1_ring_not_including_v(
     std::vector< typename boost::graph_traits< FaceGraph >::vertex_descriptor >
         &qv)
 {
-  Tools::extract_k_ring< FaceGraph, GeometryTraits >(v, g, 1, qv);
+  Operators::extract_k_ring< FaceGraph, GeometryTraits >(v, g, 1, qv);
   qv.erase(qv.begin()); // the first element is v itself ant it must be removed
 }
 
-} // namespace Tools
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined KRingTool_h

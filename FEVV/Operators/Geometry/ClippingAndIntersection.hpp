@@ -4,9 +4,9 @@
 #include "FEVV/Tools/Math/MatrixOperations.hpp"
 
 namespace FEVV {
-namespace Math {
+namespace Operators {
 
-namespace Clipping {
+namespace Geometry {
 
 /**
  * Sphere equation is given by (x-Cx)^2+(y-Cy)^2+(z-Cz)^2=r^2
@@ -63,9 +63,9 @@ sphere_clip_vector(
 
   return true;
 }
-} // namespace Clipping
+} // namespace Geometry
 
-} // namespace Math
+} // namespace Operators
 } // namespace FEVV
 
 #endif // CLIPPING_AND_INTERSECTIONS_HPP

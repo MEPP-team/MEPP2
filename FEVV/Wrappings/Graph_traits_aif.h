@@ -1078,6 +1078,8 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
   typedef
       typename boost::graph_traits< Graph >::edge_descriptor edge_descriptor;
 
+  typedef FEVV::DataStructures::AIF::AIFTopologyHelpers AIFHelpers;
+
   std::vector< vertex_descriptor > vertices(vr.begin(),
                                             vr.end()); // quick and dirty copy
   unsigned int nv =
