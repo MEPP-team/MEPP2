@@ -258,6 +258,19 @@ num_edges(const FEVV::DataStructures::AIF::AIFMesh &sm)
       sm.GetNumberOfEdges());
 }
 
+// BGL EdgeIndexGraph Concept 
+inline
+void
+renumber_edge_indices(const FEVV::DataStructures::AIF::AIFMesh& sm)
+{
+  auto edgeRangePair = edges(sm);
+  auto edgeIter = edgeRangePair.first;
+  int index = 0;
+  for (; edgeIter != edgeRangePair.second; ++edgeIter) {
+    (*edgeIter)->SetIndex(index++);
+  }
+}
+
 // CGAL FaceListGraph
 //!
 //! \brief  Returns an upper bound of the number of faces of the graph.

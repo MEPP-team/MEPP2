@@ -22,7 +22,7 @@
 #include <cassert>
 
 namespace FEVV {
-namespace Filters { // to rename NonManifoldFilters?
+namespace Filters {
 
 /**
  * \brief Split an edge of the graph.

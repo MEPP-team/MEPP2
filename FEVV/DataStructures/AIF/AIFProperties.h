@@ -69,7 +69,6 @@ public:
                                   const AIFPoint< CoordinateType, DIM > &p)
   {
     // stream << "("; // do not add this to get the same output as CGAL or
-    // OpenMesh
     for(auto itVal = p.begin(); itVal != p.end(); ++itVal)
     {
       stream << (*itVal);
@@ -275,6 +274,26 @@ public:
   {
     return v * s;
   }
+  
+  /*!
+  * 			<< operator
+  * \param	stream	The output stream to update.
+  * \param	v	The AIFVector to add to the output stream.
+  * \return The resulting output stream object.
+  */
+  friend std::ostream& operator<<(std::ostream& stream, const AIFVector<CoordinateType, DIM>& v)
+  {
+    //stream << "("; // do not add this to get the same output as CGAL or OpenMesh
+    for(auto itVal = v.begin(); itVal != v.end(); ++itVal)
+    {
+      stream << (*itVal);
+      if( itVal != (v.end() - 1) )
+        stream << " ";
+    }
+    //stream << ")";
+
+    return stream;
+  }  
 };
 
 /*

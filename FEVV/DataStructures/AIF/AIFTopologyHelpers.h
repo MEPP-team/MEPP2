@@ -482,6 +482,42 @@ public:
     }
   }
 
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, ComparatorType cmp)
+  {
+    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp);
+    return mesh->GetVertices();
+  }
+
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, ComparatorType cmp)
+  {
+    return sort_vertices<ComparatorType>(mesh.get(), cmp);
+  }
+
+  /*!
+  * 			Sort mesh vertices
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, ComparatorType cmp)
+  {
+    return sort_vertices<ComparatorType>(&mesh, cmp);
+  }
   //////////////////////////////////	Edge AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -916,6 +952,43 @@ public:
     return is_2_manifold_vertex(edge->get_first_vertex()) &&
            is_2_manifold_vertex(edge->get_second_vertex());
   }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, ComparatorType cmp)
+  {
+    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp);
+    return mesh->GetEdges();
+  }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, ComparatorType cmp)
+  {
+    return sort_edges<ComparatorType>(mesh.get(), cmp);
+  }
+
+  /*!
+  * 			Sort mesh edges
+  * \param	mesh	The involving mesh
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, ComparatorType cmp)
+  {
+    return sort_edges<ComparatorType>(&mesh, cmp);
+  }
   //////////////////////////////////	Face AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -1181,6 +1254,7 @@ public:
         adFaces.end()); // note that it is a non-sens to manage a memory caching
                         // as adjacent faces can be quickly computed
   }
+
   /*!
   * 			Reverse the incident edge order of the given face.
   * \param	face	The involved face
@@ -2467,12 +2541,14 @@ public:
   static bool
   is_e_one_ring_connected(edge_descriptor e,
                           const T &container_of_edge_one_ring,
-                          bool allow_multiple_incident_edges = false)
+                          bool allow_multiple_incident_edges = false, 
+                          bool ensure_e_belongs_to_container = true)
   {
     // First ensure that e is an element of container_of_edge_one_ring
-    if(std::find(container_of_edge_one_ring.begin(),
+    if(ensure_e_belongs_to_container && 
+      (std::find(container_of_edge_one_ring.begin(),
                  container_of_edge_one_ring.end(),
-                 e) == container_of_edge_one_ring.end())
+                 e) == container_of_edge_one_ring.end()))
       return false;
     // Then check if e is one-ring connected to its one ring
     bool another_edge_incident_to_e_v1 = false,
@@ -2514,9 +2590,9 @@ public:
   are_adjacent_edges_one_ring_connected(edge_descriptor e,
                                         const T &container_of_edge_one_ring)
   {
-    auto edgeRange = adjacent_edges(e);
-    auto iter = edgeRange.begin();
-    for(; iter != edgeRange.end(); ++iter)
+    auto edge_range = adjacent_edges(e);
+    auto iter = edge_range.begin();
+    for(; iter != edge_range.end(); ++iter)
     {
       if((std::find(container_of_edge_one_ring.begin(),
                     container_of_edge_one_ring.end(),
@@ -2603,6 +2679,8 @@ public:
               //    its second vertex not incident
               //       to any of one-ring edges (remaining notSortedOneRing and
               //       already used ones)
+              //    => If this fails, look for an edge adjacent to last edge 
+              //    with lowest degree for common vertex
               // 3) if there are only edge(>=2) with second vertex incident to
               // one of remaining edge, then
               //    select the first
@@ -2616,23 +2694,43 @@ public:
               auto it2 = it;
               ++it2;
 
+              bool neverEnter = true, atLeastOneAnotherAdjacent = false;
               for(; it2 != ite; ++it2)
               {
-                if(are_adjacent(*it2, nextEdgeTmp) &&
-                   are_adjacent(*it2, nextEdge))
+                if (are_adjacent(*it2, nextEdgeTmp))
                 {
-                  // 2)
-                  vertex_descriptor common_v = common_vertex(nextEdgeTmp, *it2);
-                  vertex_descriptor other_v = opposite_vertex(*it2, common_v);
-                  auto it3 = it;
-                  ++it3;
-                  for(; it3 != ite; ++it3)
-                    if((it3 != it2) && are_incident(*it3, other_v))
+                  atLeastOneAnotherAdjacent = true;
+                  if (are_adjacent(*it2, nextEdge))
+                  {
+                    neverEnter = false;
+                    // 2)
+                    vertex_descriptor common_v = common_vertex(nextEdgeTmp, *it2);
+                    vertex_descriptor other_v = opposite_vertex(*it2, common_v);
+                    auto it3 = it;
+                    ++it3;
+                    for (; it3 != ite; ++it3)
+                      if ((it3 != it2) && are_incident(*it3, other_v))
+                      {
+                        break; /// \todo  Should not break in case of a dangling polyline
+                      }
+                    if ((it3 == ite) && (!is_e_one_ring_connected(*it2, notSortedOneRingSave, true, true) ||
+                      is_e_one_ring_connected(nextEdge, notSortedOneRingSave, true, true) && is_e_one_ring_connected(*it2, result, true, false)))
                     {
+                      nextEdge = *it2;
                       break;
                     }
-                  if((it3 == ite) &&
-                     !is_e_one_ring_connected(*it2, notSortedOneRingSave, true))
+                  }
+                }
+              }
+              ///////////////////////////////////////////////////////////////
+              if (atLeastOneAnotherAdjacent && neverEnter)
+              {
+                it2 = it;
+                ++it2;
+
+                for (; it2 != ite; ++it2)
+                {
+                  if (are_adjacent(*it2, nextEdgeTmp) && degree(common_vertex(nextEdgeTmp, nextEdge))>degree(common_vertex(nextEdgeTmp, *it2)))
                   {
                     nextEdge = *it2;
                     break;
@@ -2981,7 +3079,13 @@ public:
 
         if(std::find(oneR.begin(), oneR.end(), lastVertex) != oneR.end())
         {
-          if((i + 2 == nbE) && !is_e_one_ring_connected(
+          if ((i + 1 == nbE) && !is_e_one_ring_connected(
+                                orderedOneRing[0], orderedOneRing, true))
+          {
+            oneR.push_back(lastVertex);
+            continue;
+          }
+          else if((i + 2 == nbE) && !is_e_one_ring_connected(
                                    orderedOneRing[i + 1], orderedOneRing, true))
           {
             oneR.push_back(lastVertex);
@@ -2993,13 +3097,6 @@ public:
         oneR.push_back(lastVertex);
       }
     }
-
-    // manage the case of orderedOneRing starting or ending by a danging edge
-    // (dangling polylines not yet managed)
-    // if(!is_e_one_ring_connected(orderedOneRing.back(), orderedOneRing, true)
-    // || !is_e_one_ring_connected(orderedOneRing.front(), orderedOneRing, true))
-    //  if (opposite_vertex(orderedOneRing.back(), oneR.back()) != oneR.front())
-    //    oneR.push_back(opposite_vertex(orderedOneRing.back(), oneR.back()));
 
     m_One_Ring_Vertices = vertex_container_in_vertex(oneR.begin(), oneR.end());
     v->m_Is_One_Ring_Vertices_Computed = true;
@@ -3059,6 +3156,69 @@ public:
   }
   // End of one-ring stuff
   /////////////////////////////////
+  /*!
+  * 			Get the edge of the face'incident edges after the prev_edge
+  * \param	face	The face for which incident edges are retrieved.
+  * \param	prev_edge	The edge located before the returned edge.
+  */
+  static edge_descriptor get_edge_of_face_after_edge(face_descriptor face, 
+                                                     edge_descriptor prev_edge)
+  {
+    std::vector< edge_descriptor >::iterator
+      it = face->m_Incident_PtrEdges.begin(),
+      ite = face->m_Incident_PtrEdges.end();
+    for (; it != ite; ++it)
+    {
+      if ((((*it)->get_first_vertex() == prev_edge->get_first_vertex()) &&
+        ((*it)->get_second_vertex() == prev_edge->get_second_vertex())) ||
+        (((*it)->get_first_vertex() == prev_edge->get_second_vertex()) &&
+        ((*it)->get_second_vertex() == prev_edge->get_first_vertex())))
+      {
+        ++it;
+        if (it == ite)
+          it = face->m_Incident_PtrEdges.begin();
+        break;
+      }
+    }
+
+    if (it == ite)
+      throw std::invalid_argument("Helpers::get_edge_of_face_after_edge(f, pe) -> prev_edge does not belong to input face.");
+
+    return *it;
+  }
+  /*!
+  * 			Get the edge of the face'incident edges before the next_edge
+  * \param	face	The face for which incident edges are retrieved.
+  * \param	next_edge	The edge located after the returned edge.
+  */
+  static edge_descriptor get_edge_of_face_before_edge(face_descriptor face, 
+                                                      edge_descriptor next_edge)
+  {
+    std::vector< edge_descriptor >::iterator
+      it = face->m_Incident_PtrEdges.begin(),
+      ite = face->m_Incident_PtrEdges.end();
+    for (; it != ite; ++it)
+    {
+      if ((((*it)->get_first_vertex() == next_edge->get_first_vertex()) && 
+        ((*it)->get_second_vertex() == next_edge->get_second_vertex())) ||
+        (((*it)->get_first_vertex() == next_edge->get_second_vertex()) && 
+        ((*it)->get_second_vertex() == next_edge->get_first_vertex())))
+      {
+        if (it == face->m_Incident_PtrEdges.begin())
+        {
+          it = ite;
+        }
+        --it;
+        break;
+      }
+    }
+
+    if (it == ite)
+      throw std::invalid_argument("Helpers::get_edge_of_face_before_edge(f, ne) -> next_edge does not belong to input face.");
+
+    return *it;
+  }
+
   /*!
    * 			Add the edge to the face'incident edges after the prev_edge
    * without any check. Update caching information for face' incident vertices.

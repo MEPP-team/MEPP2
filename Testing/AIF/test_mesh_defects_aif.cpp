@@ -76,6 +76,7 @@ main(int narg, char **argv)
   const AIFMesh::Vector red(255, 0, 0);
   const AIFMesh::Vector green(0, 255, 0);
   const AIFMesh::Vector blue(0, 0, 255);
+  const AIFMesh::Vector white(255, 255, 255);
   if(!ptr_mesh->isPropertyMap< AIFVertex::ptr >("v:color"))
   { // create a property map to store vertex colors if not already created
     ptr_mesh->AddPropertyMap< AIFVertex::ptr, AIFMesh::Vector >("v:color");
@@ -148,7 +149,8 @@ main(int narg, char **argv)
   auto iterator_pair_e = edges(*ptr_mesh);
   edge_iterator ei = iterator_pair_e.first;
   edge_iterator ei_end = iterator_pair_e.second;
-  int nb_isolated_edges = 0, nb_dangling_edges = 0, nb_complex_edges = 0;
+  int nb_isolated_edges = 0, nb_dangling_edges = 0, nb_complex_edges = 0, 
+      nb_border_edges = 0;
   std::vector< edge_descriptor > e_to_remeove;
   for(; ei != ei_end; ++ei)
   {
@@ -176,6 +178,12 @@ main(int narg, char **argv)
       ptr_mesh->SetProperty< AIFEdge::ptr, AIFMesh::Vector >(
           "e:color", (*ei)->GetIndex(), blue);
     }
+    else if (FEVV::DataStructures::AIF::AIFTopologyHelpers::is_surface_border_edge(*ei))
+    {
+      ++nb_border_edges;
+      ptr_mesh->SetProperty< AIFEdge::ptr, AIFMesh::Vector >(
+          "e:color", (*ei)->GetIndex(), white);
+    }
     else
     {
       ptr_mesh->SetProperty< AIFEdge::ptr, AIFMesh::Vector >(
@@ -187,7 +195,7 @@ main(int narg, char **argv)
   auto iterator_pair_f = faces(*ptr_mesh);
   face_iterator fi = iterator_pair_f.first;
   face_iterator fi_end = iterator_pair_f.second;
-  int nb_isolated_faces = 0;
+  int nb_isolated_faces = 0, nb_degenerated_faces = 0;
   std::vector< face_descriptor > f_to_remeove;
   for(; fi != fi_end; ++fi)
   {
@@ -207,6 +215,9 @@ main(int narg, char **argv)
       ptr_mesh->SetProperty< AIFFace::ptr, AIFMesh::Vector >(
           "f:color", (*fi)->GetIndex(), green);
     }
+
+    if (FEVV::DataStructures::AIF::AIFTopologyHelpers::is_degenerated_face(*fi))
+      ++nb_degenerated_faces;
   }
   /////////////////////////////////////////////////////////////////////////////
   // 2 - Remove isolated elements
@@ -277,6 +288,8 @@ main(int narg, char **argv)
   std::cout << "Number of cut vertices: " << nb_cut_vertices << std::endl;
   std::cout << "Number of dangling edges: " << nb_dangling_edges << std::endl;
   std::cout << "Number of complex edges: " << nb_complex_edges << std::endl;
+  std::cout << "Number of surface border edges: " << nb_border_edges << std::endl;
+  std::cout << "Number of degenerated faces: " << nb_degenerated_faces << std::endl;
   /////////////////////////////////////////////////////////////////////////////
   return 0;
 }
