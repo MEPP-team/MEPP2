@@ -111,8 +111,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ export OPENMESH_DIR="$HOME/OpenMesh-7.0"
-  $ cmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DOPENMESH_DIR="$HOME/OpenMesh-7.0" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
