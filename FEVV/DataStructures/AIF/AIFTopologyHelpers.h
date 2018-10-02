@@ -773,6 +773,53 @@ public:
 
     return null_vertex();
   }
+  
+	/*!
+	* 			Function counting the number of incident dangling edges
+	* \param	vertex	The involving vertex
+	* \return	number of incident dangling edges.
+	*/
+	static size_type num_incident_dangling_edge(vertex_descriptor vertex)
+	{
+	  size_type cpt = 0;
+	  auto edges_range = incident_edges(vertex);
+	  auto iterE = edges_range.begin();
+	  for (; iterE != edges_range.end(); ++iterE)
+	  {
+		if (is_dangling_edge(*iterE))
+		  ++cpt;
+	  }
+	  return cpt;
+	}
+	/*!
+	* 			Function determining if the argument vertex has at least one incident dangling edge
+	* \param	vertex	The involving vertex
+	* \return	true if the argument vertex has at least one incident dangling edge, false otherwise.
+	*/
+	static bool has_incident_dangling_edge(vertex_descriptor vertex)
+	{
+	  return (num_incident_dangling_edge(vertex)>0);
+	}
+
+	/*!
+	* 			Function returning the first incident dangling edge
+	* \param	vertex	The involving vertex
+	* \return	the first incident dangling edge if any, else return null_edge descriptor.
+	*/
+	static edge_descriptor get_incident_dangling_edge(vertex_descriptor vertex)
+	{
+	  edge_descriptor de = null_edge();
+	  auto edges_range = incident_edges(vertex);
+	  auto iterE = edges_range.begin();
+	  for (; iterE != edges_range.end(); ++iterE)
+	  {
+		if (is_dangling_edge(*iterE))
+		{
+		  de = *iterE;
+		}
+	  }
+	  return de;
+	}  
   /*!
    * Function determining if the argument edge shares an incidence
    * relation with the argument vertex.

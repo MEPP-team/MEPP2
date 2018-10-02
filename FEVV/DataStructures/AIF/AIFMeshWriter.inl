@@ -196,6 +196,47 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
     for(vertex_face_iterator itVF = vfRange.begin(); itVF != vfRange.end();
         ++itVF)
     {
+	  if ( has_extension(filePath, ".off") )
+      {
+        auto nb_incident_dangling_edges = helpers::num_incident_dangling_edge(*itVF);
+        if(nb_incident_dangling_edges>1)
+          throw std::runtime_error("Writer::write -> multiple dangling edge integration into face indices is not available for .off");
+        else if (nb_incident_dangling_edges == 1)
+        {
+          //throw std::runtime_error("Writer::write -> dangling edge integration into face indices for .off has not been implemented yet");
+          // 1) insert the dangling polyline
+          AIFVertex::ptr current_v = *itVF;
+          AIFEdge::ptr current_e = helpers::get_incident_dangling_edge(current_v);
+          face.push_back(indexMap[*itVF]);
+          int nb_indices_before = static_cast<int>(face.size());
+          do
+          {
+            current_v = helpers::opposite_vertex(current_e, current_v);
+            face.push_back(indexMap[current_v]);
+            ///////////////////////////////////////////////////////////////////
+            nb_incident_dangling_edges = helpers::num_incident_dangling_edge(current_v);
+            auto evRange = helpers::incident_edges(current_v);
+            auto iterE = evRange.begin();
+            for(; iterE != evRange.end(); ++iterE)
+            {
+              if (*iterE != current_e)
+              {
+                current_e = *iterE;
+                break;
+              }
+            }
+          } while (nb_incident_dangling_edges==2); // we only deal with dangling polylines without bisection
+          int nb_indices_after = static_cast<int>(face.size());
+          std::vector<index_type> additional_indices;
+          for (int i = nb_indices_after-2; i >= nb_indices_before; --i)
+          {
+            additional_indices.push_back(face[i]);
+          }
+          face.insert(face.end(), additional_indices.begin(), additional_indices.end());
+          // 2) remove it from lines_indices
+          // not done since a) it is costly and b) lines_indices are not used by off writer 
+        }
+      }
       face.push_back(
           indexMap[*itVF]); // for correct corresponding between vertex order in
                             // file and vertices around face indices
