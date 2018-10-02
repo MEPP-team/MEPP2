@@ -1181,7 +1181,35 @@ public:
         adFaces.end()); // note that it is a non-sens to manage a memory caching
                         // as adjacent faces can be quickly computed
   }
+  /*!
+  * 			Reverse the incident edge order of the given face.
+  * \param	face	The involved face
+  */
+  static void reverse_face_orientation(face_descriptor face)
+  {
+    auto edgeRange = incident_edges(face);
+    std::reverse(edgeRange.begin(), edgeRange.end());
+    face->clear_vertex_incidency();
+  }
 
+  /*!
+  * 			First common face between two edges
+  * \param	edge1	The first involving edge
+  * \param	edge2	The second involving edge
+  * \return	The first common face between edge1 and edge2.
+  */
+  static face_descriptor common_face(edge_descriptor edge1, edge_descriptor edge2)
+  {
+    typedef face_container_in_edge::const_iterator it_type;
+
+    boost::iterator_range<it_type> faces_range = incident_faces(edge1);
+
+    for (it_type it = faces_range.begin(); it != faces_range.end(); ++it) {
+      if (are_incident(*it, edge2))
+        return *it;
+    }
+    return null_face();
+  }
   //////////////////////////////////	Mesh AIFTopologyHelpers
   /////////////////////////////////////
   /*!
