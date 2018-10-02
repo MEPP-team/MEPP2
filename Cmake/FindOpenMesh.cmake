@@ -12,6 +12,12 @@ IF (OPENMESH_INCLUDE_DIR)
   SET(OPENMESH_FIND_QUIETLY TRUE)
 ENDIF (OPENMESH_INCLUDE_DIR)
 
+FIND_PATH(OPENMESH_DIR
+          NAMES "include/OpenMesh/Core/Mesh/PolyMeshT.hh"
+          PATHS $ENV{OPENMESH_DIR}
+          DOC   "Path to OpenMesh directory"
+          )
+
 FIND_PATH(OPENMESH_INCLUDE_DIR OpenMesh/Core/Mesh/PolyMeshT.hh
 	  PATHS /usr/local/include 
                 /usr/include 
