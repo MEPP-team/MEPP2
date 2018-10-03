@@ -1,3 +1,7 @@
+if( NOT BUILD_TESTS )
+  return()
+endif()
+
 # Disabling the tests whose names are found in CTestCustom.cmake
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CTestCustom.cmake
                ${CMAKE_BINARY_DIR})
