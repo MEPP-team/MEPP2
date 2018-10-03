@@ -1,11 +1,11 @@
 # - Try to find OPENMESH
 # Once done this will define
-#  
+#
 # OPENMESH_FOUND			- system has OPENMESH
 # OPENMESH_INCLUDE_DIR		- the OPENMESH include directory
 # OPENMESH_LIBRARIES		- the OPENMESH libraries
 # OPENMESH_LIBRARY_DIR		- the OPENMESH libraries directory
-#   
+#
 
 IF (OPENMESH_INCLUDE_DIR)
   # Already in cache, be silent
@@ -19,15 +19,13 @@ FIND_PATH(OPENMESH_DIR
           )
 
 FIND_PATH(OPENMESH_INCLUDE_DIR OpenMesh/Core/Mesh/PolyMeshT.hh
-	  PATHS /usr/local/include 
-                /usr/include 
+          PATHS /usr/local/include
+                /usr/include
                 /opt/local/include
-				/opt/include
-				$ENV{OPENMESH_DIR}/src
-                $ENV{OPENMESH_DIR}/include
-				${OPENMESH_DIR}/src
+                /opt/include
+                ${OPENMESH_DIR}/src
                 ${OPENMESH_DIR}/include
-                )
+          )
 
 IF (OPENMESH_INCLUDE_DIR)
 	SET(OPENMESH_LIBRARY_DIR "${OPENMESH_INCLUDE_DIR}/../lib")
@@ -37,7 +35,7 @@ IF (OPENMESH_INCLUDE_DIR)
 	SET(OPENMESH_LIBRARY_RELEASE
 		${OPENMESH_CORE_LIBRARY_RELEASE}
 		${OPENMESH_TOOLS_LIBRARY_RELEASE})
-	    
+
 	FIND_LIBRARY(OPENMESH_CORE_LIBRARY_DEBUG NAMES OpenMeshCored libOpenMeshCored PATHS ${OPENMESH_LIBRARY_DIR})
 	FIND_LIBRARY(OPENMESH_TOOLS_LIBRARY_DEBUG NAMES OpenMeshToolsd libOpenMeshToolsd PATHS ${OPENMESH_LIBRARY_DIR})
 	SET(OPENMESH_LIBRARY_DEBUG
