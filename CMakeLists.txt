@@ -48,7 +48,6 @@ include( "${PROJECT_SOURCE_DIR}/Cmake/FindDependencies.cmake" )
 
 # Make sure the compiler can find include files.
 include_directories (${PROJECT_SOURCE_DIR}/)
-include_directories (${PROJECT_BINARY_DIR}/)
 
 # Make sure the linker can find the library once it is built.
 link_directories (${PROJECT_BINARY_DIR})
@@ -178,4 +177,3 @@ append_var_to_use_file( "MEPP2_GUISRC_PLUGIN"
                         "${MEPP2_GUISRC_PLUGIN}" )
 
 message("++ ${USE_MEPP2_FILE} file created.")
-

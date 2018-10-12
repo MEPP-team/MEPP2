@@ -73,7 +73,6 @@ endif()
 if( BUILD_USE_OPENMESH )
   find_package( OpenMesh REQUIRED )
   if ( OPENMESH_FOUND )
-    include_directories( ${OPENMESH_INCLUDE_DIR} )
     add_definitions( -DFEVV_USE_OPENMESH )
   else()
     message( FATAL_ERROR
@@ -84,11 +83,6 @@ endif ()
 ##### AIF
 if( BUILD_USE_AIF )
   add_definitions( -DFEVV_USE_AIF )
-endif()
-
-##### Check (optional) GUI Dependencies (OSG and Qt)
-if( BUILD_USE_GUI )
-  include( GUIOptionalDependencies )
 endif()
 
 ##### PCL package finding

@@ -9,6 +9,10 @@ else()
   include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
 endif()
 
+if( BUILD_USE_OPENMESH AND OPENMESH_FOUND )
+  include_directories( ${OPENMESH_INCLUDE_DIR} )
+endif()
+
 if( MSVC )
   # /FORCE:MULTIPLE for osgDB ifstream / ofstream conflict
   # -> here, really no choice... (because of OSG and OpenMesh already compiled libraries)
@@ -424,4 +428,3 @@ set( MEPP2_GUISRC_PLUGIN
      ${GUISRC_PLUGIN}
      CACHE INTERNAL "no-desc" FORCE
      )
-

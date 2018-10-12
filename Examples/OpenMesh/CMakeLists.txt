@@ -2,6 +2,8 @@ if( NOT BUILD_EXAMPLES OR NOT BUILD_USE_OPENMESH OR NOT OPENMESH_FOUND )
   return()
 endif()
 
+include_directories( ${OPENMESH_INCLUDE_DIR} )
+
 if( MSVC )
   # AUTOLINK is used for CGAL on Windows. Disable it for OpenMesh in order
   # to prevent false link error.
