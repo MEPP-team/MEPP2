@@ -2960,7 +2960,8 @@ public:
                         break; /// \todo  Should not break in case of a dangling polyline
                       }
                     if ((it3 == ite) && (!is_e_one_ring_connected(*it2, notSortedOneRingSave, true, true) ||
-                      is_e_one_ring_connected(nextEdge, notSortedOneRingSave, true, true) && is_e_one_ring_connected(*it2, result, true, false)))
+                      (is_e_one_ring_connected(nextEdge, notSortedOneRingSave, true, true) && 
+					  is_e_one_ring_connected(*it2, result, true, false))))
                     {
                       nextEdge = *it2;
                       break;

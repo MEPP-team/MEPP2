@@ -7,7 +7,7 @@
 namespace FEVV {
 namespace DataStructures {
 namespace AIF {
-template< typename CoordinateType = double, unsigned short DIM = 3 >
+template< typename CoordinateT = double, unsigned short DIM = 3 >
 class AIFVector;
 /*
  * The class to store vertex coordinates.
@@ -15,11 +15,11 @@ class AIFVector;
  * with a constructor that takes 3 coordinates.
  * See FEVV/Filters/Generic/scaling.hpp usecase.
  */
-template< typename CoordinateType = double, unsigned short DIM = 3 >
-class AIFPoint : public std::array< CoordinateType, DIM >
+template< typename CoordinateT = double, unsigned short DIM = 3 >
+class AIFPoint : public std::array< CoordinateT, DIM >
 {
 public:
-  typedef CoordinateType CoordinateType;
+  typedef CoordinateT                       CoordinateType;
   typedef std::array< CoordinateType, DIM > SuperClass;
   // TODO-elo refactor all function to handle DIM!=3 case !
 
@@ -135,10 +135,11 @@ public:
  * It extends std::array<...,3>
  * with a constructor that takes 3 coordinates.
  */
-template< typename CoordinateType /*=double*/, unsigned short DIM /*=3*/ >
-class AIFVector : public std::array< CoordinateType, DIM >
+template< typename CoordinateT /*=double*/, unsigned short DIM /*=3*/ >
+class AIFVector : public std::array< CoordinateT, DIM >
 {
 public:
+  typedef CoordinateT                       CoordinateType;
   // TODO-elo refactor all function to handle DIM!=3 case !
 
   /*!
