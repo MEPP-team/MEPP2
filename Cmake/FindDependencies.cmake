@@ -76,8 +76,8 @@ if( BUILD_USE_OPENMESH )
     include_directories( ${OPENMESH_INCLUDE_DIR} )
     add_definitions( -DFEVV_USE_OPENMESH )
   else()
-    message ( "Unfound OpenMesh package: try with OpenMesh support disabled.")
-    message ( "(try toggling BUILD_USE_OPENMESH to OFF)." )
+    message( FATAL_ERROR
+             "OpenMesh not found. Please set OPENMESH_DIR or turn BUILD_USE_OPENMESH to OFF.")
   endif ()
 endif ()
 

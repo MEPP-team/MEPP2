@@ -57,10 +57,10 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
-  $ wget http://www.openmesh.org/media/Releases/7.0/OpenMesh-7.0.tar.gz
-  $ tar -xzf OpenMesh-7.0.tar.gz
-  $ cd OpenMesh-7.0 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/OpenMesh-7.0 ..
+  $ wget https://www.openmesh.org/media/Releases/7.1/OpenMesh-7.1.tar.gz
+  $ tar -xzf OpenMesh-7.1.tar.gz
+  $ cd OpenMesh-7.1 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/OpenMesh-7.1 ..
   $ make
   $ make install && cd
 
@@ -111,8 +111,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ export OPENMESH_DIR="$HOME/OpenMesh-7.0"
-  $ cmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
@@ -321,9 +320,4 @@ The automatically generated documentation is [available online](https://liris.cn
 * On Ubuntu 17.04 (04/13/17 Release): when using BUILD_USE_PCL=ON, you must complete your dependency installation stage with the following command:
    ```
    $ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpi.so /usr/lib/libmpi.so
-   ```
-
-* On Ubuntu 17.10 (10/19/17 Release): to compile the OpenMesh-6.2 (or OpenMesh-6.3) dependency, just add this line in src/OpenMesh/Tools/Utils/conio.cc after line 93:
-   ```
-   #include <sys/time.h>  // timeval struct
    ```
