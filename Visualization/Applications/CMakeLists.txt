@@ -3,13 +3,13 @@ if( NOT BUILD_USE_GUI OR NOT OPENSCENEGRAPH_FOUND_MEPP )
 endif()
 
 # Refer to DevelopersDesignCMakeFiles.dox entry 001
-if( BUILD_USE_CGAL AND CGAL_FOUND )
+if( BUILD_USE_CGAL )
   include(${CGAL_USE_FILE})
 else()
   include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
 endif()
 
-if( BUILD_USE_OPENMESH AND OPENMESH_FOUND )
+if( BUILD_USE_OPENMESH )
   include_directories( ${OPENMESH_INCLUDE_DIR} )
 endif()
 
@@ -38,7 +38,7 @@ set( GUISRC_DEMO "" )
 set( GUISRC_PLUGIN "" )
 
 ### CGAL ###
-if( BUILD_USE_CGAL AND CGAL_FOUND )
+if( BUILD_USE_CGAL )
   set( GUILIB_DEMO
     ${GUILIB_DEMO}
     ${CGAL_LIBRARY}
@@ -47,9 +47,9 @@ endif()
 ### CGAL ###
 
 ### OPENMESH ###
-if( BUILD_USE_OPENMESH AND OPENMESH_FOUND )
+if( BUILD_USE_OPENMESH )
 
-    if( BUILD_USE_PCL AND PCL_FOUND ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
+    if( BUILD_USE_PCL ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
       include_directories( ${PCL_INCLUDE_DIRS} )
       add_definitions( ${PCL_DEFINITIONS} )
 
@@ -118,7 +118,7 @@ if( BUILD_USE_AIF )
 endif()
 
 ### VTK ###
-if ( BUILD_USE_VTK AND VTK_FOUND )
+if ( BUILD_USE_VTK )
   set( GUILIB_DEMO
        ${GUILIB_DEMO}
        ${VTK_LIBRARIES} )

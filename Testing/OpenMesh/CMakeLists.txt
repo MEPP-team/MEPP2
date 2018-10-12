@@ -1,4 +1,4 @@
-if( NOT BUILD_USE_OPENMESH OR NOT OPENMESH_FOUND )
+if( NOT BUILD_USE_OPENMESH )
   return()
 endif()
 

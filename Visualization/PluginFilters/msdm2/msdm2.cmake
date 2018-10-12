@@ -1,6 +1,6 @@
 # --> MSDM2Plugin : QtPlugin [BEGIN]
 OPTION(BUILD_USE_GUI_MSDM2Plugin "BUILD MSDM2Plugin " ON)
-if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL AND CGAL_FOUND)
+if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL)
   set(MSDM2_Qt_Plugin_HEADER "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/MSDM2Plugin.h" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/Dialogs/DialogMSDM21.h")
   set(MSDM2_Qt_Plugin_UI "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/Dialogs/DialogMSDM21.ui")
   if (BUILD_USE_QT5)
@@ -27,5 +27,5 @@ if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL AND CGAL_FOUND)
     ${GUILIB_DEMO} # from viewer
     )
   add_dependencies(MSDM2Plugin mepp)
-endif (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL AND CGAL_FOUND)
+endif ()
 # --> MSDM2Plugin : QtPlugin [END]

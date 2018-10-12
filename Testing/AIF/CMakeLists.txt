@@ -394,7 +394,7 @@ add_test(Non_manifold_collapse_edge_aif_6
 #####
 add_executable( test_smoothing_aif
                 test_smoothing_aif.cpp)
-if (BUILD_USE_VTK AND VTK_FOUND )
+if (BUILD_USE_VTK )
 	add_test( Smoothing_aif_vtk
 			 test_smoothing_aif
 			 ${TESTING_DATA_DIR}/cube.vtk
@@ -481,7 +481,7 @@ target_link_libraries(test_load_dangling_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
 
-if ( BUILD_USE_VTK AND VTK_FOUND )
+if ( BUILD_USE_VTK )
 add_test( Test_load_dangling_edge_aif_vtk
           test_load_dangling_edge_aif  ${TESTING_DATA_DIR}/dangling_edge.vtk)	# pass with native and generic readers
 endif()
@@ -567,4 +567,3 @@ set( MEPP2_AIF_COMPILE_DEFINITIONS
      ${COMPILE_DEFINITIONS_TMP}
      CACHE INTERNAL "no-desc" FORCE
      )
-

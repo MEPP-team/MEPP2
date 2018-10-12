@@ -1,4 +1,4 @@
-if( NOT BUILD_EXAMPLES OR NOT BUILD_USE_CGAL OR NOT CGAL_FOUND )
+if( NOT BUILD_EXAMPLES OR NOT BUILD_USE_CGAL )
   return()
 endif()
 
@@ -18,7 +18,7 @@ target_link_libraries( example_msdm2
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                        )
-if( BUILD_USE_VTK AND VTK_FOUND )
+if( BUILD_USE_VTK )
   target_link_libraries( example_msdm2
 						 ${VTK_LIBRARIES} )
 endif()
