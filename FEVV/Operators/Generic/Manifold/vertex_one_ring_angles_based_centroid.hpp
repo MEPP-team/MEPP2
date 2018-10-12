@@ -63,7 +63,7 @@ vertex_one_ring_angles_based_centroid(
   {
     // The angle must be divided in two to take convex and concave cases into
     // account
-    alpha1 = FEVV::Functionals::Polygons::triangle_rad_angle< GeometryTraits >(
+    alpha1 = FEVV::Operators::Geometry::triangle_rad_angle< GeometryTraits >(
         get(pm, target(*cir_he, g)),
         get(pm, source(*cir_he, g)),
         get(pm, source(prev(opposite(*cir_he, g), g), g)),
@@ -71,7 +71,7 @@ vertex_one_ring_angles_based_centroid(
     // std::cout << "t1 = " << get(pm, target(*cir_he, g)) << "; " << get(pm,
     // source(*cir_he, g)) << "; " << get(pm, source(prev(opposite(*cir_he, g),
     // g), g)) << std::endl;
-    alpha2 = FEVV::Functionals::Polygons::triangle_rad_angle< GeometryTraits >(
+    alpha2 = FEVV::Operators::Geometry::triangle_rad_angle< GeometryTraits >(
         get(pm, target(next(*cir_he, g), g)),
         get(pm, source(*cir_he, g)),
         get(pm, target(*cir_he, g)),

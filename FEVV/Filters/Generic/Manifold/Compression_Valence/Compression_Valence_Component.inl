@@ -7554,7 +7554,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   Point3d Q = get(*_pm, target(next(h, _pMesh), _pMesh));
   Point3d R = get(*_pm, target(next(next(h, _pMesh), _pMesh), _pMesh));
 
-  return FEVV::Functionals::Polygons::triangle_area<
+  return FEVV::Operators::Geometry::triangle_area<
       FEVV::Geometry_traits< HalfedgeGraph > >(P, Q, R, gt);
 }
 

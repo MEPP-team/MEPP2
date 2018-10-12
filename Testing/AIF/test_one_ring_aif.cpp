@@ -342,38 +342,38 @@ v1 ---------- v0 ----------- v3             v7 --------- v8
 
   std::cout << "testing  extract_k_ring" << std::endl;
   std::vector< vertex_descriptor > qv;
-  Tools::extract_k_ring(v0, *m, 0, qv);
+  Operators::extract_k_ring(v0, *m, 0, qv);
   assert((qv == std::vector< vertex_descriptor >{v0}));
   qv.clear();
-  Tools::extract_k_ring(
+  Operators::extract_k_ring(
       v0,
       *m,
       1,
       qv); // be careful face f4 has been removed before this current test
   assert((qv == std::vector< vertex_descriptor >{v0, v3, v5, v1, v2}));
   qv.clear();
-  Tools::extract_k_ring(v0, *m, 2, qv);
+  Operators::extract_k_ring(v0, *m, 2, qv);
   assert((qv == std::vector< vertex_descriptor >{v0, v3, v5, v1, v2, v4, v6}));
   helpers::remove_edge(e8, m); // remove e8 to ensure 2-manifoldness (else
                                // extract_k_ring will throw an exception)
   qv.clear();
-  Tools::extract_k_ring(v0, *m, 3, qv);
+  Operators::extract_k_ring(v0, *m, 3, qv);
   assert(
       (qv == std::vector< vertex_descriptor >{v0, v3, v5, v1, v2, v4, v6, v7}));
   // cannot go further away, because v7 is not a manifold vertex (cut-vertex)
 
   qv.clear();
-  Tools::extract_k_ring(v8, *m, 1, qv);
+  Operators::extract_k_ring(v8, *m, 1, qv);
   assert((qv == std::vector< vertex_descriptor >{v8, v9, v7}));
   qv.clear();
-  Tools::extract_k_ring(v9, *m, 1, qv);
+  Operators::extract_k_ring(v9, *m, 1, qv);
   assert((qv == std::vector< vertex_descriptor >{v9, v8, v7}));
 
   // test extract_vertex_star [k_ring.h]
 
   std::cout << "testing  extract_vertex_star" << std::endl;
   std::vector< halfedge_descriptor > qh;
-  Tools::extract_vertex_star(v0, *m, qh);
+  Operators::extract_vertex_star(v0, *m, qh);
   assert((qh == std::vector< halfedge_descriptor >{
                     halfedge_descriptor(v3, v0, f1, e9, false),
                     halfedge_descriptor(v5, v0, f0, e11, false),
@@ -382,7 +382,7 @@ v1 ---------- v0 ----------- v3             v7 --------- v8
                     halfedge_descriptor(v2, v0, f3, e15, false)}));
   qh.clear();
 
-  Tools::extract_vertex_star(v6, *m, qh);
+  Operators::extract_vertex_star(v6, *m, qh);
   assert((qh == std::vector< halfedge_descriptor >{
                     halfedge_descriptor(v7, v6, f2, e0, false),
                     halfedge_descriptor(v6, v2, f2, e14, false)}));

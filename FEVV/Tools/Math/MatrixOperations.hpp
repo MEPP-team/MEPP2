@@ -1,12 +1,3 @@
-/**
- * \file		MatrixOperations.hxx
- * \author		Vincent Vidal
- * \date     	2015-04-14
- *
- * Imported in Mepp2 from GHARIAL commit
- * 24d25d4b145cb50087747183adb9c0894ab116fb.
- */
-
 #ifndef __MatrixOperations_hxx
 #define __MatrixOperations_hxx
 

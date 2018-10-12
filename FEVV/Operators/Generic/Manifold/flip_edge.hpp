@@ -22,7 +22,7 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief Flip an edge of the graph.
@@ -123,7 +123,7 @@ flip_edge(
   }
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined FlipEdgeFilter_h

@@ -52,6 +52,7 @@ calculate_vertex_normal(
   int cpt = 0;
   int nbBorders = 0;
 #endif
+try{
   halfedge_descriptor he = halfedge(v, g);
   halfedge_descriptor end = he;
   do
@@ -75,6 +76,11 @@ calculate_vertex_normal(
 #ifndef NDEBUG
   assert(cpt == (static_cast< int >(degree(v, g)) - nbBorders));
 #endif
+}
+catch(...)
+{
+	return gt.NULL_VECTOR;
+}
   return gt.normalize(normal);
 }
 
@@ -117,6 +123,7 @@ calculate_vertex_normal(
   int cpt = 0;
   int nbBorders = 0;
 #endif
+try{
   halfedge_descriptor he = halfedge(v, g);
   halfedge_descriptor end = he;
   do
@@ -137,6 +144,11 @@ calculate_vertex_normal(
 #ifndef NDEBUG
   assert(cpt == (static_cast< int >(degree(v, g)) - nbBorders));
 #endif
+}
+catch(...)
+{
+	return gt.NULL_VECTOR;
+}
   return gt.normalize(normal);
 }
 

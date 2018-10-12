@@ -6,7 +6,7 @@
 #include <CGAL/boost/graph/Euler_operations.h>
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief Collapse an edge of the graph.
@@ -63,7 +63,7 @@ collapse_edge_keep_target_euler(
   // doesn't compile. WHY ?
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // COLLAPSE_EDGE_EULER_H

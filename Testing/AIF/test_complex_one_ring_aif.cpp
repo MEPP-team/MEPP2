@@ -278,7 +278,7 @@ v1 ---------- v0 ----------- v3
       helpers::get_ordered_one_ring_vertices(v0),
       std::vector< vertex_descriptor >{v3, v5, v3, v4, v1, v6, v1, v2}) // ok
   );
-  /*
+ 
   // bellow the code is a work in progress, please let it here as it is
 #if 0 // dangling one-ring polylines not yet managed
   //---------------------- Tests even more complex ---------------------
@@ -315,17 +315,21 @@ std::vector<vertex_descriptor>{v3, v5, v7, v5, v3, v4, v1, v6, v1, v2}) // ok
   helpers::link_edge_and_face(e9, f6);
   helpers::link_edge_and_face(e12, f6);
   helpers::link_edge_and_face(e10, f6);
-  auto c = helpers::get_ordered_one_ring_edges(v0);
-  assert(rotationally_equal(helpers::get_ordered_one_ring_edges(v0),
-std::vector<edge_descriptor>{e11, e12, e8, e1, e0, e3, e2}) // ok
-    );
+  //auto c = helpers::get_ordered_one_ring_edges(v0);
+  assert(rotationally_equal(helpers::get_ordered_one_ring_edges(v0), std::vector<edge_descriptor>{e11, e12, e3, e2, e8, e1, e0}) // ok
+    ||
+    rotationally_equal(helpers::get_ordered_one_ring_edges(v0), std::vector<edge_descriptor>{e12, e8, e2, e3, e11, e0, e1}) // ok
+    ||
+    rotationally_equal(helpers::get_ordered_one_ring_edges(v0), std::vector<edge_descriptor>{e12, e8, e1, e0, e11, e3, e2}) // ok
+    ||
+    rotationally_equal(helpers::get_ordered_one_ring_edges(v0), std::vector<edge_descriptor>{e0, e1, e8, e2, e3, e11, e12}) // ok
+  );
   // ordered one ring of vertices of vertex
 
-  std::cout << "testing  get_ordered_one_ring_vertices(v0)" << std::endl;
-  assert(rotationally_equal(helpers::get_ordered_one_ring_vertices(v0),
-std::vector<vertex_descriptor>{v6, v5, v3, v2, v1, v4}) // ok
-    );
+  //std::cout << "testing  get_ordered_one_ring_vertices(v0)" << std::endl;
+  //assert(rotationally_equal(helpers::get_ordered_one_ring_vertices(v0), std::vector<vertex_descriptor>{v6, v5, v3, v2, v1, v4}) // not idea of expected result
+  //  );
 #endif
-  */
+ 
   return 0; // all tests passed
 }

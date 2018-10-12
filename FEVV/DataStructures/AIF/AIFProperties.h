@@ -7,7 +7,7 @@
 namespace FEVV {
 namespace DataStructures {
 namespace AIF {
-template< typename CoordinateType = double, unsigned short DIM = 3 >
+template< typename CoordinateT = double, unsigned short DIM = 3 >
 class AIFVector;
 /*
  * The class to store vertex coordinates.
@@ -15,10 +15,12 @@ class AIFVector;
  * with a constructor that takes 3 coordinates.
  * See FEVV/Filters/Generic/scaling.hpp usecase.
  */
-template< typename CoordinateType = double, unsigned short DIM = 3 >
-class AIFPoint : public std::array< CoordinateType, DIM >
+template< typename CoordinateT = double, unsigned short DIM = 3 >
+class AIFPoint : public std::array< CoordinateT, DIM >
 {
 public:
+  typedef CoordinateT                       CoordinateType;
+  typedef std::array< CoordinateType, DIM > SuperClass;
   // TODO-elo refactor all function to handle DIM!=3 case !
 
   /*!
@@ -69,7 +71,6 @@ public:
                                   const AIFPoint< CoordinateType, DIM > &p)
   {
     // stream << "("; // do not add this to get the same output as CGAL or
-    // OpenMesh
     for(auto itVal = p.begin(); itVal != p.end(); ++itVal)
     {
       stream << (*itVal);
@@ -134,10 +135,11 @@ public:
  * It extends std::array<...,3>
  * with a constructor that takes 3 coordinates.
  */
-template< typename CoordinateType /*=double*/, unsigned short DIM /*=3*/ >
-class AIFVector : public std::array< CoordinateType, DIM >
+template< typename CoordinateT /*=double*/, unsigned short DIM /*=3*/ >
+class AIFVector : public std::array< CoordinateT, DIM >
 {
 public:
+  typedef CoordinateT                       CoordinateType;
   // TODO-elo refactor all function to handle DIM!=3 case !
 
   /*!
@@ -275,6 +277,26 @@ public:
   {
     return v * s;
   }
+  
+  /*!
+  * 			<< operator
+  * \param	stream	The output stream to update.
+  * \param	v	The AIFVector to add to the output stream.
+  * \return The resulting output stream object.
+  */
+  friend std::ostream& operator<<(std::ostream& stream, const AIFVector<CoordinateType, DIM>& v)
+  {
+    //stream << "("; // do not add this to get the same output as CGAL or OpenMesh
+    for(auto itVal = v.begin(); itVal != v.end(); ++itVal)
+    {
+      stream << (*itVal);
+      if( itVal != (v.end() - 1) )
+        stream << " ";
+    }
+    //stream << ")";
+
+    return stream;
+  }  
 };
 
 /*

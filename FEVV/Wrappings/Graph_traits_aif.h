@@ -258,6 +258,19 @@ num_edges(const FEVV::DataStructures::AIF::AIFMesh &sm)
       sm.GetNumberOfEdges());
 }
 
+// BGL EdgeIndexGraph Concept 
+inline
+void
+renumber_edge_indices(const FEVV::DataStructures::AIF::AIFMesh& sm)
+{
+  auto edgeRangePair = edges(sm);
+  auto edgeIter = edgeRangePair.first;
+  int index = 0;
+  for (; edgeIter != edgeRangePair.second; ++edgeIter) {
+    (*edgeIter)->SetIndex(index++);
+  }
+}
+
 // CGAL FaceListGraph
 //!
 //! \brief  Returns an upper bound of the number of faces of the graph.
@@ -1064,6 +1077,8 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
       typename boost::graph_traits< Graph >::face_descriptor face_descriptor;
   typedef
       typename boost::graph_traits< Graph >::edge_descriptor edge_descriptor;
+
+  typedef FEVV::DataStructures::AIF::AIFTopologyHelpers AIFHelpers;
 
   std::vector< vertex_descriptor > vertices(vr.begin(),
                                             vr.end()); // quick and dirty copy

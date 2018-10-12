@@ -19,8 +19,8 @@
 #include "FEVV/Tools/Math/MatrixOperations.hpp"
 
 namespace FEVV {
-namespace Functionals {
-namespace Polygons {
+namespace Operators {
+namespace Geometry {
 /**
  * \brief   Compute the barycenter/mean position of a triangle (given by 3
  * points).
@@ -172,8 +172,8 @@ triangle_shape_potential(
   return potential;
 }
 
-} // namespace Polygons
-} // namespace Functionals
+} // namespace Geometry
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined TrianglesTool_h

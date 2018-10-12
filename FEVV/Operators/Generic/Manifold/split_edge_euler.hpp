@@ -22,7 +22,7 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 /**
  * \brief Split an edge of the graph.
@@ -104,7 +104,7 @@ split_edge_euler(
             (gt.get_z(get(pm, vs)) + gt.get_z(get(pm, vt))) * 0.5f));
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined SplitEdgeEulerFilter_h

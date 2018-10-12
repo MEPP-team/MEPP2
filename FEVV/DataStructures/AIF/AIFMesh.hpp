@@ -245,13 +245,17 @@ public:
   void EraseIsolatedCell(AIFCellContainer< T > &container, const T &cell)
   {
     std::size_t idx = cell->GetIndex();
+    if (idx != -1)
+    {
+      // remove element from container
+      std::size_t cLastId = container.remove(idx);
 
-    // remove element from container
-    std::size_t cLastId = container.remove(idx);
+      // remove entry from property maps
+      PropertyMapContainer *pmc = GetPropertyMapContainer<T>();
 
-    // remove entry from property maps
-    PropertyMapContainer *pmc = GetPropertyMapContainer< T >();
-    pmc->removeProperties(idx, cLastId);
+      pmc->removeProperties(idx, cLastId);
+      cell->SetIndex(-1);
+    }
   }
   /*!
    * Suppression function for a simple vertex (without handling any

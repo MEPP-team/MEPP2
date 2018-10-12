@@ -22,7 +22,7 @@
 #include <cassert>
 
 namespace FEVV {
-namespace Filters {
+namespace Operators {
 
 
 typedef FEVV::DataStructures::AIF::AIFTopologyHelpers AIFHelpers;
@@ -54,7 +54,7 @@ template<
   typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
   typedef typename GraphTraits::edge_descriptor edge_descriptor;
   /////////////////////////////////////////////////////////////////////////////
-  if(e == boost::graph_traits< MutableFaceIncidentGraph >::null_edge())
+  if (e == GraphTraits::null_edge())
     return;
 
   auto pair_e_bool = edge(source(e, g), target(e, g), g);
@@ -202,7 +202,7 @@ template<
   }
 }
 
-} // namespace Filters
+} // namespace Operators
 } // namespace FEVV
 
 #endif // !defined CollapseEdgeNonManifoldFilter_h
