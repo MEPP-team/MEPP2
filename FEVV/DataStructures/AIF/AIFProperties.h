@@ -19,6 +19,8 @@ template< typename CoordinateType = double, unsigned short DIM = 3 >
 class AIFPoint : public std::array< CoordinateType, DIM >
 {
 public:
+  typedef CoordinateType CoordinateType;
+  typedef std::array< CoordinateType, DIM > SuperClass;
   // TODO-elo refactor all function to handle DIM!=3 case !
 
   /*!

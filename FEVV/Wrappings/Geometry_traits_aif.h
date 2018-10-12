@@ -25,6 +25,14 @@ public:
   typedef DataStructures::AIF::AIFMesh::Point Point;
   typedef DataStructures::AIF::AIFMesh::Vector Vector;
   typedef DataStructures::AIF::AIFMesh::CoordinateType Scalar;
+
+  // part dedicated to CGAL adaptation without including CGAL types
+  typedef typename Point::CoordinateType FT;
+  typedef Point Point_3;
+  typedef Vector Vector_3;
+  typedef typename Point::SuperClass::const_iterator Cartesian_const_iterator_3;
+  typedef typename Point::SuperClass::iterator Cartesian_iterator_3;
+  typedef Cartesian_const_iterator_3 Construct_cartesian_const_iterator_3;
 };
 
 /**
