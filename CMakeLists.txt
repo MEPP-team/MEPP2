@@ -171,8 +171,6 @@ append_var_to_use_file( "MEPP2_GUI_COMPILE_DEFINITIONS"
 
 append_var_to_use_file( "MEPP2_osgQt_SRC"
                         "${MEPP2_osgQt_SRC}" )
-append_var_to_use_file( "MEPP2_CPP_PLUGIN_FILES"
-                        "${MEPP2_CPP_PLUGIN_FILES}" )
 append_var_to_use_file( "MEPP2_GUISRC_PLUGIN"
                         "${MEPP2_GUISRC_PLUGIN}" )
 

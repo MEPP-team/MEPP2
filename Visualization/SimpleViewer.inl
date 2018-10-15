@@ -1,4 +1,4 @@
-#include "Visualization/Helpers/OSGDebug.h"
+#include "Visualization/Helpers/OSGDebug.hpp"
 
 //#include <osgFX/Outline>
 //#include <osgFX/SpecularHighlights>
@@ -93,7 +93,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::init()
   // disable the default setting of viewer.done() by pressing Escape.
   setKeyEventSetsDone(0);
 
-  changeBackgroundColor(Color::WetAsphalt);
+  changeBackgroundColor(Color::WetAsphalt());
 
   // LIGHT (test)
 #if(0)
@@ -1027,7 +1027,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                 get(e_cm, *eb))); // user/filter/plugin colors
       else
         colorsArrays_edges[mtl_id]->push_back(
-            Helpers::ColorConverter(Color::Yellow)); // default color
+            Helpers::ColorConverter(Color::Yellow())); // default color
     }
   }
 
@@ -1102,7 +1102,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                 get(v_cm, *v_it))); // user/filter/plugin colors
       else
         colorsArrays_vertices[mtl_id]->push_back(
-            Helpers::ColorConverter(Color::Green)); // default color
+            Helpers::ColorConverter(Color::Green())); // default color
     }
 
     // ---
@@ -2157,7 +2157,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::setNodeSelected(osg::Node *_geode,
     if ( _isSelected )
     {
         outline->setWidth(3);
-        outline->setColor(Helpers::ColorConverter(Color::Yellow));
+        outline->setColor(Helpers::ColorConverter(Color::Yellow()));
         outline->addChild(_geode);
         for( auto parent : _geode->getParents() )
         {

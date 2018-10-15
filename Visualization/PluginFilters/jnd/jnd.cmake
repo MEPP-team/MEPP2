@@ -21,7 +21,6 @@ SET(JND_CPP_FILES
     ${Jnd_Qt_Plugin_SRC}
     ${JND_CPP_FILES}
     ${osgQt_SRC} # from viewer
-    ${CPP_PLUGIN_FILES}
     ${GUISRC_PLUGIN}
     )
   target_link_libraries (JndPlugin ${Jnd_Qt_Plugin_LIB}

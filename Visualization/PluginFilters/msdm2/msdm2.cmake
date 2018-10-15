@@ -20,7 +20,6 @@ if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL)
     "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/Dialogs/DialogMSDM21.cpp"
     ${MSDM2_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
-    ${CPP_PLUGIN_FILES}
     ${GUISRC_PLUGIN}
     )
   target_link_libraries (MSDM2Plugin ${MSDM2_Qt_Plugin_LIB}

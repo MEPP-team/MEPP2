@@ -1,4 +1,4 @@
-#include "Visualization/Helpers/OSGDebug.h"
+#include "Visualization/Helpers/OSGDebug.hpp"
 
 #include <osg/ShadeModel>
 
@@ -479,7 +479,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
 
         _colorsArrays[unit_ii].get()->resize(
             _vertexArrays[unit_ii].get()->size(),
-            Helpers::ColorConverter(Color::Wisteria));
+            Helpers::ColorConverter(Color::Wisteria()));
       }
 
       program = loadColoredMesh(_geometries,
@@ -816,7 +816,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
 
       osg::ref_ptr< osg::Material > Kdmaterial = new osg::Material;
       Kdmaterial->setDiffuse(osg::Material::FRONT,
-                             Helpers::ColorConverter(Color::Wisteria));
+                             Helpers::ColorConverter(Color::Wisteria()));
       _geometries[unit_ii]->getOrCreateStateSet()->setAttribute(
           Kdmaterial /*, osg::StateAttribute::OVERRIDE*/);
 #else

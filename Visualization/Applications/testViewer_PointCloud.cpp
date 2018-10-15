@@ -14,7 +14,7 @@
 #include "Visualization/SimpleAdapterVisu.h"
 #include "Visualization/SimpleViewer.h"
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Base/Block.h"
 
 // OSG mesh loader

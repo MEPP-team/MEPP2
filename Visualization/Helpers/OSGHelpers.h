@@ -17,7 +17,7 @@
 #include <osg/Geometry>
 #include <osg/Material>
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Visualization/BaseViewer.h"
 
 #include <boost/graph/graph_traits.hpp>

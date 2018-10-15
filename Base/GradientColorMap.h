@@ -11,7 +11,7 @@
 #define GradientColorMap_h
 
 #include <iostream>
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 
 namespace FEVV {
 
@@ -30,14 +30,14 @@ namespace FEVV {
  * The code below shows a possible use of this class.
  * @code
  * #include <iostream>
- * #include "Base/Color.h"
+ * #include "Base/Color.hpp"
  * #include "Base/GradientColorMap.h"
  *
  * using namespace FEVV;
  * // ...
  * {
  *
- *   GradientColorMap<float> gradient( 0.0, 1000.0, Color::White, Color::Red );
+ *   GradientColorMap<float> gradient( 0.0, 1000.0, Color::White(), Color::Red() );
  *
  *   Color c = gradient( 230.0 );
  *   std::cout << "Color: [" << c.red()   << ";"

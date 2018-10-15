@@ -153,23 +153,17 @@ else() # Linux
   endif()
 endif()
 
-# common cpp files to all plugins...
-set( CPP_PLUGIN_FILES														# minimum for plugins
-  "${PROJECT_SOURCE_DIR}/Base/Color.cpp"
-#  "${PROJECT_SOURCE_DIR}/Visualization/OSG/Manipulator/TabBoxDragger2.cpp"
-  )
 # common cpp files to all executables...
 set( CPP_FILES 																# addons for GUI
-  ${CPP_PLUGIN_FILES}
-  "${PROJECT_SOURCE_DIR}/Visualization/Helpers/OSGDebug.cpp"
-  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.cpp"
+  #TODO-elo-rm "${PROJECT_SOURCE_DIR}/Visualization/Helpers/OSGDebug.cpp"
+  #TODO-elo-rm "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.cpp"
   )
 
 # common moc stuff to all executables... /
 # IMPORTANT : automoc is off for qt5 because we wan't same behavior
 # with qt4 and/or qt5...
 set( moc_files ${moc_files}
-  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.h"
+  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.hpp"
 #  "${PROJECT_SOURCE_DIR}/Visualization/Qt/SimpleLineEdit.h"
 #  "${PROJECT_SOURCE_DIR}/Visualization/Qt/SimpleCheckBox.h"
   "${PROJECT_SOURCE_DIR}/Visualization/SimpleWindow.h"
@@ -416,11 +410,6 @@ set( MEPP2_GUI_COMPILE_DEFINITIONS
 
 set( MEPP2_osgQt_SRC
      ${osgQt_SRC}
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-set( MEPP2_CPP_PLUGIN_FILES
-     ${CPP_PLUGIN_FILES}
      CACHE INTERNAL "no-desc" FORCE
      )
 
