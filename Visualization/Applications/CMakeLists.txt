@@ -85,27 +85,6 @@ if( BUILD_USE_OPENMESH )
 endif()
 ### OPENMESH ###
 
-### AIF ###
-#TODO-elo-rm-no-more-AIF-lib
-if( BUILD_USE_AIF )
-  #set( AIF_PLUGIN_Sources													# minimum for plugins
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMesh.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFFace.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFVertex.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFEdge.cpp"
-  #  )
-  #set( AIFSources 															# addons for GUI
-  #  ${AIF_PLUGIN_Sources}
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMeshReader.cpp"
-  #  )
-
-  if(MSVC)
-    # get rid of warning
-    # 'class __ needs to have dll-interface to be used by clients of class __'
-    add_definitions( /wd4251 )
-  endif()
-endif()
-
 ### VTK ###
 if ( BUILD_USE_VTK )
   set( GUILIB_DEMO
@@ -348,7 +327,6 @@ set( MEPP2_GUI_SYSTEM_INCLUDE_DIRECTORIES
      "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
      CACHE INTERNAL "no-desc" FORCE
      )
-message("++ SYSTEM_INCLUDE_DIRECTORIES_TMP = ${SYSTEM_INCLUDE_DIRECTORIES_TMP}")
 
 # libraries to link with
 set( MEPP2_GUI_LIBRARIES
