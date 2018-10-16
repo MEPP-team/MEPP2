@@ -8,8 +8,12 @@ if( WIN32 )
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
 endif()
 
-# Refer to Doc/Devel/CMakeFiles.md entry 001
-include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+# Refer to DevelopersDesignCMakeFiles.dox entry 001
+if( BUILD_USE_CGAL )
+  include(${CGAL_USE_FILE})
+else()
+  include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+endif()
 
 # Refer to Doc/Devel/CMakeFiles.md entry 002
 add_definitions( -DCGAL_NDEBUG )
