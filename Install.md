@@ -134,6 +134,12 @@ Scripting commands for compiling Mepp2:
   $ ctest
 ````
 
+### Run the GUI and filter-plugins
+
+````
+  $ ./Visualization/Applications/mepp
+````
+
 ## MacOS installation
 
 ### Install dependencies
