@@ -34,8 +34,6 @@ set( UI_TESTS_SRC_DEMO
      mepp )
 
 set( GUILIB_DEMO ${MEPP_GUI_LIB} ${Boost_LIBRARIES} ${FBX_LIBRARY} )
-set( GUISRC_DEMO "" )
-set( GUISRC_PLUGIN "" )
 
 ### CGAL ###
 if( BUILD_USE_CGAL )
@@ -88,6 +86,7 @@ endif()
 ### OPENMESH ###
 
 ### AIF ###
+#TODO-elo-rm-no-more-AIF-lib
 if( BUILD_USE_AIF )
   #set( AIF_PLUGIN_Sources													# minimum for plugins
   #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMesh.cpp"
@@ -99,16 +98,6 @@ if( BUILD_USE_AIF )
   #  ${AIF_PLUGIN_Sources}
   #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMeshReader.cpp"
   #  )
-
-  set( GUISRC_PLUGIN
-      ${GUISRC_PLUGIN}
-      #${AIF_PLUGIN_Sources}
-      )
-
-  set( GUISRC_DEMO
-      ${GUISRC_DEMO}
-      #${AIFSources}
-      )
 
   if(MSVC)
     # get rid of warning
@@ -152,12 +141,6 @@ else() # Linux
       "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
   endif()
 endif()
-
-# common cpp files to all executables...
-set( CPP_FILES 																# addons for GUI
-  #TODO-elo-rm "${PROJECT_SOURCE_DIR}/Visualization/Helpers/OSGDebug.cpp"
-  #TODO-elo-rm "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.cpp"
-  )
 
 # common moc stuff to all executables... /
 # IMPORTANT : automoc is off for qt5 because we wan't same behavior
@@ -218,11 +201,9 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
 
   add_executable( ${FILE} MACOSX_BUNDLE
     ${osgQt_SRC}
-    ${CPP_FILES}
     ${MOC_FILES}
     ${QT_RESOURCE_FILES}
     ${resource_files}
-    ${GUISRC_DEMO}
     ${FILE}.cpp )
 
   if("${FILE}" STREQUAL "mepp")
@@ -410,10 +391,5 @@ set( MEPP2_GUI_COMPILE_DEFINITIONS
 
 set( MEPP2_osgQt_SRC
      ${osgQt_SRC}
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-set( MEPP2_GUISRC_PLUGIN
-     ${GUISRC_PLUGIN}
      CACHE INTERNAL "no-desc" FORCE
      )

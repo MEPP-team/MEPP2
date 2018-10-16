@@ -16,7 +16,6 @@ if (BUILD_USE_GUI_ProcessingPlugin)
   add_library(ProcessingPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/processing/ProcessingPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/processing/Dialogs/DialogProcessing1.cpp"
     ${Processing_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
-    ${GUISRC_PLUGIN}
     )
   target_link_libraries (ProcessingPlugin ${Processing_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
