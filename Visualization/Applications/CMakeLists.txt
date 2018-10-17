@@ -3,10 +3,14 @@ if( NOT BUILD_USE_GUI OR NOT OPENSCENEGRAPH_FOUND_MEPP )
 endif()
 
 # Refer to DevelopersDesignCMakeFiles.dox entry 001
-if( BUILD_USE_CGAL AND CGAL_FOUND )
+if( BUILD_USE_CGAL )
   include(${CGAL_USE_FILE})
 else()
   include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+endif()
+
+if( BUILD_USE_OPENMESH )
+  include_directories( ${OPENMESH_INCLUDE_DIR} )
 endif()
 
 if( MSVC )
@@ -30,11 +34,9 @@ set( UI_TESTS_SRC_DEMO
      mepp )
 
 set( GUILIB_DEMO ${MEPP_GUI_LIB} ${Boost_LIBRARIES} ${FBX_LIBRARY} )
-set( GUISRC_DEMO "" )
-set( GUISRC_PLUGIN "" )
 
 ### CGAL ###
-if( BUILD_USE_CGAL AND CGAL_FOUND )
+if( BUILD_USE_CGAL )
   set( GUILIB_DEMO
     ${GUILIB_DEMO}
     ${CGAL_LIBRARY}
@@ -43,9 +45,9 @@ endif()
 ### CGAL ###
 
 ### OPENMESH ###
-if( BUILD_USE_OPENMESH AND OPENMESH_FOUND )
+if( BUILD_USE_OPENMESH )
 
-    if( BUILD_USE_PCL AND PCL_FOUND ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
+    if( BUILD_USE_PCL ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
       include_directories( ${PCL_INCLUDE_DIRS} )
       add_definitions( ${PCL_DEFINITIONS} )
 
@@ -83,38 +85,8 @@ if( BUILD_USE_OPENMESH AND OPENMESH_FOUND )
 endif()
 ### OPENMESH ###
 
-### AIF ###
-if( BUILD_USE_AIF )
-  #set( AIF_PLUGIN_Sources													# minimum for plugins
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMesh.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFFace.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFVertex.cpp"
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFEdge.cpp"
-  #  )
-  #set( AIFSources 															# addons for GUI
-  #  ${AIF_PLUGIN_Sources}
-  #  "${PROJECT_SOURCE_DIR}/FEVV/DataStructures/AIF/AIFMeshReader.cpp"
-  #  )
-
-  set( GUISRC_PLUGIN
-      ${GUISRC_PLUGIN}
-      #${AIF_PLUGIN_Sources}
-      )
-
-  set( GUISRC_DEMO
-      ${GUISRC_DEMO}
-      #${AIFSources}
-      )
-
-  if(MSVC)
-    # get rid of warning
-    # 'class __ needs to have dll-interface to be used by clients of class __'
-    add_definitions( /wd4251 )
-  endif()
-endif()
-
 ### VTK ###
-if ( BUILD_USE_VTK AND VTK_FOUND )
+if ( BUILD_USE_VTK )
   set( GUILIB_DEMO
        ${GUILIB_DEMO}
        ${VTK_LIBRARIES} )
@@ -149,23 +121,11 @@ else() # Linux
   endif()
 endif()
 
-# common cpp files to all plugins...
-set( CPP_PLUGIN_FILES														# minimum for plugins
-  "${PROJECT_SOURCE_DIR}/Base/Color.cpp"
-#  "${PROJECT_SOURCE_DIR}/Visualization/OSG/Manipulator/TabBoxDragger2.cpp"
-  )
-# common cpp files to all executables...
-set( CPP_FILES 																# addons for GUI
-  ${CPP_PLUGIN_FILES}
-  "${PROJECT_SOURCE_DIR}/Visualization/Helpers/OSGDebug.cpp"
-  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.cpp"
-  )
-
 # common moc stuff to all executables... /
 # IMPORTANT : automoc is off for qt5 because we wan't same behavior
 # with qt4 and/or qt5...
 set( moc_files ${moc_files}
-  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.h"
+  "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.hpp"
 #  "${PROJECT_SOURCE_DIR}/Visualization/Qt/SimpleLineEdit.h"
 #  "${PROJECT_SOURCE_DIR}/Visualization/Qt/SimpleCheckBox.h"
   "${PROJECT_SOURCE_DIR}/Visualization/SimpleWindow.h"
@@ -220,11 +180,9 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
 
   add_executable( ${FILE} MACOSX_BUNDLE
     ${osgQt_SRC}
-    ${CPP_FILES}
     ${MOC_FILES}
     ${QT_RESOURCE_FILES}
     ${resource_files}
-    ${GUISRC_DEMO}
     ${FILE}.cpp )
 
   if("${FILE}" STREQUAL "mepp")
@@ -345,3 +303,71 @@ include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/PluginFilters.cmake" )
 #foreach(dir ${dirs})
 #  message(STATUS "dir='${dir}'")
 #endforeach()
+
+
+##TODO-elo make a function
+## variables to be exported to external projects
+
+# include dirs
+get_property( INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY INCLUDE_DIRECTORIES
+              )
+set( MEPP2_GUI_INCLUDE_DIRECTORIES
+     "${INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# system include dirs
+get_property( SYSTEM_INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY SYSTEM_INCLUDE_DIRECTORIES
+              )
+set( MEPP2_GUI_SYSTEM_INCLUDE_DIRECTORIES
+     "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# libraries to link with
+set( MEPP2_GUI_LIBRARIES
+     ${GUILIB_DEMO}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link libraries (to link all target with, silently!)
+get_property( LINK_LIBRARIES_TMP
+              DIRECTORY
+              PROPERTY LINK_LIBRARIES
+              )
+set( MEPP2_GUI_LINK_LIBRARIES
+     "${LINK_LIBRARIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link dirs
+get_property( LINK_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY LINK_DIRECTORIES
+              )
+set( MEPP2_GUI_LINK_DIRECTORIES
+     "${LINK_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# compilation flags and define
+get_property( COMPILE_DEFINITIONS_TMP
+              DIRECTORY
+              PROPERTY COMPILE_DEFINITIONS
+              )
+set( MEPP2_GUI_COMPILE_DEFINITIONS
+     ${COMPILE_DEFINITIONS_TMP}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+## extra variables to be exported to external projects
+## specific to plugins
+
+set( MEPP2_osgQt_SRC
+     ${osgQt_SRC}
+     CACHE INTERNAL "no-desc" FORCE
+     )

@@ -1,6 +1,8 @@
-if( NOT BUILD_USE_OPENMESH OR NOT OPENMESH_FOUND )
+if( NOT BUILD_USE_OPENMESH )
   return()
 endif()
+
+include_directories( ${OPENMESH_INCLUDE_DIR} )
 
 if( MSVC )
   # AUTOLINK is used for CGAL on Windows. Disable it for OpenMesh-only tests
@@ -494,3 +496,66 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
+
+
+##TODO-elo make a function
+## variables to be exported to external projects
+
+# include dirs
+get_property( INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY INCLUDE_DIRECTORIES
+              )
+set( MEPP2_OPENMESH_INCLUDE_DIRECTORIES
+     "${INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# system include dirs
+get_property( SYSTEM_INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY SYSTEM_INCLUDE_DIRECTORIES
+              )
+set( MEPP2_OPENMESH_SYSTEM_INCLUDE_DIRECTORIES
+     "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# libraries to link with
+set( MEPP2_OPENMESH_LIBRARIES
+     ${OPENMESH_LIBRARIES}
+     ${Boost_LIBRARIES}
+     ${FBX_LIBRARY}
+     ${VTK_LIBRARIES}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link libraries (to link all target with, silently!)
+get_property( LINK_LIBRARIES_TMP
+              DIRECTORY
+              PROPERTY LINK_LIBRARIES
+              )
+set( MEPP2_OPENMESH_LINK_LIBRARIES
+     "${LINK_LIBRARIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link dirs
+get_property( LINK_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY LINK_DIRECTORIES
+              )
+set( MEPP2_OPENMESH_LINK_DIRECTORIES
+     "${LINK_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# compilation flags and define
+get_property( COMPILE_DEFINITIONS_TMP
+              DIRECTORY
+              PROPERTY COMPILE_DEFINITIONS
+              )
+set( MEPP2_OPENMESH_COMPILE_DEFINITIONS
+     ${COMPILE_DEFINITIONS_TMP}
+     CACHE INTERNAL "no-desc" FORCE
+     )

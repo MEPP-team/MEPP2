@@ -19,7 +19,7 @@
 
 #include <QPluginLoader>
 #include "Visualization/Plugins/PluginInterface.h"
-#include "Visualization/Plugins/PluginDialog.h"
+#include "Visualization/Plugins/PluginDialog.hpp"
 // Plugins
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
@@ -177,9 +177,9 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   // --- JUST HERE FOR AUTOMATIC TEST ---
 
 #ifdef DEBUG_VISU
-  Helpers::changeBackgroundColor(this, Color::Green);
-  Helpers::changeBackgroundColor(ui.statusbar, Color::Pink);
-  Helpers::changeBackgroundColor(ui.dockWidget, Color::Blue);
+  Helpers::changeBackgroundColor(this, Color::Green());
+  Helpers::changeBackgroundColor(ui.statusbar, Color::Pin());
+  Helpers::changeBackgroundColor(ui.dockWidget, Color::Blue());
 #endif
 
   setMinimumSize(_width, _height);
@@ -3218,7 +3218,7 @@ FEVV::SimpleWindow::onAddBall()
             y,
             z,
             1,
-            Color::Amethyst,
+            Color::Amethyst(),
             "Ball [" + bavQt->windowTitle().toStdString() + std::string("]")));
   }
 }

@@ -11,7 +11,7 @@
 #define VisualizationDataStructures_h
 
 #include <QMetaType>
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Visualization/BaseViewerOSG.h"
 #include <osg/Node>
 

@@ -9,7 +9,7 @@
 
 #include <osgText/Text>
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Visualization/OSG/Visitor/DataVisitor.h"
 
 // Generic mesh iterators

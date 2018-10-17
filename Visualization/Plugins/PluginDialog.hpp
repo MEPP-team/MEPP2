@@ -37,3 +37,9 @@ private:
 };
 
 } // namespace FEVV
+
+
+#ifndef Q_MOC_RUN
+// implementation
+#include "PluginDialog.inl"
+#endif // Q_MOC_RUN

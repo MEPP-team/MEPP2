@@ -4,12 +4,6 @@
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"
 #include "FEVV/Tools/Math/MatrixOperations.hpp"
 
-#ifdef FEVV_BUILDWINDLL
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
-
 namespace FEVV {
 namespace DataStructures {
 namespace AIF {
@@ -21,7 +15,7 @@ namespace AIF {
  *functions but also on properties (point coordinates for example). \see
  *AIFMesh
  */
-class DLL_EXPORT AIFMeshHelpers
+class AIFMeshHelpers
 {
 public:
   typedef AIFPropertiesHelpers::CoordinateType CoordinateType;
