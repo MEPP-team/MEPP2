@@ -369,20 +369,24 @@ def build_all_configs():
 			report[-1]['duration'] = re.search(r'[0-9]+:[0-9]+:[0-9]+$', rep['durationstr']).group(0)
 		elif sys.platform == "win32":
 			try:
-				report[-1]['warningsstr'] = re.search(r'[0-9]+ Avertissement\(s\)', summary).group(0)
+				report[-1]['warningsstr'] = re.findall(r'[0-9]+ Avertissement\(s\)', summary)
+				# returns a list
 			except:
 				try:
-					report[-1]['warningsstr'] = re.search(r'[0-9]+ Warning\(s\)', summary).group(0)
+					report[-1]['warningsstr'] = re.findall(r'[0-9]+ Warning\(s\)', summary)
+					# returns a list
 				except:
-					report[-1]['warningsstr'] = '999 warnings info not available, look at the log file !!!'
+					report[-1]['warningsstr'] = ['999 warnings info not available, look at the log file !!!']
 
 			try:
-				report[-1]['errorsstr'] = re.search(r'[0-9]+ Erreur\(s\)', summary).group(0)
+				report[-1]['errorsstr'] = re.findall(r'[0-9]+ Erreur\(s\)', summary)
+				# returns a list
 			except:
 				try:
-					report[-1]['errorsstr'] = re.search(r'[0-9]+ Error\(s\)', summary).group(0)
+					report[-1]['errorsstr'] = re.findall(r'[0-9]+ Error\(s\)', summary)
+					# returns a list
 				except:
-					report[-1]['errorsstr'] = '999 errors info not available, look at the log file !!!'
+					report[-1]['errorsstr'] = ['999 errors info not available, look at the log file !!!']
 
 			try:
 				report[-1]['testsstr'] = re.search(r'[0-9]+% tests passed.*', summary).group(0)
@@ -390,8 +394,21 @@ def build_all_configs():
 				report[-1]['testsstr'] = '0% tests info not available, look at the log file !!!'
 
 			report[-1]['durationstr'] = re.search(r'total build time.*', summary).group(0)
-			report[-1]['warningsnbr'] = re.search(r'^[0-9]+', rep['warningsstr']).group(0)
-			report[-1]['errorsnbr'] = re.search(r'^[0-9]+', rep['errorsstr']).group(0)
+
+			report[-1]['warningsnbr'] = 0
+			for warnstr in rep['warningsstr']:
+				warnnbr = int(re.search(r'^[0-9]+', warnstr).group(0))
+				report[-1]['warningsnbr'] += warnnbr
+			report[-1]['warningsnbr'] = str(report[-1]['warningsnbr'])
+			report[-1]['warningsstr'] = str(report[-1]['warningsstr'])
+
+			report[-1]['errorsnbr'] = 0
+			for errstr in rep['errorsstr']:
+				errnbr = int(re.search(r'^[0-9]+', errstr).group(0))
+				report[-1]['errorsnbr'] += errnbr
+			report[-1]['errorsnbr'] = str(report[-1]['errorsnbr'])
+			report[-1]['errorsstr'] = str(report[-1]['errorsstr'])
+
 			report[-1]['testssnbr'] = re.search(r'^[0-9]+', rep['testsstr']).group(0)
 			report[-1]['duration'] = re.search(r'[0-9]+:[0-9]+:[0-9]+$', rep['durationstr']).group(0)
 		elif sys.platform == "darwin":
