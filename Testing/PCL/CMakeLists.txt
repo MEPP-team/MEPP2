@@ -1,4 +1,4 @@
-if( NOT BUILD_USE_PCL OR NOT PCL_FOUND )
+if( NOT BUILD_USE_PCL )
   return()
 endif()
 

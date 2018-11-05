@@ -1,6 +1,6 @@
 #include "Visualization/BaseViewerOSG.h"
 
-#include "Visualization/Helpers/OSGDebug.h"
+#include "Visualization/Helpers/OSGDebug.hpp"
 #include "Visualization/Helpers/QtHelpers.h"
 
 #include <osgGA/MultiTouchTrackballManipulator>
@@ -58,7 +58,7 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::init(const bool _useMdiWindows)
   // setActive(false, 100);
 
 #ifdef DEBUG_VISU
-  Helpers::changeBackgroundColor(this, Color::Red);
+  Helpers::changeBackgroundColor(this, Color::Red());
 #endif
 
   // myGraphicsWindow = new osgViewer::GraphicsWindowEmbedded( this->x(),
@@ -141,7 +141,7 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::addViewWidget(
   osgWidget->setParent(this);
 
 #ifdef DEBUG_VISU
-  Helpers::changeBackgroundColor(osgWidget, Color::Yellow);
+  Helpers::changeBackgroundColor(osgWidget, Color::Yellow());
 #endif
 
   layout->addWidget(osgWidget);

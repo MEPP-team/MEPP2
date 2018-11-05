@@ -3,7 +3,7 @@
 // #include "Visualization/BaseAdapterVisu.h"
 // #include "Visualization/BaseWindow.h"
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Base/Assert.h"
 
 // Generic mesh iterators

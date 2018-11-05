@@ -11,7 +11,7 @@
 #define QtHelpers_h
 
 #include <QWidget>
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 
 #include <QThread>
 

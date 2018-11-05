@@ -8,8 +8,12 @@ if( WIN32 )
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
 endif()
 
-# Refer to Doc/Devel/CMakeFiles.md entry 001
-include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+# Refer to DevelopersDesignCMakeFiles.dox entry 001
+if( BUILD_USE_CGAL )
+  include(${CGAL_USE_FILE})
+else()
+  include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+endif()
 
 # Refer to Doc/Devel/CMakeFiles.md entry 002
 add_definitions( -DCGAL_NDEBUG )
@@ -394,7 +398,7 @@ add_test(Non_manifold_collapse_edge_aif_6
 #####
 add_executable( test_smoothing_aif
                 test_smoothing_aif.cpp)
-if (BUILD_USE_VTK AND VTK_FOUND )
+if (BUILD_USE_VTK )
 	add_test( Smoothing_aif_vtk
 			 test_smoothing_aif
 			 ${TESTING_DATA_DIR}/cube.vtk
@@ -481,7 +485,7 @@ target_link_libraries(test_load_dangling_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
 
-if ( BUILD_USE_VTK AND VTK_FOUND )
+if ( BUILD_USE_VTK )
 add_test( Test_load_dangling_edge_aif_vtk
           test_load_dangling_edge_aif  ${TESTING_DATA_DIR}/dangling_edge.vtk)	# pass with native and generic readers
 endif()
@@ -504,3 +508,65 @@ add_test( Test_load_dangling_edge_aif_off_3
 #TODO-elo-off  target_link_libraries(test_compression_valence_aif
 #TODO-elo-off                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
 #TODO-elo-off  					             )
+
+
+##TODO-elo make a function
+## variables to be exported to external projects
+
+# include dirs
+get_property( INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY INCLUDE_DIRECTORIES
+              )
+set( MEPP2_AIF_INCLUDE_DIRECTORIES
+     "${INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# system include dirs
+get_property( SYSTEM_INCLUDE_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY SYSTEM_INCLUDE_DIRECTORIES
+              )
+set( MEPP2_AIF_SYSTEM_INCLUDE_DIRECTORIES
+     "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# libraries to link with
+set( MEPP2_AIF_LIBRARIES
+     ${Boost_LIBRARIES}
+     ${FBX_LIBRARY}
+     ${VTK_LIBRARIES}
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link libraries (to link all target with, silently!)
+get_property( LINK_LIBRARIES_TMP
+              DIRECTORY
+              PROPERTY LINK_LIBRARIES
+              )
+set( MEPP2_AIF_LINK_LIBRARIES
+     "${LINK_LIBRARIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# link dirs
+get_property( LINK_DIRECTORIES_TMP
+              DIRECTORY
+              PROPERTY LINK_DIRECTORIES
+              )
+set( MEPP2_AIF_LINK_DIRECTORIES
+     "${LINK_DIRECTORIES_TMP}"
+     CACHE INTERNAL "no-desc" FORCE
+     )
+
+# compilation flags and define
+get_property( COMPILE_DEFINITIONS_TMP
+              DIRECTORY
+              PROPERTY COMPILE_DEFINITIONS
+              )
+set( MEPP2_AIF_COMPILE_DEFINITIONS
+     ${COMPILE_DEFINITIONS_TMP}
+     CACHE INTERNAL "no-desc" FORCE
+     )

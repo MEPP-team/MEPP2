@@ -72,7 +72,7 @@ init:
   - dir C:\Libraries
 #
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" set QT5_DIR=C:\Qt\5.6\msvc2015_64 # vs_2015
-  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set QT5_DIR=C:\Qt\5.9\msvc2017_64 # vs_2017
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set QT5_DIR=C:\Qt\5.11\msvc2017_64 # vs_2017
 #  - echo %QT5_DIR%
   - dir C:\Qt
 #

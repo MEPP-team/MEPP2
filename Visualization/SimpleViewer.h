@@ -3,7 +3,7 @@
 #include <osgViewer/ViewerEventHandlers>
 // #include <osgUtil/Optimizer>
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Visualization/BaseViewerOSG.h"
 
 #include "Base/Texture.h"
@@ -300,7 +300,7 @@ public:
   osg::ref_ptr< osg::Group >
   createMesh(const PCArray &_pts,
              const bool _withColor = false,
-             const Color _defaultColor = Color::Wisteria,
+             const Color _defaultColor = Color::Wisteria(),
              std::string _mesh_file = std::string(""),
              osg::ref_ptr< osg::Group > _group = new osg::Group);
 

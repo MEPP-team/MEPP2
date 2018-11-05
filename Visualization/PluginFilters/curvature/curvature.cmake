@@ -17,8 +17,6 @@ if (BUILD_USE_GUI_CurvaturePlugin)
     "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
     ${Curvature_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
-    ${CPP_PLUGIN_FILES}
-    ${GUISRC_PLUGIN}
     )
   target_link_libraries (CurvaturePlugin ${Curvature_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

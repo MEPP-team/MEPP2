@@ -18,13 +18,13 @@
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
 #include "Visualization/BaseWindowQt.h"
 #include "Visualization/BaseAdapterVisuQt.h"
+#include "Visualization/Helpers/QtHelpers.h"
+#include "Visualization/Helpers/OSGDebug.hpp" // @todo to be removed
+#include "Visualization/Plugins/PluginInterface.h"
+#include "Visualization/Plugins/PluginDialog.hpp"
 #endif
 
 #include "ui_SimpleWindow.h"
-
-#include "Visualization/Helpers/OSGDebug.h" // @todo to be removed
-
-#include "Visualization/Helpers/QtHelpers.h"
 
 #include <QDebug>
 #include <QMenuBar>
@@ -34,8 +34,6 @@
 
 // Plugins
 #include <QPluginLoader>
-#include "Visualization/Plugins/PluginInterface.h"
-#include "Visualization/Plugins/PluginDialog.h"
 // Plugins
 
 #if 0
@@ -333,4 +331,6 @@ protected:
 
 } // namespace FEVV
 
+#ifndef Q_MOC_RUN
 #include "Visualization/SimpleWindow.inl"
+#endif // Q_MOC_RUN

@@ -16,8 +16,6 @@ if (BUILD_USE_GUI_ScalingPlugin)
   add_library(ScalingPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/scaling/ScalingPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/scaling/Dialogs/DialogScaling1.cpp"
     ${Scaling_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
-    ${CPP_PLUGIN_FILES}
-    ${GUISRC_PLUGIN}
     )
   target_link_libraries (ScalingPlugin ${Scaling_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

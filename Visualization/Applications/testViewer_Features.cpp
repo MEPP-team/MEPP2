@@ -11,7 +11,7 @@
 #include "Visualization/SimpleAdapterVisu.h"
 #include "Visualization/SimpleViewer.h"
 
-#include "Base/Color.h"
+#include "Base/Color.hpp"
 #include "Base/Block.h"
 #include "Base/GradientColorMap.h"
 
@@ -368,7 +368,7 @@ main(int argc, char **argv)
       VertexColorMapOpenMesh cm(vm);
       unsigned int nbVertex = calculate_vertex_number(*mesh);
       GradientColorMap< unsigned int > gradient(
-          0, nbVertex, Color::White, Color::Black);
+          0, nbVertex, Color::White(), Color::Black());
       calculate_gradient_colormap(*mesh, cm, gradient);
 
       // adapter->attachMesh( mesh );

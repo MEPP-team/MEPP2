@@ -1,4 +1,3 @@
-#include "Visualization/Helpers/OSGDebug.h"
 
 #include "Visualization/Helpers/OSGHelpers.h"
 
@@ -11,6 +10,7 @@
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createLine(const double &_x,
                         const double &_y,
@@ -46,6 +46,7 @@ FEVV::Debug::createLine(const double &_x,
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createCylinder(const double &_x,
                             const double &_y,
@@ -89,6 +90,7 @@ FEVV::Debug::createCylinder(const double &_x,
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createBox(const double &_x,
                        const double &_y,
@@ -118,6 +120,7 @@ FEVV::Debug::createBox(const double &_x,
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createBall(const double &_x,
                         const double &_y,
@@ -148,6 +151,7 @@ FEVV::Debug::createBall(const double &_x,
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createPyramid(const double &_x,
                            const double &_y,
@@ -234,11 +238,11 @@ FEVV::Debug::createPyramid(const double &_x,
                                   osg::Array::BIND_PER_PRIMITIVE_SET);
 
   osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
-  colors->push_back(Helpers::ColorConverter(Color::Red));
-  colors->push_back(Helpers::ColorConverter(Color::Green));
-  colors->push_back(Helpers::ColorConverter(Color::Blue));
-  colors->push_back(Helpers::ColorConverter(Color::SunFlower));
-  colors->push_back(Helpers::ColorConverter(Color::Wisteria));
+  colors->push_back(Helpers::ColorConverter(Color::Red()));
+  colors->push_back(Helpers::ColorConverter(Color::Green()));
+  colors->push_back(Helpers::ColorConverter(Color::Blue()));
+  colors->push_back(Helpers::ColorConverter(Color::SunFlower()));
+  colors->push_back(Helpers::ColorConverter(Color::Wisteria()));
 
   pyramidGeometry->setColorArray(colors, osg::Array::BIND_PER_PRIMITIVE_SET);
 
@@ -288,6 +292,7 @@ FEVV::Debug::createPyramid(const double &_x,
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createGizmo(osg::ref_ptr< osg::Group > _group)
 {
@@ -295,11 +300,11 @@ FEVV::Debug::createGizmo(osg::ref_ptr< osg::Group > _group)
   const double weight = 0.03;
 
   createCylinder(
-      0, 0, 0, size, 0, 0, weight, Color::Red, "(Gizmo) Cylinder", _group);
+      0, 0, 0, size, 0, 0, weight, Color::Red(), "(Gizmo) Cylinder", _group);
   createCylinder(
-      0, 0, 0, 0, size, 0, weight, Color::Green, "(Gizmo) Cylinder", _group);
+      0, 0, 0, 0, size, 0, weight, Color::Green(), "(Gizmo) Cylinder", _group);
   createCylinder(
-      0, 0, 0, 0, 0, size, weight, Color::Blue, "(Gizmo) Cylinder", _group);
+      0, 0, 0, 0, 0, size, weight, Color::Blue(), "(Gizmo) Cylinder", _group);
 
   if(_group->getName() == "")
   {
@@ -309,11 +314,12 @@ FEVV::Debug::createGizmo(osg::ref_ptr< osg::Group > _group)
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createUnitGrid(osg::ref_ptr< osg::Group > _group)
 {
   const int size = 10;
-  const Color color = Color::Clouds;
+  const Color color = Color::Clouds();
 
   for(int x_axis = -size; x_axis <= size; ++x_axis)
   {
@@ -335,6 +341,7 @@ FEVV::Debug::createUnitGrid(osg::ref_ptr< osg::Group > _group)
   return _group;
 }
 
+inline
 osg::ref_ptr< osg::Group >
 FEVV::Debug::createHud(osg::ref_ptr< osgText::Text > updateText,
                        osg::ref_ptr< osg::Group > _group)

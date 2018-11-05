@@ -11,7 +11,7 @@ inline FEVV::GradientColorMap< PValue >::GradientColorMap(
 {
   // ASSERT_MSG(myMin < myMax, "Max should be strictly greather than Min in a
   // colormap.");
-  if(_firstColor != Color::None && _lastColor != Color::None)
+  if(_firstColor != Color::None() && _lastColor != Color::None())
   {
     myColors.push_back(_firstColor);
     myColors.push_back(_lastColor);
@@ -89,7 +89,7 @@ FEVV::GradientColorMap< PValue >::getColor(const std::vector< Color > &_colors,
   // colormap.");
   if(_colors.size() < 2)
   {
-    return Color::None;
+    return Color::None();
   }
 
   double scale = static_cast< double >(_value - _min) / (_max - _min);

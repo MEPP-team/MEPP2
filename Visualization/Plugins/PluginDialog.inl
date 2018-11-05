@@ -1,5 +1,4 @@
 #include "Visualization/Plugins/PluginInterface.h"
-#include "Visualization/Plugins/PluginDialog.h"
 
 #include <QPluginLoader>
 #include <QStringList>
@@ -14,6 +13,7 @@
 
 #include <iostream>
 
+inline
 FEVV::PluginDialog::PluginDialog(const QString &path,
                                  const QStringList &fileNames,
                                  QWidget *parent)
@@ -49,6 +49,7 @@ FEVV::PluginDialog::PluginDialog(const QString &path,
   findPlugins(path, fileNames);
 }
 
+inline
 void
 FEVV::PluginDialog::findPlugins(const QString &path,
                                 const QStringList &fileNames)
@@ -73,6 +74,7 @@ FEVV::PluginDialog::findPlugins(const QString &path,
   }
 }
 
+inline
 void
 FEVV::PluginDialog::populateTreeWidget(QObject *plugin, const QString &text)
 {
@@ -95,6 +97,7 @@ FEVV::PluginDialog::populateTreeWidget(QObject *plugin, const QString &text)
   }
 }
 
+inline
 void
 FEVV::PluginDialog::addItems(QTreeWidgetItem *pluginItem,
                              const char *interfaceName,

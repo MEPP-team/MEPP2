@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(Color_RECURSES)
-#error Recursive header files inclusion detected in Color.h
-#else // defined(Color_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define Color_RECURSES
-
-#if !defined Color_h
-/** Prevents repeated inclusion of headers. */
-#define Color_h
-
 #include <iostream>
 
 namespace FEVV {
@@ -175,51 +165,51 @@ public:
 
   // Please refer to
   // https://www.google.com/design/spec/style/color.html#color-color-palette
-  static const Color None;
-  static const Color Black;
-  static const Color White;
-  static const Color Red;
-  static const Color Pink;
-  static const Color Purple;
-  static const Color DeepPurple;
-  static const Color Indigo;
-  static const Color Blue;
-  static const Color LightBlue;
-  static const Color Cyan;
-  static const Color Teal;
-  static const Color Green;
-  static const Color LightGreen;
-  static const Color Lime;
-  static const Color Yellow;
-  static const Color Amber;
-  static const Color Orange;
-  static const Color DeepOrange;
-  static const Color Brown;
-  static const Color Grey;
-  static const Color BlueGrey;
+  static Color None(void);
+  static Color Black(void);
+  static Color White(void);
+  static Color Red(void);
+  static Color Pink(void);
+  static Color Purple(void);
+  static Color DeepPurple(void);
+  static Color Indigo(void);
+  static Color Blue(void);
+  static Color LightBlue(void);
+  static Color Cyan(void);
+  static Color Teal(void);
+  static Color Green(void);
+  static Color LightGreen(void);
+  static Color Lime(void);
+  static Color Yellow(void);
+  static Color Amber(void);
+  static Color Orange(void);
+  static Color DeepOrange(void);
+  static Color Brown(void);
+  static Color Grey(void);
+  static Color BlueGrey(void);
 
   ///////////////////////////////
 
   // Please refer to https://flatuicolors.com/
-  static const Color Turquoise;
-  static const Color GreenSea;
-  static const Color Emerald;
-  static const Color Nephritis;
-  static const Color PeterRiver;
-  static const Color BelizeHole;
-  static const Color Amethyst;
-  static const Color Wisteria;
-  static const Color WetAsphalt;
-  static const Color MidnightBlue;
-  static const Color SunFlower;
-  static const Color Carrot;
-  static const Color Pumpkin;
-  static const Color Alizarin;
-  static const Color Pomegranate;
-  static const Color Clouds;
-  static const Color Silver;
-  static const Color Concrete;
-  static const Color Asbestos;
+  static Color Turquoise(void);
+  static Color GreenSea(void);
+  static Color Emerald(void);
+  static Color Nephritis(void);
+  static Color PeterRiver(void);
+  static Color BelizeHole(void);
+  static Color Amethyst(void);
+  static Color Wisteria(void);
+  static Color WetAsphalt(void);
+  static Color MidnightBlue(void);
+  static Color SunFlower(void);
+  static Color Carrot(void);
+  static Color Pumpkin(void);
+  static Color Alizarin(void);
+  static Color Pomegranate(void);
+  static Color Clouds(void);
+  static Color Silver(void);
+  static Color Concrete(void);
+  static Color Asbestos(void);
 
 private:
   unsigned char redComponent;
@@ -230,7 +220,8 @@ private:
 
 } // namespace FEVV
 
-#endif // !defined Color_h
 
-#undef Color_RECURSES
-#endif // else defined(Color_RECURSES)
+#ifndef Q_MOC_RUN
+// implementation
+#include "Color.inl"
+#endif // Q_MOC_RUN
