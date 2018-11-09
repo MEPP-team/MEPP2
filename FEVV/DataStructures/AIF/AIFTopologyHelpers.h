@@ -224,18 +224,20 @@ public:
     return !is_surface_border_vertex(vertex) && !is_isolated_vertex(vertex);
   }
   /*!
-   * Function determining if the arguments share an incidence relation
+   * \brief   Function determining if the arguments share an incidence relation
    *
-   * \param  vertex  The involving vertex
-   * \param  edge    The involving edge
+   * \param   vertex  The involving vertex
+   * \param   edge    The involving edge
    *
    * \return  true if the arguments share an incidence relation,
    *          false otherwise.
+   * \warning are_incident(edge, vertex) will not give consistent
+   *          results when topological modifications are in progress
    */
   static bool are_incident(vertex_descriptor vertex, edge_descriptor edge)
   {
-    // Notes that "return are_incident(edge, vertex);" will not give consistent
-    // results when topological modifications are in progress
+	if(vertex==null_vertex())
+		return false;	  
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range< it_type > edges_range = incident_edges(vertex);
 
@@ -247,19 +249,22 @@ public:
     return false;
   }
   /*!
-   * Function determining if the arguments share an incidence relation
+   * \brief  Function determining if the arguments share an incidence relation
    *
    * \param  vertex  The involving vertex
    * \param  u       one vertex of the involving edge
    * \param  v       the other vertex of the involving edge
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(vertex_descriptor vertex,
                            vertex_descriptor u,
                            vertex_descriptor v)
   {
+	if(vertex==null_vertex())
+		return false;
+	  
     edge_descriptor edge = common_edge(u, v);
     if(edge != null_edge())
     {
@@ -821,32 +826,36 @@ public:
 	  return de;
 	}  
   /*!
-   * Function determining if the argument edge shares an incidence
-   * relation with the argument vertex.
+   * \brief  Function determining if the argument edge shares an incidence
+   *         relation with the argument vertex.
    *
    * \param  edge    The involving edge
    * \param  vertex  The involving vertex
    *
-   * \return  true if the arguments share an incidence relation, false
+   * \return true if the arguments share an incidence relation, false
    *         otherwise.
    */
   static bool are_incident(edge_descriptor edge, vertex_descriptor vertex)
   {
+	if(edge == null_edge())
+      return false;		
     return (edge->get_first_vertex() == vertex) ||
            (edge->get_second_vertex() == vertex);
   }
   /*!
-   * Function determining if the argument edge share an incidence
-   * relation with the argument face.
+   * \brief  Function determining if the argument edge share an incidence
+   *         relation with the argument face.
    *
    * \param  edge  The involving edge
    * \param  face  The involving face
    *
-   * \return  true if the arguments share an incidence relation, false
+   * \return true if the arguments share an incidence relation, false
    *         otherwise.
    */
   static bool are_incident(edge_descriptor edge, face_descriptor face)
   {
+	if(edge == null_edge())
+      return false;		  
     typedef face_container_in_edge::const_iterator it_type;
     boost::iterator_range< it_type > faces_range = incident_faces(edge);
 
@@ -1312,17 +1321,19 @@ public:
   }
 
   /*!
-   * Function determining if the argument face shares an incidence
-   * relation with the argument vertex.
+   * \brief  Function determining if the argument face shares an incidence
+   *         relation with the argument vertex.
    *
    * \param  face    The involving face
    * \param  vertex  The involving vertex
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(face_descriptor face, vertex_descriptor vertex)
   {
+	if(face == null_face())
+      return false;		  
     if(face->m_Is_Incident_PtrVertices_Computed) // optimization by using
                                                  // topological caching
     {
@@ -1344,17 +1355,19 @@ public:
   }
 
   /*!
-   * Function determining if the argument vertex shares an incidence
-   * relation with the argument face.
+   * \brief  Function determining if the argument vertex shares an incidence
+   *         relation with the argument face.
    *
    * \param  vertex  The involving vertex
    * \param  face    The involving face
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(vertex_descriptor vertex, face_descriptor face)
   {
+	if(vertex == null_vertex())
+      return false;		  	  
     if(vertex->m_Incident_PtrFaces_Computed) // optimization by using
                                              // topological caching
     {
@@ -1375,8 +1388,8 @@ public:
     return false;
   }
   /*!
-   * Function determining if the argument face shares an incidence
-   * relation with the argument edge.
+   * \brief  Function determining if the argument face shares an incidence
+   *         relation with the argument edge.
    *
    * \param  face  The involving face
    * \param  edge  The involving edge
@@ -1384,12 +1397,14 @@ public:
    * \return  true if the arguments share an incidence relation, false
    *          otherwise.
    *
-   * \warning  are_incident(face,  edge) does not give necessary the
-   *           same result as are_incident(edge, face) when topological
-   *           modifications are in progress.
+   * \warning are_incident(face, edge) does not give necessary the
+   *          same result as are_incident(edge, face) when topological
+   *          modifications are in progress.
    */
   static bool are_incident(face_descriptor face, edge_descriptor edge)
   {
+	if(face == null_face())
+      return false;		  
     auto edges_range = incident_edges(face);
     auto it = edges_range.begin();
     for(; it != edges_range.end(); ++it)
