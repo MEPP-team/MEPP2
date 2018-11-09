@@ -524,29 +524,21 @@ public:
     return sort_vertices<ComparatorType>(&mesh, cmp);
   }
   /*!
-  * 			Sort incident edges and return incidence relations with edges
-  * \param	vertex	The involving vertex
-  * \param	cmp   	The involving comparator object used for the sorting
-  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
-  */
-  template<typename ComparatorType>
-  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges(vertex_descriptor vertex, ComparatorType cmp)
-  {
-    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
-    return incident_edges(vertex);
-  }
-
-  /*!
   * 			Sort incident edges starting with given incident edge and return incidence relations with edges
   * \param	vertex	The involving vertex
   * \param	cmp   	The involving comparator object used for the sorting
   * \param	edge  	The involving incident edge to vertex
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at edge edge.
   * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, ComparatorType cmp, edge_descriptor edge)
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
+                                                                                                                ComparatorType cmp, 
+                                                                                                                edge_descriptor edge,
+                                                                                                                bool do_full_incident_edge_sorting = false)
   {
-    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
+    if(do_full_incident_edge_sorting)
+      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // break of clockwise ordering
     /////////////////////////////////////////////////////////////////////////
     std::list<edge_descriptor> ltmp, ltmpnext;
     edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
@@ -567,6 +559,64 @@ public:
     vertex->m_Incident_PtrEdges.insert(vertex->m_Incident_PtrEdges.end(), ltmpnext.begin(), ltmpnext.end());
     /////////////////////////////////////////////////////////////////////////
     return incident_edges(vertex);
+  }
+
+  /*!
+  * 			Sort incident edges and return incidence relations with edges
+  * \param	vertex	The involving vertex
+  * \param	cmp   	The involving comparator object used for the sorting
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
+  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
+                                                                                              ComparatorType cmp,
+                                                                                              bool do_full_incident_edge_sorting = false)
+  {
+
+    return sort_incident_edges_starting_with_edge<ComparatorType>(vertex, 
+                                                                  cmp, 
+                                                                  *std::min_element(vertex->m_Incident_PtrEdges.begin(), 
+                                                                                    vertex->m_Incident_PtrEdges.end(), 
+                                                                                    cmp),
+                                                                  do_full_incident_edge_sorting);
+  }
+
+  /*!
+  * 			Sort incident edges of its two vertices
+  * \param	edge	The involving edge
+  * \param	cmp   The involving comparator object used for the sorting
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
+  */
+  template<typename ComparatorType>
+  static void sort_incident_edges(edge_descriptor edge,
+                                  ComparatorType cmp,
+                                  bool do_full_incident_edge_sorting = false)
+  {
+    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
+    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp, do_full_incident_edge_sorting);
+  }
+
+  /*!
+  * 			Sort incident edges of its two vertices' one-ring
+  * \param	edge	The involving edge
+  * \param	cmp   The involving comparator object used for the sorting
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
+  */
+  template<typename ComparatorType>
+  static void sort_one_ring_incident_edges( edge_descriptor edge,
+                                            ComparatorType cmp,
+                                            bool do_full_incident_edge_sorting = false)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+    boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) 
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_first_vertex()), cmp, do_full_incident_edge_sorting);
+
+    edges_range = incident_edges(edge->get_second_vertex());
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it)
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_second_vertex()), cmp, do_full_incident_edge_sorting);
+
   }
 
   static std::vector<edge_descriptor> get_incident_hole_border_edges(vertex_descriptor vertex)
