@@ -2,6 +2,7 @@
 #define __EdgeComparators_hxx
 
 #include <limits>
+#include <iterator>
 
 namespace FEVV { 
 namespace Comparator 
@@ -109,8 +110,55 @@ namespace Comparator
         return _gt.get_y(maxie1) < _gt.get_y(maxie2);
       else if (fabs(_gt.get_z(maxie1) - _gt.get_z(maxie2)) > std::numeric_limits<Scalar>::epsilon())
         return _gt.get_z(maxie1) < _gt.get_z(maxie2);
-	
-	  return false;
+	  else
+	  {
+		 auto e1_v1 = in_edges(source(e1, _g),_g), 
+		      e1_v2 = in_edges(target(e1, _g),_g),
+			  e2_v1 = in_edges(source(e2, _g),_g),
+			  e2_v2 = in_edges(target(e2, _g),_g);
+	     
+		 auto e1_v1_deg = std::distance(e1_v1.first, e1_v1.second),
+              e1_v2_deg = std::distance(e1_v2.first, e1_v2.second),
+              e2_v1_deg = std::distance(e2_v1.first, e2_v1.second),
+              e2_v2_deg = std::distance(e2_v2.first, e2_v2.second);		
+         if( minie1 == pe1_pv1 )
+         {
+			 if( minie2 == pe2_pv1 )
+				 if( e1_v1_deg!= e2_v1_deg)
+			       return e1_v1_deg < e2_v1_deg;
+			 else 
+				 if( e1_v1_deg!= e2_v2_deg)
+				   return e1_v1_deg < e2_v2_deg;
+		 }	
+         else 
+         {
+			 if( minie2 == pe2_pv1 )
+				 if( e1_v2_deg!= e2_v1_deg)				 
+				   return e1_v2_deg < e2_v1_deg;
+			 else
+				 if( e1_v2_deg!= e2_v2_deg)
+				   return e1_v2_deg < e2_v2_deg; 
+		 }		 
+		 
+         if( maxie1 == pe1_pv1 )
+         {
+			 if( maxie2 == pe2_pv1 )
+				 if( e1_v1_deg!= e2_v1_deg)
+			       return e1_v1_deg < e2_v1_deg;
+			 else 
+				 if( e1_v1_deg!= e2_v2_deg)
+				   return e1_v1_deg < e2_v2_deg;
+		 }	
+         else 
+         {
+			 if( maxie2 == pe2_pv1 )
+				 if( e1_v2_deg!= e2_v1_deg)				 
+				   return e1_v2_deg < e2_v1_deg;
+			 else
+				 if( e1_v2_deg!= e2_v2_deg)
+				   return e1_v2_deg < e2_v2_deg; 
+		 }			 
+	  }
 	  /////////////////////////////////////////////////////////////////////////
 #else	  
       Point pv1((_gt.get_x(pe1_pv1) + _gt.get_x(pe1_pv2))*0.5,
@@ -127,9 +175,9 @@ namespace Comparator
         return _gt.get_y(pv1) < _gt.get_y(pv2);
       else if (fabs(_gt.get_z(pv1) - _gt.get_z(pv2)) > std::numeric_limits<Scalar>::epsilon())
         return _gt.get_z(pv1) < _gt.get_z(pv2);
-	  else
-		  return false; // can be an issue
 #endif	  
+
+      return false; // can be an issue
     }
   };
   /////////////////////////////////////////////////////////////////////////////
