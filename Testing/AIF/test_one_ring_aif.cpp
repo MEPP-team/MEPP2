@@ -236,6 +236,12 @@ v1 ---------- v0 ----------- v3             v7 --------- v8
 
   //---------------------- Tests ---------------------
 
+  // incident edges
+  //std::cout << "testing incident_edges(v1)" << std::endl;
+  //auto inci_edges = helpers::incident_edges(v1);
+  //assert(rotationally_equal(std::vector<edge_descriptor>(inci_edges.begin(), inci_edges.end()),
+  //  std::vector< edge_descriptor >{e4, e13, e12}, false));
+
   // unordered one ring edges of vertex
 
   std::cout << "testing  get_unordered_one_ring_edges(v0)" << std::endl;

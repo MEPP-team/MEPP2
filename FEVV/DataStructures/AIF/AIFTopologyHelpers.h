@@ -490,7 +490,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -503,7 +504,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -515,7 +517,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -526,7 +529,9 @@ public:
   /*!
   * 			Sort incident edges starting with given incident edge and return incidence relations with edges
   * \param	vertex	The involving vertex
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   	The involving comparator object used for the sorting. Comparator can be based
+  *                 on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *                 faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param	edge  	The involving incident edge to vertex
   * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at edge edge.
   * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
@@ -535,10 +540,10 @@ public:
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
                                                                                                                 ComparatorType cmp, 
                                                                                                                 edge_descriptor edge,
-                                                                                                                bool do_full_incident_edge_sorting = false)
+                                                                                                                bool do_full_incident_edge_sorting = true)
   {
     if(do_full_incident_edge_sorting)
-      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // break of clockwise ordering
+      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
     /////////////////////////////////////////////////////////////////////////
     std::list<edge_descriptor> ltmp, ltmpnext;
     edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
@@ -564,14 +569,16 @@ public:
   /*!
   * 			Sort incident edges and return incidence relations with edges
   * \param	vertex	The involving vertex
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   	The involving comparator object used for the sorting. Comparator can be based
+  *                 on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *                 faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
                                                                                               ComparatorType cmp,
-                                                                                              bool do_full_incident_edge_sorting = false)
+                                                                                              bool do_full_incident_edge_sorting = true)
   {
 
     return sort_incident_edges_starting_with_edge<ComparatorType>(vertex, 
@@ -585,13 +592,15 @@ public:
   /*!
   * 			Sort incident edges of its two vertices
   * \param	edge	The involving edge
-  * \param	cmp   The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   */
   template<typename ComparatorType>
   static void sort_incident_edges(edge_descriptor edge,
                                   ComparatorType cmp,
-                                  bool do_full_incident_edge_sorting = false)
+                                  bool do_full_incident_edge_sorting = true)
   {
     sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
     sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp, do_full_incident_edge_sorting);
@@ -600,13 +609,15 @@ public:
   /*!
   * 			Sort incident edges of its two vertices' one-ring
   * \param	edge	The involving edge
-  * \param	cmp   The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   */
   template<typename ComparatorType>
   static void sort_one_ring_incident_edges( edge_descriptor edge,
                                             ComparatorType cmp,
-                                            bool do_full_incident_edge_sorting = false)
+                                            bool do_full_incident_edge_sorting = true)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
@@ -619,6 +630,14 @@ public:
 
   }
 
+  
+  /*!
+  *      Get incident border edges within a mesh hole. 
+  * \param	 vertex	The involving vertex
+  * \return  An std::vector of incident hole border edges. 
+  * \warning vertex is assumed to be on the hole border, and no check
+  *          is done.
+  */
   static std::vector<edge_descriptor> get_incident_hole_border_edges(vertex_descriptor vertex)
   {
     std::vector<edge_descriptor> res;
