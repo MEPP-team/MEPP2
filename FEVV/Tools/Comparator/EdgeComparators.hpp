@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <iterator>
+#include <cmath>
 
 namespace FEVV { 
 namespace Comparator 
@@ -31,12 +32,13 @@ namespace Comparator
 
       Point pe2_pv1 = get(_pm, source(e2, _g));
       Point pe2_pv2 = get(_pm, target(e2, _g));
-#if 1
-	  Point minie1(0,0,0), maxie1(0,0,0), minie2(0,0,0), maxie2(0,0,0);
 
+	  Point minie1(0,0,0), maxie1(0,0,0), minie2(0,0,0), maxie2(0,0,0);
+      bool minie1_is_pe1_pv1 = false, 
+	       minie2_is_pe2_pv1 = false;
 	  if( _gt.get_x(pe1_pv1) < _gt.get_x(pe1_pv2) )
 	  {
-		  minie1 = pe1_pv1;
+		  minie1 = pe1_pv1; minie1_is_pe1_pv1 = true;
 		  maxie1 = pe1_pv2;
 	  }
 	  else if( _gt.get_x(pe1_pv1) > _gt.get_x(pe1_pv2) )
@@ -46,7 +48,7 @@ namespace Comparator
 	  }
 	  else if( _gt.get_y(pe1_pv1) < _gt.get_y(pe1_pv2) )
 	  {
-		  minie1 = pe1_pv1;
+		  minie1 = pe1_pv1; minie1_is_pe1_pv1 = true;
 		  maxie1 = pe1_pv2;
 	  }
 	  else if( _gt.get_y(pe1_pv1) > _gt.get_y(pe1_pv2) )
@@ -56,7 +58,7 @@ namespace Comparator
 	  }
 	  else if( _gt.get_z(pe1_pv1) < _gt.get_z(pe1_pv2) )
 	  {
-		  minie1 = pe1_pv1;
+		  minie1 = pe1_pv1; minie1_is_pe1_pv1 = true;
 		  maxie1 = pe1_pv2;
 	  }
 	  else if( _gt.get_z(pe1_pv1) > _gt.get_z(pe1_pv2) )
@@ -64,11 +66,11 @@ namespace Comparator
 		  maxie1 = pe1_pv1;
 		  minie1 = pe1_pv2;
 	  }
-	  else minie1 = maxie1 = pe1_pv1;
+	  else minie1 = maxie1 = pe1_pv1; 
 	  /////////////////////////////////////////////////////////////////////////
 	  if( _gt.get_x(pe2_pv1) < _gt.get_x(pe2_pv2) )
 	  {
-		  minie2 = pe2_pv1;
+		  minie2 = pe2_pv1; minie2_is_pe2_pv1 = true;
 		  maxie2 = pe2_pv2;
 	  }
 	  else if( _gt.get_x(pe2_pv1) > _gt.get_x(pe2_pv2) )
@@ -78,7 +80,7 @@ namespace Comparator
 	  }
 	  else if( _gt.get_y(pe2_pv1) < _gt.get_y(pe2_pv2) )
 	  {
-		  minie2 = pe2_pv1;
+		  minie2 = pe2_pv1; minie2_is_pe2_pv1 = true;
 		  maxie2 = pe2_pv2;
 	  }
 	  else if( _gt.get_y(pe2_pv1) > _gt.get_y(pe2_pv2) )
@@ -88,7 +90,7 @@ namespace Comparator
 	  }
 	  else if( _gt.get_z(pe2_pv1) < _gt.get_z(pe2_pv2) )
 	  {
-		  minie2 = pe2_pv1;
+		  minie2 = pe2_pv1; minie2_is_pe2_pv1 = true;
 		  maxie2 = pe2_pv2;
 	  }
 	  else if( _gt.get_z(pe2_pv1) > _gt.get_z(pe2_pv2) )
@@ -121,9 +123,9 @@ namespace Comparator
               e1_v2_deg = std::distance(e1_v2.first, e1_v2.second),
               e2_v1_deg = std::distance(e2_v1.first, e2_v1.second),
               e2_v2_deg = std::distance(e2_v2.first, e2_v2.second);		
-         if( minie1 == pe1_pv1 )
+         if( minie1_is_pe1_pv1 )
          {
-			 if( minie2 == pe2_pv1 )
+			 if( minie2_is_pe2_pv1 )
 				 if( e1_v1_deg!= e2_v1_deg)
 			       return e1_v1_deg < e2_v1_deg;
 			 else 
@@ -132,7 +134,7 @@ namespace Comparator
 		 }	
          else 
          {
-			 if( minie2 == pe2_pv1 )
+			 if( minie2_is_pe2_pv1 )
 				 if( e1_v2_deg!= e2_v1_deg)				 
 				   return e1_v2_deg < e2_v1_deg;
 			 else
@@ -140,9 +142,9 @@ namespace Comparator
 				   return e1_v2_deg < e2_v2_deg; 
 		 }		 
 		 
-         if( maxie1 == pe1_pv1 )
+         if( !minie1_is_pe1_pv1 )
          {
-			 if( maxie2 == pe2_pv1 )
+			 if( !minie2_is_pe2_pv1 )
 				 if( e1_v1_deg!= e2_v1_deg)
 			       return e1_v1_deg < e2_v1_deg;
 			 else 
@@ -151,7 +153,7 @@ namespace Comparator
 		 }	
          else 
          {
-			 if( maxie2 == pe2_pv1 )
+			 if( !minie2_is_pe2_pv1 )
 				 if( e1_v2_deg!= e2_v1_deg)				 
 				   return e1_v2_deg < e2_v1_deg;
 			 else
@@ -159,23 +161,6 @@ namespace Comparator
 				   return e1_v2_deg < e2_v2_deg; 
 		 }			 
 	  }
-	  /////////////////////////////////////////////////////////////////////////
-#else	  
-      Point pv1((_gt.get_x(pe1_pv1) + _gt.get_x(pe1_pv2))*0.5,
-                (_gt.get_y(pe1_pv1) + _gt.get_y(pe1_pv2))*0.5,
-                (_gt.get_z(pe1_pv1) + _gt.get_z(pe1_pv2))*0.5);
-
-      Point pv2((_gt.get_x(pe2_pv1) + _gt.get_x(pe2_pv2))*0.5,
-                (_gt.get_y(pe2_pv1) + _gt.get_y(pe2_pv2))*0.5,
-                (_gt.get_z(pe2_pv1) + _gt.get_z(pe2_pv2))*0.5);
-
-	  if (fabs(_gt.get_x(pv1) - _gt.get_x(pv2)) > std::numeric_limits<Scalar>::epsilon())
-        return _gt.get_x(pv1) < _gt.get_x(pv2);
-      else if (fabs(_gt.get_y(pv1) - _gt.get_y(pv2)) > std::numeric_limits<Scalar>::epsilon())
-        return _gt.get_y(pv1) < _gt.get_y(pv2);
-      else if (fabs(_gt.get_z(pv1) - _gt.get_z(pv2)) > std::numeric_limits<Scalar>::epsilon())
-        return _gt.get_z(pv1) < _gt.get_z(pv2);
-#endif	  
 
       return false; // can be an issue
     }

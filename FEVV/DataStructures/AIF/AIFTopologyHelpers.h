@@ -534,6 +534,8 @@ public:
   *                 faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param	edge  	The involving incident edge to vertex
   * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at edge edge.
+                    Sometimes we do no want to lose the current incident ordering (e.g. clockwise).
+					In this case, we need to specify false.
   * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
   */
   template<typename ComparatorType>
@@ -577,8 +579,7 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
-                                                                                              ComparatorType cmp,
-                                                                                              bool do_full_incident_edge_sorting = true)
+                                                                                              ComparatorType cmp)
   {
 
     return sort_incident_edges_starting_with_edge<ComparatorType>(vertex, 
@@ -586,7 +587,7 @@ public:
                                                                   *std::min_element(vertex->m_Incident_PtrEdges.begin(), 
                                                                                     vertex->m_Incident_PtrEdges.end(), 
                                                                                     cmp),
-                                                                  do_full_incident_edge_sorting);
+                                                                  true);
   }
 
   /*!
@@ -595,15 +596,13 @@ public:
   * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
   *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
   *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
-  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   */
   template<typename ComparatorType>
   static void sort_incident_edges(edge_descriptor edge,
-                                  ComparatorType cmp,
-                                  bool do_full_incident_edge_sorting = true)
+                                  ComparatorType cmp)
   {
-    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
-    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp, do_full_incident_edge_sorting);
+    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp);
+    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp);
   }
 
   /*!
@@ -612,21 +611,19 @@ public:
   * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
   *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
   *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
-  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   */
   template<typename ComparatorType>
   static void sort_one_ring_incident_edges( edge_descriptor edge,
-                                            ComparatorType cmp,
-                                            bool do_full_incident_edge_sorting = true)
+                                            ComparatorType cmp)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
     for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) 
-      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_first_vertex()), cmp, do_full_incident_edge_sorting);
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_first_vertex()), cmp);
 
     edges_range = incident_edges(edge->get_second_vertex());
     for (it_type it = edges_range.begin(); it != edges_range.end(); ++it)
-      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_second_vertex()), cmp, do_full_incident_edge_sorting);
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_second_vertex()), cmp);
 
   }
 
