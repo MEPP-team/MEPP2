@@ -328,6 +328,9 @@ calculate_curvature(const HalfedgeGraph &g,
   // ---
 
   std::cout << "Asking to calculate curvature" << std::endl;
+#ifdef DBG_calculate_curvature
+  std::cout << "Real radius = " << radius << std::endl;
+#endif
 
   const auto iterator_pair =
       vertices(g); // vertices() returns a vertex_iterator pair
