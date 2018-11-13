@@ -20,7 +20,7 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 #include "FEVV/Filters/Generic/Manifold/Curvature/curvature.hpp"
-#include "FEVV/Filters/Generic/AABB/compute_mesh_bounding_box.hpp"
+#include "FEVV/Filters/Generic/AABB/get_max_bb_size.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -716,35 +716,6 @@ kmax_kmean(const HalfedgeGraph &mesh,
 }
 
 /**
-\brief	Gets the maximum dimension of the object bounding box length.
-
-\param	polyhedron_ptr	The polyhedron.
-
-\return	The maximum dimension.
-*/
-template< typename PointMap, typename HalfedgeGraph, typename GeometryTraits >
-double
-get_max_dim(const HalfedgeGraph &halfedge_graph,
-            PointMap &point_map,
-            GeometryTraits &geometry_traits)
-{
-  typename boost::property_traits< PointMap >::value_type min_aabb, max_aabb;
-  Tools::compute_mesh_bounding_box< HalfedgeGraph, PointMap, GeometryTraits >(
-      halfedge_graph, point_map, min_aabb, max_aabb, geometry_traits);
-
-  double xmax =
-      geometry_traits.get_x(max_aabb) - geometry_traits.get_x(min_aabb);
-  double ymax =
-      geometry_traits.get_y(max_aabb) - geometry_traits.get_y(min_aabb);
-  double zmax =
-      geometry_traits.get_z(max_aabb) - geometry_traits.get_z(min_aabb);
-  double max = xmax > ymax ? xmax : ymax;
-
-  return max > zmax ? max : zmax;
-}
-
-
-/**
 \brief	Computes the multiscale MSDM2 metric
 
 \param	m_PolyDegrad	  	The first Polyhedron.
@@ -787,7 +758,9 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
                                 gt_org,
                                 nb_level,
                                 msdm2_pmap,
-                                get_max_dim(m_poly_degrad, pm_degrad, gt_deg),
+                                Tools::get_max_bb_size(m_poly_degrad,
+                                                    pm_degrad,
+                                                    gt_deg),
                                 msdm2_value);
 }
 
