@@ -14,16 +14,12 @@ target_link_libraries( test_msdm2
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                        )
-if (WIN32)
-  add_test(Test_MSDM2_Cow
-           test_msdm2
-           ${TESTING_DATA_DIR}/cow.off
-           ${TESTING_DATA_DIR}/cow_simp.off
-           surfacemesh/cow_msdm2_output.obj
-           ${TESTING_DATA_DIR}/cow_msdm2_reference.obj )
-
-endif()
-
+add_test(Test_MSDM2_Cow
+         test_msdm2
+         ${TESTING_DATA_DIR}/cow.off
+         ${TESTING_DATA_DIR}/cow_simp.off
+         surfacemesh/cow_msdm2_output.obj
+         ${TESTING_DATA_DIR}/cow_msdm2_reference.obj )
 
 ####
 add_executable( test_jnd
