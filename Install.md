@@ -134,7 +134,7 @@ Scripting commands for compiling Mepp2:
   $ ctest
 ````
 
-### Run the GUI and filter-plugins
+### Run the GUI and plugin filters
 
 ````
   $ ./Visualization/Applications/mepp
@@ -270,7 +270,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 
  7. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
 
- 8. Extract CMake 3.4.3 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.4.3-win32-x86.zip'
+ 8. Extract CMake 3.12.4 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.12.4-win64-x64.zip'
 
  9. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
 
