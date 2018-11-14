@@ -54,7 +54,7 @@ if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
   endif(Boost_FOUND)
 endif()
 
-##### EIGEN3
+##### EIGEN3 package finding
 if (WIN32)
 	if(DEFINED ENV{EIGEN3_INCLUDE_DIR})
 		SET( EIGEN3_INCLUDE_DIR $ENV{EIGEN3_INCLUDE_DIR} )
@@ -87,6 +87,37 @@ if( BUILD_USE_AIF )
   add_definitions( -DFEVV_USE_AIF )
 endif()
 
+##### IMG-3RDPARTY libraries finding
+if( BUILD_USE_IMG-3RDPARTY )
+  FIND_PACKAGE(JPEG)
+  if ( JPEG_FOUND )
+    add_definitions( -DFEVV_USE_JPEG )
+    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+  else()
+    #message ( "Unfound Jpeg library." )
+  endif ()
+
+  FIND_PACKAGE(PNG) # and ZLIB
+  if ( ZLIB_FOUND AND PNG_FOUND )
+    add_definitions( -DFEVV_USE_PNG )
+    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+  else()
+    #message ( "Unfound Png library." )
+  endif ()
+
+  FIND_PACKAGE(TIFF)
+  if ( TIFF_FOUND )
+    add_definitions( -DFEVV_USE_TIFF )
+    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+  else()
+    #message ( "Unfound Tiff library." )
+  endif ()
+
+  if ( NOT FEVV_HAS_ONE_IMG_LIBRARY )
+    message (FATAL_ERROR "None of Jpeg or Png (or Zlib) or Tiff library found. Turn BUILD_USE_IMG-3RDPARTY to OFF.")
+  endif ()
+endif()
+
 ##### PCL package finding
 if( BUILD_USE_PCL )
   find_package(PCL 1.3 REQUIRED COMPONENTS common io)
@@ -101,7 +132,7 @@ if( BUILD_USE_PCL )
   if ( FLANN_FOUND )
     add_definitions( -DFEVV_USE_FLANN )
   else()
-    message ( "Unfound Flann package.")
+    message ( "Unfound Flann package." )
   endif ()
 endif ()
 
