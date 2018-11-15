@@ -6,6 +6,7 @@ option( BUILD_DOCUMENTATION                  "Build the documentation." OFF )
 option( BUILD_USE_CGAL                       "CGAL usage toggle." ON )
 option( BUILD_USE_OPENMESH                   "OpenMesh usage toggle." ON )
 option( BUILD_USE_AIF                        "Adjacency and Incidence Framework toggle." OFF)
+option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." OFF )
 option( BUILD_USE_GUI                        "Using User Interface." OFF)
 option( BUILD_USE_PCL                        "PCL usage toggle." OFF )
 option( BUILD_USE_VTK                        "VTK usage toggle." OFF )
@@ -17,12 +18,6 @@ option( BUILD_ADVANCED_TESTS_COMPR_VALENCE   "Build advanced compression-decompr
 if( BUILD_USE_AIF )
 	option( BUILD_USE_GENERATE_TRIANGLE		"2D (and soon 3D) triangle meshes generator." ON )
 endif( BUILD_USE_AIF )
-
-if( DEFINED ENV{APPVEYOR} ) # TEMP
-    option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." ON )
-else()
-    option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." ON )
-endif()
 
 #####
 # Set CMAKE module path unless provided by user
