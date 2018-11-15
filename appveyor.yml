@@ -183,12 +183,16 @@ before_build:
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/FBX_SDK.7z
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/VRjcORdpqE5hU18/download -O FBX_SDK.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x FBX_SDK.7z > nul
+# Img-3rdparty: jpeg, zlib (for png), png, tiff
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/img-3rdparty.rar
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OoWoz1cwBS8cxfa/download -O img-3rdparty.rar 2> nul
+  - IF %CACHE%==FALSE 7z x img-3rdparty.rar > nul
 #
   - cd %APPVEYOR_BUILD_FOLDER%
 # VTK, PCL and FBX set to ON in Release configuration
-  - IF %CONFIGURATION%==Release cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_EXAMPLES=ON
+  - IF %CONFIGURATION%==Release cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON
 # VTK, PCL and FBX set to OFF in Debug configuration because of time limitations: "all plans have 60 minutes quota per build job"
-  - IF %CONFIGURATION%==Debug cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_EXAMPLES=ON
+  - IF %CONFIGURATION%==Debug cmake . -G%CMAKE_GENERATOR% -DMSVC_KIT_ROOT=%KIT_ROOT% -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=%B_USE_CGAL% -DBUILD_USE_OPENMESH=%B_USE_OM% -DBUILD_USE_AIF=%B_USE_AIF% -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=%B_USE_QT5% -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
