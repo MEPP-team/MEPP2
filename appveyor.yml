@@ -184,9 +184,9 @@ before_build:
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/VRjcORdpqE5hU18/download -O FBX_SDK.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x FBX_SDK.7z > nul
 # Img-3rdparty: jpeg, zlib (for png), png, tiff
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/img-3rdparty.rar
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OoWoz1cwBS8cxfa/download -O img-3rdparty.rar 2> nul
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x img-3rdparty.rar > nul
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/img-3rdparty.rar
+  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OoWoz1cwBS8cxfa/download -O img-3rdparty.rar 2> nul
+  - IF %CACHE%==FALSE 7z x img-3rdparty.rar > nul
 #
   - cd %APPVEYOR_BUILD_FOLDER%
 # VTK, PCL and FBX set to ON in Release configuration

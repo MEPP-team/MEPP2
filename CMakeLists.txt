@@ -19,7 +19,7 @@ if( BUILD_USE_AIF )
 endif( BUILD_USE_AIF )
 
 if( DEFINED ENV{APPVEYOR} ) # TEMP
-    option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." OFF )
+    option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." ON )
 else()
     option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." ON )
 endif()
