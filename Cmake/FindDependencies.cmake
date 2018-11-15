@@ -90,31 +90,60 @@ endif()
 ##### IMG-3RDPARTY libraries finding
 if( BUILD_USE_IMG-3RDPARTY )
   FIND_PACKAGE(JPEG)
-  if ( JPEG_FOUND )
-    add_definitions( -DFEVV_USE_JPEG )
+  if ( JPEG_FOUND AND EXISTS ${JPEG_LIBRARIES} )
     set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+
+    add_definitions( -DFEVV_USE_JPEG )
+    include_directories( ${JPEG_INCLUDE_DIR} )
+
+    set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${JPEG_LIBRARIES} )
+
+    #message( STATUS "---> JPEG_INCLUDE_DIR: ${JPEG_INCLUDE_DIR}" )
+    #message( STATUS "---> JPEG_LIBRARIES: ${JPEG_LIBRARIES}" )
   else()
     #message ( "Unfound Jpeg library." )
   endif ()
 
   FIND_PACKAGE(PNG) # and ZLIB
-  if ( ZLIB_FOUND AND PNG_FOUND )
-    add_definitions( -DFEVV_USE_PNG )
-    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
-  else()
-    #message ( "Unfound Png library." )
+  if ( PNG_FOUND )
+	  if ( ZLIB_FOUND AND EXISTS ${ZLIB_LIBRARIES} )
+	    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+
+	    add_definitions( -DFEVV_USE_PNG )
+	    include_directories( ${PNG_PNG_INCLUDE_DIR} )
+
+	    set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${PNG_LIBRARIES} )
+
+	    #message( STATUS "---> PNG_PNG_INCLUDE_DIR: ${PNG_PNG_INCLUDE_DIR}" )
+	    #message( STATUS "---> PNG_LIBRARIES: ${PNG_LIBRARIES}" )
+	  else()
+	    #message ( "Unfound Png library." )
+	  endif ()
   endif ()
 
   FIND_PACKAGE(TIFF)
-  if ( TIFF_FOUND )
-    add_definitions( -DFEVV_USE_TIFF )
+  if ( TIFF_FOUND AND EXISTS "${TIFF_LIBRARIES}" )
     set(FEVV_HAS_ONE_IMG_LIBRARY 1)
+
+    add_definitions( -DFEVV_USE_TIFF )
+    include_directories( ${TIFF_INCLUDE_DIR} )
+
+    set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${TIFF_LIBRARIES} )
+
+    #message( STATUS "---> TIFF_INCLUDE_DIR: ${TIFF_INCLUDE_DIR}" )
+    #message( STATUS "---> TIFF_LIBRARIES: ${TIFF_LIBRARIES}" )
   else()
     #message ( "Unfound Tiff library." )
   endif ()
 
   if ( NOT FEVV_HAS_ONE_IMG_LIBRARY )
     message (FATAL_ERROR "None of Jpeg or Png (or Zlib) or Tiff library found. Turn BUILD_USE_IMG-3RDPARTY to OFF.")
+  else ()
+    if ( DEFINED ENV{TRAVIS} OR DEFINED ENV{APPVEYOR} )
+        add_definitions( -Dcimg_display=0 ) # Flags used to disable display capablities of CImg (for all CIs)
+    endif ()
+    
+    include_directories( "${PROJECT_SOURCE_DIR}/External/CImg/CImg-2.4.2_pre111418" )
   endif ()
 endif()
 
