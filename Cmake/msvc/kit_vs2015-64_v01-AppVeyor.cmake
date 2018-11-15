@@ -24,12 +24,11 @@ set(JPEG_INCLUDE_DIR            ${IMG_DIR_3rdParty}/libjpeg)
 set(JPEG_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/jpeg.lib)
 
 # for PNG
-#set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/zlib)
-#set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/zlib)
+set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
 
-# PNG don't work under AppVeyor - don't understand why...
-#set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/libpng)
-#set(PNG_LIBRARY                 ${IMG_DIR_3rdParty}/build/lib/Release/libpng.lib)
+set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/libpng)
+set(PNG_LIBRARY                 ${IMG_DIR_3rdParty}/build/lib/Release/libpng.lib)
 
 set(TIFF_INCLUDE_DIR            ${IMG_DIR_3rdParty}/libtiff/libtiff)
 set(TIFF_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/libtiff.lib)
