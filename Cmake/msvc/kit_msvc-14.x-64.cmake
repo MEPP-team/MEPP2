@@ -1,4 +1,4 @@
-# MSVC - KIT VS 2015 x64
+# MSVC - KIT msvc-14.x-64
 
 if( DEFINED ENV{MSVC_KIT_ROOT} )
 	set( MSVC_KIT_ROOT $ENV{MSVC_KIT_ROOT} )
@@ -9,7 +9,12 @@ endif()
 
 ### 'core' : boost, CGAL, OpenMesh, Eigen 3, Img-3rdparty: jpeg, zlib (for png), png, tiff
 
-set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_59_0)
+if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "19.10.25017.0") # 19.10.25017.0 -> info from boost 1_64_0 sources
+	set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
+else()
+	set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
+	#set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
+endif()
 
 set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.11-bug-patched)
 
