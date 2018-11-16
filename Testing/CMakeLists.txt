@@ -11,6 +11,7 @@ set( TESTING_DIR ${PROJECT_SOURCE_DIR}/Testing )
 #------ TESTS subdirectories ------
 add_subdirectory( AIF )
 add_subdirectory( CGAL )
+add_subdirectory( CImg )
 add_subdirectory( OpenMesh )
 add_subdirectory( PCL )
 add_subdirectory( Utils )

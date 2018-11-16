@@ -11,7 +11,7 @@
 #define mepp_h
 
 // -----------------------------------------------------------------------
-#define MEPP_VERSION "v0.7.1 - 29/07/2018"
+#define MEPP_VERSION "v0.7.2 - 15/11/2018"
 
 #define MAINWINDOW_TITLE QObject::tr("MEPP2 : 3D MEsh Processing Platform")
 

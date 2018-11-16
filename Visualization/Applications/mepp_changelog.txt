@@ -1,3 +1,6 @@
+v0.7.2 - 15/11/2018 :
+ - update 'About' and 'Help'
+
 v0.7.1 - 29/07/2018 :
  - add GLSL130-GL3.0 shaders
  - disable vsync
