@@ -30,23 +30,25 @@ namespace Operators {
  * \tparam  MutableFaceIncidentGraph a Mesh type that provides a Model of the
  *          MutableFaceIncidentGraph Concept through a boost::graph_traits<>
  *          specialization.
- * \tparam  PointMap A modifiable point map to manage vertex positions.
  * \param g The MutableFaceIncidentGraph instance from which the e edge will be
  *          split.
- * \param pm The mesh point map which associates vertex to positions.
  * \param e The edge to be split.
+ * \param midpoint_vertex The new vertex used for the splitting.
+ * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
+ * \ingroup  AIFOperators
  */
-template< typename MutableFaceIncidentGraph, // similar concept to
+template< typename MutableFaceIncidentGraph // similar concept to
                                              // MutableCellIncidentGraph, but
                                              // limited to 0, 1 and 2
                                              // dimensional cells
-          typename PointMap >
-void
+         >
+typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor	
 split_edge(
     MutableFaceIncidentGraph &g,
-    PointMap pm,
     typename boost::graph_traits< MutableFaceIncidentGraph >::edge_descriptor
-        &e)
+        e, 
+    typename boost::graph_traits<MutableFaceIncidentGraph>::vertex_descriptor 
+	    midpoint_vertex)
 {
   typedef FEVV::Geometry_traits< MutableFaceIncidentGraph > GeometryTraits;
   typedef typename GeometryTraits::Point Point;
@@ -58,35 +60,29 @@ split_edge(
   GeometryTraits gt(g);
 
   if(e == boost::graph_traits< MutableFaceIncidentGraph >::null_edge())
-    return;
+    return boost::graph_traits<MutableFaceIncidentGraph>::null_edge();
 
   // ensure the edge is incident to triangles (only)
   if(!FEVV::Operators::has_only_incident_triangular_faces(e, g))
   {
-    return;
+    return boost::graph_traits<MutableFaceIncidentGraph>::null_edge();
   }
 
   // deal with vertex geometry
   vertex_descriptor vs = source(e, g);
   vertex_descriptor vt = target(e, g);
 
-  vertex_descriptor midpoint_vertex;
-  midpoint_vertex = add_vertex(g);
-  put(pm,
-      midpoint_vertex,
-      Point((gt.get_x(get(pm, vs)) + gt.get_x(get(pm, vt))) * 0.5f,
-            (gt.get_y(get(pm, vs)) + gt.get_y(get(pm, vt))) * 0.5f,
-            (gt.get_z(get(pm, vs)) + gt.get_z(get(pm, vt))) * 0.5f));
-
   // when a topological modication is done over an edge, better to remove that
   // edge than to reuse it because we have to make sure the final user will
   // update edge properties accordingly.
-  if(degree(e, g) == 0)
-  { // one dangling edge is tranfromed into 2 successive dangling edges
-    add_edge(vs, midpoint_vertex, g);
+  if (degree(e, g) == 0)
+  {// one dangling edge is tranformed into 2 successive dangling edges
+    std::pair<edge_descriptor, bool> p = add_edge(vs, midpoint_vertex, g);
     add_edge(midpoint_vertex, vt, g);
 
     remove_edge(e, g); // remove at the end, to make sure no vertex is removed
+
+    return p.first;
   }
   else
   {
@@ -162,7 +158,84 @@ split_edge(
                   g); // remove at the end, to make sure no vertex or edge is
                       // removed while still needing by new geometries
     }
+	
+	  std::pair<edge_descriptor, bool> p2 = edge(vs, midpoint_vertex, g);
+      return p2.first;
   }
+}
+
+/**
+ * \brief Split an edge of the graph.
+ *
+ * \tparam  MutableFaceIncidentGraph a Mesh type that provides a Model of the
+ *          MutableFaceIncidentGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param g The MutableFaceIncidentGraph instance from which the e edge will be
+ *          split.
+ * \param e The edge to be split.
+ * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
+ *         In this version, the new vertex is created internally via add_vertex(g).
+ * \ingroup  AIFOperators
+ */
+template< typename MutableFaceIncidentGraph // similar concept to MutableCellIncidentGraph, but limited to 0, 1 and 2 dimensional cells
+               >
+typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor  
+	split_edge(MutableFaceIncidentGraph& g, typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor e)
+{
+  typedef boost::graph_traits<MutableFaceIncidentGraph>       GraphTraits;
+  typedef typename GraphTraits::vertex_descriptor             vertex_descriptor;
+
+  vertex_descriptor midpoint_vertex;
+  midpoint_vertex = add_vertex(g);
+
+  return split_edge<MutableFaceIncidentGraph>(g, e, midpoint_vertex);
+}
+
+/**
+ * \brief Split an edge of the graph.
+ *
+ * \tparam  MutableFaceIncidentGraph a Mesh type that provides a Model of the
+ *          MutableFaceIncidentGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \tparam  PointMap A modifiable point map to manage vertex positions.
+ * \tparam  GeometryTraits  The geometric kernel when available. This is
+ *                          defaulted to FEVV::Geometry_traits<MutableFaceIncidentGraph>. 
+ * \param g The MutableFaceIncidentGraph instance from which the e edge will be
+ *          split.
+ * \param pm The mesh point map which associates vertex to positions.
+ * \param e The edge to be split.
+ * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
+ *         In this version, the new vertex is created internally via add_vertex(g).
+ * \ingroup  AIFOperators
+ */
+template< typename MutableFaceIncidentGraph, // similar concept to MutableCellIncidentGraph, but limited to 0, 1 and 2 dimensional cells
+          typename PointMap,
+          typename GeometryTraits = FEVV::Geometry_traits<MutableFaceIncidentGraph> 
+         >
+typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor 	  
+	split_edge(MutableFaceIncidentGraph& g, PointMap pm, typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor e)
+{
+  typedef typename GeometryTraits::Point                      Point;
+
+  typedef boost::graph_traits<MutableFaceIncidentGraph>       GraphTraits;
+  typedef typename GraphTraits::edge_descriptor               edge_descriptor;
+  typedef typename GraphTraits::vertex_descriptor             vertex_descriptor;
+  GeometryTraits gt(g);
+
+  vertex_descriptor vs = source(e, g);
+  vertex_descriptor vt = target(e, g);
+  edge_descriptor res = split_edge<MutableFaceIncidentGraph>(g, e);
+
+  if (res == boost::graph_traits<MutableFaceIncidentGraph>::null_edge())
+    return boost::graph_traits<MutableFaceIncidentGraph>::null_edge();
+
+  // deal with vertex geometry
+  vertex_descriptor midpoint_vertex = target(res, g);
+
+  put(pm, midpoint_vertex, Point( (gt.get_x(get(pm, vs)) + gt.get_x(get(pm, vt)))*0.5f,
+                                  (gt.get_y(get(pm, vs)) + gt.get_y(get(pm, vt)))*0.5f,
+                                  (gt.get_z(get(pm, vs)) + gt.get_z(get(pm, vt)))*0.5f));
+  return res ;
 }
 
 } // namespace Operators

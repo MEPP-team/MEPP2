@@ -1,8 +1,9 @@
 #ifndef __AIFProperties_h
 #define __AIFProperties_h
 
-
+#include <limits>
 #include <stdexcept>
+#include <cmath>
 
 namespace FEVV {
 namespace DataStructures {
@@ -127,6 +128,28 @@ public:
     else
       return false;
   }
+  
+  /*!
+   * 			== operator
+   * \param	other	The second AIFPoint to compare to the current AIFPoint.
+   * \return The equality compare.
+   */
+  bool operator==(const AIFPoint< CoordinateType, DIM > &p) const
+  {
+    if( this == &p )
+      return true;
+  
+    if( fabs((*this)[0] - p[0]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+    
+	if( fabs((*this)[1] - p[1]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+
+	if( fabs((*this)[2] - p[2]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+  
+    return true;
+  }  
 };
 
 
@@ -215,7 +238,8 @@ public:
   /*!
    * 			* operator
    * \param	other	The second AIFVector to do a dot product with the current
-   * one. \return The resulting dot product (scalar) value.
+   * one. 
+   * \return The resulting dot product (scalar) value.
    */
   double operator*(const AIFVector< CoordinateType, DIM > &other) const
   {
@@ -246,7 +270,8 @@ public:
   /*!
    * 			< operator
    * \param	other	The second AIFVector to compare to the current
-   * AIFVector. \return The lexicographical compare.
+   * AIFVector. 
+   * \return The lexicographical compare.
    */
   bool operator<(const AIFVector< CoordinateType, DIM > &v) const
   {
@@ -265,12 +290,35 @@ public:
     else
       return false;
   }
+  
+  /*!
+   * 			== operator
+   * \param	other	The second AIFVector to compare to the current AIFVector.
+   * \return The equality compare.
+   */
+  bool operator==(const AIFVector< CoordinateType, DIM > &v) const
+  {
+    if( this == &v )
+      return true;
+  
+    if( fabs((*this)[0] - v[0]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+    
+	if( fabs((*this)[1] - v[1]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+
+	if( fabs((*this)[2] - v[2]) > std::numeric_limits<CoordinateType>::epsilon() )
+      return false;
+  
+    return true;
+  }    
 
   /*!
    * 			* operator
    * \param	s	The scalar to multiply each coordinate.
    * \param	v	The AIFVector object whose coordinates are multiplied by
-   * s. \return The resulting AIFVector object.
+   * s. 
+   * \return The resulting AIFVector object.
    */
   friend AIFVector< CoordinateType, DIM >
   operator*(double s, const AIFVector< CoordinateType, DIM > &v)
@@ -340,7 +388,7 @@ public:
     // no access to underlying std::vector :(
   }
 
-  /*
+  /**
    * (Re)move one element in property map.
    * \param  idx  index of element to remove
    * \param  cLastIdx  index of the last element of the cell container
@@ -403,7 +451,7 @@ private:
 };
 
 
-/*
+/**
  * A property maps container.
  */
 class PropertyMapContainer
@@ -420,7 +468,7 @@ public:
       }
   }
 
-  /*
+  /**
    * Test if a property map exists.
    *
    * \param  name  name of the property map
@@ -434,7 +482,7 @@ public:
       return false;
   }
 
-  /*
+  /**
    * Get the property map if it exists, else throw an exception.
    *
    * \param  name  name of the property map
@@ -455,7 +503,7 @@ public:
     return pm;
   }
 
-  /*
+  /**
    * Add a property map or return an existing one.
    *
    * \param  name  name of the property map
@@ -473,7 +521,7 @@ public:
     return getPropertyMap< T >(name);
   }
 
-  /*
+  /**
    * Remove a property map.
    *
    * \param  name  name of the property map
@@ -487,7 +535,7 @@ public:
     m_PropertyMaps.erase(name);
   }
 
-  /*
+  /**
    * Set value at index in property map.
    *
    * \param  name  name of the property map
@@ -501,7 +549,7 @@ public:
     (*prop_map)[idx] = value;
   }
 
-  /*
+  /**
    * Get the value of a property map at the given index.
    *
    * \param  name  name of the property map
@@ -515,7 +563,7 @@ public:
     return (*prop_map)[idx];
   }
 
-  /*
+  /**
    * Get the value of a property map at the given index.
    *
    * \param  name  name of the property map
@@ -529,7 +577,7 @@ public:
     return (*prop_map)[idx];
   }
 
-  /*
+  /**
    * Remove property at index, in all property maps.
    *
    * \param  idx  the index where to remove properties
@@ -546,7 +594,7 @@ public:
 
   //------------------Associative prop maps -------------------------------
 
-  /*
+  /**
    * Get the property map if it exists, else throw an exception.
    *
    * \param  name  name of the property map
@@ -569,7 +617,7 @@ public:
     return pm;
   }
 
-  /*
+  /**
    * Add a property map or return an existing one.
    *
    * \param  name  name of the property map

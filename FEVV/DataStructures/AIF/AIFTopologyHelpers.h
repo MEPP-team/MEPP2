@@ -224,18 +224,20 @@ public:
     return !is_surface_border_vertex(vertex) && !is_isolated_vertex(vertex);
   }
   /*!
-   * Function determining if the arguments share an incidence relation
+   * \brief   Function determining if the arguments share an incidence relation
    *
-   * \param  vertex  The involving vertex
-   * \param  edge    The involving edge
+   * \param   vertex  The involving vertex
+   * \param   edge    The involving edge
    *
    * \return  true if the arguments share an incidence relation,
    *          false otherwise.
+   * \warning are_incident(edge, vertex) will not give consistent
+   *          results when topological modifications are in progress
    */
   static bool are_incident(vertex_descriptor vertex, edge_descriptor edge)
   {
-    // Notes that "return are_incident(edge, vertex);" will not give consistent
-    // results when topological modifications are in progress
+	if(vertex==null_vertex())
+		return false;	  
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range< it_type > edges_range = incident_edges(vertex);
 
@@ -247,19 +249,22 @@ public:
     return false;
   }
   /*!
-   * Function determining if the arguments share an incidence relation
+   * \brief  Function determining if the arguments share an incidence relation
    *
    * \param  vertex  The involving vertex
    * \param  u       one vertex of the involving edge
    * \param  v       the other vertex of the involving edge
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(vertex_descriptor vertex,
                            vertex_descriptor u,
                            vertex_descriptor v)
   {
+	if(vertex==null_vertex())
+		return false;
+	  
     edge_descriptor edge = common_edge(u, v);
     if(edge != null_edge())
     {
@@ -485,7 +490,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -498,7 +504,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -510,7 +517,8 @@ public:
   /*!
   * 			Sort mesh vertices
   * \param	mesh	The involving mesh
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, etc.
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
@@ -519,29 +527,25 @@ public:
     return sort_vertices<ComparatorType>(&mesh, cmp);
   }
   /*!
-  * 			Sort incident edges and return incidence relations with edges
-  * \param	vertex	The involving vertex
-  * \param	cmp   	The involving comparator object used for the sorting
-  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
-  */
-  template<typename ComparatorType>
-  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges(vertex_descriptor vertex, ComparatorType cmp)
-  {
-    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
-    return incident_edges(vertex);
-  }
-
-  /*!
   * 			Sort incident edges starting with given incident edge and return incidence relations with edges
   * \param	vertex	The involving vertex
-  * \param	cmp   	The involving comparator object used for the sorting
+  * \param	cmp   	The involving comparator object used for the sorting. Comparator can be based
+  *                 on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *                 faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
   * \param	edge  	The involving incident edge to vertex
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at edge edge.
+                    Sometimes we do no want to lose the current incident ordering (e.g. clockwise).
+					In this case, we need to specify false.
   * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, ComparatorType cmp, edge_descriptor edge)
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
+                                                                                                                ComparatorType cmp, 
+                                                                                                                edge_descriptor edge,
+                                                                                                                bool do_full_incident_edge_sorting = true)
   {
-    std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp);
+    if(do_full_incident_edge_sorting)
+      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
     /////////////////////////////////////////////////////////////////////////
     std::list<edge_descriptor> ltmp, ltmpnext;
     edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
@@ -564,6 +568,73 @@ public:
     return incident_edges(vertex);
   }
 
+  /*!
+  * 			Sort incident edges and return incidence relations with edges
+  * \param	vertex	The involving vertex
+  * \param	cmp   	The involving comparator object used for the sorting. Comparator can be based
+  *                 on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *                 faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
+  * \return	An iterator range on the incident edges (AIFEdge pointer) of the involve vertex.
+  */
+  template<typename ComparatorType>
+  static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
+                                                                                              ComparatorType cmp)
+  {
+
+    return sort_incident_edges_starting_with_edge<ComparatorType>(vertex, 
+                                                                  cmp, 
+                                                                  *std::min_element(vertex->m_Incident_PtrEdges.begin(), 
+                                                                                    vertex->m_Incident_PtrEdges.end(), 
+                                                                                    cmp),
+                                                                  true);
+  }
+
+  /*!
+  * 			Sort incident edges of its two vertices
+  * \param	edge	The involving edge
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
+  */
+  template<typename ComparatorType>
+  static void sort_incident_edges(edge_descriptor edge,
+                                  ComparatorType cmp)
+  {
+    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp);
+    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp);
+  }
+
+  /*!
+  * 			Sort incident edges of its two vertices' one-ring
+  * \param	edge	The involving edge
+  * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
+  *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
+  *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
+  */
+  template<typename ComparatorType>
+  static void sort_one_ring_incident_edges( edge_descriptor edge,
+                                            ComparatorType cmp)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+    boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it) 
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_first_vertex()), cmp);
+
+    edges_range = incident_edges(edge->get_second_vertex());
+    for (it_type it = edges_range.begin(); it != edges_range.end(); ++it)
+      sort_incident_edges<ComparatorType>(opposite_vertex(*it, edge->get_second_vertex()), cmp);
+
+  }
+
+  
+  /*!
+  *      Get incident border edges within a mesh hole. 
+  * \param	 vertex	The involving vertex
+  * \return  An std::vector of incident hole border edges. 
+  * \warning vertex is assumed to be on the hole border, and no check
+  *          is done.
+  */
   static std::vector<edge_descriptor> get_incident_hole_border_edges(vertex_descriptor vertex)
   {
     std::vector<edge_descriptor> res;
@@ -821,32 +892,36 @@ public:
 	  return de;
 	}  
   /*!
-   * Function determining if the argument edge shares an incidence
-   * relation with the argument vertex.
+   * \brief  Function determining if the argument edge shares an incidence
+   *         relation with the argument vertex.
    *
    * \param  edge    The involving edge
    * \param  vertex  The involving vertex
    *
-   * \return  true if the arguments share an incidence relation, false
+   * \return true if the arguments share an incidence relation, false
    *         otherwise.
    */
   static bool are_incident(edge_descriptor edge, vertex_descriptor vertex)
   {
+	if(edge == null_edge())
+      return false;		
     return (edge->get_first_vertex() == vertex) ||
            (edge->get_second_vertex() == vertex);
   }
   /*!
-   * Function determining if the argument edge share an incidence
-   * relation with the argument face.
+   * \brief  Function determining if the argument edge share an incidence
+   *         relation with the argument face.
    *
    * \param  edge  The involving edge
    * \param  face  The involving face
    *
-   * \return  true if the arguments share an incidence relation, false
+   * \return true if the arguments share an incidence relation, false
    *         otherwise.
    */
   static bool are_incident(edge_descriptor edge, face_descriptor face)
   {
+	if(edge == null_edge())
+      return false;		  
     typedef face_container_in_edge::const_iterator it_type;
     boost::iterator_range< it_type > faces_range = incident_faces(edge);
 
@@ -1312,17 +1387,19 @@ public:
   }
 
   /*!
-   * Function determining if the argument face shares an incidence
-   * relation with the argument vertex.
+   * \brief  Function determining if the argument face shares an incidence
+   *         relation with the argument vertex.
    *
    * \param  face    The involving face
    * \param  vertex  The involving vertex
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(face_descriptor face, vertex_descriptor vertex)
   {
+	if(face == null_face())
+      return false;		  
     if(face->m_Is_Incident_PtrVertices_Computed) // optimization by using
                                                  // topological caching
     {
@@ -1344,17 +1421,19 @@ public:
   }
 
   /*!
-   * Function determining if the argument vertex shares an incidence
-   * relation with the argument face.
+   * \brief  Function determining if the argument vertex shares an incidence
+   *         relation with the argument face.
    *
    * \param  vertex  The involving vertex
    * \param  face    The involving face
    *
-   * \return  true if the arguments share an incidence relation, false
-   *          otherwise.
+   * \return true if the arguments share an incidence relation, false
+   *         otherwise.
    */
   static bool are_incident(vertex_descriptor vertex, face_descriptor face)
   {
+	if(vertex == null_vertex())
+      return false;		  	  
     if(vertex->m_Incident_PtrFaces_Computed) // optimization by using
                                              // topological caching
     {
@@ -1375,8 +1454,8 @@ public:
     return false;
   }
   /*!
-   * Function determining if the argument face shares an incidence
-   * relation with the argument edge.
+   * \brief  Function determining if the argument face shares an incidence
+   *         relation with the argument edge.
    *
    * \param  face  The involving face
    * \param  edge  The involving edge
@@ -1384,12 +1463,14 @@ public:
    * \return  true if the arguments share an incidence relation, false
    *          otherwise.
    *
-   * \warning  are_incident(face,  edge) does not give necessary the
-   *           same result as are_incident(edge, face) when topological
-   *           modifications are in progress.
+   * \warning are_incident(face, edge) does not give necessary the
+   *          same result as are_incident(edge, face) when topological
+   *          modifications are in progress.
    */
   static bool are_incident(face_descriptor face, edge_descriptor edge)
   {
+	if(face == null_face())
+      return false;		  
     auto edges_range = incident_edges(face);
     auto it = edges_range.begin();
     for(; it != edges_range.end(); ++it)
