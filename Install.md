@@ -240,6 +240,12 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
   $ ctest
 ````
 
+### Run the GUI and plugin filters
+
+````
+  $ ./Visualization/Applications/mepp.app/Content/MacOS/mepp
+````
+
 ## Windows installation
 
 ### Prerequisites
@@ -306,15 +312,19 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 
  - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015, select 'Release' mode, then generate the 'ALL_BUILD' target
 
-### Running tests
- - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015.
+### Run tests
+
+ - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015
  - Generate the 'RUN_TESTS' target
 
+### Run the GUI and plugin filters
+
+ - In Visual Studio 'Solution Explorer', select mepp as the startup project within your solution (right click)
+ - Hit Ctrl+F5 to run mepp without debugging (or hit F5 to run mepp in debugging mode)
 
 ## Documentation
 
 The automatically generated documentation is [available online](https://liris.cnrs.fr/mepp/doc/nightly/)
-
 
 ## Known issues
 
