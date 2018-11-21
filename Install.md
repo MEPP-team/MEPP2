@@ -243,7 +243,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 ### Run the GUI and plugin filters
 
 ````
-  $ ./Visualization/Applications/mepp.app/Content/MacOS/mepp
+  $ ./Visualization/Applications/mepp.app/Contents/MacOS/mepp
 ````
 
 ## Windows installation
