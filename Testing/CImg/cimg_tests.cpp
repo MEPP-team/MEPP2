@@ -25,17 +25,14 @@ int main(int argc, char **argv)
 
 #ifdef FEVV_USE_JPEG
   CImg<unsigned char> image_j(argv[1]);
-  //image_j.display("image_jpeg"); // no display under CIs !
 #endif
 
 #ifdef FEVV_USE_PNG
   CImg<unsigned char> image_p(argv[2]);
-  //image_p.display("image_png"); // no display under CIs !
 #endif
 
 #ifdef FEVV_USE_TIFF
   CImg<unsigned char> image_t(argv[3]);
-  //image_t.display("image_tiff"); // no display under CIs !
 #endif
 
   return 0;

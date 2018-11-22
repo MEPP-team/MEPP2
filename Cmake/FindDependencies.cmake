@@ -145,8 +145,6 @@ if( BUILD_USE_IMG-3RDPARTY )
     if ( DEFINED ENV{TRAVIS} OR DEFINED ENV{APPVEYOR} )
         add_definitions( -Dcimg_display=0 ) # Flags used to disable display capablities of CImg (for all CIs)
     endif ()
-    
-    include_directories( "${PROJECT_SOURCE_DIR}/External/CImg/CImg-2.4.2_pre111418" )
   endif ()
 endif()
 
