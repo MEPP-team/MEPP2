@@ -169,18 +169,18 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
   using Vector = typename GeometryTraits::Vector;
   typedef typename GraphTraits::face_descriptor face_descriptor;
 
-  std::set< VertexDescriptor * > vertices;
+  std::set< VertexDescriptor > vertices;
   Point3d o = get(pm, vd);
-  std::stack< VertexDescriptor * > s;
-  s.push(&vd);
-  vertices.insert(&vd);
+  std::stack< VertexDescriptor > s;
+  s.push(vd);
+  vertices.insert(vd);
   int iter = 0;
   while(!s.empty())
   {
-    VertexDescriptor *v = s.top();
+    VertexDescriptor v = s.top();
     s.pop();
-    Point3d p = get(pm, *v);
-    CGAL::Halfedge_around_target_circulator< HalfedgeGraph > h(*v, g), done(h);
+    Point3d p = get(pm, v);
+    CGAL::Halfedge_around_target_circulator< HalfedgeGraph > h(v, g), done(h);
     do
     {
       Point3d p1 = get(pm, target(*h, g));
@@ -196,8 +196,9 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
 #endif
       double ps_vx_pm_o =
           vec[0] * pm_o[0] + vec[1] * pm_o[1] + vec[2] * pm_o[2];
+
       // ---
-      if(v == &vd ||
+      if(v == vd ||
          ps_vx_pm_o >
              0.0) // if (v==pVertex || vec * (P - O) > 0.0) // TODO BETTER
       {
@@ -247,10 +248,10 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
 
           assert(w != GraphTraits::null_vertex());
 
-          if(vertices.find(&w) == vertices.end())
+          if(vertices.find(w) == vertices.end())
           {
-            vertices.insert(&w);
-            s.push(&w);
+            vertices.insert(w);
+            s.push(w);
           }
         }
       }
@@ -327,6 +328,9 @@ calculate_curvature(const HalfedgeGraph &g,
   // ---
 
   std::cout << "Asking to calculate curvature" << std::endl;
+#ifdef DBG_calculate_curvature
+  std::cout << "Real radius = " << radius << std::endl;
+#endif
 
   const auto iterator_pair =
       vertices(g); // vertices() returns a vertex_iterator pair
@@ -345,16 +349,26 @@ calculate_curvature(const HalfedgeGraph &g,
           FaceNormalMap,
           GeometryTraits,
           GraphTraits,
-          typename GraphTraits::vertex_descriptor >(
-          g, pm, f_nm, *vi, pp_matrix_sum, radius, gt);
+          typename GraphTraits::vertex_descriptor >( g,
+                                                     pm,
+                                                     f_nm,
+                                                     *vi,
+                                                     pp_matrix_sum,
+                                                     radius,
+                                                     gt);
     else // 1-ring neighborhood
-      principal_curvature_per_vert< HalfedgeGraph,
-                                    PointMap,
-                                    FaceNormalMap,
-                                    GeometryTraits,
-                                    GraphTraits,
-                                    typename GraphTraits::vertex_descriptor >(
-          g, pm, f_nm, *vi, pp_matrix_sum, gt);
+      principal_curvature_per_vert<
+          HalfedgeGraph,
+          PointMap,
+          FaceNormalMap,
+          GeometryTraits,
+          GraphTraits,
+          typename GraphTraits::vertex_descriptor >( g,
+                                                     pm,
+                                                     f_nm,
+                                                     *vi,
+                                                     pp_matrix_sum,
+                                                     gt);
 
     // Eigen values/vectors
     EigenMatrix cov_mat;

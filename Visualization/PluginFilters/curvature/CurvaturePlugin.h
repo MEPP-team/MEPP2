@@ -20,8 +20,8 @@
 #include "Visualization/SimpleWindow.h"
 
 #include "FEVV/Filters/Generic/Manifold/Curvature/curvature.hpp" // A) include the header of the filter corresponding to your operation
-
 #include "FEVV/Filters/Generic/calculate_face_normals.hpp"
+#include "FEVV/Filters/Generic/AABB/get_max_bb_size.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -930,6 +930,8 @@ public:
 
     auto pm = get(boost::vertex_point, *_mesh);
 
+    double max_bb_size = Tools::get_max_bb_size(*_mesh, pm);
+
     auto f_nm = make_property_map(FEVV::face_normal, *_mesh);
 
     Filters::calculate_face_normals(*_mesh, pm, f_nm);
@@ -941,7 +943,7 @@ public:
         pm,
         f_nm,
         *value_isGeod,
-        *value_radius,
+        *value_radius * max_bb_size,
         MinNrmMinCurvature,
         MaxNrmMinCurvature,
         MinNrmMaxCurvature,
