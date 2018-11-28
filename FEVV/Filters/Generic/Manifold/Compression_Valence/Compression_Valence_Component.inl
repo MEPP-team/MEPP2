@@ -16,6 +16,7 @@
 #include <sstream>
 #include <chrono>
 #include <string>
+#include <algorithm>                          // for std::min() and std::max()
 
 #include "FEVV/Filters/Generic/generic_writer.hpp" // for FEVV::Filters::write_mesh()
 
@@ -5723,7 +5724,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
       LAB[0] = pVertex->color(0);
       LAB[1] = pVertex->color(1);
       LAB[2] = pVertex->color(2);
-      
+
       float RGB[3];
       LAB_To_RGB(LAB[0], LAB[1], LAB[2], RGB);
       pVertex->color(RGB[0], RGB[1], RGB[2]);		*/
@@ -6585,6 +6586,9 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
       Write_Info(_pMesh);
   }
 
+  //ELO+ fix color > 1 issue on level 0 mesh
+  truncate_colors(_pMesh, _v_cm);
+
   // save the level 0 mesh (the simplest one) to file
   if(do_write_intermediate_meshes)
     write_intermediate_mesh(_pMesh, _v_cm);
@@ -6611,6 +6615,9 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     {
       Write_Info(_pMesh);
     }
+
+    //ELO+ fix color > 1 issue on current level mesh
+    truncate_colors(_pMesh, _v_cm);
 
     // save intermediate meshes into files
     if(do_write_intermediate_meshes)
@@ -9761,6 +9768,34 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   put(this->vertex_Seed_Edge, v, -1);
   put(this->vertex_Region_Number, v, -1);
   put(this->vertex_Removal_Order, v, -1);
+}
+
+
+template< typename HalfedgeGraph, typename PointMap, typename VertexColorMap >
+void
+Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
+    truncate_colors(const HalfedgeGraph &_pMesh, VertexColorMap *_v_cm)
+{
+  typedef typename boost::property_traits< VertexColorMap >::value_type Color;
+
+  // loop over vertices
+  vertex_iterator vi_begin = vertices(_pMesh).first;
+  vertex_iterator vi_end = vertices(_pMesh).second;
+  for(vertex_iterator vi = vi_begin; vi != vi_end; ++vi)
+  {
+    Color c = get(*_v_cm, *vi);
+
+    if( c[0] <= 1 && c[1] <= 1 && c[2] <= 1 )
+      continue; // no need to truncate
+
+    // truncate to 1
+    double c0 = std::min(1.0/*double*/, static_cast<double>(c[0]));
+    double c1 = std::min(1.0/*double*/, static_cast<double>(c[1]));
+    double c2 = std::min(1.0/*double*/, static_cast<double>(c[2]));
+
+    put(*_v_cm, *vi, Color(c0, c1, c2));
+    //DBG put(*_v_cm, *vi, Color(0, 0, 0));
+   }
 }
 
 

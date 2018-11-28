@@ -2084,6 +2084,12 @@ public: // private:
           Initialize vertex attributes in the same way as Mepp1.
   */
   void init_vertex_attributes(const vertex_descriptor &v);
+
+  /**
+          Truncate vertices colors to 1.
+  */
+  void truncate_colors(const HalfedgeGraph &_pMesh,
+                      VertexColorMap *_v_cm);
 };
 
 // implementation details
