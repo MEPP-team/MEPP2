@@ -79,7 +79,7 @@ public:
   //          this could be done when the generic reader is widely used
   //          OR
   //          the  DefaultXXXMap types could be defined using FEVV::PMap_traits,
-  //          see drawMesh() call in mepp.cpp for an example
+  //          see drawMesh() call in mepp-gui.cpp for an example
 
   using DefaultVertexNormalMap = boost::vector_property_map<
       typename GeometryTraits::Vector,

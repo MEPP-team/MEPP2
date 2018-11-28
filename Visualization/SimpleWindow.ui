@@ -262,7 +262,7 @@
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/new.png</normaloff>:/icons/resources/Icons/new.png</iconset>
    </property>
    <property name="text">
@@ -274,7 +274,7 @@
   </action>
   <action name="actionSaveAs">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/save.png</normaloff>:/icons/resources/Icons/save.png</iconset>
    </property>
    <property name="text">
@@ -329,7 +329,7 @@
   </action>
   <action name="actionOpen_Polyhedron_3">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
@@ -344,7 +344,7 @@
   </action>
   <action name="actionOpen_Surface_mesh">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
@@ -359,7 +359,7 @@
   </action>
   <action name="actionOpen_Linear_cell_complex">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
@@ -374,7 +374,7 @@
   </action>
   <action name="actionOpen_OpenMesh">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
@@ -389,7 +389,7 @@
   </action>
   <action name="actionOpen_AIFMesh">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
@@ -404,7 +404,7 @@
   </action>
   <action name="actionRender_Point">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Vertices.png</normaloff>:/icons/resources/Icons/_Vertices.png</iconset>
    </property>
    <property name="text">
@@ -413,7 +413,7 @@
   </action>
   <action name="actionRender_Line">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Edges.png</normaloff>:/icons/resources/Icons/_Edges.png</iconset>
    </property>
    <property name="text">
@@ -422,7 +422,7 @@
   </action>
   <action name="actionRender_Fill">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_RenderFill.png</normaloff>:/icons/resources/Icons/_RenderFill.png</iconset>
    </property>
    <property name="text">
@@ -431,7 +431,7 @@
   </action>
   <action name="actionSuperimpose_Vertices">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_SuperimposeVertices.png</normaloff>:/icons/resources/Icons/_SuperimposeVertices.png</iconset>
    </property>
    <property name="text">
@@ -440,7 +440,7 @@
   </action>
   <action name="actionSuperimpose_Vertices_bigger">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_SuperimposeSpheres.png</normaloff>:/icons/resources/Icons/_SuperimposeSpheres.png</iconset>
    </property>
    <property name="text">
@@ -449,7 +449,7 @@
   </action>
   <action name="actionSuperimpose_Edges">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_SuperimposeEdges.png</normaloff>:/icons/resources/Icons/_SuperimposeEdges.png</iconset>
    </property>
    <property name="text">
@@ -458,7 +458,7 @@
   </action>
   <action name="actionVertex_Color">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_VertexColorMode.png</normaloff>:/icons/resources/Icons/_VertexColorMode.png</iconset>
    </property>
    <property name="text">
@@ -467,7 +467,7 @@
   </action>
   <action name="actionFace_Color">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_FaceColorMode.png</normaloff>:/icons/resources/Icons/_FaceColorMode.png</iconset>
    </property>
    <property name="text">
@@ -476,7 +476,7 @@
   </action>
   <action name="actionTexture_Mode">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/textureEnable.png</normaloff>:/icons/resources/Icons/textureEnable.png</iconset>
    </property>
    <property name="text">
@@ -485,7 +485,7 @@
   </action>
   <action name="actionLighting">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Lighting.png</normaloff>:/icons/resources/Icons/_Lighting.png</iconset>
    </property>
    <property name="text">
@@ -497,7 +497,7 @@
   </action>
   <action name="actionSmoothFlat_Shading">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Smoothing.png</normaloff>:/icons/resources/Icons/_Smoothing.png</iconset>
    </property>
    <property name="text">
@@ -509,7 +509,7 @@
   </action>
   <action name="actionRender_Mode">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_RenderMode.png</normaloff>:/icons/resources/Icons/_RenderMode.png</iconset>
    </property>
    <property name="text">
@@ -521,7 +521,7 @@
   </action>
   <action name="actionShow_Entire_Mesh">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_ShowAll.png</normaloff>:/icons/resources/Icons/_ShowAll.png</iconset>
    </property>
    <property name="text">
@@ -530,7 +530,7 @@
   </action>
   <action name="actionShow_Axis">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Axis.png</normaloff>:/icons/resources/Icons/_Axis.png</iconset>
    </property>
    <property name="text">
@@ -539,7 +539,7 @@
   </action>
   <action name="actionShow_Grid">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Grid.png</normaloff>:/icons/resources/Icons/_Grid.png</iconset>
    </property>
    <property name="text">
@@ -548,7 +548,7 @@
   </action>
   <action name="actionShow_Selected">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Edges.png</normaloff>:/icons/resources/Icons/_Edges.png</iconset>
    </property>
    <property name="text">
@@ -560,7 +560,7 @@
   </action>
   <action name="actionShow_Translation_Draggers">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/3d_translation1-32.png</normaloff>:/icons/resources/Icons/3d_translation1-32.png</iconset>
    </property>
    <property name="text">
@@ -569,7 +569,7 @@
   </action>
   <action name="actionShow_Rotation_Draggers">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/3d_rotation1-32.png</normaloff>:/icons/resources/Icons/3d_rotation1-32.png</iconset>
    </property>
    <property name="text">
@@ -583,7 +583,7 @@
   </action>
   <action name="actionDyn_First">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_First.png</normaloff>:/icons/resources/Icons/_First.png</iconset>
    </property>
    <property name="text">
@@ -592,7 +592,7 @@
   </action>
   <action name="actionDyn_Previous">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Previous.png</normaloff>:/icons/resources/Icons/_Previous.png</iconset>
    </property>
    <property name="text">
@@ -601,7 +601,7 @@
   </action>
   <action name="actionDyn_Next">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Next.png</normaloff>:/icons/resources/Icons/_Next.png</iconset>
    </property>
    <property name="text">
@@ -610,7 +610,7 @@
   </action>
   <action name="actionDyn_Last">
    <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp.qrc">
+    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/_Last.png</normaloff>:/icons/resources/Icons/_Last.png</iconset>
    </property>
    <property name="text">
@@ -619,7 +619,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../Testing/Visualization/mepp.qrc"/>
+  <include location="../../Testing/Visualization/mepp-gui.qrc"/>
  </resources>
  <connections/>
  <slots>

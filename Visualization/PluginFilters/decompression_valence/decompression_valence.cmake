@@ -20,7 +20,7 @@ if (BUILD_USE_GUI_DecompressionValencePlugin)
   target_link_libraries (DecompressionValencePlugin ${DecompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(DecompressionValencePlugin mepp)
+  add_dependencies(DecompressionValencePlugin mepp-gui)
   if( MSVC )
     set_target_properties(DecompressionValencePlugin PROPERTIES LINK_FLAGS "/FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088")
   endif( MSVC )

@@ -21,6 +21,6 @@ if (BUILD_USE_GUI_CurvaturePlugin)
   target_link_libraries (CurvaturePlugin ${Curvature_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(CurvaturePlugin mepp)
+  add_dependencies(CurvaturePlugin mepp-gui)
 endif (BUILD_USE_GUI_CurvaturePlugin)
 # --> CurvaturePlugin : QtPlugin [END]

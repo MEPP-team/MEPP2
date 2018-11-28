@@ -20,6 +20,6 @@ if (BUILD_USE_GUI_CompressionValencePlugin)
   target_link_libraries (CompressionValencePlugin ${CompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(CompressionValencePlugin mepp)
+  add_dependencies(CompressionValencePlugin mepp-gui)
 endif (BUILD_USE_GUI_CompressionValencePlugin)
 # --> CompressionValencePlugin : QtPlugin [END]

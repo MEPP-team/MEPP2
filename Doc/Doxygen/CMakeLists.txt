@@ -34,10 +34,10 @@ configure_file(
 # we need to "manually" construct the doxygen wrapper of the Install.md
 file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "/**")
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox 
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "@page InstallWrapperPage FEVV installation instructions\r")
 file(READ ${PROJECT_SOURCE_DIR}/Install.md CONTENTS)
-file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox 
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "${CONTENTS}")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "**/")
@@ -66,7 +66,7 @@ add_custom_target(
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
 )
 
-add_dependencies ( DocDoxygen mepp )
+add_dependencies ( DocDoxygen mepp-gui )
 
 ### Someday there will be an installation stage:
 # install(

@@ -146,8 +146,8 @@ mesh :
 *****************************************
 \section ExampleDisplay Displaying a mesh
 The following code snippet (taken from to
-<a href=mepp_8cpp_source.html>Visualization/Applications/mepp.cpp</a>) illustrates how to open a visualization sub-window :
-\snippet Visualization/Applications/mepp.cpp Snippet Displaying Surface SurfaceMesh
+<a href=mepp_8cpp_source.html>Visualization/Applications/mepp-gui.cpp</a>) illustrates how to open a visualization sub-window :
+\snippet Visualization/Applications/mepp-gui.cpp Snippet Displaying Surface SurfaceMesh
 
 Note that this code is not self sufficient and placing it in your `main()` and hoping for a visualization window to show up won't suffice.
 

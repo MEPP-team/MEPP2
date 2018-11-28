@@ -25,6 +25,6 @@ SET(JND_CPP_FILES
   target_link_libraries (JndPlugin ${Jnd_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(JndPlugin mepp)
+  add_dependencies(JndPlugin mepp-gui)
 endif (BUILD_USE_GUI_JndPlugin)
 # --> JndPlugin : QtPlugin [END]

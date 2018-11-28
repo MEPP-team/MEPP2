@@ -205,4 +205,4 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
   - ctest -j 2 --output-on-failure
-#  - dumpbin /dependents "C:\projects\mepp2\Testing\Visualization\Release\mepp.exe" # here for Release mode !
+#  - dumpbin /dependents "C:\projects\mepp2\Testing\Visualization\Release\mepp-gui.exe" # here for Release mode !

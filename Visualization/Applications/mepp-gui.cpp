@@ -4,7 +4,7 @@
 #endif
 #endif
 
-#include "mepp.h"
+#include "mepp-gui.h"
 
 #include "FEVV/DataStructures/DataStructures.h"
 
