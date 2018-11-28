@@ -243,7 +243,7 @@ read_mesh(const std::string &filename,
     }
   }
 
-  // check if vertex color is in range 0...255
+  // check if face color is in range 0...255
   bool is_face_color_0_255 = false;
   if(!face_color_coords.empty())
   {
