@@ -24,6 +24,6 @@ if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL)
   target_link_libraries (MSDM2Plugin ${MSDM2_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(MSDM2Plugin mepp)
+  add_dependencies(MSDM2Plugin mepp-gui)
 endif ()
 # --> MSDM2Plugin : QtPlugin [END]

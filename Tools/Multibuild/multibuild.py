@@ -205,7 +205,7 @@ def build_one_config(config, builddir, logfilename):
 	if success:
 		if sys.platform.startswith('linux'):
 			ctestcmd = 'ctest  -j 2  --output-on-failure'
-			ctestcmd += ' -E mepp'
+			ctestcmd += ' -E mepp-gui'
 		elif sys.platform == "win32":
 			ctestcmd = CTEST_PATH + '  -j 2  --output-on-failure'
 		elif sys.platform == "darwin":

@@ -20,6 +20,6 @@ if (BUILD_USE_GUI_ScalingPlugin)
   target_link_libraries (ScalingPlugin ${Scaling_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(ScalingPlugin mepp)
+  add_dependencies(ScalingPlugin mepp-gui)
 endif (BUILD_USE_GUI_ScalingPlugin)
 # --> ScalingPlugin : QtPlugin [END]

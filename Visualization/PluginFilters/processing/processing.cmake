@@ -20,6 +20,6 @@ if (BUILD_USE_GUI_ProcessingPlugin)
   target_link_libraries (ProcessingPlugin ${Processing_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )
-  add_dependencies(ProcessingPlugin mepp)
+  add_dependencies(ProcessingPlugin mepp-gui)
 endif (BUILD_USE_GUI_ProcessingPlugin)
 # --> ProcessingPlugin : QtPlugin [END]

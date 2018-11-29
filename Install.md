@@ -137,7 +137,7 @@ Scripting commands for compiling Mepp2:
 ### Run the GUI and plugin filters
 
 ````
-  $ ./Visualization/Applications/mepp
+  $ ./Visualization/Applications/mepp-gui
 ````
 
 ## MacOS installation
@@ -243,7 +243,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 ### Run the GUI and plugin filters
 
 ````
-  $ ./Visualization/Applications/mepp.app/Contents/MacOS/mepp
+  $ ./Visualization/Applications/mepp.app/Contents/MacOS/mepp-gui
 ````
 
 ## Windows installation
@@ -319,8 +319,8 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 
 ### Run the GUI and plugin filters
 
- - In Visual Studio 'Solution Explorer', select mepp as the startup project within your solution (right click)
- - Hit Ctrl+F5 to run mepp without debugging (or hit F5 to run mepp in debugging mode)
+ - In Visual Studio 'Solution Explorer', select mepp-gui as the startup project within your solution (right click)
+ - Hit Ctrl+F5 to run mepp-gui without debugging (or hit F5 to run mepp-gui in debugging mode)
 
 ## Documentation
 

@@ -31,7 +31,7 @@ if( MSVC )
 endif()
 
 set( UI_TESTS_SRC_DEMO
-     mepp )
+     mepp-gui )
 
 set( GUILIB_DEMO ${MEPP_GUI_LIB} ${Boost_LIBRARIES} ${FBX_LIBRARY} )
 
@@ -139,7 +139,7 @@ set( ui_files ${ui_files}
 
 # qrc
 set( qrc_files ${qrc_files}
-  "${PROJECT_SOURCE_DIR}/Visualization/Applications/mepp.qrc")
+  "${PROJECT_SOURCE_DIR}/Visualization/Applications/mepp-gui.qrc")
 #set( qrc_files ${qrc_files} "add_here_your_qrc_file" )
 
 if( BUILD_USE_QT5 )
@@ -157,22 +157,22 @@ endif()
 # For Windows set the .ico file with the .rc file
 if( MSVC )
   set( resource_files ${resource_files}
-    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp.rc" )
+    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp-gui.rc" )
 endif()
 
 # For Apple set the .icns file containing icons
 if(APPLE)
   # set how it shows up in the Info.plist file
-  set(MACOSX_BUNDLE_ICON_FILE mepp.icns)
+  set(MACOSX_BUNDLE_ICON_FILE mepp-gui.icns)
 
   # set where in the bundle to put the icns file
   set_source_files_properties(
-    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp.icns"
+    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp-gui.icns"
     PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
   # include the icns file in the target
   set( resource_files ${resource_files}
-    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp.icns" )
+    "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp-gui.icns" )
 endif()
 
 
@@ -185,10 +185,10 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
     ${resource_files}
     ${FILE}.cpp )
 
-  if("${FILE}" STREQUAL "mepp")
-    target_sources(mepp PUBLIC ${UI_FILES})
+  if("${FILE}" STREQUAL "mepp-gui")
+    target_sources(mepp-gui PUBLIC ${UI_FILES})
   else()
-    add_dependencies(${FILE} mepp)
+    add_dependencies(${FILE} mepp-gui)
   endif()
 
   target_link_libraries( ${FILE} ${GUILIB_DEMO} )

@@ -159,7 +159,7 @@ add_test( Generic_writer_openmesh_off_with_face-color
 # the following test fails with OpenMesh only (ok with AIF and CGALs)
 # because normal in output file is "vn -3.83376e-14 1.53036e-41 -1"
 # instead of "vn 0 0 -1"
-# this may also explain why the rendering of this mesh in mepp
+# this may also explain why the rendering of this mesh in mepp-gui
 # is different with OpenMesh
 #add_test( Generic_writer_openmesh_obj_with_face-normal
 #          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  test_generic_writer_obj_with_face-normal.obj  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.writer-output.obj.ref)

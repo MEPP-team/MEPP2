@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(mepp_RECURSES)
-#error Recursive header files inclusion detected in mepp.h
-#else // defined(mepp_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define mepp_RECURSES
-
-#if !defined mepp_h
-/** Prevents repeated inclusion of headers. */
-#define mepp_h
-
 // -----------------------------------------------------------------------
 #define MEPP_VERSION "v0.7.2 - 15/11/2018"
 
@@ -40,8 +30,3 @@
 #define ORGANIZATION QObject::tr("LIRIS")
 #define APPLICATION QObject::tr("MEPP2")
 // -----------------------------------------------------------------------
-
-#endif // !defined mepp_h
-
-#undef mepp_RECURSES
-#endif // else defined(mepp_RECURSES)
