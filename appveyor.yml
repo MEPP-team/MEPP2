@@ -111,8 +111,8 @@ before_build:
   - IF %CACHE%==FALSE mkdir %KIT_ROOT%
   - IF %CACHE%==FALSE cd %KIT_ROOT%
 # wget -> wget.exe from https://eternallybored.org/misc/wget/
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/bin/wget.rar
-  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -o wget.rar https://mycore.core-cloud.net/index.php/s/3XoDkeXScMoGFIM/download
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/bin/wget.rar
+  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -o wget.rar https://mycore.core-cloud.net/index.php/s/3XoDkeXScMoGFIM/download
   - IF %CACHE%==FALSE 7z x wget.rar > nul
 # boost
 # vs_2015
@@ -132,60 +132,60 @@ before_build:
 #  - IF %CACHE%==FALSE 7z x boost_1_59_0.7z > nul
 # CGAL
 # vs_2015
-  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
-  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
+  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" IF %CACHE%==FALSE 7z x CGAL-4.11-bug-patched-CV.7z > nul
 # vs_2017
-  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
-  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
+  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.11-bug-patched-CV.7z
+  #- IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/QNrSsl8Vve39rOO/download -O CGAL-4.11-bug-patched-CV.7z 2> nul
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE 7z x CGAL-4.11-bug-patched-CV.7z > nul
 # OpenMesh
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
   #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1jyy_J_O7EMXZBPmIo9oV9EftMw1_4GQx" -O OpenMesh-6.2.rar 2> nul
   #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/e6gelvzlcxbtq4q/OpenMesh-6.2.rar 2> nul
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OiJFwZHvIBIRWiB/download -O OpenMesh-6.2.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OiJFwZHvIBIRWiB/download -O OpenMesh-6.2.rar 2> nul
   - IF %CACHE%==FALSE 7z x OpenMesh-6.2.rar > nul
 # Qt4
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/qt-4.8.7-x64-msvc2015-moc_patched.7z
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/jNeqWUtzabmQr8w/download -O qt-4.8.7-x64-msvc2015-moc_patched.7z 2> nul
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/qt-4.8.7-x64-msvc2015-moc_patched.7z
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/jNeqWUtzabmQr8w/download -O qt-4.8.7-x64-msvc2015-moc_patched.7z 2> nul
   - IF %CACHE%==FALSE 7z x qt-4.8.7-x64-msvc2015-moc_patched.7z > nul
 # OSG
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/redo/osg-3.4.0.7z
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/redo/osg-3.4.0.7z
   #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1q-ifPbzMvWxz_UFSlQvMMYCvnoMGpscu" -O osg-3.4.0.7z 2> nul
   #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/ylnkrgal3cfeezg/osg-3.4.0.7z 2> nul
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CW6VrwTfIDu2EKM/download -O osg-3.4.0.7z 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CW6VrwTfIDu2EKM/download -O osg-3.4.0.7z 2> nul
   - IF %CACHE%==FALSE 7z x osg-3.4.0.7z > nul
 # osg-3rdparty-runtime (libpng - zlib)
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/osg-3rdparty-runtime.rar
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/osg-3rdparty-runtime.rar
   #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1_eee96-twiZ93Rc6ZqrjLlzjaOR0f8Az" -O osg-3rdparty-runtime.rar 2> nul
   #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/5z3hljvu3ch68oy/osg-3rdparty-runtime.rar 2> nul
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/EcY1smUJxwzHRkF/download -O osg-3rdparty-runtime.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/EcY1smUJxwzHRkF/download -O osg-3rdparty-runtime.rar 2> nul
   - IF %CACHE%==FALSE 7z x osg-3rdparty-runtime.rar > nul
 # eigen
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/eigen-3.2.8.rar
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/eigen-3.2.8.rar
   #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1QFpKt3_iGRvcEyBLQe_sDBZPQUlbv_VX" -O eigen-3.2.8.rar 2> nul
   #- IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/qz2vytifk5io9la/eigen-3.2.8.rar 2> nul
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/ibSGyso5bX2fSgf/download -O eigen-3.2.8.rar 2> nul
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/ibSGyso5bX2fSgf/download -O eigen-3.2.8.rar 2> nul
   - IF %CACHE%==FALSE 7z x eigen-3.2.8.rar > nul
 # PCL, flann, qhull
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.7.2.7z
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.7.2.7z
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1JYliMDB6oiTiG0DG-0URR-8cY0LKAOEC" -O PCL-1.7.2.7z 2> nul
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/gpacri5co33pbw4/PCL-1.7.2.7z 2> nul
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/hQsCduXmtXJjsnt/download -O PCL-1.7.2.7z 2> nul
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/hQsCduXmtXJjsnt/download -O PCL-1.7.2.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.7.2.7z > nul
 # VTK
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1dyNslEtQrkf2I1YwVvXDZNOezZoh7YDi" -O kitware-VTK-7.0.0.7z 2> nul
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/xeqzki5insnads1/kitware-VTK-7.0.0.7z 2> nul
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/JzJrjVGjvz7oNKX/download -O kitware-VTK-7.0.0.7z 2> nul
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/JzJrjVGjvz7oNKX/download -O kitware-VTK-7.0.0.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x kitware-VTK-7.0.0.7z > nul
 # FBX
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/FBX_SDK.7z
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/VRjcORdpqE5hU18/download -O FBX_SDK.7z 2> nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/FBX_SDK.7z
+  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/VRjcORdpqE5hU18/download -O FBX_SDK.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x FBX_SDK.7z > nul
 # Img-3rdparty: jpeg, zlib (for png), png, tiff
-  #- IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/img-3rdparty.rar
-  - IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OoWoz1cwBS8cxfa/download -O img-3rdparty.rar 2> nul
+  - IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/img-3rdparty.rar
+  #- IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/OoWoz1cwBS8cxfa/download -O img-3rdparty.rar 2> nul
   - IF %CACHE%==FALSE 7z x img-3rdparty.rar > nul
 #
   - cd %APPVEYOR_BUILD_FOLDER%
