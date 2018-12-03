@@ -6,6 +6,7 @@
 #include "FEVV/Tools/IO/ObjFileReader.h"
 #include "FEVV/Tools/IO/OffFileReader.h"
 #include "FEVV/Tools/IO/PlyFileReader.h"
+#include "FEVV/Tools/IO/MshFileReader.h"
 
 #include <vector>
 #include <array>
@@ -111,8 +112,16 @@ AIFMeshReader::read(const std::string &filePath)
   }
   else if(has_extension(filePath, ".msh"))
   {
-    throw std::runtime_error(
-        "AIFMeshReader::read -> msh reader has not been implemented yet");
+    IO::read_gmsh_file(filePath,
+                       points_coords,
+                       normals_coords,
+                       vertex_color_coords,
+                       lines_indices,
+                       lines_colors,
+                       faces_indices,
+                       faces_colors,
+                       field_attributes,
+                       field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(has_extension(filePath, ".vtk") || has_extension(filePath, ".vtp") ||

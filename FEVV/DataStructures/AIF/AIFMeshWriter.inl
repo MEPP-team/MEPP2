@@ -4,10 +4,10 @@
 
 #include "FEVV/Tools/IO/ObjFileWriter.h"
 #include "FEVV/Tools/IO/OffFileWriter.h"
-
 #ifdef FEVV_USE_VTK
 #include "FEVV/Tools/IO/VtkFileWriter.h"
 #endif
+#include "FEVV/Tools/IO/MshFileWriter.h"
 
 #include "FEVV/Types/Material.h"
 
@@ -299,8 +299,16 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
   }
   else if(has_extension(filePath, ".msh"))
   {
-    throw std::runtime_error(
-        "Writer::write -> msh writer has not been implemented yet");
+    IO::write_gmesh_file(filePath,
+                         points_coords,
+                         normals_coords,
+                         vertex_color_coords,
+                         lines_indices,
+                         line_colors_coords,
+                         faces_indices,
+                         face_color_coords,
+                         field_attributes,
+                         field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(has_extension(filePath, ".vtk") || has_extension(filePath, ".vtp") ||

@@ -71,15 +71,14 @@ get_line_containing_dataset(std::string file_path)
 
 template< typename CoordType,
           typename CoordNType,
-          /*typename coordT_type,*/ typename CoordCType,
+          typename CoordCType,
           typename IndexType >
 void
 read_vtk_poly_data(
     const vtkSmartPointer< vtkPolyData > &poly_data,
     std::vector< std::vector< CoordType > > &points_coords,
     std::vector< std::vector< CoordNType > >
-        &normals_coords, /// should have either 0 or points_coords.size() at the
-                         /// end
+        &normals_coords, /// should have either 0 or points_coords.size() at the end
     std::vector< std::vector< CoordCType > > &vertex_color_coords,
     std::vector< std::vector< IndexType > >
         &line_indices, /// edges (can also be used to decribe a volume element)
@@ -445,7 +444,7 @@ read_vtk_poly_data(
 
 template< typename CoordType,
           typename CoordNType,
-          /*typename coordT_type,*/ typename CoordCType,
+          typename CoordCType,
           typename IndexType >
 void
 read_vtk_unstructured_grid(
@@ -901,7 +900,7 @@ read_vtk_unstructured_grid(
 
 template< typename CoordType,
           typename CoordNType,
-          /*typename coordT_type,*/ typename CoordCType,
+          typename CoordCType,
           typename IndexType >
 void
 read_vtk_or_vtp_or_vtu_file(

@@ -1,0 +1,270 @@
+#ifndef __STLmshWriter_h
+#define __STLmshWriter_h
+
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+#include "FEVV/Tools/IO/FileUtilities.hpp"
+#include "FEVV/Tools/IO/StringUtilities.hpp"
+
+namespace FEVV {
+namespace IO {
+
+
+using namespace StrUtils;
+using namespace FileUtils;	
+	inline unsigned long get_type(const unsigned long size, const unsigned short dim)
+	{
+		switch(size)
+		{
+			case 3:
+				return 2;
+			case 4:
+				return (dim==2)?3:4;
+			case 6:
+				return 9;
+			case 8:
+				return 5;
+		}
+		return 0;
+	}
+
+    /**
+    * Write mesh data to gmesh (.msh) file.
+    */
+template< typename CoordType,
+          typename CoordNType,
+          typename CoordCType,
+          typename IndexType >   	
+	bool write_gmesh_file(	const std::string &file_path,
+							const std::vector< std::vector<CoordType> >& points_coords,							
+							const std::vector< std::vector<CoordNType> >& normals_coords,
+							const std::vector< std::vector<CoordCType> >& vertex_color_coords,							
+							const std::vector< std::vector<IndexType> >& line_indices,
+							const std::vector< std::vector<CoordCType> >& lines_color_coords,
+							const std::vector< std::vector<IndexType> >& face_indices,
+							const std::vector< std::vector<CoordCType> >& face_color_coords,
+							const std::vector< std::vector< std::vector<double> > >& field_attributes,
+							const std::vector< std::string >& field_names)
+	{
+		//We check that the file path has the correct extension
+		if(!(FileUtils::has_extension(file_path, ".msh")))
+		{
+			std::cerr << "MSH Writer: file extension is inappropriate" << std::endl;
+			return false;
+		}
+		
+		//We check that no node is colored or that every node are colored
+		if (vertex_color_coords.size()!=0 && vertex_color_coords.size()!=points_coords.size())
+		{
+			std::cerr << "MSH Writer: Not every node are colored" << std::endl;
+			return false;
+		}
+			
+		//We check that no node has normal or that every node has normal
+		if (normals_coords.size()>0 && normals_coords.size()!=points_coords.size()) 
+		{
+			std::cerr << "MSH Writer: Not every node are normalized" << std::endl;
+			return false;
+		}
+
+		//We check that no element is colored or that every element is colored
+		if (face_color_coords.size()!=0 && face_color_coords.size()!=face_indices.size())
+		{
+			std::cerr << "MSH Writer: Not every 2D element are colored" << std::endl;
+			return false;
+		}
+
+		//We check that there is not 3D elements combined with 2D elements
+		if (line_indices.size()!=0 && face_indices.size()!=0)
+		{
+			std::cerr << "MSH Writer: It is impossible to have 2D elements with 3D elements" << std::endl;
+			return false;
+		}
+		std::vector<std::string> names;
+		if (field_names.size() != field_attributes.size())
+		{
+			names.resize(field_attributes.size());
+			for (unsigned long i(0); i<field_attributes.size(); ++i){
+				if( (points_coords.size() == field_attributes[i].size()) && 
+					((points_coords.size() != face_indices.size()) || (field_attributes[i][0].size()>1)))
+					names[i] = std::string("Shifting_") + convert(i); // to make it compatible with Curves2D/Curves3D binaries
+				else
+					names[i] = std::string("cell_law_")+ convert(i);
+			}
+		}
+		else
+			names = field_names;
+		//If there is elements in the vector face_indices so it is the 2D vectors that we should use
+		//Otherwise we should use the 3D vectors
+		unsigned short dim = (face_indices.size()) ? 2 : 3;
+		const std::vector< std::vector<IndexType> >& elem = (face_indices.size()) ? face_indices : line_indices;
+		const std::vector< std::vector<CoordCType> >& color = (face_indices.size()) ? face_color_coords : lines_color_coords;
+
+		//We open the file
+		FILE* file = fopen(file_path.c_str(), "w");
+		if (file==NULL)
+		{
+			std::cerr << "MSH Reader: Unable to open file : " << file_path << std::endl;
+			return false;
+		}
+		
+		//We write the beginning of the file
+		fprintf(file, "$MeshFormat\n2.2 0 %zd\n$EndMeshFormat\n$Nodes\n%zd\n", sizeof(double), points_coords.size());
+
+		//If there is some points to write
+		if (points_coords.size()!=0)
+		{
+			//We write every point while not forgetting the fact that index starts at 1 in msh file
+			for(unsigned long i(0); i<points_coords.size(); i++)
+			{
+				fprintf(file, "%ld %f %f %f\n", i+1, points_coords[i][0], points_coords[i][1], points_coords[i][2]);
+			}
+			fprintf(file, "$EndNodes\n");
+
+			//Then we write the element (at least points, msh file must at least have one Elements block)
+			fprintf(file, "$Elements\n");
+			//If there is elements different from points
+			if (elem.size()!=0)
+			{
+				//Then we write the number of elements
+				fprintf(file, "%zd\n", elem.size());
+				//And we write all their attributes
+				unsigned long type;
+				for(unsigned long i(0); i<elem.size(); i++)
+				{
+					type = get_type(static_cast<unsigned long>(elem[i].size()), dim);
+					//If we found an unknown element
+					if (type==0)
+					{
+						std::cerr << "MSH Writer: Type of element is unknown" << std::endl;
+						fclose(file);
+						return false;
+					}
+					fprintf(file, "%ld %ld 2 99 2", i+1, type);
+					for(unsigned long j(0); j<elem[i].size(); j++)
+					{
+						fprintf(file, " %ld", elem[i][j]);
+					}
+					fprintf(file, "\n");
+				}
+				fprintf(file, "$EndElements");
+			}
+			//If there is no element we write the points as elements
+			else
+			{
+				fprintf(file, "%zd\n", points_coords.size());
+				for(unsigned long i(0); i<points_coords.size(); i++)
+				{
+					fprintf(file, "%ld 15 2 99 2 %ld\n", i+1, i+1);
+				}
+				fprintf(file, "$EndElements");
+			}
+
+			//If there is point colors we write it
+			if (vertex_color_coords.size()!=0)
+			{
+				fprintf(file, "\n$NodeData\n1\n\"Color\"\n0\n1\n%zd\n", vertex_color_coords.size());
+				for(unsigned long i(0); i<vertex_color_coords.size(); i++)
+				{
+					if (vertex_color_coords[i].size()!=3)
+					{
+						std::cerr << "MSH Writer: Wrong number of values for declaration of colors" << std::endl;
+						fclose(file);
+						return false;
+					}
+					fprintf(file, "%ld %f %f %f\n", i+1, vertex_color_coords[i][0], vertex_color_coords[i][1], vertex_color_coords[i][2]);
+				}
+				fprintf(file, "$EndNodeData");
+			}
+
+			//If there is point normal we write it
+			if (normals_coords.size()!=0)
+			{
+				fprintf(file, "\n$NodeData\n1\n\"Normal\"\n0\n1\n%zd\n", normals_coords.size());
+				for(unsigned long i(0); i<normals_coords.size(); i++)
+				{
+					if (normals_coords[i].size()!=3)
+					{
+						std::cerr << "MSH Writer: Wrong number of values for declaration of normals" << std::endl;
+						fclose(file);
+						return false;
+					}
+					fprintf(file, "%ld %f %f %f\n", i+1, normals_coords[i][0], normals_coords[i][1], normals_coords[i][2]);
+				}
+				fprintf(file, "$EndNodeData");
+			}
+
+			//If there is element color we write it
+			if (color.size()!=0)
+			{
+				fprintf(file, "\n$ElementData\n1\n\"Color\"\n0\n1\n%zd\n", color.size());
+				for(unsigned long i(0); i<color.size(); i++)
+				{
+					if (color[i].size()!=3)
+					{
+						std::cerr << "MSH Writer: Wrong number of values for declaration of colors" << std::endl;
+						fclose(file);
+						return false;
+					}
+					fprintf(file, "%ld %f %f %f\n", i+1, color[i][0], color[i][1], color[i][2]);
+				}
+				fprintf(file, "$EndElementData");
+			}
+
+			if (names.size()>0)
+			{
+				bool isnode = true;
+				for(unsigned long i(0); i<names.size(); ++i)
+				{
+					fprintf(file, "\n");
+					if ( names[i].find("POINT_DATA_") != std::string::npos )
+					{
+						isnode = true;
+						fprintf(file, "$NodeData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].substr(11).c_str(), field_attributes[i].size()); 
+					}
+					else if ( (points_coords.size()==field_attributes[i].size()) && ( (points_coords.size()!=face_indices.size()) || (field_attributes[i][0].size()>1)) ) // the case of points_coords.size()=face_indices.size() is not well tackled, but for the time being we assume that in that case the attribute is a face attribute if only one value... [temporary solution; try to use the name of the field to decide?]
+					{
+						isnode = true;
+						fprintf(file, "$NodeData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].c_str(), field_attributes[i].size()); 
+					}
+					else if (names[i].find("ELEMENT_DATA_") != std::string::npos)
+					{
+						isnode = false;
+						fprintf(file, "$ElementData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].substr(13).c_str(), field_attributes[i].size()); 
+					}
+					else
+					{
+						isnode = false;
+						fprintf(file, "$ElementData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].c_str(), field_attributes[i].size()); 
+					}
+					for(unsigned long j(0); j<field_attributes[i].size(); ++j)
+					{
+						fprintf(file, "%ld", j+1);
+						for(unsigned long k(0); k<field_attributes[i][j].size(); ++k)
+						{
+							fprintf(file, " %f", field_attributes[i][j][k]);
+						}
+						fprintf(file, "\n");
+					}
+					if (isnode)
+						fprintf(file, "$EndNodeData");
+					else
+						fprintf(file, "$EndElementData");
+				}
+			}
+		}
+		//If there is no point we write that there is nothing
+		else
+		{
+			fprintf(file, "$EndNodes\n$Elements\n0\n$EndElements");
+		}
+
+		fclose(file);
+		return true;
+	}
+
+}
+}
+#endif

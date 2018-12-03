@@ -24,6 +24,7 @@
 #ifdef FEVV_USE_FBX
 #include "FEVV/Tools/IO/FbxFileReader.h"
 #endif
+#include "FEVV/Tools/IO/MshFileReader.h"
 
 #include "FEVV/Types/Material.h"
 
@@ -157,8 +158,16 @@ read_mesh(const std::string &filename,
   }
   else if(FEVV::FileUtils::has_extension(filename, ".msh"))
   {
-    throw std::runtime_error(
-        "read_mesh() -> msh reader has not been implemented yet");
+    IO::read_gmsh_file(filename,
+                       points_coords,
+                       normals_coords,
+                       vertex_color_coords,
+                       lines_indices,
+                       lines_colors,
+                       faces_indices,
+                       face_color_coords,
+                       field_attributes,
+                       field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(FEVV::FileUtils::has_extension(filename, ".vtk") ||
