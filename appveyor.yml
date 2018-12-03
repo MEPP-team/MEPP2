@@ -98,6 +98,9 @@ configuration:
 before_build:
 #  - tracert download.gforge.liris.cnrs.fr
 #
+  - IF %FTP_MYCORE%==TRUE echo FTP_FROM_MYCORE
+  - IF %FTP_MYCORE%==FALSE echo FTP_FROM_GFORGE
+#
   - echo %CMAKE_GENERATOR%
   - echo %BOOST_ROOT%
   - echo %QT5_DIR%
