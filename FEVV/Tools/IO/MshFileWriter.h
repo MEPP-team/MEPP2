@@ -14,7 +14,9 @@ namespace IO {
 
 using namespace StrUtils;
 using namespace FileUtils;	
-	inline unsigned long get_type(const unsigned long size, const unsigned short dim)
+
+template< typename IndexType >
+	inline IndexType get_type(const IndexType size, const IndexType dim)
 	{
 		switch(size)
 		{
@@ -98,7 +100,7 @@ template< typename CoordType,
 			names = field_names;
 		//If there is elements in the vector face_indices so it is the 2D vectors that we should use
 		//Otherwise we should use the 3D vectors
-		unsigned short dim = (face_indices.size()) ? 2 : 3;
+    IndexType dim = (face_indices.size()) ? 2 : 3;
 		const std::vector< std::vector<IndexType> >& elem = (face_indices.size()) ? face_indices : line_indices;
 		const std::vector< std::vector<CoordCType> >& color = (face_indices.size()) ? face_color_coords : lines_color_coords;
 
@@ -131,10 +133,10 @@ template< typename CoordType,
 				//Then we write the number of elements
 				fprintf(file, "%zd\n", elem.size());
 				//And we write all their attributes
-				unsigned long type;
+        IndexType type;
 				for(unsigned long i(0); i<elem.size(); i++)
 				{
-					type = get_type(static_cast<unsigned long>(elem[i].size()), dim);
+					type = get_type(static_cast<IndexType>(elem[i].size()), dim);
 					//If we found an unknown element
 					if (type==0)
 					{
@@ -142,10 +144,10 @@ template< typename CoordType,
 						fclose(file);
 						return false;
 					}
-					fprintf(file, "%ld %ld 2 99 2", i+1, type);
+					fprintf(file, "%ld %ld 2 99 2", i+1, static_cast<long>(type));
 					for(unsigned long j(0); j<elem[i].size(); j++)
 					{
-						fprintf(file, " %ld", elem[i][j]);
+						fprintf(file, " %s", convert(elem[i][j]).c_str());
 					}
 					fprintf(file, "\n");
 				}

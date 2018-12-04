@@ -16,7 +16,7 @@
 #include "FEVV/Tools/IO/StringUtilities.hpp"
 
 //Comment this one if you want a strict usage of msh file with only one Nodes and one Elements block.
-#define USE_MULTI_BLOCk
+#define USE_MULTI_BLOC
 
 namespace FEVV {
 namespace IO {
@@ -25,7 +25,8 @@ namespace IO {
 using namespace StrUtils;
 using namespace FileUtils;	
 	//Return the dimension of an element type
-	inline unsigned short dimensions(unsigned long type)
+  template< typename IndexType >
+	inline IndexType dimensions(IndexType type)
 	{
 		//If it is a 2D element
 		if (type==2 || type==3 || type==9)
@@ -39,7 +40,7 @@ using namespace FileUtils;
 
 	//Get every node of an element
   template< typename IndexType >
-	std::vector<IndexType> get_index(char* buffer, unsigned short d)
+	std::vector<IndexType> get_index(char* buffer, IndexType d)
 	{
 		//We split the line at every whitespace
 		char* token = strtok(buffer, " ");
@@ -107,7 +108,7 @@ template< typename CoordType,
 						std::vector< std::vector<CoordCType> >& lines_color_coords,
 						std::vector< std::vector<IndexType> >& face_indices,
 						std::vector< std::vector<CoordCType> >& face_color_coords,						
-						short& dim)
+            IndexType& dim)
 	{
 		FILE* file;
 
@@ -118,13 +119,13 @@ template< typename CoordType,
 			return false;
 		}
 
-		IndexType nb_points(0);
-		IndexType nb_p_color(0);
-		IndexType nb_p_normal(0);
-		IndexType nb_e_color(0);
-		IndexType nb_elements(0);
+		long nb_points(0);
+    long nb_p_color(0);
+    long nb_p_normal(0);
+    long nb_e_color(0);
+    long nb_elements(0);
 		int nb_param_reads;
-		IndexType number;
+		long number;
 
 #ifndef USE_MULTI_BLOC
 		bool found_multi_nodes = false;
@@ -262,7 +263,7 @@ template< typename CoordType,
 				bool found_color = false;
 				bool found_normal = false;
 				//We loop through every string tags searching for a color or a normal tag
-				for(unsigned int i=0; i<number; i++)
+				for(int i=0; i<number; i++)
 				{
 					//If the file is bad structured
 					if (fgets(buffer, T_MAX, file) == NULL)
@@ -318,7 +319,7 @@ template< typename CoordType,
 						return false;
 					}
 					//We loop through all real tags
-					for(unsigned int i=0; i<number; i++)
+					for(int i=0; i<number; i++)
 					{
 						//If the file is bad structured
 						if (fgets(buffer, T_MAX, file) == NULL)
@@ -345,7 +346,7 @@ template< typename CoordType,
 						return false;
 					}
 					//We loop throught the integer tags
-					for(unsigned int i=0; i<number; i++)
+					for(int i=0; i<number; i++)
 					{
 						//If the file is bad structured
 						if (fgets(buffer, T_MAX, file) == NULL)
@@ -442,7 +443,7 @@ template< typename CoordType,
 		field_attributes.clear();
 
 		//Dimension of the elements
-		short dim(0);
+    IndexType dim(0);
 
 		if (!init_vectors(file_path, points_coords, normals_coords, vertex_color_coords, line_indices, lines_color_coords, face_indices, face_color_coords, dim))
 		{
@@ -478,7 +479,7 @@ template< typename CoordType,
 				unsigned int type;
 				unsigned int size;
 
-				number_param = sscanf(buffer, "%f %d %d", &version, &type, &size);
+				number_param = sscanf(buffer, "%f %u %u", &version, &type, &size);
 				//Currently only the version 2.2 is supported by Gmsh
 				if (version != 2.2f)
 				{
@@ -521,8 +522,8 @@ template< typename CoordType,
 					fclose(file);
 					return false;
 				}
-				IndexType temp;
-				std::vector<CoordType> temp_pts;
+				long temp;
+				std::vector<float> temp_pts;
 				
 				//We get the number of nodes declared in this block
 				number_param = sscanf(buffer, "%ld", &temp);
@@ -532,9 +533,9 @@ template< typename CoordType,
 					fclose(file);
 					return false;
 				}
-				IndexType index;
+				long index;
 				//Then we add all the nodes on the block
-				for(IndexType i(0); i<temp; ++i)
+				for(long i(0); i<temp; ++i)
 				{
 					if (fgets(buffer, T_MAX, file) == NULL)
 					{
@@ -554,8 +555,8 @@ template< typename CoordType,
 					}
 					//Then we assign it to the vector points_coords if the index is correct
 					//Don't forget the index-1 because msh format starts array at 1 and not 0
-					if (index-1 < points_coords.size())
-						points_coords[index-1] = temp_pts;
+					if (index-1 < static_cast<long>(points_coords.size()))
+						points_coords[index-1] = std::vector<CoordType>(temp_pts.begin(), temp_pts.end());
 					else
 					{
 						std::cerr << "MSH Reader: Error in the node index, " << points_coords.size() << " declared and there is the " << index << " declared." << std::endl;
@@ -583,7 +584,7 @@ template< typename CoordType,
 					fclose(file);
 					return false;
 				}
-				IndexType temp;
+        long temp;
 				//We get the number of elements declared in this block
 				number_param = sscanf(buffer, "%ld", &temp);
 				if (number_param != 1)
@@ -592,9 +593,9 @@ template< typename CoordType,
 					fclose(file);
 					return false;
 				}
-				IndexType index;
+        long index;
 				//We get every elements
-				for(unsigned long i(0); i<temp; ++i)
+				for(long i(0); i<temp; ++i)
 				{
 					if (fgets(buffer, T_MAX, file) == NULL)
 					{
@@ -620,7 +621,7 @@ template< typename CoordType,
 						{
 							//If the index of the element isn't too big for the size declared
 							//The file should NOT skip an index
-							if (index-1 < face_indices.size())
+							if (index-1 < static_cast<long>(face_indices.size()))
 								face_indices[index-1] = temp;
 							//Otherwise we throw an error
 							else
@@ -635,7 +636,7 @@ template< typename CoordType,
 						{
 							//If the index of the element isn't too big for the size declared
 							//The file should NOT skip an index
-							if (index-1 < line_indices.size())
+							if (index-1 < static_cast<long>(line_indices.size()))
 								line_indices[index-1] = temp;
 							//Otherwise we throw an error
 							else
@@ -684,7 +685,7 @@ template< typename CoordType,
 					fclose(file);
 					return false;
 				}
-				IndexType params;
+				long params;
 				//We get the number of string parameters
 				number_param = sscanf(buffer, "%ld", &params);
 				if (number_param != 1)
@@ -694,7 +695,7 @@ template< typename CoordType,
 					return false;
 				}
 				//We loop through all the string paramaters
-				for(unsigned long i(0); i<=params; ++i)
+				for(long i(0); i<=params; ++i)
 				{
 					if (fgets(buffer, T_MAX, file)==NULL)
 					{
@@ -746,7 +747,7 @@ template< typename CoordType,
 					return false;
 				}
 				//We loop through all the real paramaters
-				for(unsigned long i(0); i<=params; ++i)
+				for(long i(0); i<=params; ++i)
 				{
 					if (fgets(buffer, T_MAX, file)==NULL)
 					{
@@ -766,7 +767,7 @@ template< typename CoordType,
 					return false;
 				}
 				//We loop until the last integer parameter (the number of datas in the block)
-				for(unsigned long i(0); i<params; ++i)
+				for(long i(0); i<params; ++i)
 				{
 					if (fgets(buffer, T_MAX, file)==NULL)
 					{
@@ -790,7 +791,7 @@ template< typename CoordType,
 				temp_vector_f.clear();
 				float temp1, temp2, temp3;
 				//We loop through every declared datas
-				for(unsigned long i(0); i<params; i++)
+				for(long i(0); i<params; i++)
 				{
 					if (fgets(buffer, T_MAX, file)==NULL)
 					{
@@ -809,7 +810,7 @@ template< typename CoordType,
 						temp_vector_n.reserve(3);
 						break;						
 					}
-					IndexType index;
+					long index;
 					//We get all the values concerning the data (the index and the data itself)
 					//If it is a color we get three values
 					//Duplicate this if block, create temp4 et check for 5 number_param for color if you want to use alpha
@@ -856,7 +857,7 @@ template< typename CoordType,
 							if (data == 0)
 							{
 								//On vérifie qu'on ne sort pas de la taille du tableau
-								if (index - 1 < face_color_coords.size())
+								if (index - 1 < static_cast<long>(face_color_coords.size()))
 									face_color_coords[index-1] = temp_vector_c;
 								else
 								{
@@ -872,7 +873,7 @@ template< typename CoordType,
 							if (data==0)
 							{
 								//On vérifie qu'on ne sort pas de la taille du tableau
-								if (index - 1 < lines_color_coords.size())
+								if (index - 1 < static_cast<long>(lines_color_coords.size()))
 									lines_color_coords[index-1] = temp_vector_c;
 								else
 								{
@@ -890,7 +891,7 @@ template< typename CoordType,
 						if (data==0)
 						{
 							//On vérifie qu'on ne sort pas de la taille du tableau
-							if (index - 1 < vertex_color_coords.size())
+							if (index - 1 < static_cast<long>(vertex_color_coords.size()))
 								vertex_color_coords[index-1] = temp_vector_c;
 							else
 							{
@@ -902,7 +903,7 @@ template< typename CoordType,
 						else if (data==1)
 						{
 							//On vérifie qu'on ne sort pas de la taille du tableau
-							if (index - 1 < normals_coords.size())
+							if (index - 1 < static_cast<long>(normals_coords.size()))
 								normals_coords[index-1] = temp_vector_n;
 							else
 							{
