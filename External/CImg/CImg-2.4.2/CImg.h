@@ -8634,8 +8634,8 @@ namespace cimg_library_suffixed {
       unsigned int dims = 0;
       cimglist_for(list,l) {
         const CImg<T>& img = list._data[l];
-        img.__get_select(*this,_normalization,(img._width - 1)/2,(img._height - 1)/2,
-                         (img._depth - 1)/2).move_to(visu[l]);
+        img._get_select(*this,_normalization,(img._width - 1)/2,(img._height - 1)/2,
+                        (img._depth - 1)/2).move_to(visu[l]);
         dims = std::max(dims,visu[l]._spectrum);
       }
       cimglist_for(list,l) if (visu[l]._spectrum<dims) visu[l].resize(-100,-100,-100,dims,1);
@@ -12581,7 +12581,7 @@ namespace cimg_library_suffixed {
       const unsigned int omode = cimg::exception_mode();
       cimg::exception_mode(0);
       try {
-        _fill(expression,true,true,0,0,"operator=",0);
+        _fill(expression,true,1,0,0,"operator=",0);
       } catch (CImgException&) {
         cimg::exception_mode(omode);
         load(expression);
@@ -12657,7 +12657,7 @@ namespace cimg_library_suffixed {
          instead of assigning them.
     **/
     CImg<T>& operator+=(const char *const expression) {
-      return *this+=(+*this)._fill(expression,true,true,0,0,"operator+=",this);
+      return *this+=(+*this)._fill(expression,true,1,0,0,"operator+=",this);
     }
 
     //! In-place addition operator.
@@ -12780,7 +12780,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a substraction instead of an addition.
      **/
     CImg<T>& operator-=(const char *const expression) {
-      return *this-=(+*this)._fill(expression,true,true,0,0,"operator-=",this);
+      return *this-=(+*this)._fill(expression,true,1,0,0,"operator-=",this);
     }
 
     //! In-place substraction operator.
@@ -12886,7 +12886,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a multiplication instead of an addition.
      **/
     CImg<T>& operator*=(const char *const expression) {
-      return mul((+*this)._fill(expression,true,true,0,0,"operator*=",this));
+      return mul((+*this)._fill(expression,true,1,0,0,"operator*=",this));
     }
 
     //! In-place multiplication operator.
@@ -13139,7 +13139,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a division instead of an addition.
      **/
     CImg<T>& operator/=(const char *const expression) {
-      return div((+*this)._fill(expression,true,true,0,0,"operator/=",this));
+      return div((+*this)._fill(expression,true,1,0,0,"operator/=",this));
     }
 
     //! In-place division operator.
@@ -13204,7 +13204,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a modulo operation instead of an addition.
     **/
     CImg<T>& operator%=(const char *const expression) {
-      return *this%=(+*this)._fill(expression,true,true,0,0,"operator%=",this);
+      return *this%=(+*this)._fill(expression,true,1,0,0,"operator%=",this);
     }
 
     //! In-place modulo operator.
@@ -13271,7 +13271,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a bitwise AND operation instead of an addition.
     **/
     CImg<T>& operator&=(const char *const expression) {
-      return *this&=(+*this)._fill(expression,true,true,0,0,"operator&=",this);
+      return *this&=(+*this)._fill(expression,true,1,0,0,"operator&=",this);
     }
 
     //! In-place bitwise AND operator.
@@ -13338,7 +13338,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a bitwise OR operation instead of an addition.
     **/
     CImg<T>& operator|=(const char *const expression) {
-      return *this|=(+*this)._fill(expression,true,true,0,0,"operator|=",this);
+      return *this|=(+*this)._fill(expression,true,1,0,0,"operator|=",this);
     }
 
     //! In-place bitwise OR operator.
@@ -13409,7 +13409,7 @@ namespace cimg_library_suffixed {
        - It does \e not compute the \e power of pixel values. For this purpose, use pow(const char*) instead.
     **/
     CImg<T>& operator^=(const char *const expression) {
-      return *this^=(+*this)._fill(expression,true,true,0,0,"operator^=",this);
+      return *this^=(+*this)._fill(expression,true,1,0,0,"operator^=",this);
     }
 
     //! In-place bitwise XOR operator.
@@ -13478,7 +13478,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a bitwise left shift instead of an addition.
     **/
     CImg<T>& operator<<=(const char *const expression) {
-      return *this<<=(+*this)._fill(expression,true,true,0,0,"operator<<=",this);
+      return *this<<=(+*this)._fill(expression,true,1,0,0,"operator<<=",this);
     }
 
     //! In-place bitwise left shift operator.
@@ -13546,7 +13546,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except that it performs a bitwise right shift instead of an addition.
     **/
     CImg<T>& operator>>=(const char *const expression) {
-      return *this>>=(+*this)._fill(expression,true,true,0,0,"operator>>=",this);
+      return *this>>=(+*this)._fill(expression,true,1,0,0,"operator>>=",this);
     }
 
     //! In-place bitwise right shift operator.
@@ -13628,7 +13628,7 @@ namespace cimg_library_suffixed {
        \param expression Value string describing the way pixel values are compared.
     **/
     bool operator==(const char *const expression) const {
-      return *this==(+*this)._fill(expression,true,true,0,0,"operator==",this);
+      return *this==(+*this)._fill(expression,true,1,0,0,"operator==",this);
     }
 
     //! Test if two images have the same size and values.
@@ -16047,7 +16047,6 @@ namespace cimg_library_suffixed {
 #define _cimg_mp_check_type(arg,n_arg,mode,N) check_type(arg,n_arg,mode,N,ss,se,saved_char)
 #define _cimg_mp_check_constant(arg,n_arg,mode) check_constant(arg,n_arg,mode,ss,se,saved_char)
 #define _cimg_mp_check_matrix_square(arg,n_arg) check_matrix_square(arg,n_arg,ss,se,saved_char)
-#define _cimg_mp_check_vector0(dim) check_vector0(dim,ss,se,saved_char)
 #define _cimg_mp_check_list(is_out) check_list(is_out,ss,se,saved_char)
 #define _cimg_mp_defunc(mp) (*(mp_func)(*(mp).opcode))(mp)
 #define _cimg_mp_return(x) { *se = saved_char; s_op = previous_s_op; ss_op = previous_ss_op; return x; }
@@ -16373,7 +16372,7 @@ namespace cimg_library_suffixed {
           case 'I' :
             _cimg_mp_op("Variable 'I'");
             if (reserved_label['I']!=~0U) _cimg_mp_return(reserved_label['I']);
-            _cimg_mp_check_vector0(imgin._spectrum);
+            if (!imgin._spectrum) _cimg_mp_return(0);
             need_input_copy = true;
             pos = vector(imgin._spectrum);
             CImg<ulongT>::vector((ulongT)mp_Joff,pos,0,0,imgin._spectrum).move_to(code);
@@ -16503,7 +16502,7 @@ namespace cimg_library_suffixed {
                     p3 = (unsigned int)cimg::mod((int)mem[p1],listin.width());
                     p2 = listin[p3]._spectrum;
                   }
-                  _cimg_mp_check_vector0(p2);
+                  if (!p2) _cimg_mp_return(0);
                 } else p2 = 0;
                 _cimg_mp_check_type(arg2,2,*ss>='i'?1:3,p2);
 
@@ -16589,7 +16588,7 @@ namespace cimg_library_suffixed {
                     p3 = (unsigned int)cimg::mod((int)mem[p1],listin.width());
                     p2 = listin[p3]._spectrum;
                   }
-                  _cimg_mp_check_vector0(p2);
+                  if (!p2) _cimg_mp_return(0);
                 } else p2 = 0;
                 _cimg_mp_check_type(arg5,2,*ss>='i'?1:3,p2);
 
@@ -17948,7 +17947,7 @@ namespace cimg_library_suffixed {
               p3 = (unsigned int)cimg::mod((int)mem[p1],listin.width());
               p2 = listin[p3]._spectrum;
             }
-            _cimg_mp_check_vector0(p2);
+            if (!p2) _cimg_mp_return(0);
             pos = vector(p2);
             if (p1!=~0U) {
               CImg<ulongT>::vector((ulongT)(is_relative?mp_list_Joff:mp_list_Ioff),
@@ -18116,7 +18115,7 @@ namespace cimg_library_suffixed {
               p3 = (unsigned int)cimg::mod((int)mem[p1],listin.width());
               p2 = listin[p3]._spectrum;
             }
-            _cimg_mp_check_vector0(p2);
+            if (!p2) _cimg_mp_return(0);
             pos = vector(p2);
             if (p1!=~0U)
               CImg<ulongT>::vector((ulongT)(is_relative?mp_list_Jxyz:mp_list_Ixyz),
@@ -18526,7 +18525,7 @@ namespace cimg_library_suffixed {
               } else { p1 = ~0U; s0 = ss5; need_input_copy = true; }
               pos = 0;
               is_sth = false; // Coordinates specified as a vector?
-              if (ss5<se1) for (s = s0; s<se; ++s, ++pos) {
+              if (s0<se1) for (s = s0; s<se; ++s, ++pos) {
                 ns = s; while (ns<se && (*ns!=',' || level[ns - expr._data]!=clevel1) &&
                                (*ns!=')' || level[ns - expr._data]!=clevel)) ++ns;
                 arg1 = compile(s,ns,depth1,0,is_single);
@@ -18550,39 +18549,39 @@ namespace cimg_library_suffixed {
                 break;
               case 2 :
                 CImg<ulongT>::vector(*opcode,0,0,0,opcode[1],~0U,~0U,~0U,_cimg_mp_boundary).move_to(opcode);
-                arg1 = arg2?3:2;
+                arg1 = arg2 + 2;
                 break;
               case 3 :
                 CImg<ulongT>::vector(*opcode,0,0,0,opcode[1],~0U,~0U,~0U,opcode[2]).move_to(opcode);
-                arg1 = arg2?3:2;
+                arg1 = arg2 + 2;
                 break;
               case 4 :
                 CImg<ulongT>::vector(*opcode,opcode[1],0,0,opcode[2],opcode[3],~0U,~0U,_cimg_mp_boundary).
                   move_to(opcode);
-                arg1 = (is_sth?2:1) + arg2;
+                arg1 = arg2 + (is_sth?2:3);
                 break;
               case 5 :
                 CImg<ulongT>::vector(*opcode,opcode[1],0,0,opcode[2],opcode[3],~0U,~0U,opcode[4]).
                   move_to(opcode);
-                arg1 = (is_sth?2:1) + arg2;
+                arg1 = arg2 + (is_sth?2:3);
                 break;
               case 6 :
                 CImg<ulongT>::vector(*opcode,opcode[1],opcode[2],0,opcode[3],opcode[4],opcode[5],~0U,
                                     _cimg_mp_boundary).move_to(opcode);
-                arg1 = (is_sth?2:4) + arg2;
+                arg1 = arg2 + (is_sth?2:4);
                 break;
               case 7 :
                 CImg<ulongT>::vector(*opcode,opcode[1],opcode[2],0,opcode[3],opcode[4],opcode[5],~0U,
                                     opcode[6]).move_to(opcode);
-                arg1 = (is_sth?2:4) + arg2;
+                arg1 = arg2 + (is_sth?2:4);
                 break;
               case 8 :
                 CImg<ulongT>::vector(*opcode,opcode[1],opcode[2],opcode[3],opcode[4],opcode[5],opcode[6],
                                     opcode[7],_cimg_mp_boundary).move_to(opcode);
-                arg1 = (is_sth?2:5) + arg2;
+                arg1 = arg2 + (is_sth?2:5);
                 break;
               case 9 :
-                arg1 = (is_sth?2:5) + arg2;
+                arg1 = arg2 + (is_sth?2:5);
                 break;
               default : // Error -> too much arguments
                 *se = saved_char;
@@ -20124,7 +20123,7 @@ namespace cimg_library_suffixed {
                   s = ns;
                 }
               if (arg1==~0U) arg1 = arg2;
-              _cimg_mp_check_vector0(arg1);
+              if (!arg1) _cimg_mp_return(0);
               pos = vector(arg1);
               l_opcode.insert(CImg<ulongT>::vector((ulongT)mp_vector_init,pos,0,arg1),0);
               (l_opcode>'y').move_to(opcode);
@@ -20446,7 +20445,7 @@ namespace cimg_library_suffixed {
                 } else { CImg<ulongT>::vector(arg2).move_to(l_opcode); ++arg1; }
                 s = ns;
               }
-            _cimg_mp_check_vector0(arg1);
+            if (!arg1) _cimg_mp_return(0);
             pos = vector(arg1);
             l_opcode.insert(CImg<ulongT>::vector((ulongT)mp_vector_init,pos,0,arg1),0);
             (l_opcode>'y').move_to(opcode);
@@ -20487,7 +20486,7 @@ namespace cimg_library_suffixed {
                              0,_cimg_mp_boundary);
           case 'I' : // I#ind
             p2 = p1!=~0U?listin[p1]._spectrum:listin._width?~0U:0;
-            _cimg_mp_check_vector0(p2);
+            if (!p2) _cimg_mp_return(0);
             pos = vector(p2);
             CImg<ulongT>::vector((ulongT)mp_list_Joff,pos,p1,0,0,p2).move_to(code);
             _cimg_mp_return(pos);
@@ -21077,31 +21076,6 @@ namespace cimg_library_suffixed {
           cimg::strellipsize(s0,64);
           throw CImgArgumentException("[" cimg_appname "_math_parser] "
                                       "CImg<%s>::%s: %s%s Invalid call with an empty image list, "
-                                      "in expression '%s%s%s'.",
-                                      pixel_type(),_cimg_mp_calling_function,s_op,*s_op?":":"",
-                                      s0!=expr._data?"...":"",s0,se<&expr.back()?"...":"");
-        }
-      }
-
-      // Check a vector is not 0-dimensional, or with unknown dimension at compile time.
-      void check_vector0(const unsigned int dim,
-                         char *const ss, char *const se, const char saved_char) {
-        char *s0 = 0;
-        if (!dim) {
-          *se = saved_char;
-          s0 = ss - 4>expr._data?ss - 4:expr._data;
-          cimg::strellipsize(s0,64);
-          throw CImgArgumentException("[" cimg_appname "_math_parser] "
-                                      "CImg<%s>::%s: %s%s Invalid construction of a 0-dimensional vector, "
-                                      "in expression '%s%s%s'.",
-                                      pixel_type(),_cimg_mp_calling_function,s_op,*s_op?":":"",
-                                      s0!=expr._data?"...":"",s0,se<&expr.back()?"...":"");
-        } else if (dim==~0U) {
-          *se = saved_char;
-          s0 = ss - 4>expr._data?ss - 4:expr._data;
-          cimg::strellipsize(s0,64);
-          throw CImgArgumentException("[" cimg_appname "_math_parser] "
-                                      "CImg<%s>::%s: %s%s Invalid construction of a vector with possible dynamic size, "
                                       "in expression '%s%s%s'.",
                                       pixel_type(),_cimg_mp_calling_function,s_op,*s_op?":":"",
                                       s0!=expr._data?"...":"",s0,se<&expr.back()?"...":"");
@@ -24830,7 +24804,7 @@ namespace cimg_library_suffixed {
        Similar to operator+=(const char*), except it performs a pointwise exponentiation instead of an addition.
     **/
     CImg<T>& pow(const char *const expression) {
-      return pow((+*this)._fill(expression,true,true,0,0,"pow",this));
+      return pow((+*this)._fill(expression,true,1,0,0,"pow",this));
     }
 
     //! Raise each pixel value to a power, specified from an expression \newinstance.
@@ -24883,7 +24857,7 @@ namespace cimg_library_suffixed {
        Similar to operator<<=(const char*), except that it performs a left rotation instead of a left shift.
     **/
     CImg<T>& rol(const char *const expression) {
-      return rol((+*this)._fill(expression,true,true,0,0,"rol",this));
+      return rol((+*this)._fill(expression,true,1,0,0,"rol",this));
     }
 
     //! Compute the bitwise left rotation of each pixel value \newinstance.
@@ -24936,7 +24910,7 @@ namespace cimg_library_suffixed {
        Similar to operator>>=(const char*), except that it performs a right rotation instead of a right shift.
     **/
     CImg<T>& ror(const char *const expression) {
-      return ror((+*this)._fill(expression,true,true,0,0,"ror",this));
+      return ror((+*this)._fill(expression,true,1,0,0,"ror",this));
     }
 
     //! Compute the bitwise right rotation of each pixel value \newinstance.
@@ -25019,7 +24993,7 @@ namespace cimg_library_suffixed {
        \f$\mathrm{min}(I_{(x,y,z,c)},\mathrm{expr}_{(x,y,z,c)})\f$.
     **/
     CImg<T>& min(const char *const expression) {
-      return min((+*this)._fill(expression,true,true,0,0,"min",this));
+      return min((+*this)._fill(expression,true,1,0,0,"min",this));
     }
 
     //! Pointwise min operator between an image and an expression \newinstance.
@@ -25078,7 +25052,7 @@ namespace cimg_library_suffixed {
        \f$\mathrm{max}(I_{(x,y,z,c)},\mathrm{expr}_{(x,y,z,c)})\f$.
     **/
     CImg<T>& max(const char *const expression) {
-      return max((+*this)._fill(expression,true,true,0,0,"max",this));
+      return max((+*this)._fill(expression,true,1,0,0,"max",this));
     }
 
     //! Pointwise max operator between an image and an expression \newinstance.
@@ -27742,10 +27716,12 @@ namespace cimg_library_suffixed {
     **/
     CImg<T>& fill(const char *const expression, const bool repeat_values, const bool allow_formula=true,
                   const CImgList<T> *const list_inputs=0, CImgList<T> *const list_outputs=0) {
-      return _fill(expression,repeat_values,allow_formula,list_inputs,list_outputs,"fill",0);
+      return _fill(expression,repeat_values,allow_formula?1:0,list_inputs,list_outputs,"fill",0);
     }
 
-    CImg<T>& _fill(const char *const expression, const bool repeat_values, bool allow_formula,
+    // 'formula_mode' = { 0 = does not allow formula | 1 = allow formula |
+    //                    2 = allow formula but do not fill image values }.
+    CImg<T>& _fill(const char *const expression, const bool repeat_values, const unsigned int formula_mode,
                    const CImgList<T> *const list_inputs, CImgList<T> *const list_outputs,
                    const char *const calling_function, const CImg<T> *provides_copy) {
       if (is_empty() || !expression || !*expression) return *this;
@@ -27755,7 +27731,7 @@ namespace cimg_library_suffixed {
       bool is_value_sequence = false;
       cimg_abort_init;
 
-      if (allow_formula) {
+      if (formula_mode) {
 
         // Try to pre-detect regular value sequence to avoid exception thrown by _cimg_math_parser.
         double value;
@@ -27791,21 +27767,23 @@ namespace cimg_library_suffixed {
                 CImg<doubleT> res(1,mp.result_dim);
                 cimg_rofYZ(*this,y,z) {
                   cimg_abort_test;
-                  cimg_rofX(*this,x) {
-                    mp(x,y,z,0,res._data);
-                    const double *ptrs = res._data;
-                    T *_ptrd = ptrd--; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
-                  }
+                  if (formula_mode==2) cimg_rofX(*this,x) mp(x,y,z,0);
+                  else cimg_rofX(*this,x) {
+                      mp(x,y,z,0,res._data);
+                      const double *ptrs = res._data;
+                      T *_ptrd = ptrd--; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
+                    }
                 }
               } else if (*expression=='>' || !do_in_parallel) {
                 CImg<doubleT> res(1,mp.result_dim);
                 cimg_forYZ(*this,y,z) {
                   cimg_abort_test;
-                  cimg_forX(*this,x) {
-                    mp(x,y,z,0,res._data);
-                    const double *ptrs = res._data;
-                    T *_ptrd = ptrd++; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
-                  }
+                  if (formula_mode==2) cimg_forX(*this,x) mp(x,y,z,0);
+                  else cimg_forX(*this,x) {
+                      mp(x,y,z,0,res._data);
+                      const double *ptrs = res._data;
+                      T *_ptrd = ptrd++; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
+                    }
                 }
              } else {
 #ifdef cimg_use_openmp
@@ -27818,12 +27796,15 @@ namespace cimg_library_suffixed {
                   cimg_pragma_openmp(for collapse(2))
                     cimg_forYZ(*this,y,z) _cimg_abort_try_omp {
                     cimg_abort_test;
-                    CImg<doubleT> res(1,lmp.result_dim);
-                    T *ptrd = data(0,y,z,0);
-                    cimg_forX(*this,x) {
-                      lmp(x,y,z,0,res._data);
-                      const double *ptrs = res._data;
-                      T *_ptrd = ptrd++; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
+                    if (formula_mode==2) cimg_forX(*this,x) lmp(x,y,z,0);
+                    else {
+                      CImg<doubleT> res(1,lmp.result_dim);
+                      T *ptrd = data(0,y,z,0);
+                      cimg_forX(*this,x) {
+                        lmp(x,y,z,0,res._data);
+                        const double *ptrs = res._data;
+                        T *_ptrd = ptrd++; for (unsigned int n = N; n>0; --n) { *_ptrd = (T)(*ptrs++); _ptrd+=whd; }
+                      }
                     }
                   } _cimg_abort_catch_omp _cimg_abort_catch_fill_omp
                 }
@@ -27832,11 +27813,13 @@ namespace cimg_library_suffixed {
 
             } else { // Scalar-valued expression
               T *ptrd = *expression=='<'?end() - 1:_data;
-              if (*expression=='<')
-                cimg_rofYZC(*this,y,z,c) { cimg_abort_test; cimg_rofX(*this,x) *(ptrd--) = (T)mp(x,y,z,c); }
-              else if (*expression=='>' || !do_in_parallel)
-                cimg_forYZC(*this,y,z,c) { cimg_abort_test; cimg_forX(*this,x) *(ptrd++) = (T)mp(x,y,z,c); }
-              else {
+              if (*expression=='<') {
+                if (formula_mode==2) cimg_rofYZC(*this,y,z,c) { cimg_abort_test; cimg_rofX(*this,x) mp(x,y,z,c); }
+                else cimg_rofYZC(*this,y,z,c) { cimg_abort_test; cimg_rofX(*this,x) *(ptrd--) = (T)mp(x,y,z,c); }
+              } else if (*expression=='>' || !do_in_parallel) {
+                if (formula_mode==2) cimg_forYZC(*this,y,z,c) { cimg_abort_test; cimg_forX(*this,x) mp(x,y,z,c); }
+                else cimg_forYZC(*this,y,z,c) { cimg_abort_test; cimg_forX(*this,x) *(ptrd++) = (T)mp(x,y,z,c); }
+              } else {
 #ifdef cimg_use_openmp
                 cimg_pragma_openmp(parallel)
                 {
@@ -27847,8 +27830,11 @@ namespace cimg_library_suffixed {
                   cimg_pragma_openmp(for collapse(3))
                     cimg_forYZC(*this,y,z,c) _cimg_abort_try_omp {
                     cimg_abort_test;
-                    T *ptrd = data(0,y,z,c);
-                    cimg_forX(*this,x) *ptrd++ = (T)lmp(x,y,z,c);
+                    if (formula_mode==2) cimg_forX(*this,x) lmp(x,y,z,c);
+                    else {
+                      T *ptrd = data(0,y,z,c);
+                      cimg_forX(*this,x) *ptrd++ = (T)lmp(x,y,z,c);
+                    }
                   } _cimg_abort_catch_omp _cimg_abort_catch_fill_omp
                 }
 #endif
@@ -27859,7 +27845,7 @@ namespace cimg_library_suffixed {
       }
 
       // Try to fill values according to a value sequence.
-      if (!allow_formula || is_value_sequence || is_error) {
+      if (!formula_mode || is_value_sequence || is_error) {
         CImg<charT> item(256);
         char sep = 0;
         const char *nexpression = expression;
@@ -27893,7 +27879,7 @@ namespace cimg_library_suffixed {
     //! Fill sequentially pixel values according to a given expression \newinstance.
     CImg<T> get_fill(const char *const expression, const bool repeat_values, const bool allow_formula=true,
                      const CImgList<T> *const list_inputs=0, CImgList<T> *const list_outputs=0) const {
-      return (+*this).fill(expression,repeat_values,allow_formula,list_inputs,list_outputs);
+      return (+*this).fill(expression,repeat_values,allow_formula?1:0,list_inputs,list_outputs);
     }
 
     //! Fill sequentially pixel values according to the values found in another image.
@@ -36712,8 +36698,8 @@ namespace cimg_library_suffixed {
     /**
        \param sigma_s Amount of blur along the XYZ-axes.
        \param sigma_p Amount of blur along the value axis.
-       \param patch_size Size of the patchs.
-       \param lookup_size Size of the window to search similar patchs.
+       \param patch_size Size of the patches.
+       \param lookup_size Size of the window to search similar patches.
        \param smoothness Smoothness for the patch comparison.
        \param is_fast_approx Tells if a fast approximation of the gaussian function is used or not.
     **/
@@ -37970,7 +37956,7 @@ namespace cimg_library_suffixed {
       return U;
     }
 
-    //! Compute correspondence map between two images, using the patch-match algorithm.
+    //! Compute correspondence map between two images, using a patch-matching algorithm.
     /**
         \param patch_image The image containing the reference patches to match with the instance image.
         \param patch_width Width of the patch used for matching.
@@ -37978,120 +37964,97 @@ namespace cimg_library_suffixed {
         \param patch_depth Depth of the patch used for matching.
         \param nb_iterations Number of patch-match iterations.
         \param nb_randoms Number of randomization attempts (per pixel).
+        \param occ_penalization Penalization factor in score related patch occurences.
         \param guide Image used as the initial correspondence estimate for the algorithm.
           'guide' may have a last channel with boolean values (0=false | other=true) that
           tells for each pixel if its correspondence vector is constrained to its initial value (constraint mask).
         \param[out] matching_score Returned as the image of matching scores.
-        \note
-        The patch-match algorithm is described in this paper:
-        Connelly Barnes, Eli Shechtman, Adam Finkelstein, Dan B Goldman(2009),
-        PatchMatch: A Randomized Correspondence Algorithm for Structural Image Editing
     **/
     template<typename t1, typename t2>
-    CImg<T>& patchmatch(const CImg<T>& patch_image,
+    CImg<T>& matchpatch(const CImg<T>& patch_image,
                         const unsigned int patch_width,
                         const unsigned int patch_height,
                         const unsigned int patch_depth,
                         const unsigned int nb_iterations,
                         const unsigned int nb_randoms,
+                        const float occ_penalization,
                         const CImg<t1> &guide,
                         CImg<t2> &matching_score) {
-      return get_patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                            nb_iterations,nb_randoms,guide,matching_score).move_to(*this);
+      return get_matchpatch(patch_image,patch_width,patch_height,patch_depth,
+                            nb_iterations,nb_randoms,occ_penalization,guide,matching_score).move_to(*this);
     }
 
     //! Compute correspondence map between two images, using the patch-match algorithm \newinstance.
     template<typename t1, typename t2>
-    CImg<intT> get_patchmatch(const CImg<T>& patch_image,
+    CImg<intT> get_matchpatch(const CImg<T>& patch_image,
                               const unsigned int patch_width,
                               const unsigned int patch_height,
                               const unsigned int patch_depth,
                               const unsigned int nb_iterations,
                               const unsigned int nb_randoms,
+                              const float occ_penalization,
                               const CImg<t1> &guide,
                               CImg<t2> &matching_score) const {
-      return _patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                         nb_iterations,nb_randoms,
+      return _matchpatch(patch_image,patch_width,patch_height,patch_depth,
+                         nb_iterations,nb_randoms,occ_penalization,
                          guide,true,matching_score);
     }
 
     //! Compute correspondence map between two images, using the patch-match algorithm \overloading.
     template<typename t>
-    CImg<T>& patchmatch(const CImg<T>& patch_image,
+    CImg<T>& matchpatch(const CImg<T>& patch_image,
                         const unsigned int patch_width,
                         const unsigned int patch_height,
                         const unsigned int patch_depth,
-                        const unsigned int nb_iterations,
-                        const unsigned int nb_randoms,
-                        const CImg<t> &guide) {
-      return get_patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                            nb_iterations,nb_randoms,guide).move_to(*this);
+                        const unsigned int nb_iterations=5,
+                        const unsigned int nb_randoms=5,
+                        const float occ_penalization=0,
+                        const CImg<t> &guide=CImg<t>::const_empty()) {
+      return get_matchpatch(patch_image,patch_width,patch_height,patch_depth,
+                            nb_iterations,nb_randoms,occ_penalization,guide).move_to(*this);
     }
 
     //! Compute correspondence map between two images, using the patch-match algorithm \overloading.
     template<typename t>
-    CImg<intT> get_patchmatch(const CImg<T>& patch_image,
+    CImg<intT> get_matchpatch(const CImg<T>& patch_image,
                               const unsigned int patch_width,
                               const unsigned int patch_height,
                               const unsigned int patch_depth,
-                              const unsigned int nb_iterations,
-                              const unsigned int nb_randoms,
-                              const CImg<t> &guide) const {
-      return _patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                         nb_iterations,nb_randoms,
-                         guide,false,CImg<T>::empty());
-    }
-
-    //! Compute correspondence map between two images, using the patch-match algorithm \overloading.
-    CImg<T>& patchmatch(const CImg<T>& patch_image,
-                        const unsigned int patch_width,
-                        const unsigned int patch_height,
-                        const unsigned int patch_depth=1,
-                        const unsigned int nb_iterations=5,
-                        const unsigned int nb_randoms=5) {
-      return get_patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                            nb_iterations,nb_randoms).move_to(*this);
-    }
-
-    //! Compute correspondence map between two images, using the patch-match algorithm \overloading.
-    CImg<intT> get_patchmatch(const CImg<T>& patch_image,
-                              const unsigned int patch_width,
-                              const unsigned int patch_height,
-                              const unsigned int patch_depth=1,
                               const unsigned int nb_iterations=5,
-                              const unsigned int nb_randoms=5) const {
-      return _patchmatch(patch_image,patch_width,patch_height,patch_depth,
-                         nb_iterations,nb_randoms,
-                         CImg<T>::const_empty(),
-                         false,CImg<T>::empty());
+                              const unsigned int nb_randoms=5,
+                              const float occ_penalization=0,
+                              const CImg<t> &guide=CImg<t>::const_empty()) const {
+      return _matchpatch(patch_image,patch_width,patch_height,patch_depth,
+                         nb_iterations,nb_randoms,guide,occ_penalization,false,CImg<T>::empty());
     }
 
     template<typename t1, typename t2>
-    CImg<intT> _patchmatch(const CImg<T>& patch_image,
+    CImg<intT> _matchpatch(const CImg<T>& patch_image,
                            const unsigned int patch_width,
                            const unsigned int patch_height,
                            const unsigned int patch_depth,
                            const unsigned int nb_iterations,
                            const unsigned int nb_randoms,
+                           const float occ_penalization,
                            const CImg<t1> &guide,
                            const bool is_matching_score,
                            CImg<t2> &matching_score) const {
       if (is_empty()) return CImg<intT>::const_empty();
       if (patch_image._spectrum!=_spectrum)
         throw CImgArgumentException(_cimg_instance
-                                    "patchmatch(): Instance image and specified patch image (%u,%u,%u,%u,%p) "
+                                    "matchpatch(): Instance image and specified patch image (%u,%u,%u,%u,%p) "
                                     "have different spectrums.",
                                     cimg_instance,
                                     patch_image._width,patch_image._height,patch_image._depth,patch_image._spectrum,
                                     patch_image._data);
       if (patch_width>_width || patch_height>_height || patch_depth>_depth)
         throw CImgArgumentException(_cimg_instance
-                                    "patchmatch(): Specified patch size %ux%ux%u is bigger than the dimensions "
+                                    "matchpatch(): Specified patch size %ux%ux%u is bigger than the dimensions "
                                     "of the instance image.",
                                     cimg_instance,patch_width,patch_height,patch_depth);
       if (patch_width>patch_image._width || patch_height>patch_image._height || patch_depth>patch_image._depth)
         throw CImgArgumentException(_cimg_instance
-                                    "patchmatch(): Specified patch size %ux%ux%u is bigger than the dimensions "
+                                    "matchpatch(): Specified patch size %ux%ux%u is bigger than the dimensions "
                                     "of the patch image image (%u,%u,%u,%u,%p).",
                                     cimg_instance,patch_width,patch_height,patch_depth,
                                     patch_image._width,patch_image._height,patch_image._depth,patch_image._spectrum,
@@ -38103,8 +38066,8 @@ namespace cimg_library_suffixed {
       if (guide &&
           (guide._width!=_width || guide._height!=_height || guide._depth!=_depth || guide._spectrum<_constraint))
         throw CImgArgumentException(_cimg_instance
-                                    "patchmatch(): Specified guide (%u,%u,%u,%u,%p) has invalid dimensions "
-                                    "considering instance and patch image image (%u,%u,%u,%u,%p).",
+                                    "matchpatch(): Specified guide (%u,%u,%u,%u,%p) has invalid dimensions "
+                                    "considering instance and patch image (%u,%u,%u,%u,%p).",
                                     cimg_instance,
                                     guide._width,guide._height,guide._depth,guide._spectrum,guide._data,
                                     patch_image._width,patch_image._height,patch_image._depth,patch_image._spectrum,
@@ -38112,273 +38075,333 @@ namespace cimg_library_suffixed {
 
       CImg<intT> map(_width,_height,_depth,patch_image._depth>1?3:2);
       CImg<floatT> score(_width,_height,_depth);
+      CImg<uintT> occ, loop_order;
+      if (occ_penalization!=0) {
+        occ.assign(patch_image._width,patch_image._height,patch_image._depth,1,0);
+        loop_order.assign(_width,_height,_depth,_depth>1?3:2);
+        cimg_forXYZ(loop_order,x,y,z) {
+          loop_order(x,y,z,0) = x;
+          loop_order(x,y,z,1) = y;
+          if (loop_order._spectrum>2) loop_order(x,y,z,2) = z;
+        }
+        cimg_forXYZ(loop_order,x,y,z) { // Randomize loop order in case of constraints on patch occurence
+          const unsigned int
+            X = (unsigned int)cimg::round(cimg::rand(loop_order._width - 1.0)),
+            Y = (unsigned int)cimg::round(cimg::rand(loop_order._height - 1.0)),
+            Z = loop_order._depth>1?(unsigned int)cimg::round(cimg::rand(loop_order._depth  - 1.0)):0U;
+          cimg::swap(loop_order(x,y,z,0),loop_order(X,Y,Z,0));
+          cimg::swap(loop_order(x,y,z,1),loop_order(X,Y,Z,1));
+          if (loop_order._spectrum>2) cimg::swap(loop_order(x,y,z,2),loop_order(X,Y,Z,2));
+        }
+      }
       const int
-        psizew = (int)patch_width, psizew1 = psizew/2, psizew2 = psizew - psizew1 - 1,
+        psizew = (int)patch_width,  psizew1 = psizew/2, psizew2 = psizew - psizew1 - 1,
         psizeh = (int)patch_height, psizeh1 = psizeh/2, psizeh2 = psizeh - psizeh1 - 1,
-        psized = (int)patch_depth, psized1 = psized/2, psized2 = psized - psized1 - 1;
+        psized = (int)patch_depth,  psized1 = psized/2, psized2 = psized - psized1 - 1;
 
       if (_depth>1 || patch_image._depth>1) { // 3D version
 
         // Initialize correspondence map.
         if (guide) cimg_forXYZ(*this,x,y,z) { // User-defined initialization
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
               cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
-              cz1 = z<=psized1?z:(z<depth() - psized2?psized1:psized + z - depth()), cz2 = psized - cz1 - 1,
-              u = std::min(std::max((int)guide(x,y,z,0),cx1),patch_image.width() - 1 - cx2),
-              v = std::min(std::max((int)guide(x,y,z,1),cy1),patch_image.height() - 1 - cy2),
-              w = std::min(std::max((int)guide(x,y,z,2),cz1),patch_image.depth() - 1 - cz2);
+              cz1 = z<=psized1?z:(z<depth()  - psized2?psized1:psized + z - depth()),  cz2 = psized - cz1 - 1,
+              u = cimg::cut((int)guide(x,y,z,0),cx1,patch_image.width() - 1 - cx2),
+              v = cimg::cut((int)guide(x,y,z,1),cy1,patch_image.height() - 1 - cy2),
+              w = cimg::cut((int)guide(x,y,z,2),cz1,patch_image.depth() - 1 - cz2);
             map(x,y,z,0) = u;
             map(x,y,z,1) = v;
             map(x,y,z,2) = w;
-            score(x,y,z) = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
+            score(x,y,z) = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
                                        x - cx1,y - cy1,z - cz1,
-                                       u - cx1,v - cy1,w - cz1,cimg::type<float>::inf());
+                                       u - cx1,v - cy1,w - cz1,
+                                       u,v,w,0,cimg::type<float>::inf());
           } else cimg_forXYZ(*this,x,y,z) { // Random initialization
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
               cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
-              cz1 = z<=psized1?z:(z<depth() - psized2?psized1:psized + z - depth()), cz2 = psized - cz1 - 1,
+              cz1 = z<=psized1?z:(z<depth()  - psized2?psized1:psized + z - depth()),  cz2 = psized - cz1 - 1,
               u = (int)cimg::round(cimg::rand(cx1,patch_image.width() - 1 - cx2)),
               v = (int)cimg::round(cimg::rand(cy1,patch_image.height() - 1 - cy2)),
               w = (int)cimg::round(cimg::rand(cz1,patch_image.depth() - 1 - cz2));
             map(x,y,z,0) = u;
             map(x,y,z,1) = v;
             map(x,y,z,2) = w;
-            score(x,y,z) = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
+            score(x,y,z) = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
                                        x - cx1,y - cy1,z - cz1,
-                                       u - cx1,v - cy1,w - cz1,cimg::type<float>::inf());
+                                       u - cx1,v - cy1,w - cz1,
+                                       u,v,w,0,cimg::type<float>::inf());
           }
 
         // Start iteration loop.
         cimg_abort_init;
         for (unsigned int iter = 0; iter<nb_iterations; ++iter) {
           cimg_abort_test;
-          const bool is_even = !(iter%2);
+          const bool is_odd = iter%2;
+          occ.fill(0);
 
           cimg_pragma_openmp(parallel for collapse(2) cimg_openmp_if(_width>64 && iter<nb_iterations-2))
           cimg_forXYZ(*this,X,Y,Z) {
             const int
-              x = is_even?X:width() - 1 - X,
-              y = is_even?Y:height() - 1 - Y,
-              z = is_even?Z:depth() - 1 - Z;
+              _x = is_odd?width() - 1 - X:X,
+              _y = is_odd?height() - 1 - Y:Y,
+              _z = is_odd?depth() - 1 - Z:Z;
+            int x, y, z;
+            if (occ_penalization) {
+              x = loop_order(_x,_y,_z,0);
+              y = loop_order(_x,_y,_z,1);
+              if (loop_order._spectrum>2) z = loop_order(_x,_y,_z,2); else z = _z;
+            } else { x = _x; y = _y; z = _z; }
+
             if (score(x,y,z)<=1e-5 || (constraint && guide(x,y,z,constraint)!=0)) continue;
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
               cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
-              cz1 = z<=psized1?z:(z<depth() - psized2?psized1:psized + z - depth()), cz2 = psized - cz1 - 1,
+              cz1 = z<=psized1?z:(z<depth()  - psized2?psized1:psized + z - depth()),  cz2 = psized - cz1 - 1,
               xp = x - cx1,
               yp = y - cy1,
               zp = z - cz1;
 
+            int best_u = map(x,y,z,0), best_v = map(x,y,z,1), best_w = map(x,y,z,2), u, v, w;
+            const float best_score0 = score(x,y,z);
+            float best_score = best_score0, s;
+
             // Propagation.
-            if (is_even) {
-              if (x>0) { // Compare with left neighbor
-                const int u = map(x - 1,y,z,0), v = map(x - 1,y,z,1), w = map(x - 1,y,z,2);
-                if (u>=cx1 - 1 && u<patch_image.width() - 1 - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2 &&
-                    w>=cz1 && w<patch_image.depth() - cz2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u + 1 - cx1,v - cy1,w - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u + 1; map(x,y,z,1) = v; map(x,y,z,2) = w; }
-                }
+            if (x>0) { // Compare with left neighbor
+              u = map(x - 1,y,z,0);
+              v = map(x - 1,y,z,1);
+              w = map(x - 1,y,z,2);
+              if (u>=cx1 - 1 && u<patch_image.width() - 1 - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2 &&
+                  w>=cz1 && w<patch_image.depth() - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u + 1 - cx1,v - cy1,w - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u + 1; best_v = v; best_w = w; best_score = s; }
               }
-              if (y>0) { // Compare with up neighbor
-                const int u = map(x,y - 1,z,0), v = map(x,y - 1,z,1), w = map(x,y - 1,z,2);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 - 1 && v<patch_image.height() - 1 - cy2 &&
-                    w>=cz1 && w<patch_image.depth() - cx2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u - cx1,v + 1 - cy1,w - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u; map(x,y,z,1) = v + 1; map(x,y,z,2) = w; }
-                }
+            }
+            if (y>0) { // Compare with up neighbor
+              u = map(x,y - 1,z,0);
+              v = map(x,y - 1,z,1);
+              w = map(x,y - 1,z,2);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 - 1 && v<patch_image.height() - 1 - cy2 &&
+                  w>=cz1 && w<patch_image.depth() - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - cx1,v + 1 - cy1,w - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v + 1; best_w = w; best_score = s; }
               }
-              if (z>0) { // Compare with backward neighbor
-                const int u = map(x,y,z - 1,0), v = map(x,y,z - 1,1), w = map(x,y,z - 1,2);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2 &&
-                    w>=cz1 - 1 && w<patch_image.depth() - 1 - cz2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u - cx1,v - cy1,w + 1 - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u; map(x,y,z,1) = v; map(x,y,z,2) = w + 1; }
-                }
+            }
+            if (z>0) { // Compare with backward neighbor
+              u = map(x,y,z - 1,0);
+              v = map(x,y,z - 1,1);
+              w = map(x,y,z - 1,2);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2 &&
+                  w>=cz1 - 1 && w<patch_image.depth() - 1 - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - cx1,v - cy1,w + 1 - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v; best_w = w + 1; best_score = s; }
               }
-            } else {
-              if (x<width() - 1) { // Compare with right neighbor
-                const int u = map(x + 1,y,z,0), v = map(x + 1,y,z,1), w = map(x + 1,y,z,2);
-                if (u>=cx1 + 1 && u<patch_image.width() + 1 - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2 &&
-                    w>=cz1 && w<patch_image.depth() - cz2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u - 1 - cx1,v - cy1,w - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u - 1; map(x,y,z,1) = v; map(x,y,z,2) = w; }
-                }
+            }
+            if (x<width() - 1) { // Compare with right neighbor
+              u = map(x + 1,y,z,0);
+              v = map(x + 1,y,z,1);
+              w = map(x + 1,y,z,2);
+              if (u>=cx1 + 1 && u<patch_image.width() + 1 - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2 &&
+                  w>=cz1 && w<patch_image.depth() - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - 1 - cx1,v - cy1,w - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u - 1; best_v = v; best_w = w; best_score = s; }
               }
-              if (y<height() - 1) { // Compare with bottom neighbor
-                const int u = map(x,y + 1,z,0), v = map(x,y + 1,z,1), w = map(x,y + 1,z,2);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 + 1 && v<patch_image.height() + 1 - cy2 &&
-                    w>=cz1 && w<patch_image.depth() - cz2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u - cx1,v - 1 - cy1,w - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u; map(x,y,z,1) = v - 1; map(x,y,z,2) = w; }
-                }
+            }
+            if (y<height() - 1) { // Compare with bottom neighbor
+              u = map(x,y + 1,z,0);
+              v = map(x,y + 1,z,1);
+              w = map(x,y + 1,z,2);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 + 1 && v<patch_image.height() + 1 - cy2 &&
+                  w>=cz1 && w<patch_image.depth() - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - cx1,v - 1 - cy1,w - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v - 1; best_w = w; best_score = s; }
               }
-              if (z<depth() - 1) { // Compare with forward neighbor
-                const int u = map(x,y,z + 1,0), v = map(x,y,z + 1,1), w = map(x,y,z + 1,2);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2 &&
-                    w>=cz1 + 1 && w<patch_image.depth() + 1 - cz2) {
-                  const float
-                    current_score = score(x,y,z),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                    xp,yp,zp,u - cx1,v - cy1,w - 1 - cz1,current_score);
-                  if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = u; map(x,y,z,1) = v; map(x,y,z,2) = w - 1; }
-                }
+            }
+            if (z<depth() - 1) { // Compare with forward neighbor
+              u = map(x,y,z + 1,0);
+              v = map(x,y,z + 1,1);
+              w = map(x,y,z + 1,2);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2 &&
+                  w>=cz1 + 1 && w<patch_image.depth() + 1 - cz2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - cx1,v - cy1,w - 1 - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v; best_w = w - 1; best_score = s; }
               }
             }
 
             // Randomization.
-            const int u = map(x,y,z,0), v = map(x,y,z,1), w = map(x,y,z,2);
-            float dw = (float)patch_image.width(), dh = (float)patch_image.height(), dd = (float)patch_image.depth();
+            float
+              dw = (float)patch_image.width(),
+              dh = (float)patch_image.height(),
+              dd = (float)patch_image.depth();
             for (unsigned int i = 0; i<nb_randoms; ++i) {
-              const int
-                ui = (int)cimg::round(cimg::rand(std::max((float)cx1,u - dw),
-                                                 std::min(patch_image.width() - 1.0f - cx2,u + dw))),
-                vi = (int)cimg::round(cimg::rand(std::max((float)cy1,v - dh),
-                                                 std::min(patch_image.height() - 1.0f - cy2,v + dh))),
-                wi = (int)cimg::round(cimg::rand(std::max((float)cz1,w - dd),
-                                                 std::min(patch_image.depth() - 1.0f - cz2,w + dd)));
-              if (ui!=u || vi!=v || wi!=w) {
-                const float
-                  current_score = score(x,y,z),
-                  D = _patchmatch(*this,patch_image,patch_width,patch_height,patch_depth,
-                                  xp,yp,zp,ui - cx1,vi - cy1,wi - cz1,current_score);
-                if (D<current_score) { score(x,y,z) = D; map(x,y,z,0) = ui; map(x,y,z,1) = vi; map(x,y,z,2) = wi; }
+              u = (int)cimg::round(cimg::rand(std::max((float)cx1,best_u - dw),
+                                              std::min(patch_image.width() - 1.0f - cx2,best_u + dw)));
+              v = (int)cimg::round(cimg::rand(std::max((float)cy1,best_v - dh),
+                                              std::min(patch_image.height() - 1.0f - cy2,best_v + dh)));
+              w = (int)cimg::round(cimg::rand(std::max((float)cz1,best_w - dd),
+                                              std::min(patch_image.depth() - 1.0f - cz2,best_w + dd)));
+              if (u!=best_u || v!=best_v || w!=best_w) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,patch_depth,
+                                xp,yp,zp,u - cx1,v - cy1,w - cz1,
+                                u,v,w,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v; best_w = w; best_score = s; }
                 dw = std::max(5.0f,dw*0.5f); dh = std::max(5.0f,dh*0.5f); dd = std::max(5.0f,dd*0.5f);
               }
             }
+
+            if (best_score<best_score0) {
+              map(x,y,z,0) = best_u;
+              map(x,y,z,1) = best_v;
+              map(x,y,z,2) = best_w;
+              score(x,y,z) = best_score;
+            }
+            if (occ_penalization!=0) cimg_pragma_openmp(atomic) ++occ(best_u,best_v,best_w);
           }
         }
 
       } else { // 2D version
 
         // Initialize correspondence map.
-        if (guide) cimg_forXY(*this,x,y) { // Random initialization
+        if (guide) cimg_forXY(*this,x,y) { // User-defined initialization
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
-              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()) , cy2 = psizeh - cy1 - 1,
-              u = std::min(std::max((int)guide(x,y,0),cx1),patch_image.width() - 1 - cx2),
-              v = std::min(std::max((int)guide(x,y,1),cy1),patch_image.height() - 1 - cy2);
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
+              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
+              u = cimg::cut((int)guide(x,y,0),cx1,patch_image.width() - 1 - cx2),
+              v = cimg::cut((int)guide(x,y,1),cy1,patch_image.height() - 1 - cy2);
             map(x,y,0) = u;
             map(x,y,1) = v;
-            score(x,y) = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                     x - cx1,y - cy1,u - cx1,v - cy1,cimg::type<float>::inf());
+            score(x,y) = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                     x - cx1,y - cy1,u - cx1,v - cy1,
+                                     u,v,0,cimg::type<float>::inf());
           } else cimg_forXY(*this,x,y) { // Random initialization
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
-              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()) , cy2 = psizeh - cy1 - 1,
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
+              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
               u = (int)cimg::round(cimg::rand(cx1,patch_image.width() - 1 - cx2)),
               v = (int)cimg::round(cimg::rand(cy1,patch_image.height() - 1 - cy2));
             map(x,y,0) = u;
             map(x,y,1) = v;
-            score(x,y) = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                     x - cx1,y - cy1,u - cx1,v - cy1,cimg::type<float>::inf());
+            score(x,y) = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                     x - cx1,y - cy1,u - cx1,v - cy1,
+                                     u,v,0,cimg::type<float>::inf());
           }
 
         // Start iteration loop.
         for (unsigned int iter = 0; iter<nb_iterations; ++iter) {
-          const bool is_even = !(iter%2);
+          const bool is_odd = iter%2;
+          occ.fill(0);
 
           cimg_pragma_openmp(parallel for cimg_openmp_if(_width>64 && iter<nb_iterations-2))
           cimg_forXY(*this,X,Y) {
             const int
-              x = is_even?X:width() - 1 - X,
-              y = is_even?Y:height() - 1 - Y;
+              _x = is_odd?width() - 1 - X:X,
+              _y = is_odd?height() - 1 - Y:Y;
+            int x, y;
+            if (occ_penalization) {
+              x = loop_order(_x,_y,0);
+              y = loop_order(_x,_y,1);
+            } else { x = _x; y = _y; }
+
             if (score(x,y)<=1e-5 || (constraint && guide(x,y,constraint)!=0)) continue;
             const int
-              cx1 = x<=psizew1?x:(x<width() - psizew2?psizew1:psizew + x - width()), cx2 = psizew - cx1 - 1,
-              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()) , cy2 = psizeh - cy1 - 1,
+              cx1 = x<=psizew1?x:(x<width()  - psizew2?psizew1:psizew + x - width()),  cx2 = psizew - cx1 - 1,
+              cy1 = y<=psizeh1?y:(y<height() - psizeh2?psizeh1:psizeh + y - height()), cy2 = psizeh - cy1 - 1,
               xp = x - cx1,
               yp = y - cy1;
 
+            int best_u = map(x,y,0), best_v = map(x,y,1), u, v;
+            const float best_score0 = score(x,y);
+            float best_score = best_score0, s;
+
             // Propagation.
-            if (is_even) {
-              if (x>0) { // Compare with left neighbor
-                const int u = map(x - 1,y,0), v = map(x - 1,y,1);
-                if (u>=cx1 - 1 && u<patch_image.width() - 1 - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2) {
-                  const float
-                    current_score = score(x,y),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                    xp,yp,u + 1 - cx1,v - cy1,current_score);
-                  if (D<current_score) { score(x,y) = D; map(x,y,0) = u + 1; map(x,y,1) = v; }
-                }
+            if (x>0) { // Compare with left neighbor
+              u = map(x - 1,y,0);
+              v = map(x - 1,y,1);
+              if (u>=cx1 - 1 && u<patch_image.width() - 1 - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                xp,yp,u + 1 - cx1,v - cy1,
+                                u,v,occ_penalization,best_score);
+                if (s<best_score) { best_u = u + 1; best_v = v; best_score = s; }
               }
-              if (y>0) { // Compare with up neighbor
-                const int u = map(x,y - 1,0), v = map(x,y - 1,1);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 - 1 && v<patch_image.height() - 1 - cy2) {
-                  const float
-                    current_score = score(x,y),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                    xp,yp,u - cx1,v + 1 - cy1,current_score);
-                  if (D<current_score) { score(x,y) = D; map(x,y,0) = u; map(x,y,1) = v + 1; }
-                }
+            }
+            if (y>0) { // Compare with up neighbor
+              u = map(x,y - 1,0);
+              v = map(x,y - 1,1);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 - 1 && v<patch_image.height() - 1 - cy2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                xp,yp,u - cx1,v + 1 - cy1,
+                                u,v,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v + 1; best_score = s; }
               }
-            } else {
-              if (x<width() - 1) { // Compare with right neighbor
-                const int u = map(x + 1,y,0), v = map(x + 1,y,1);
-                if (u>=cx1 + 1 && u<patch_image.width() + 1 - cx2 &&
-                    v>=cy1 && v<patch_image.height() - cy2) {
-                  const float
-                    current_score = score(x,y),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                    xp,yp,u - 1 - cx1,v - cy1,current_score);
-                  if (D<current_score) { score(x,y) = D; map(x,y,0) = u - 1; map(x,y,1) = v; }
-                }
+            }
+            if (x<width() - 1) { // Compare with right neighbor
+              u = map(x + 1,y,0);
+              v = map(x + 1,y,1);
+              if (u>=cx1 + 1 && u<patch_image.width() + 1 - cx2 &&
+                  v>=cy1 && v<patch_image.height() - cy2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                xp,yp,u - 1 - cx1,v - cy1,
+                                u,v,occ_penalization,best_score);
+                if (s<best_score) { best_u = u - 1; best_v = v; best_score = s; }
               }
-              if (y<height() - 1) { // Compare with bottom neighbor
-                const int u = map(x,y + 1,0), v = map(x,y + 1,1);
-                if (u>=cx1 && u<patch_image.width() - cx2 &&
-                    v>=cy1 + 1 && v<patch_image.height() + 1 - cy2) {
-                  const float
-                    current_score = score(x,y),
-                    D = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                    xp,yp,u - cx1,v - 1 - cy1,current_score);
-                  if (D<current_score) { score(x,y) = D; map(x,y,0) = u; map(x,y,1) = v - 1; }
-                }
+            }
+            if (y<height() - 1) { // Compare with bottom neighbor
+              u = map(x,y + 1,0);
+              v = map(x,y + 1,1);
+              if (u>=cx1 && u<patch_image.width() - cx2 &&
+                  v>=cy1 + 1 && v<patch_image.height() + 1 - cy2) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                xp,yp,u - cx1,v - 1 - cy1,
+                                u,v,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v - 1; best_score = s; }
               }
             }
 
             // Randomization.
-            const int u = map(x,y,0), v = map(x,y,1);
-            float dw = (float)patch_image.width(), dh = (float)patch_image.height();
+            float
+              dw = (float)patch_image.width(),
+              dh = (float)patch_image.height();
             for (unsigned int i = 0; i<nb_randoms; ++i) {
-              const int
-                ui = (int)cimg::round(cimg::rand(std::max((float)cx1,u - dw),
-                                                 std::min(patch_image.width() - 1.0f - cx2,u + dw))),
-                vi = (int)cimg::round(cimg::rand(std::max((float)cy1,v - dh),
-                                                 std::min(patch_image.height() - 1.0f - cy2,v + dh)));
-              if (ui!=u || vi!=v) {
-                const float
-                  current_score = score(x,y),
-                  D = _patchmatch(*this,patch_image,patch_width,patch_height,
-                                  xp,yp,ui - cx1,vi - cy1,current_score);
-                if (D<current_score) { score(x,y) = D; map(x,y,0) = ui; map(x,y,1) = vi; }
+              u = (int)cimg::round(cimg::rand(std::max((float)cx1,best_u - dw),
+                                              std::min(patch_image.width() - 1.0f - cx2,best_u + dw)));
+              v = (int)cimg::round(cimg::rand(std::max((float)cy1,best_v - dh),
+                                              std::min(patch_image.height() - 1.0f - cy2,best_v + dh)));
+              if (u!=best_u || v!=best_v) {
+                s = _matchpatch(*this,patch_image,occ,patch_width,patch_height,
+                                xp,yp,u - cx1,v - cy1,
+                                u,v,occ_penalization,best_score);
+                if (s<best_score) { best_u = u; best_v = v; best_score = s; }
                 dw = std::max(5.0f,dw*0.5f); dh = std::max(5.0f,dh*0.5f);
               }
             }
+
+            if (best_score<best_score0) {
+              map(x,y,0) = best_u;
+              map(x,y,1) = best_v;
+              score(x,y) = best_score;
+            }
+            if (occ_penalization!=0) cimg_pragma_openmp(atomic) ++occ(best_u,best_v);
           }
         }
       }
@@ -38387,59 +38410,61 @@ namespace cimg_library_suffixed {
     }
 
     // Compute SSD between two patches in different images.
-    static float _patchmatch(const CImg<T>& img1, const CImg<T>& img2,
-                             const unsigned int psizew, const unsigned int psizeh,
-                             const int x1, const int y1,
-                             const int x2, const int y2,
-                             const float max_ssd) { // 2D version
-      const T *p1 = img1.data(x1,y1), *p2 = img2.data(x2,y2);
-      const ulongT
-        offx1 = (ulongT)img1._width - psizew,
-        offx2 = (ulongT)img2._width - psizew,
-        offy1 = (ulongT)img1._width*img1._height - psizeh*img1._width,
-        offy2 = (ulongT)img2._width*img2._height - psizeh*img2._width;
-      float ssd = 0;
-      cimg_forC(img1,c) {
-        for (unsigned int j = 0; j<psizeh; ++j) {
-          for (unsigned int i = 0; i<psizew; ++i)
-            ssd += cimg::sqr(*(p1++) - *(p2++));
-          if (ssd>max_ssd) return max_ssd;
-          p1+=offx1; p2+=offx2;
-        }
-        p1+=offy1; p2+=offy2;
-      }
-      return ssd;
-    }
-
-    static float _patchmatch(const CImg<T>& img1, const CImg<T>& img2,
+    static float _matchpatch(const CImg<T>& img1, const CImg<T>& img2, const CImg<uintT>& occ,
                              const unsigned int psizew, const unsigned int psizeh, const unsigned int psized,
                              const int x1, const int y1, const int z1,
                              const int x2, const int y2, const int z2,
-                             const float max_ssd) { // 3D version
+                             const int xc, const int yc, const int zc,
+                             const float occ_penalization,
+                             const float max_score) { // 3D version
       const T *p1 = img1.data(x1,y1,z1), *p2 = img2.data(x2,y2,z2);
       const ulongT
         offx1 = (ulongT)img1._width - psizew,
         offx2 = (ulongT)img2._width - psizew,
-        offy1 = (ulongT)img1._width*img1._height - psizeh*img1._width - psizew,
-        offy2 = (ulongT)img2._width*img2._height - psizeh*img2._width - psizew,
-        offz1 = (ulongT)img1._width*img1._height*img1._depth - psized*img1._width*img1._height -
-        psizeh*img1._width - psizew,
-        offz2 = (ulongT)img2._width*img2._height*img2._depth - psized*img2._width*img2._height -
-        psizeh*img2._width - psizew;
+        offy1 = (ulongT)img1._width*img1._height - (ulongT)psizeh*img1._width,
+        offy2 = (ulongT)img2._width*img2._height - (ulongT)psizeh*img2._width,
+        offz1 = (ulongT)img1._width*img1._height*img1._depth - (ulongT)psized*img1._width*img1._height,
+        offz2 = (ulongT)img2._width*img2._height*img2._depth - (ulongT)psized*img2._width*img2._height;
       float ssd = 0;
       cimg_forC(img1,c) {
         for (unsigned int k = 0; k<psized; ++k) {
           for (unsigned int j = 0; j<psizeh; ++j) {
             for (unsigned int i = 0; i<psizew; ++i)
-              ssd += cimg::sqr(*(p1++) - *(p2++));
-            if (ssd>max_ssd) return max_ssd;
+              ssd += cimg::sqr((Tfloat)*(p1++) - *(p2++));
+            if (ssd>max_score) return max_score;
             p1+=offx1; p2+=offx2;
           }
           p1+=offy1; p2+=offy2;
         }
         p1+=offz1; p2+=offz2;
       }
-      return ssd;
+      return occ_penalization==0?ssd:cimg::sqr(std::sqrt(ssd) + occ_penalization*occ(xc,yc,zc));
+    }
+
+    static float _matchpatch(const CImg<T>& img1, const CImg<T>& img2, const CImg<uintT>& occ,
+                             const unsigned int psizew, const unsigned int psizeh,
+                             const int x1, const int y1,
+                             const int x2, const int y2,
+                             const int xc, const int yc,
+                             const float occ_penalization,
+                             const float max_score) { // 2D version
+      const T *p1 = img1.data(x1,y1), *p2 = img2.data(x2,y2);
+      const ulongT
+        offx1 = (ulongT)img1._width - psizew,
+        offx2 = (ulongT)img2._width - psizew,
+        offy1 = (ulongT)img1._width*img1._height - (ulongT)psizeh*img1._width,
+        offy2 = (ulongT)img2._width*img2._height - (ulongT)psizeh*img2._width;
+      float ssd = 0;
+      cimg_forC(img1,c) {
+        for (unsigned int j = 0; j<psizeh; ++j) {
+          for (unsigned int i = 0; i<psizew; ++i)
+            ssd += cimg::sqr((Tfloat)*(p1++) - *(p2++));
+          if (ssd>max_score) return max_score;
+          p1+=offx1; p2+=offx2;
+        }
+        p1+=offy1; p2+=offy2;
+      }
+      return occ_penalization==0?ssd:cimg::sqr(std::sqrt(ssd) + occ_penalization*occ(xc,yc));
     }
 
     //! Compute Euclidean distance function to a specified value.
@@ -45558,8 +45583,7 @@ namespace cimg_library_suffixed {
                                     cimg_instance);
 
       const unsigned int text_length = (unsigned int)std::strlen(text);
-      const bool _is_empty = is_empty();
-      if (_is_empty) {
+      if (is_empty()) {
         // If needed, pre-compute necessary size of the image
         int x = 0, y = 0, w = 0;
         unsigned char c = 0;
@@ -45603,6 +45627,24 @@ namespace cimg_library_suffixed {
             }
           }
         }
+      }
+      return *this;
+    }
+
+    // [internal] Version used to display text in interactive viewers.
+    CImg<T>& __draw_text(const char *const text, const bool is_down, ...) {
+      CImg<charT> tmp(2048);
+      std::va_list ap; va_start(ap,is_down);
+      cimg_vsnprintf(tmp,tmp._width,text,ap); va_end(ap);
+      CImg<ucharT> label, labelmask;
+      const unsigned char labelcolor = 127;
+      const unsigned int fsize = 13;
+      label.draw_text(0,0,"%s",&labelcolor,0,1,fsize,tmp._data);
+      if (label) {
+        label.crop(2,0,label.width() - 1,label.height());
+        ((labelmask = label)+=label.get_dilate(5)).max(80);
+        (label*=2).resize(-100,-100,1,3,1);
+        return draw_image(0,is_down?height() - fsize:0,label,labelmask,1,254);
       }
       return *this;
     }
@@ -48110,10 +48152,9 @@ namespace cimg_library_suffixed {
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
             if (visu0) {
-              (+visu0).draw_text(0,0," Saving snapshot... ",foreground_color,background_color,0.7f,13).display(disp);
+              (+visu0).__draw_text(" Saving snapshot...",text_down).display(disp);
               visu0.save(filename);
-              (+visu0).draw_text(0,0," Snapshot '%s' saved. ",foreground_color,background_color,0.7f,13,filename._data).
-                display(disp);
+              (+visu0).__draw_text(" Snapshot '%s' saved. ",text_down,filename._data).display(disp);
             }
             disp.set_key(key,false); key = 0;
           } break;
@@ -48128,10 +48169,9 @@ namespace cimg_library_suffixed {
 #endif
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu0).draw_text(0,0," Saving instance... ",foreground_color,background_color,0.7f,13).display(disp);
+            (+visu0).__draw_text(" Saving instance... ",text_down).display(disp);
             save(filename);
-            (+visu0).draw_text(0,0," Instance '%s' saved. ",foreground_color,background_color,0.7f,13,filename._data).
-              display(disp);
+            (+visu0).__draw_text(" Instance '%s' saved. ",text_down,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
         }
@@ -48278,8 +48318,8 @@ namespace cimg_library_suffixed {
         if (mx!=omx || my!=omy || !visu0 || (_depth>1 && !view3d)) {
 
           if (!visu0) { // Create image of projected planes
-            if (thumb) thumb.__get_select(disp,old_normalization,phase?X1:X0,phase?Y1:Y0,phase?Z1:Z0).move_to(visu0);
-            else __get_select(disp,old_normalization,phase?X1:X0,phase?Y1:Y0,phase?Z1:Z0).move_to(visu0);
+            if (thumb) thumb._get_select(disp,old_normalization,phase?X1:X0,phase?Y1:Y0,phase?Z1:Z0).move_to(visu0);
+            else _get_select(disp,old_normalization,phase?X1:X0,phase?Y1:Y0,phase?Z1:Z0).move_to(visu0);
             visu0.resize(disp);
             view3d.assign();
             points3d.assign();
@@ -48570,8 +48610,7 @@ namespace cimg_library_suffixed {
                                    origX + X0,origY + Y0,origX + X1,origY + Y1,
                                    1 + cimg::abs(X0 - X1),1 + cimg::abs(Y0 - Y1));
               }
-            if (phase || (mx>=0 && my>=0))
-              visu.draw_text(0,text_down?visu.height() - 13:0,text,foreground_color,background_color,0.7f,13);
+            if (phase || (mx>=0 && my>=0)) visu.__draw_text("%s",text_down,text._data);
           }
 
           disp.display(visu);
@@ -48618,8 +48657,8 @@ namespace cimg_library_suffixed {
     }
 
     // Return a visualizable uchar8 image for display routines.
-    CImg<ucharT> __get_select(const CImgDisplay& disp, const int normalization,
-                              const int x, const int y, const int z) const {
+    CImg<ucharT> _get_select(const CImgDisplay& disp, const int normalization,
+                             const int x, const int y, const int z) const {
       if (is_empty()) return CImg<ucharT>(1,1,1,1,0);
       const CImg<T> crop = get_shared_channels(0,std::min(2,spectrum() - 1));
       CImg<Tuchar> img2d;
@@ -48880,9 +48919,9 @@ namespace cimg_library_suffixed {
                 cimg_snprintf(filename,filename._width,cimg_appname "_%.4u.bmp",snap_number++);
                 if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
               } while (file);
-              (+screen).draw_text(0,0," Saving snapshot... ",black,gray,1,13).display(disp);
+              (+screen).__draw_text(" Saving snapshot... ",false).display(disp);
               screen.save(filename);
-              (+screen).draw_text(0,0," Snapshot '%s' saved. ",black,gray,1,13,filename._data).display(disp);
+              (+screen).__draw_text(" Snapshot '%s' saved. ",false,filename._data).display(disp);
             }
             disp.set_key(key,false); okey = 0;
           } break;
@@ -48899,9 +48938,9 @@ namespace cimg_library_suffixed {
 #endif
                 if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
               } while (file);
-              (+screen).draw_text(0,0," Saving instance... ",black,gray,1,13).display(disp);
+              (+screen).__draw_text(" Saving instance... ",false).display(disp);
               save(filename);
-              (+screen).draw_text(0,0," Instance '%s' saved. ",black,gray,1,13,filename._data).display(disp);
+              (+screen).__draw_text(" Instance '%s' saved. ",false,filename._data).display(disp);
             }
             disp.set_key(key,false); okey = 0;
           } break;
@@ -52986,11 +53025,9 @@ namespace cimg_library_suffixed {
               cimg_snprintf(filename,filename._width,cimg_appname "_%.4u.bmp",snap_number++);
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu).draw_text(0,0," Saving snapshot... ",
-                              foreground_color._data,background_color._data,0.7f,13).display(disp);
+            (+visu).__draw_text(" Saving snapshot... ",false).display(disp);
             visu.save(filename);
-            (+visu).draw_text(0,0," Snapshot '%s' saved. ",
-                              foreground_color._data,background_color._data,0.7f,13,filename._data).display(disp);
+            (+visu).__draw_text(" Snapshot '%s' saved. ",false,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
         case cimg::keyG : if (disp.is_keyCTRLLEFT() || disp.is_keyCTRLRIGHT()) { // Save object as a .off file
@@ -53000,11 +53037,9 @@ namespace cimg_library_suffixed {
               cimg_snprintf(filename,filename._width,cimg_appname "_%.4u.off",snap_number++);
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu).draw_text(0,0," Saving object... ",
-                              foreground_color._data,background_color._data,0.7f,13).display(disp);
+            (+visu).__draw_text(" Saving object... ",false).display(disp);
             vertices.save_off(reverse_primitives?reverse_primitives:primitives,colors,filename);
-            (+visu).draw_text(0,0," Object '%s' saved. ",
-                              foreground_color._data,background_color._data,0.7f,13,filename._data).display(disp);
+            (+visu).__draw_text(" Object '%s' saved. ",false,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
         case cimg::keyO : if (disp.is_keyCTRLLEFT() || disp.is_keyCTRLRIGHT()) { // Save object as a .cimg file
@@ -53018,12 +53053,10 @@ namespace cimg_library_suffixed {
 #endif
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu).draw_text(0,0," Saving object... ",
-                              foreground_color._data,background_color._data,0.7f,13).display(disp);
+            (+visu).__draw_text(" Saving object... ",false).display(disp);
             vertices.get_object3dtoCImg3d(reverse_primitives?reverse_primitives:primitives,colors,opacities).
               save(filename);
-            (+visu).draw_text(0,0," Object '%s' saved. ",
-                              foreground_color._data,background_color._data,0.7f,13,filename._data).display(disp);
+            (+visu).__draw_text(" Object '%s' saved. ",false,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
 #ifdef cimg_use_board
@@ -53034,8 +53067,7 @@ namespace cimg_library_suffixed {
               cimg_snprintf(filename,filename._width,cimg_appname "_%.4u.eps",snap_number++);
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu).draw_text(0,0," Saving EPS snapshot... ",
-                              foreground_color._data,background_color._data,0.7f,13).display(disp);
+            (+visu).__draw_text(" Saving EPS snapshot... ",false).display(disp);
             LibBoard::Board board;
             (+visu)._draw_object3d(&board,zbuffer.fill(0),
                                    Xoff + visu._width/2.0f,Yoff + visu._height/2.0f,Zoff,
@@ -53046,8 +53078,7 @@ namespace cimg_library_suffixed {
                                    specular_lightness,specular_shininess,
                                    sprite_scale);
             board.saveEPS(filename);
-            (+visu).draw_text(0,0," Object '%s' saved. ",
-                              foreground_color._data,background_color._data,0.7f,13,filename._data).display(disp);
+            (+visu).__draw_text(" Object '%s' saved. ",false,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
         case cimg::keyV : if (disp.is_keyCTRLLEFT() || disp.is_keyCTRLRIGHT()) { // Save object as a .SVG file
@@ -53057,8 +53088,7 @@ namespace cimg_library_suffixed {
               cimg_snprintf(filename,filename._width,cimg_appname "_%.4u.svg",snap_number++);
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu).draw_text(0,0," Saving SVG snapshot... ",
-                              foreground_color._data,background_color._data,0.7f,13).display(disp);
+            (+visu).__draw_text(" Saving SVG snapshot... ",false,13).display(disp);
             LibBoard::Board board;
             (+visu)._draw_object3d(&board,zbuffer.fill(0),
                                    Xoff + visu._width/2.0f,Yoff + visu._height/2.0f,Zoff,
@@ -53069,8 +53099,7 @@ namespace cimg_library_suffixed {
                                    specular_lightness,specular_shininess,
                                    sprite_scale);
             board.saveSVG(filename);
-            (+visu).draw_text(0,0," Object '%s' saved. ",
-                              foreground_color._data,background_color._data,0.7f,13,filename._data).display(disp);
+            (+visu).__draw_text(" Object '%s' saved. ",false,filename._data).display(disp);
             disp.set_key(key,false); key = 0;
           } break;
 #endif
@@ -57990,7 +58019,7 @@ namespace cimg_library_suffixed {
               while (x1<visu0._width && indices[x1++]==(unsigned int)ind) {}
               const CImg<T> &src = _data[ind]?_data[ind]:onexone;
               CImg<ucharT> res;
-              src.__get_select(disp,old_normalization,(src._width - 1)/2,(src._height - 1)/2,(src._depth - 1)/2).
+              src._get_select(disp,old_normalization,(src._width - 1)/2,(src._height - 1)/2,(src._depth - 1)/2).
                 move_to(res);
               const unsigned int h = CImgDisplay::_fitscreen(res._width,res._height,1,128,-85,true);
               res.resize(x1 - x0,std::max(32U,h*disp._height/max_height),1,res._spectrum==1?3:-100);
@@ -58009,7 +58038,7 @@ namespace cimg_library_suffixed {
               while (y1<visu0._height && indices[y1++]==(unsigned int)ind) {}
               const CImg<T> &src = _data[ind]?_data[ind]:onexone;
               CImg<ucharT> res;
-              src.__get_select(disp,old_normalization,(src._width - 1)/2,(src._height - 1)/2,(src._depth - 1)/2).
+              src._get_select(disp,old_normalization,(src._width - 1)/2,(src._height - 1)/2,(src._depth - 1)/2).
                 move_to(res);
               const unsigned int w = CImgDisplay::_fitscreen(res._width,res._height,1,128,-85,false);
               res.resize(std::max(32U,w*disp._width/max_width),y1 - y0,1,res._spectrum==1?3:-100);
@@ -58035,16 +58064,14 @@ namespace cimg_library_suffixed {
                   visu.draw_rectangle(positions(ind,0),positions(ind,1),positions(ind,2),positions(ind,3),
                                       foreground_color,0.9f,0xAAAAAAAA);
               }
-            const int yt = (int)text_down?visu.height() - 13:0;
-            if (is_clicked) visu.draw_text(0,yt," Images #%u - #%u, Size = %u",
-                                           foreground_color,background_color,0.7f,13,
-                                           orig + indm,orig + indM,indM - indm + 1);
-            else visu.draw_text(0,yt," Image #%u (%u,%u,%u,%u)",foreground_color,background_color,0.7f,13,
-                                orig + indice0,
-                                _data[indice0]._width,
-                                _data[indice0]._height,
-                                _data[indice0]._depth,
-                                _data[indice0]._spectrum);
+            if (is_clicked) visu.__draw_text(" Images #%u - #%u, Size = %u",text_down,
+                                             orig + indm,orig + indM,indM - indm + 1);
+            else visu.__draw_text(" Image #%u (%u,%u,%u,%u)",text_down,
+                                  orig + indice0,
+                                  _data[indice0]._width,
+                                  _data[indice0]._height,
+                                  _data[indice0]._depth,
+                                  _data[indice0]._spectrum);
             update_display = true;
           } else visu.assign();
         }
@@ -58113,11 +58140,9 @@ namespace cimg_library_suffixed {
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
             if (visu0) {
-              (+visu0).draw_text(0,0," Saving snapshot... ",
-                                 foreground_color,background_color,0.7f,13).display(disp);
+              (+visu0).__draw_text(" Saving snapshot... ",text_down).display(disp);
               visu0.save(filename);
-              (+visu0).draw_text(0,0," Snapshot '%s' saved. ",
-                                 foreground_color,background_color,0.7f,13,filename._data).display(disp);
+              (+visu0).__draw_text(" Snapshot '%s' saved. ",text_down,filename._data).display(disp);
             }
             disp.set_key(key,false).wait(); key = 0;
           } break;
@@ -58133,11 +58158,9 @@ namespace cimg_library_suffixed {
 #endif
               if ((file=cimg::std_fopen(filename,"r"))!=0) cimg::fclose(file);
             } while (file);
-            (+visu0).draw_text(0,0," Saving instance... ",
-                               foreground_color,background_color,0.7f,13).display(disp);
+            (+visu0).__draw_text(" Saving instance... ",text_down).display(disp);
             save(filename);
-            (+visu0).draw_text(0,0," Instance '%s' saved. ",
-                               foreground_color,background_color,0.7f,13,filename._data).display(disp);
+            (+visu0).__draw_text(" Instance '%s' saved. ",text_down,filename._data).display(disp);
             disp.set_key(key,false).wait(); key = 0;
           } break;
         }

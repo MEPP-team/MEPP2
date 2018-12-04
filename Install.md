@@ -119,8 +119,7 @@ Scripting commands for compiling Mepp2:
   $ make
 
   # compile with CGAL, GUI and FBX
-  $ export FBX_DIR="$HOME/FBX_SDK/2019.0"
-  $ cmake -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
@@ -151,7 +150,8 @@ Mandatory dependencies:
   # CMake
   $ brew install cmake
 
-  # Boost: installed with CGAL (dependency)
+  # Boost
+  $ brew install boost
 
   # Eigen 3
   $ brew install eigen
@@ -222,14 +222,13 @@ For the majority of the commandes refer to the above Linux section. The only dif
 
 Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this:
 ````
-  $ export FBX_DIR="/Applications/Autodesk/FBX SDK/2019.0"
-  $ cmake -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DFBX_DIR="/Applications/Autodesk/FBX SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
 
 Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JPEG-patched above) can be done like this:
 ````
-  $ export DYLD_LIBRARY_PATH=$HOME/osg-3.4.1/lib
+  $ export DYLD_LIBRARY_PATH="$HOME/osg-3.4.1/lib"
   $ cmake -DBUILD_USE_GUI=ON -DOSG_DIR=$HOME/osg-3.4.1 -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
@@ -253,7 +252,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
  - Update Windows 7/8/8.1/10 (services packs and Windows Update)
 
  - Download and install Visual Studio Express 2015 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
-   (download size 7.4 GB, installation size ~>14 GB)
+   (download size 7.4 GB, installation size ~>14 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/Visual%20Studio%20Community%202017/vs2017layout-fr.7z)
 
 ### Installing dependencies
 
