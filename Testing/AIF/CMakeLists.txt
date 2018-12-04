@@ -398,6 +398,11 @@ add_test(Non_manifold_collapse_edge_aif_6
 #####
 add_executable( test_smoothing_aif
                 test_smoothing_aif.cpp)
+
+target_link_libraries(test_smoothing_aif
+                      ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      )
+
 if (BUILD_USE_VTK )
 	add_test( Smoothing_aif_vtk
 			 test_smoothing_aif
@@ -405,9 +410,6 @@ if (BUILD_USE_VTK )
        #${TESTING_DATA_DIR}/egea.vtk # time consuming test
        )
 endif()
-target_link_libraries(test_smoothing_aif
-                      ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
-                      )
 
 add_test( Smoothing_aif
          test_smoothing_aif
@@ -415,7 +417,9 @@ add_test( Smoothing_aif
 add_test( Smoothing_aif_border
          test_smoothing_aif
          ${TESTING_DATA_DIR}/flat.off )
-
+add_test( Smoothing_aif_gmesh
+         test_smoothing_aif
+         ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh )
 #####
 add_executable( test_curvature_filter_aif
                 test_curvature_filter_aif.cpp

@@ -88,7 +88,7 @@ using namespace FileUtils;
 			token = strtok(NULL, " ");
 			//If we finished the tags we push back in the vector the value of the node
 			if (i>=nb)
-				indexes.push_back(static_cast<IndexType>(atol(token)));
+				indexes.push_back(static_cast<IndexType>(atol(token)-1));
 		}
 		return indexes;
 	}
@@ -931,7 +931,7 @@ template< typename CoordType,
 			}
 			//--------------------$EndData-----------------------
 		}
-		return true;
+    return true;
 	}
 
 }

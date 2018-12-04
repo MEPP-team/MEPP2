@@ -98,6 +98,7 @@ template< typename CoordType,
 		}
 		else
 			names = field_names;
+    ///////////////////////////////////////////////////////////////////////////
 		//If there is elements in the vector face_indices so it is the 2D vectors that we should use
 		//Otherwise we should use the 3D vectors
     IndexType dim = (face_indices.size()) ? 2 : 3;
@@ -147,7 +148,7 @@ template< typename CoordType,
 					fprintf(file, "%ld %ld 2 99 2", i+1, static_cast<long>(type));
 					for(unsigned long j(0); j<elem[i].size(); j++)
 					{
-						fprintf(file, " %s", convert(elem[i][j]).c_str());
+						fprintf(file, " %s", convert(elem[i][j]+1).c_str());
 					}
 					fprintf(file, "\n");
 				}
