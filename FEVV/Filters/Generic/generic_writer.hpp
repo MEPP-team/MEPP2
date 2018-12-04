@@ -99,10 +99,8 @@ write_mesh(const std::string &filename,
       lines_colors;
   std::vector< index_type > face_material;
   std::vector< FEVV::Types::Material > materials;
-#ifdef FEVV_USE_VTK
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-#endif
 
 
   // which vertex attribute are available for export ?

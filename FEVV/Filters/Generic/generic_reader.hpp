@@ -112,10 +112,8 @@ read_mesh(const std::string &filename,
   std::vector< std::vector< index_type > > normal_face_indices;
   std::vector< std::vector< coordC_type > > points_colors, faces_colors,
       lines_colors;
-#ifdef FEVV_USE_VTK
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-#endif
   std::vector< FEVV::Types::Material > materials;
   std::vector< index_type > face_material;
 
