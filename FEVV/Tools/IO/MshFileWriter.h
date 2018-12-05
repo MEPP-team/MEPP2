@@ -88,10 +88,13 @@ template< typename CoordType,
 		if (field_names.size() != field_attributes.size())
 		{
 			names.resize(field_attributes.size());
+			// When data field names need to be set, we assume that nD (n>=2)
+			// fields associated with positions are displacement fields while others
+			// are understood as physical laws.
 			for (unsigned long i(0); i<field_attributes.size(); ++i){
 				if( (points_coords.size() == field_attributes[i].size()) && 
 					((points_coords.size() != face_indices.size()) || (field_attributes[i][0].size()>1)))
-					names[i] = std::string("Shifting_") + convert(i); // to make it compatible with Curves2D/Curves3D binaries
+					names[i] = std::string("Shifting_") + convert(i);  
 				else
 					names[i] = std::string("cell_law_")+ convert(i);
 			}
@@ -237,6 +240,11 @@ template< typename CoordType,
 						isnode = false;
 						fprintf(file, "$ElementData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].substr(13).c_str(), field_attributes[i].size()); 
 					}
+					else if (names[i].find("CELL_DATA_") != std::string::npos)
+					{
+						isnode = false;
+						fprintf(file, "$ElementData\n1\n\"%s\"\n0\n1\n%zd\n", names[i].substr(10).c_str(), field_attributes[i].size()); 
+					}					
 					else
 					{
 						isnode = false;
