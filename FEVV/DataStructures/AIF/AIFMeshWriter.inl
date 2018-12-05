@@ -76,13 +76,14 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
 
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-
   // which vertex attribute are available for export ?
 
   bool useNorm = false;
   bool useVertexColor = false;
   bool useFaceColor = false;
   bool useVertexTextureCoord = false;
+  bool useVertexDatafield = false;
+  bool useFaceDatafield = false;
 
 #ifdef FEVV_USE_VTK
   bool useEdgeColor =
@@ -99,6 +100,10 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
     useFaceColor = true;
   if(inputMesh.isPropertyMap< AIFVertex::ptr >("v:texcoord"))
     useVertexTextureCoord = true;
+  if (inputMesh.isAPropertyMapStartingWithPrefix< AIFVertex::ptr >("v:datafield:"))
+    useVertexDatafield = true;
+  if (inputMesh.isAPropertyMapStartingWithPrefix< AIFFace::ptr >("f:datafield:"))
+    useFaceDatafield = true;
 
   unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
@@ -152,6 +157,27 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
               "v:texcoord", (*itV)->GetIndex());
       std::vector< coordT_type > vt(uv.cbegin(), uv.cend());
       texture_coords.push_back(vt);
+    }
+
+    if (useVertexDatafield)
+    {
+      std::vector<std::string> dfv_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
+      auto it_s = dfv_names.begin(), it_se = dfv_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          inputMesh.GetProperty< AIFVertex::ptr, std::vector< double > >(
+            *it_s, (*itV)->GetIndex());
+
+        if (itV == vRange.begin())
+        {
+          field_names.push_back("POINT_DATA_" + it_s->substr(12));
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+
+        field_attributes[i].push_back(vdata);
+      }
     }
   }
 
@@ -265,6 +291,29 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
       // store face-color in standard container
       std::vector< coordC_type > color(fc.cbegin(), fc.cend());
       face_color_coords.push_back(color);
+    }
+
+    if (useFaceDatafield)
+    {
+      std::vector<std::string> dff_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
+      auto it_s = dff_names.begin(), it_se = dff_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          inputMesh.GetProperty< AIFFace::ptr, std::vector< double > >(
+            *it_s, (*itF)->GetIndex());
+
+        if (itF == fRange.begin())
+        {
+          field_names.push_back("CELL_DATA_" + it_s->substr(12));
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+        if (useVertexDatafield && (it_s== dff_names.begin()))
+          i = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:").size();
+
+        field_attributes[i].push_back(vdata);
+      }
     }
   }
 

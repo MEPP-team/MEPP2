@@ -125,7 +125,7 @@ template< typename CoordType,
 			//We write every point while not forgetting the fact that index starts at 1 in msh file
 			for(unsigned long i(0); i<points_coords.size(); i++)
 			{
-				fprintf(file, "%ld %f %f %f\n", i+1, points_coords[i][0], points_coords[i][1], points_coords[i][2]);
+				fprintf(file, "%ld %.10f %.10f %.10f\n", i+1, static_cast<double>(points_coords[i][0]), static_cast<double>(points_coords[i][1]), static_cast<double>(points_coords[i][2]));
 			}
 			fprintf(file, "$EndNodes\n");
 
@@ -163,7 +163,7 @@ template< typename CoordType,
 				fprintf(file, "%zd\n", points_coords.size());
 				for(unsigned long i(0); i<points_coords.size(); i++)
 				{
-					fprintf(file, "%ld 15 2 99 2 %ld\n", i+1, i+1);
+					fprintf(file, "%lu 15 2 99 2 %lu\n", i+1, i+1);
 				}
 				fprintf(file, "$EndElements");
 			}
@@ -180,7 +180,7 @@ template< typename CoordType,
 						fclose(file);
 						return false;
 					}
-					fprintf(file, "%ld %f %f %f\n", i+1, vertex_color_coords[i][0], vertex_color_coords[i][1], vertex_color_coords[i][2]);
+					fprintf(file, "%ld %.10f %.10f %.10f\n", i+1, static_cast<double>(vertex_color_coords[i][0]), static_cast<double>(vertex_color_coords[i][1]), static_cast<double>(vertex_color_coords[i][2]));
 				}
 				fprintf(file, "$EndNodeData");
 			}
@@ -197,7 +197,7 @@ template< typename CoordType,
 						fclose(file);
 						return false;
 					}
-					fprintf(file, "%ld %f %f %f\n", i+1, normals_coords[i][0], normals_coords[i][1], normals_coords[i][2]);
+					fprintf(file, "%ld %.10f %.10f %.10f\n", i+1, static_cast<double>(normals_coords[i][0]), static_cast<double>(normals_coords[i][1]), static_cast<double>(normals_coords[i][2]));
 				}
 				fprintf(file, "$EndNodeData");
 			}
@@ -214,7 +214,7 @@ template< typename CoordType,
 						fclose(file);
 						return false;
 					}
-					fprintf(file, "%ld %f %f %f\n", i+1, color[i][0], color[i][1], color[i][2]);
+					fprintf(file, "%ld %.10f %.10f %.10f\n", i+1, static_cast<double>(color[i][0]), static_cast<double>(color[i][1]), static_cast<double>(color[i][2]));
 				}
 				fprintf(file, "$EndElementData");
 			}
@@ -252,10 +252,10 @@ template< typename CoordType,
 					}
 					for(unsigned long j(0); j<field_attributes[i].size(); ++j)
 					{
-						fprintf(file, "%ld", j+1);
+						fprintf(file, "%lu", j+1);
 						for(unsigned long k(0); k<field_attributes[i][j].size(); ++k)
 						{
-							fprintf(file, " %f", field_attributes[i][j][k]);
+							fprintf(file, " %.10f", field_attributes[i][j][k]);
 						}
 						fprintf(file, "\n");
 					}

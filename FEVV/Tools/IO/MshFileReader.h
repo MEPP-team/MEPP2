@@ -523,7 +523,7 @@ template< typename CoordType,
 					return false;
 				}
 				long temp;
-				std::vector<float> temp_pts;
+				std::vector<double> temp_pts;
 				
 				//We get the number of nodes declared in this block
 				number_param = sscanf(buffer, "%ld", &temp);
@@ -546,7 +546,7 @@ template< typename CoordType,
 					temp_pts.clear();
 					temp_pts.resize(3);
 					//We get the three coordinates
-					number_param = sscanf(buffer, "%ld %f %f %f", &index, &temp_pts[0], &temp_pts[1], &temp_pts[2]);
+					number_param = sscanf(buffer, "%ld %lf %lf %lf", &index, &temp_pts[0], &temp_pts[1], &temp_pts[2]);
 					if (number_param != 4)
 					{
 						std::cerr << "MSH Reader: Error in the file, wrong node declaration" << std::endl;
@@ -789,7 +789,7 @@ template< typename CoordType,
 				std::vector<CoordNType> temp_vector_n;
 				std::vector< std::vector<double> > temp_vector_f;
 				temp_vector_f.clear();
-				float temp1, temp2, temp3;
+				double temp1, temp2, temp3;
 				//We loop through every declared datas
 				for(long i(0); i<params; i++)
 				{
@@ -814,7 +814,7 @@ template< typename CoordType,
 					//We get all the values concerning the data (the index and the data itself)
 					//If it is a color we get three values
 					//Duplicate this if block, create temp4 et check for 5 number_param for color if you want to use alpha
-					number_param = sscanf(buffer, "%ld %f %f %f", &index, &temp1, &temp2, &temp3);
+					number_param = sscanf(buffer, "%ld %lf %lf %lf", &index, &temp1, &temp2, &temp3);
 					if (number_param<1 || number_param>4)
 					{
 						std::cerr << "MSH Reader: Error in the file, wrong number of arguments for integer parameters in " << type << std::endl;
@@ -825,18 +825,18 @@ template< typename CoordType,
 					switch(data)
 					{
 					case 0:
-						temp_vector_c.push_back(temp1);
+						temp_vector_c.push_back(static_cast<CoordCType>(temp1));
 						if (number_param > 1)
-							temp_vector_c.push_back(temp2);
+							temp_vector_c.push_back(static_cast<CoordCType>(temp2));
 						if (number_param > 2)
-							temp_vector_c.push_back(temp3);
+							temp_vector_c.push_back(static_cast<CoordCType>(temp3));
 						break;
 					case 1:
-						temp_vector_n.push_back(temp1);
+						temp_vector_n.push_back(static_cast<CoordNType>(temp1));
 						if (number_param > 1)
-							temp_vector_n.push_back(temp2);
+							temp_vector_n.push_back(static_cast<CoordNType>(temp2));
 						if (number_param > 2)
-							temp_vector_n.push_back(temp3);
+							temp_vector_n.push_back(static_cast<CoordNType>(temp3));
 						break;
 					case 2:
 						if (temp_vector_f.size() < index)

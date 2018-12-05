@@ -678,13 +678,13 @@ AIFMeshReader::read(const std::string &filePath)
           { // property map associated to faces
 
             outputMesh->SetProperty< AIFFace::ptr, std::vector<double> >(
-              ("f:datafield:" + it->substr(13)), currentVertex->GetIndex(), (*it_d)[faceId]);
+              ("f:datafield:" + it->substr(13)), currentFace->GetIndex(), (*it_d)[faceId]);
           }
           else if (it->find("CELL_DATA_") != std::string::npos)
           { // property map associated to faces
 
             outputMesh->SetProperty< AIFFace::ptr, std::vector<double> >(
-              ("f:datafield:" + it->substr(10)), currentVertex->GetIndex(), (*it_d)[faceId]);
+              ("f:datafield:" + it->substr(10)), currentFace->GetIndex(), (*it_d)[faceId]);
           }
         }
       }

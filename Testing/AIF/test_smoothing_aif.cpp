@@ -52,7 +52,7 @@ test_calculate_scaling_aif(const std::string &input_file_path)
     std::cout << "reading failed";
     return;
   }
-  MeshT m(*pm);
+  MeshT m(*pm); // copy contructor use
 #endif
   /**********************************************************************************************************/
   try
