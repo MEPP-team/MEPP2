@@ -163,7 +163,9 @@ add_test( Generic_writer_openmesh_off_with_face-color
 # is different with OpenMesh
 #add_test( Generic_writer_openmesh_obj_with_face-normal
 #          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  test_generic_writer_obj_with_face-normal.obj  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.writer-output.obj.ref)
-
+# For the next test, the comparison beteween files fails, but it should not
+#add_test( Generic_writer_openmesh_msh_SimpleBeam
+#          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh  test_generic_writer_msh_SimpleBeam.msh  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh)
 
 #####
 add_executable( test_compression_valence_openmesh
