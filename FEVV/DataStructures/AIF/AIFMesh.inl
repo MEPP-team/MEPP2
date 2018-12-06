@@ -79,7 +79,10 @@ AIFMesh::AIFMesh(const Self &other)
     useVertexDatafield = true;
   if (other.isAPropertyMapStartingWithPrefix< AIFFace::ptr >("f:datafield:"))
     useFaceDatafield = true;
-
+  
+  std::vector<std::string> dfv_names = other.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
+  std::vector<std::string> dff_names = other.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
+  
   unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long > indexMap;
@@ -135,7 +138,6 @@ AIFMesh::AIFMesh(const Self &other)
 	
     if (useVertexDatafield)
     {
-      std::vector<std::string> dfv_names = other.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
       auto it_s = dfv_names.begin(), it_se = dfv_names.end();
       size_t i = 0;
       for (; it_s != it_se; ++it_s, ++i)
@@ -222,7 +224,6 @@ AIFMesh::AIFMesh(const Self &other)
 
     if (useFaceDatafield)
     {
-      std::vector<std::string> dff_names = other.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
       auto it_s = dff_names.begin(), it_se = dff_names.end();
       size_t i = 0;
       for (; it_s != it_se; ++it_s, ++i)

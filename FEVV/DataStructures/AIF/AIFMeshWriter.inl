@@ -104,7 +104,10 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
     useVertexDatafield = true;
   if (inputMesh.isAPropertyMapStartingWithPrefix< AIFFace::ptr >("f:datafield:"))
     useFaceDatafield = true;
-
+  
+  std::vector<std::string> dfv_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
+  std::vector<std::string> dff_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
+  
   unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long >
@@ -161,7 +164,6 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
 
     if (useVertexDatafield)
     {
-      std::vector<std::string> dfv_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
       auto it_s = dfv_names.begin(), it_se = dfv_names.end();
       size_t i = 0;
       for (; it_s != it_se; ++it_s, ++i)
@@ -295,7 +297,6 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
 
     if (useFaceDatafield)
     {
-      std::vector<std::string> dff_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
       auto it_s = dff_names.begin(), it_se = dff_names.end();
       size_t i = 0;
       for (; it_s != it_se; ++it_s, ++i)
@@ -309,8 +310,8 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
           field_names.push_back("CELL_DATA_" + it_s->substr(12));
           field_attributes.resize(field_attributes.size() + 1);
         }
-        if (useVertexDatafield && (it_s== dff_names.begin()))
-          i = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:").size();
+        if (useVertexDatafield && (it_s == dff_names.begin()))
+          i = dfv_names.size();
 
         field_attributes[i].push_back(vdata);
       }
