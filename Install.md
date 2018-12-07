@@ -98,6 +98,15 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ ln -s ~/FBX_SDK/2019.0/lib/gcc4/x64/release ~/FBX_SDK/2019.0/lib/release
   $ ln -s ~/FBX_SDK/2019.0/lib/gcc4/x64/debug ~/FBX_SDK/2019.0/lib/debug
   $ cd
+
+  # Draco (installation in user home directory)
+  $ cd /tmp
+  $ wget https://github.com/google/draco/archive/1.3.4.tar.gz
+  $ tar -xzf draco-1.3.4.tar.gz
+  $ cd draco-1.3.4 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.4 ..
+  $ make
+  $ make install && cd
 ````
 
 ### Build stage
@@ -211,6 +220,9 @@ Optional dependencies:
   $ ln -s "/Applications/Autodesk/FBX SDK/2019.0/lib/clang/release" "/Applications/Autodesk/FBX SDK/2019.0/lib/release"
   $ ln -s "/Applications/Autodesk/FBX SDK/2019.0/lib/clang/debug" "/Applications/Autodesk/FBX SDK/2019.0/lib/debug"
   $ export DYLD_LIBRARY_PATH="/Applications/Autodesk/FBX SDK/2019.0/lib/release"
+
+  # Draco
+  $ brew install draco
 ````
 
 ### Build stage
@@ -273,23 +285,28 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
  6. Optionally download the ['addon_05' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_05.7z) for FBX
    (download size 54 MB, installation size 679 MB)
 
- 7. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
+ 7. Optionally download the ['addon_06' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_06.7z) for Draco
+   (download size 35 MB, installation size 467 MB)
 
- 8. Extract CMake 3.12.4 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.12.4-win64-x64.zip'
+ 8. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
 
- 9. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
+ 9. Extract CMake 3.12.4 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.12.4-win64-x64.zip'
 
- 10. Add ';path_to\local_vs2015_64\\\_bin_' to the PATH system environment variable, just after the Windows system paths, but before any other path, in order to avoid a library version conflict; beware of the ';' path separator
+ 10. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
 
- 11. Extract the 'addon_01' binary kit, if needed, into the 'path_to' directory
+ 11. Add ';path_to\local_vs2015_64\\\_bin_' to the PATH system environment variable, just after the Windows system paths, but before any other path, in order to avoid a library version conflict; beware of the ';' path separator
 
- 12. Extract the 'addon_02' binary kit, if needed, into the 'path_to' directory
+ 12. Extract the 'addon_01' binary kit, if needed, into the 'path_to' directory
 
- 13. Extract the 'addon_03' binary kit, if needed, into the 'path_to' directory
+ 13. Extract the 'addon_02' binary kit, if needed, into the 'path_to' directory
 
- 14. Extract the 'addon_04' binary kit, if needed, into the 'path_to' directory
+ 14. Extract the 'addon_03' binary kit, if needed, into the 'path_to' directory
 
- 15. Extract the 'addon_05' binary kit, if needed, into the 'path_to' directory
+ 15. Extract the 'addon_04' binary kit, if needed, into the 'path_to' directory
+
+ 16. Extract the 'addon_05' binary kit, if needed, into the 'path_to' directory
+
+ 17. Extract the 'addon_06' binary kit, if needed, into the 'path_to' directory
 
 ### Building stage
 
