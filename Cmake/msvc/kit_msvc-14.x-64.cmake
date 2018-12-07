@@ -70,6 +70,10 @@ set(VTK_DIR						${MSVC_KIT_ROOT}/kitware/VTK-7.0.0)
 
 set(FBX_DIR						${MSVC_KIT_ROOT}/FBX_SDK/2019.0)
 
+### addon 06 : Draco
+
+set(DRACO_DIR					${MSVC_KIT_ROOT}/draco-1.3.4)
+
 ### vtests
 
 set(VTEST						test)

@@ -212,3 +212,15 @@ if( BUILD_USE_FBX )
     message( "FBX SDK not found." )
   endif()
 endif()
+
+##### Draco package finding
+if( BUILD_USE_DRACO )
+  find_package(Draco)
+  if ( draco_FOUND )
+    include_directories( ${draco_INCLUDE_DIRS} )
+    add_definitions( -DFEVV_USE_DRACO )
+  else()
+    message( FATAL_ERROR
+             "Draco not found. Please set DRACO_DIR or turn BUILD_USE_DRACO to OFF.")
+  endif ()
+endif ()
