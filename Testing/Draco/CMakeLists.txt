@@ -12,4 +12,4 @@ include_directories( ${draco_INCLUDE_DIRS} )
 add_executable(draco_decoder draco_decoder.cc)
 target_link_libraries(draco_decoder ${draco_LIBRARIES})
 
-add_test(draco_decoder draco_decoder -i ${TESTING_DATA_DIR}/armadillo_simplified.obj.drc)
+add_test(draco_decoder draco_decoder -i ${TESTING_DATA_DIR}/armadillo_simplified.drc)
