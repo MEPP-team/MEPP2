@@ -215,11 +215,11 @@ Optional dependencies:
   $ brew install pcl
 
   # FBX SDK - primary support, not finished !
-  # get and install the sdk from here: http://download.autodesk.com/us/fbx/2019/2019.0/fbx20190_fbxsdk_clang_mac.pkg.tgz
+  # get and install the sdk from here: https://www.autodesk.com/content/dam/autodesk/www/adn/fbx/20192/fbx20192_fbxsdk_clang_mac.pkg.tgz
   # double click to decompress the .tgz and then install the .pkg by clicking on it
-  $ ln -s "/Applications/Autodesk/FBX SDK/2019.0/lib/clang/release" "/Applications/Autodesk/FBX SDK/2019.0/lib/release"
-  $ ln -s "/Applications/Autodesk/FBX SDK/2019.0/lib/clang/debug" "/Applications/Autodesk/FBX SDK/2019.0/lib/debug"
-  $ export DYLD_LIBRARY_PATH="/Applications/Autodesk/FBX SDK/2019.0/lib/release"
+  $ ln -s "/Applications/Autodesk/FBX SDK/2019.2/lib/clang/release" "/Applications/Autodesk/FBX SDK/2019.2/lib/release"
+  $ ln -s "/Applications/Autodesk/FBX SDK/2019.2/lib/clang/debug" "/Applications/Autodesk/FBX SDK/2019.2/lib/debug"
+  $ export DYLD_LIBRARY_PATH="/Applications/Autodesk/FBX SDK/2019.2/lib/release"
 
   # Draco
   $ brew install draco
@@ -234,7 +234,7 @@ For the majority of the commandes refer to the above Linux section. The only dif
 
 Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this:
 ````
-  $ cmake -DFBX_DIR="/Applications/Autodesk/FBX SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DFBX_DIR="/Applications/Autodesk/FBX SDK/2019.2" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
 
