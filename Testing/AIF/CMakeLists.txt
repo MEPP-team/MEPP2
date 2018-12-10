@@ -54,8 +54,8 @@ add_test(AIFHelpers
 #####
 add_executable( test_reader_writer_aif
                 test_reader_writer_aif.cpp
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_identical_text_based_files.cpp"
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_are_meshes_identical.cpp" )
+				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
+				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp" )
 target_link_libraries(test_reader_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
@@ -437,8 +437,8 @@ target_link_libraries(test_complying_concepts_aif
 #####
 add_executable( test_generic_writer_aif
                 test_generic_writer_aif.cpp
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_identical_text_based_files.cpp"
-				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_are_meshes_identical.cpp" )
+				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
+				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp" )
 target_link_libraries(test_generic_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
@@ -502,8 +502,8 @@ add_test( Test_load_dangling_edge_aif_off_3
 #TODO-elo-off  add_executable( test_compression_valence_aif
 #TODO-elo-off                  test_compression_valence_aif.cpp
 #TODO-elo-off  				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-#TODO-elo-off  				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_identical_text_based_files.cpp"
-#TODO-elo-off  				"${CMAKE_CURRENT_SOURCE_DIR}/../Utils/utils_are_meshes_identical.cpp"
+#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
+#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 #TODO-elo-off  				)
 #TODO-elo-off  target_link_libraries(test_compression_valence_aif
 #TODO-elo-off                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
