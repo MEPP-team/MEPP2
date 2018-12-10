@@ -9,7 +9,7 @@ target_link_libraries( hello_world_filter_cgal_surface_mesh
 
 ######
 add_executable( example_msdm2
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/msdm2.h"
+                "${PROJECT_SOURCE_DIR}/FEVV/Filters/CGAL/Surface_mesh/msdm2.h"
                 example_msdm2.cpp
                 "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp")
 target_link_libraries( example_msdm2
