@@ -419,7 +419,6 @@ add_test( Smoothing_aif_border
 #####
 add_executable( test_curvature_filter_aif
                 test_curvature_filter_aif.cpp
-				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/eigen_val_vect.cpp"
                 )
 target_link_libraries(test_curvature_filter_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}

@@ -1,11 +1,24 @@
-#include "eigen_val_vect.h"
+#pragma once
 
-#include <iostream>
+#include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
 #include <cmath> // for std::abs()
 #include <vector>
 
 
+using EigenMatrix = Eigen::Matrix3d;
+using EigenvectorsType = Eigen::Matrix3d;
+using EigenvalueType = Eigen::Vector3d;
+
+/*
+  Compute eigenvalues and eigenvectors of a double symmetric matrix
+
+  \param  A  (input) double symmetric matrix
+  \param  U  (ouput) eigenvectors
+  \param  AD (ouput) eigenvalues, unsorted
+  \return  0 if ok
+*/
+inline
 int
 eigen_val_vect_compute(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad)
 {
@@ -25,7 +38,16 @@ eigen_val_vect_compute(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType
   return 0;
 }
 
+/*
+  Sort eigenvalues by descending order of their absolute values,
+  and sort eigenvectors accordingly
 
+  \param  AD  eigenvalues ; at function return the values are sorted
+              by descending order of their absolute value
+  \param  U   eigenvectors ; at function return the vectors are sorted
+              in the same order as eigenvalues
+*/
+inline
 void
 eigen_val_vect_sort(EigenvalueType &ad, EigenvectorsType &u)
 {
