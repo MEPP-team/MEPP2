@@ -14,7 +14,7 @@
 #include "Testing/Utils/utils_are_meshes_identical.h"
 #include "Testing/Utils/utils_identical_text_based_files.h"
 
-#include "FEVV/Filters/Generic/Manifold/msdm2.h"
+#include "FEVV/Filters/CGAL/Surface_mesh/msdm2.h"
 #include "FEVV/Filters/Generic/minmax_map.h"
 #include "FEVV/Filters/Generic/color_mesh.h"
 
