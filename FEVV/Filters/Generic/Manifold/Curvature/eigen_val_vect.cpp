@@ -10,14 +10,17 @@ int
 eigen_val_vect_compute(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad)
 {
   Eigen::EigenSolver< EigenMatrix > solver(a, true);
+
+  // check for error
+  if( solver.info() != Eigen::ComputationInfo::Success )
+    return -1;
+
   // ELO-note:
   //  solver.eigenvalues() and solver.eigenvectors() return
   //  matrices of std::complex values ; here we keep only
   //  the real part of this values
   ad = solver.eigenvalues().real();
   u = solver.eigenvectors().real();
-
-  // TODO-elo check if the values are 'good', return -1 if not
 
   return 0;
 }
