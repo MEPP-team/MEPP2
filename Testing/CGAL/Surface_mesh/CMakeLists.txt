@@ -3,7 +3,7 @@ add_executable( test_msdm2
                 test_msdm2.cpp
                 "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
                 "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp" )
+                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/eigen_val_vect.cpp" )
 target_link_libraries( test_msdm2
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -98,7 +98,7 @@ add_test( Smoothing_surfacemesh_border
 #####
 add_executable( test_curvature_filter_surfacemesh
                 test_curvature_filter_surfacemesh.cpp
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
+                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/eigen_val_vect.cpp"
                 )
 target_link_libraries(test_curvature_filter_surfacemesh
                       ${CGAL_LIBRARY}

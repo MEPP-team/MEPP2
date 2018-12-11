@@ -117,7 +117,7 @@ add_test( Smoothing_openmesh_border
 #####
 add_executable( test_curvature_filter_openmesh
                 test_curvature_filter_openmesh.cpp
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
+                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/eigen_val_vect.cpp"
                 )
 target_link_libraries(  test_curvature_filter_openmesh
                         ${OPENMESH_LIBRARIES}
