@@ -5,7 +5,10 @@ endif()
 include(${CGAL_USE_FILE})
 
 if( MSVC )
-  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /IGNORE:4715" )
+  # remove warning
+  # boost_1_59_0\boost\property_tree\detail\json_parser\standard_callbacks.hpp(132): warning C4715: 'boost::property_tree::json_parser::detail::standard_callbacks<boost::property_tree::basic_ptree<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > > > >::new_tree'ÿ: les chemins de contr“le ne retournent pas tous une valeur
+  # see https://stackoverflow.com/questions/47136503/boost-json-parser-warning-c4715
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4715" )
 endif()
 
 # In order to make sure the FEVV embarked Euler operators will be seeked

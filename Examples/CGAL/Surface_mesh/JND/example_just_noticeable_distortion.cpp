@@ -12,14 +12,10 @@
 #include "FEVV/Filters/Generic/calculate_face_normals.hpp"
 #include "FEVV/Filters/Generic/Manifold/calculate_vertex_normals.hpp"
 
-#pragma warning(push)
-#pragma warning(                                                               \
-    disable : 4715) // Disable a warning from boost, more info :
-                    // https://stackoverflow.com/questions/47136503/boost-json-parser-warning-c4715
 #include <boost/property_tree/ptree.hpp>
-#pragma warning(pop)
 #include <boost/property_tree/json_parser.hpp>
 #include <time.h>
+
 //---------------------------------------------------------
 //                       Main
 //---------------------------------------------------------
