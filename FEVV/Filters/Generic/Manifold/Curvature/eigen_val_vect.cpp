@@ -7,7 +7,7 @@
 
 
 int
-val_pro(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad)
+eigen_val_vect_compute(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad)
 {
   Eigen::EigenSolver< EigenMatrix > solver(a, true);
   // ELO-note:
@@ -24,7 +24,7 @@ val_pro(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad)
 
 
 void
-eig_srt(EigenvalueType &ad, EigenvectorsType &u)
+eigen_val_vect_sort(EigenvalueType &ad, EigenvectorsType &u)
 {
   // sort eigenvalues indices by descending order of their absolute values
   std::vector< size_t > sorted_indices;

@@ -399,7 +399,7 @@ calculate_curvature(const HalfedgeGraph &g,
     }
     else
     {
-      if(val_pro(cov_mat, vect_pro, valpro) == -1)
+      if(eigen_val_vect_compute(cov_mat, vect_pro, valpro) == -1)
       {
         no_val_pro = true;
       }
@@ -412,7 +412,7 @@ calculate_curvature(const HalfedgeGraph &g,
 
     if(!no_val_pro)
     {
-      eig_srt(valpro, vect_pro);
+      eigen_val_vect_sort(valpro, vect_pro);
       Vector v_kmax_curv(vect_pro(0, 1), vect_pro(1, 1), vect_pro(2, 1));
       Vector v_kmin_curv(vect_pro(0, 0), vect_pro(1, 0), vect_pro(2, 0));
 

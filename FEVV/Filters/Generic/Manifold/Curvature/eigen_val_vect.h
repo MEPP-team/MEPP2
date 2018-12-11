@@ -17,7 +17,7 @@ using EigenvalueType = Eigen::Vector3d;
   \return  0 if ok
 */
 int
-val_pro(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad);
+eigen_val_vect_compute(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad);
 
 /*
   Sort eigenvalues by descending order of their absolute values,
@@ -29,7 +29,7 @@ val_pro(const EigenMatrix &a, EigenvectorsType &u, EigenvalueType &ad);
               in the same order as eigenvalues
 */
 void
-eig_srt(EigenvalueType &ad, EigenvectorsType &u);
+eigen_val_vect_sort(EigenvalueType &ad, EigenvectorsType &u);
 
 
 #endif
