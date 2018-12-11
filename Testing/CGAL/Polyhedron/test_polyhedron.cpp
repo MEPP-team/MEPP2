@@ -12,7 +12,6 @@
 #include "FEVV/Filters/Generic/scaling.hpp"
 #include "FEVV/Operators/Generic/Manifold/collapse_edge.hpp"
 #include "FEVV/Filters/Generic/translation.hpp"
-#include "FEVV/Filters/translation_with_object.h"
 #include "FEVV/Filters/Generic/print_points.hpp"
 #include "FEVV/Filters/Generic/print_face_normals.hpp"
 
@@ -87,12 +86,7 @@ test_polyhedron(char *filename)
   collapse_some_edges_os << P;*/
 
   // 8) Translate object
-  // 8.1) First by using a global function
   translate(p, pos_pm, 10, 5, 3);
-
-  // 8.2) Second by using an object
-  TranslationFilter< Polyhedron, decltype(pos_pm) > tf(p, pos_pm);
-  tf.translate(-10, -5, -3);
 
   // End of test
   std::cout << "Done." << std::endl;
