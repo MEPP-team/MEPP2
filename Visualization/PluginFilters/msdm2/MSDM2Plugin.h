@@ -19,7 +19,7 @@
 
 #include "Visualization/SimpleWindow.h"
 
-#include "FEVV/Filters/Generic/Manifold/msdm2.h" // A) include the header of the filter corresponding to your operation
+#include "FEVV/Filters/CGAL/Surface_mesh/msdm2.h" // A) include the header of the filter corresponding to your operation
 #include "FEVV/Filters/Generic/color_mesh.h"
 #include "FEVV/Filters/Generic/minmax_map.h"
 

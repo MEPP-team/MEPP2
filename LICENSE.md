@@ -6,14 +6,14 @@ FEVV is distributed under the GNU Lesser General Public License Version 3.0 (ref
 ## FIXME To document cleanly
  * Refer bellow for the many embedded FIXMEs
  * The **GUI IS GPL** ! Deal with it properly in the header files...
- * `CGAL/Cartesian.h`, that in turn has many sub-includes (hence reading the license header of that file does not suffice), belongs to the [CGAL's Cartesian_kernel](https://github.com/CGAL/cgal/blob/master/Cartesian_kernel/include/CGAL/Cartesian.h). Although this Cartesian_kernel package [is not documented in the package review](https://doc.cgal.org/latest/Manual/packages.html) we can hope the [legal header of Cartesian.h](https://github.com/CGAL/cgal/blob/master/Cartesian_kernel/include/CGAL/Cartesian.h) suffices to make it LGPL. 
+ * `CGAL/Cartesian.h`, that in turn has many sub-includes (hence reading the license header of that file does not suffice), belongs to the [CGAL's Cartesian_kernel](https://github.com/CGAL/cgal/blob/master/Cartesian_kernel/include/CGAL/Cartesian.h). Although this Cartesian_kernel package [is not documented in the package review](https://doc.cgal.org/latest/Manual/packages.html) we can hope the [legal header of Cartesian.h](https://github.com/CGAL/cgal/blob/master/Cartesian_kernel/include/CGAL/Cartesian.h) suffices to make it LGPL.
  * Including `CGAL/IO/Polyhedron_iostream.h` produces the inclusion of [`cgal/Polyhedron_IO/include/CGAL/IO/Polyhedron_iostream.h`](https://github.com/CGAL/cgal/blob/master/Polyhedron_IO/include/CGAL/IO/Polyhedron_iostream.h). Alas the `Polyhedron_IO` package [is not documented in the package review](https://doc.cgal.org/latest/Manual/packages.html). Nevertheless [Polyhedron_iostream.h legal header](https://github.com/CGAL/cgal/blob/master/Polyhedron_IO/include/CGAL/IO/Polyhedron_iostream.h) makes it **GPL**.
  * Note: the cmake configuration flag for CGAL surfaces (`BUILD_USE_CGAL`) doesn't enable to distinguish GPL (Polyhedron, SurfaceMesh) form LGPL (LCC)
  * MSDM2 is GPL since it uses AABB:
 
    | Package         |    License    | Included headers / Notes |
    | --------------- | ------------- | ------------------------ |
-   |[3D Fast Intersection and Distance Computation](https://doc.cgal.org/latest/AABB_tree/index.html)| [GPL](https://doc.cgal.org/latest/Manual/packages.html#PkgAABB_treeSummary)| For `CGAL/AABB_tree.h`, `CGAL/AABB_traits.h` and `CGAL/AABB_face_graph_triangle_primitive.h` that are only used by FEVV/Filters/Generic/Manifold/msdm2.h |
+   |[3D Fast Intersection and Distance Computation](https://doc.cgal.org/latest/AABB_tree/index.html)| [GPL](https://doc.cgal.org/latest/Manual/packages.html#PkgAABB_treeSummary)| For `CGAL/AABB_tree.h`, `CGAL/AABB_traits.h` and `CGAL/AABB_face_graph_triangle_primitive.h` that are only used by FEVV/Filters/CGAL/Surface_mesh/msdm2.h |
   * What is the purpose of BUILD_USE_FBX
 
 
