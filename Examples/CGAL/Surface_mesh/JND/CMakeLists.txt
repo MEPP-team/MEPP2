@@ -30,12 +30,11 @@ SET(JND_HEADER_FILES
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/threshold.h"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/types.h"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/visibility.h"
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.h"
+	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.hpp"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.h"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatcontrastcomputor.h")
 
 SET(JND_CPP_FILES
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.cpp"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.cpp")
 
 add_executable( example_just_noticeable_distortion

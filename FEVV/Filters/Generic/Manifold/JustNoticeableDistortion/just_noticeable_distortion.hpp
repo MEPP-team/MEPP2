@@ -14,7 +14,7 @@
 
 #include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatcontrastcomputor.h"
 #include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.h"
-#include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.h"
+#include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.hpp"
 #include "FEVV/Filters/Generic/AABB/compute_mesh_bounding_box.hpp"
 
 //---------------------------------------------------------

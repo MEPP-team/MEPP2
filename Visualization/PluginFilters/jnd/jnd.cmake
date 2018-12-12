@@ -14,7 +14,6 @@ if (BUILD_USE_GUI_JndPlugin)
   endif(BUILD_USE_QT5)
 
 SET(JND_CPP_FILES
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.cpp"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.cpp")
 
   add_library(JndPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/JndPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/Dialogs/DialogJnd1.cpp"
