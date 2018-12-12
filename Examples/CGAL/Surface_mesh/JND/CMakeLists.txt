@@ -31,16 +31,13 @@ SET(JND_HEADER_FILES
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/types.h"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/visibility.h"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/utils/lightsampler.hpp"
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.h"
+	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.hpp"
 	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatcontrastcomputor.h")
 
-SET(JND_CPP_FILES
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.cpp")
-
 add_executable( example_just_noticeable_distortion
-                ${JND_HEADER_FILES}   ### For VC++ to present include files
                 example_just_noticeable_distortion.cpp
-                ${JND_CPP_FILES} )
+                ${JND_HEADER_FILES}   ### For VC++ to present include files
+                )
 
 target_link_libraries( example_just_noticeable_distortion
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}

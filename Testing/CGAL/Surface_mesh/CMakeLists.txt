@@ -20,7 +20,7 @@ add_executable( test_jnd
                 test_jnd.cpp
                 "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
                 "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.cpp" )
+                )
 target_link_libraries( test_jnd
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}

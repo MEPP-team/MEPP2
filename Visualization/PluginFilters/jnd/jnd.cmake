@@ -13,12 +13,8 @@ if (BUILD_USE_GUI_JndPlugin)
     set(Jnd_Qt_Plugin_SRC ${Jnd_Qt_Plugin_SRC} ${Jnd_Qt_Plugin_MOC_CPP} ${Jnd_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
-SET(JND_CPP_FILES
-	"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/perception/flatfrequencycomputor.cpp")
-
   add_library(JndPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/JndPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/Dialogs/DialogJnd1.cpp"
     ${Jnd_Qt_Plugin_SRC}
-    ${JND_CPP_FILES}
     ${osgQt_SRC} # from viewer
     )
   target_link_libraries (JndPlugin ${Jnd_Qt_Plugin_LIB}
