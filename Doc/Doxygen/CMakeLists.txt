@@ -66,8 +66,6 @@ add_custom_target(
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
 )
 
-add_dependencies ( DocDoxygen mepp-gui )
-
 ### Someday there will be an installation stage:
 # install(
 #  DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/

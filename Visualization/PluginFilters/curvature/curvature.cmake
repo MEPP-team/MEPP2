@@ -14,7 +14,6 @@ if (BUILD_USE_GUI_CurvaturePlugin)
   endif(BUILD_USE_QT5)
 
   add_library(CurvaturePlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/curvature/CurvaturePlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/curvature/Dialogs/DialogCurvature1.cpp"
-    "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
     ${Curvature_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
     )
