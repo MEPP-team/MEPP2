@@ -235,7 +235,6 @@ target_link_libraries(test_curvature_filter_polyhedron
 #####
 add_executable( test_generic_writer_polyhedron
                 test_generic_writer_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
         				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_generic_writer_polyhedron
@@ -269,7 +268,6 @@ add_test( Generic_writer_polyhedron_obj_with_face-normal
 #####
 add_executable( test_compression_valence_polyhedron
                 test_compression_valence_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
         				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_polyhedron
@@ -483,7 +481,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_polyhedron
                 test_decompression_valence_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
         				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_polyhedron

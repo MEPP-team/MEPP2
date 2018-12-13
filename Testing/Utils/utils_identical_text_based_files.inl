@@ -1,4 +1,4 @@
-#include "utils_identical_text_based_files.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -8,6 +8,7 @@
  * \param  filenameB  Filename of second file.
  * \result true when files are identical false otherwise
  */
+inline
 bool
 identical_text_based_files(std::string filename_a, std::string filename_b)
 {

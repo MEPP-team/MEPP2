@@ -126,7 +126,6 @@ target_link_libraries(  test_curvature_filter_openmesh
 #####
 add_executable( test_generic_writer_openmesh
                 test_generic_writer_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_generic_writer_openmesh
@@ -167,7 +166,6 @@ add_test( Generic_writer_openmesh_off_with_face-color
 #####
 add_executable( test_compression_valence_openmesh
                 test_compression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_openmesh
@@ -380,7 +378,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_openmesh
                 test_decompression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_openmesh

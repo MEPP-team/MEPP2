@@ -29,7 +29,6 @@ target_link_libraries( test_complying_concepts_linear_cell_complex
 #####
 add_executable( test_compression_valence_lcc
                 test_compression_valence_lcc.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
         				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_lcc
@@ -243,7 +242,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_lcc
                 test_decompression_valence_lcc.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
         				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_lcc
