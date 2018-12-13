@@ -12,7 +12,7 @@ using MeshT = FEVV::DataStructures::AIF::AIFMesh;
 //---------------- generic code below ---------------------
 
 #include "Testing/Utils/utils_retrieve_halfedge.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "FEVV/Operators/Generic/Manifold/collapse_edge.hpp"
 
 #include "FEVV/Filters/Generic/generic_reader.hpp"

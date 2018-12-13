@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 
@@ -94,3 +96,6 @@ are_meshes_equal(std::string filename_a,
                  FloatT geom_threshold,
                  FloatT attr_threshold,
                  bool relative_thresholds);
+
+
+#include "utils_are_meshes_identical.inl"

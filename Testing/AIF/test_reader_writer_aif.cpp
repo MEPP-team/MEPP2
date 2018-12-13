@@ -3,8 +3,8 @@
 #include "FEVV/DataStructures/AIF/AIFMeshWriter.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
-#include "Testing/Utils/utils_are_meshes_identical.h"
-#include "Testing/Utils/utils_identical_text_based_files.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
+#include "Testing/Utils/utils_identical_text_based_files.hpp"
 
 #include <cassert>
 

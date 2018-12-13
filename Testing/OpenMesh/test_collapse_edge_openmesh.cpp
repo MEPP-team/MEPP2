@@ -13,7 +13,7 @@
 #include <iostream>
 
 #include "Testing/Utils/utils_retrieve_halfedge.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "FEVV/Operators/Generic/Manifold/collapse_edge.hpp"
 // DBG #include "FEVV/Filters/Generic/print_points.hpp"
 

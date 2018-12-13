@@ -1,5 +1,4 @@
-#ifndef JNDPerception_FLATFREQUENCYCOMPUTOR_H
-#define JNDPerception_FLATFREQUENCYCOMPUTOR_H
+#pragma once
 
 #include <cmath>
 #include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/models/types.h"
@@ -103,4 +102,4 @@ compute_flat_frequency(const Cam_t &cam,
   return compute_flat_frequency(cam, p1, p2, geom_t, screen, user, scene);
 }
 
-#endif // JNDPerception_FLATFREQUENCYCOMPUTOR_H
+#include "flatfrequencycomputor.inl"

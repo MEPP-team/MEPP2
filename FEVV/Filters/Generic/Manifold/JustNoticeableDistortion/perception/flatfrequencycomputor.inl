@@ -1,5 +1,5 @@
-#include "flatfrequencycomputor.h"
 
+inline
 int
 cpd_to_pixel(int screen_resX,
              int screen_resY,
@@ -16,6 +16,7 @@ cpd_to_pixel(int screen_resX,
   return nb_pixel;
 }
 
+inline
 double
 pixel_to_wDistance(int camera_vportY,
                    double camera_fov,
@@ -29,6 +30,7 @@ pixel_to_wDistance(int camera_vportY,
   return wDistance;
 }
 
+inline
 double
 cpd_to_wDistance(int screen_resX,
                  int screen_resY,
@@ -46,6 +48,7 @@ cpd_to_wDistance(int screen_resX,
       cpd_to_pixel(screen_resX, screen_resY, screen_size, user_distance, cpd));
 }
 
+inline
 double
 pixel_to_cpd(int screen_resX,
              int screen_resY,
@@ -62,6 +65,7 @@ pixel_to_cpd(int screen_resX,
   return cpd;
 }
 
+inline
 int
 wDistance_to_pixel(int camera_vportY,
                    double camera_fov,
@@ -74,6 +78,7 @@ wDistance_to_pixel(int camera_vportY,
   return nb_pixel;
 }
 
+inline
 double
 wDistance_to_cpd(int screen_resX,
                  int screen_resY,

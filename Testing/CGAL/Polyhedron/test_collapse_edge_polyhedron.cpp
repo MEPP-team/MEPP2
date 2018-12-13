@@ -11,7 +11,7 @@
 #include <string> // std::stoi
 
 #include "Testing/Utils/utils_retrieve_halfedge.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "FEVV/Operators/Generic/Manifold/collapse_edge_euler.hpp"
 // DBG #include "FEVV/Filters/print_points.h"
 

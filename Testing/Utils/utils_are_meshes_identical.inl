@@ -1,4 +1,4 @@
-#include "utils_are_meshes_identical.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -11,6 +11,8 @@
 #include <numeric> // for std::accumulate()
 
 
+namespace are_meshes_identical {
+
 //------------------------------------------------------------------------------
 
 typedef std::set< std::pair< FloatT, FloatT > > ErrorContainer;
@@ -20,12 +22,18 @@ typedef std::set< std::pair< FloatT, FloatT > > ErrorContainer;
 // one error as a couple of values (reference value and effective value)
 // into a set, to get rid of duplicated errors.
 
+inline
 std::string
 get_next_line(std::ifstream &file);
+
+inline
 FloatT
 relative_distance(FloatT a, FloatT b);
+
 inline FloatT
 absolute_distance(FloatT a, FloatT b);
+
+inline
 bool
 arevectorequal(const std::vector< FloatT > &v1,
                const std::vector< FloatT > &v2,
@@ -143,6 +151,7 @@ public:
   FloatT m_x, m_y, m_z; // point coordinates
 };
 
+inline
 std::ostream &
 operator<<(std::ostream &os, const Point &p)
 {
@@ -209,6 +218,7 @@ public:
   std::vector< FloatT > m_attributes;
 };
 
+inline
 std::ostream &
 operator<<(std::ostream &os, const Vertex &v)
 {
@@ -378,6 +388,7 @@ public:
   std::vector< FloatT > m_attributes; // face attributes
 };
 
+inline
 std::ostream &
 operator<<(std::ostream &os, const Face &p)
 {
@@ -417,6 +428,7 @@ protected:
   std::multiset< Face > m_faces;      // automatically sorted
 };
 
+inline
 void
 Mesh::load(std::ifstream &file, int vertices_nbr, int faces_nbr)
 {
@@ -493,6 +505,7 @@ Mesh::load(std::ifstream &file, int vertices_nbr, int faces_nbr)
   }
 }
 
+inline
 void
 Mesh::display(void)
 {
@@ -550,6 +563,7 @@ bool Mesh::operator==(const Mesh& m) const
 #endif
 
 // test Mesh approximated equality
+inline
 bool
 Mesh::isequalto(const Mesh &other,
                 FloatT geom_threshold,
@@ -635,6 +649,7 @@ Mesh::isequalto(const Mesh &other,
  * Get next line from .off file.
  * Skip empty lines and lines beginning with '#'
  */
+inline
 std::string
 get_next_line(std::ifstream &file)
 {
@@ -654,6 +669,7 @@ get_next_line(std::ifstream &file)
 /*
  * Compute the relative distance between two floats.
  */
+inline
 FloatT
 relative_distance(FloatT a, FloatT b)
 {
@@ -669,7 +685,8 @@ relative_distance(FloatT a, FloatT b)
 /*
  * Compute the absolute distance between two floats.
  */
-inline FloatT
+inline
+FloatT
 absolute_distance(FloatT a, FloatT b)
 {
   return std::abs(a - b);
@@ -678,6 +695,7 @@ absolute_distance(FloatT a, FloatT b)
 /*
  * Compare to vectors of floats for approximated equality.
  */
+inline
 bool
 arevectorequal(const std::vector< FloatT > &v1,
                const std::vector< FloatT > &v2,
@@ -744,6 +762,11 @@ arevectorequal(const std::vector< FloatT > &v1,
 
 //------------------------------------------------------------------------------
 
+} // namespace are_meshes_identical
+
+//------------------------------------------------------------------------------
+
+inline
 bool
 are_meshes_equal(std::string filename_a,
                  std::string filename_b,
@@ -771,14 +794,14 @@ are_meshes_equal(std::string filename_a,
 
   // check that files are in OFF format
 
-  line_a = get_next_line(file_a);
+  line_a = are_meshes_identical::get_next_line(file_a);
   if(line_a != "OFF" && line_a != "COFF")
   {
     std::cout << filename_a << " is not in OFF format." << std::endl;
     return false;
   }
 
-  line_b = get_next_line(file_b);
+  line_b = are_meshes_identical::get_next_line(file_b);
   if(line_b != "OFF" && line_b != "COFF")
   {
     std::cout << filename_b << " is not in OFF format." << std::endl;
@@ -788,17 +811,17 @@ are_meshes_equal(std::string filename_a,
   // check meshes sizes
 
   int vertices_nbr_a, faces_nbr_a, edges_nbr_a;
-  std::stringstream(get_next_line(file_a)) >> vertices_nbr_a >> faces_nbr_a >>
-      edges_nbr_a;
+  std::stringstream(are_meshes_identical::get_next_line(file_a))
+      >> vertices_nbr_a >> faces_nbr_a >> edges_nbr_a;
   int vertices_nbr_b, faces_nbr_b, edges_nbr_b;
-  std::stringstream(get_next_line(file_b)) >> vertices_nbr_b >> faces_nbr_b >>
-      edges_nbr_b;
+  std::stringstream(are_meshes_identical::get_next_line(file_b))
+      >> vertices_nbr_b >> faces_nbr_b >> edges_nbr_b;
 
   if(vertices_nbr_a != vertices_nbr_b ||
-     faces_nbr_a !=
-         faces_nbr_b /*||  edgesNbrA != edgesNbrB*/) // number of edges is not
-                                                     // always correct in .off
-                                                     // files!
+     faces_nbr_a != faces_nbr_b /*||
+     edgesNbrA != edgesNbrB*/) // number of edges is not
+                               // always correct in .off
+                               // files!
   {
     std::cout << "Meshes do NOT have the same size:" << std::endl;
     std::cout << " - " << filename_a << " has " << vertices_nbr_a
@@ -812,7 +835,7 @@ are_meshes_equal(std::string filename_a,
 
   // load meshes
 
-  Mesh mesh_a, mesh_b;
+  are_meshes_identical::Mesh mesh_a, mesh_b;
   mesh_a.load(file_a, vertices_nbr_a, faces_nbr_a);
   mesh_b.load(file_b, vertices_nbr_b, faces_nbr_b);
 
@@ -827,7 +850,7 @@ are_meshes_equal(std::string filename_a,
   }
 
   // compare meshes
-  ErrorContainer errors_log;
+  are_meshes_identical::ErrorContainer errors_log;
   bool isequal = mesh_a.isequalto(
       mesh_b, geom_threshold, attr_threshold, relative_thresholds, &errors_log);
 
@@ -839,12 +862,14 @@ are_meshes_equal(std::string filename_a,
     if(relative_thresholds)
     {
       for(auto pair : errors_log)
-        errors.push_back(relative_distance(pair.first, pair.second));
+        errors.push_back(
+            are_meshes_identical::relative_distance(pair.first, pair.second));
     }
     else
     {
       for(auto pair : errors_log)
-        errors.push_back(absolute_distance(pair.first, pair.second));
+        errors.push_back(
+            are_meshes_identical::absolute_distance(pair.first, pair.second));
     }
 
     auto minmax = std::minmax_element(errors.begin(), errors.end());
@@ -868,6 +893,7 @@ are_meshes_equal(std::string filename_a,
 }
 
 
+inline
 bool
 are_meshes_equal(std::string filename_a,
                  std::string filename_b,
@@ -884,6 +910,7 @@ are_meshes_equal(std::string filename_a,
 }
 
 
+inline
 bool
 are_meshes_equal(std::string filename_a, std::string filename_b, bool verbose)
 {
