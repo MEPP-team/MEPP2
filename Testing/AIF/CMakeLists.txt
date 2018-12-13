@@ -500,7 +500,6 @@ add_test( Test_load_dangling_edge_aif_off_3
 #TODO-elo disabled because of compilation error
 #TODO-elo-off  add_executable( test_compression_valence_aif
 #TODO-elo-off                  test_compression_valence_aif.cpp
-#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
 #TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 #TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 #TODO-elo-off  				)

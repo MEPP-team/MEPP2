@@ -1,7 +1,7 @@
 #ifndef Compression_Valence_COMPONENT_H
 #define Compression_Valence_COMPONENT_H
 
-#include "arithmetic_codec.h"
+#include "arithmetic_codec.hpp"
 
 #include <boost/graph/graph_traits.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"

@@ -13,10 +13,12 @@ if (BUILD_USE_GUI_DecompressionValencePlugin)
     set(DecompressionValence_Qt_Plugin_SRC ${DecompressionValence_Qt_Plugin_SRC} ${DecompressionValence_Qt_Plugin_MOC_CPP} ${DecompressionValence_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
-  add_library(DecompressionValencePlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/DecompressionValencePlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/Dialogs/DialogDecompressionValence1.cpp" "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-    ${DecompressionValence_Qt_Plugin_SRC}
-    ${osgQt_SRC} # from viewer
-    )
+  add_library(DecompressionValencePlugin SHARED
+              "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/DecompressionValencePlugin.cpp"
+              "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/Dialogs/DialogDecompressionValence1.cpp"
+              ${DecompressionValence_Qt_Plugin_SRC}
+              ${osgQt_SRC} # from viewer
+              )
   target_link_libraries (DecompressionValencePlugin ${DecompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )

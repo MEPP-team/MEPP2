@@ -167,7 +167,6 @@ add_test( Generic_writer_openmesh_off_with_face-color
 #####
 add_executable( test_compression_valence_openmesh
                 test_compression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
@@ -381,7 +380,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_openmesh
                 test_decompression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
 				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)

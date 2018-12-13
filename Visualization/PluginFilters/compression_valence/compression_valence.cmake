@@ -13,10 +13,12 @@ if (BUILD_USE_GUI_CompressionValencePlugin)
     set(CompressionValence_Qt_Plugin_SRC ${CompressionValence_Qt_Plugin_SRC} ${CompressionValence_Qt_Plugin_MOC_CPP} ${CompressionValence_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
-  add_library(CompressionValencePlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.cpp" "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-    ${CompressionValence_Qt_Plugin_SRC}
-    ${osgQt_SRC} # from viewer
-    )
+  add_library(CompressionValencePlugin SHARED
+              "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.cpp"
+              "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.cpp"
+              ${CompressionValence_Qt_Plugin_SRC}
+              ${osgQt_SRC} # from viewer
+              )
   target_link_libraries (CompressionValencePlugin ${CompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
     )

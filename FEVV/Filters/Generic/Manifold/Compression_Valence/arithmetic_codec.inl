@@ -45,27 +45,61 @@
 // - - Inclusion - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #include <stdlib.h>
-#include "arithmetic_codec.h"
 
 
 // - - Constants - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//
+// ELO-note: constants transformed into functions to make this file header-only
+//
 
-const unsigned AC__MinLength = 0x01000000U; // threshold for renormalization
-const unsigned AC__MaxLength = 0xFFFFFFFFU; // maximum AC interval length
+inline
+const unsigned AC__MinLength(void)
+{
+  return 0x01000000U; // threshold for renormalization
+}
+
+inline
+const unsigned AC__MaxLength(void)
+{
+  return 0xFFFFFFFFU; // maximum AC interval length
+}
 
 // Maximum values for binary models
-const unsigned BM__LengthShift = 13; // length bits discarded before mult.
-const unsigned BM__MaxCount = 1 << BM__LengthShift; // for adaptive models
+
+inline
+const unsigned BM__LengthShift(void)
+{
+  return 13; // length bits discarded before mult.
+}
+
+inline
+const unsigned BM__MaxCount(void)
+{
+  return 1 << BM__LengthShift(); // for adaptive models
+}
 
 // Maximum values for general models
-const unsigned DM__LengthShift = 15; // length bits discarded before mult.
-const unsigned DM__MaxCount = 1 << DM__LengthShift; // for adaptive models
+
+inline
+const unsigned DM__LengthShift(void)
+{
+  return 15; // length bits discarded before mult.
+}
+
+inline
+const unsigned DM__MaxCount(void)
+{
+  return 1 << DM__LengthShift(); // for adaptive models
+}
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - Static functions  - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//
+// ELO-note: made inline instead of static to make this file header-only
+//
 
-static void
+inline void
 AC_Error(const char *msg)
 {
   fprintf(stderr, "\n\n -> Arithmetic coding error: ");
@@ -96,7 +130,7 @@ Arithmetic_Codec::renorm_enc_interval(void)
   { // output and discard top byte
     *ac_pointer++ = (unsigned char)(base >> 24);
     base <<= 8;
-  } while((length <<= 8) < AC__MinLength); // length multiplied by 256
+  } while((length <<= 8) < AC__MinLength()); // length multiplied by 256
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,11 +141,12 @@ Arithmetic_Codec::renorm_dec_interval(void)
   do
   { // read least-significant byte
     value = (value << 8) | unsigned(*++ac_pointer);
-  } while((length <<= 8) < AC__MinLength); // length multiplied by 256
+  } while((length <<= 8) < AC__MinLength()); // length multiplied by 256
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::put_bit(unsigned bit)
 {
@@ -129,12 +164,13 @@ Arithmetic_Codec::put_bit(unsigned bit)
       propagate_carry(); // overflow = carry
   }
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::get_bit(void)
 {
@@ -148,7 +184,7 @@ Arithmetic_Codec::get_bit(void)
   if(bit)
     value -= length; // move base
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   return bit; // return data bit value
@@ -156,6 +192,7 @@ Arithmetic_Codec::get_bit(void)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::put_bits(unsigned data, unsigned bits)
 {
@@ -173,12 +210,13 @@ Arithmetic_Codec::put_bits(unsigned data, unsigned bits)
 
   if(init_base > base)
     propagate_carry(); // overflow = carry
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::get_bits(unsigned bits)
 {
@@ -192,7 +230,7 @@ Arithmetic_Codec::get_bits(unsigned bits)
   unsigned s = value / (length >>= bits); // decode symbol, change length
 
   value -= length * s; // update interval
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   return s;
@@ -200,6 +238,7 @@ Arithmetic_Codec::get_bits(unsigned bits)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::encode(unsigned bit, Static_Bit_Model &M)
 {
@@ -208,7 +247,7 @@ Arithmetic_Codec::encode(unsigned bit, Static_Bit_Model &M)
     AC_Error("encoder not initialized");
 #endif
 
-  unsigned x = M.bit_0_prob * (length >> BM__LengthShift); // product l x p0
+  unsigned x = M.bit_0_prob * (length >> BM__LengthShift()); // product l x p0
                                                            // update interval
   if(bit == 0)
     length = x;
@@ -221,12 +260,13 @@ Arithmetic_Codec::encode(unsigned bit, Static_Bit_Model &M)
       propagate_carry(); // overflow = carry
   }
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::decode(Static_Bit_Model &M)
 {
@@ -235,7 +275,7 @@ Arithmetic_Codec::decode(Static_Bit_Model &M)
     AC_Error("decoder not initialized");
 #endif
 
-  unsigned x = M.bit_0_prob * (length >> BM__LengthShift); // product l x p0
+  unsigned x = M.bit_0_prob * (length >> BM__LengthShift()); // product l x p0
   unsigned bit = (value >= x);                             // decision
                                // update & shift interval
   if(bit == 0)
@@ -246,7 +286,7 @@ Arithmetic_Codec::decode(Static_Bit_Model &M)
     length -= x;
   }
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   return bit; // return data bit value
@@ -254,6 +294,7 @@ Arithmetic_Codec::decode(Static_Bit_Model &M)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::encode(unsigned bit, Adaptive_Bit_Model &M)
 {
@@ -262,7 +303,7 @@ Arithmetic_Codec::encode(unsigned bit, Adaptive_Bit_Model &M)
     AC_Error("encoder not initialized");
 #endif
 
-  unsigned x = M.bit_0_prob * (length >> BM__LengthShift); // product l x p0
+  unsigned x = M.bit_0_prob * (length >> BM__LengthShift()); // product l x p0
                                                            // update interval
   if(bit == 0)
   {
@@ -278,7 +319,7 @@ Arithmetic_Codec::encode(unsigned bit, Adaptive_Bit_Model &M)
       propagate_carry(); // overflow = carry
   }
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 
   if(--M.bits_until_update == 0)
@@ -287,6 +328,7 @@ Arithmetic_Codec::encode(unsigned bit, Adaptive_Bit_Model &M)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::decode(Adaptive_Bit_Model &M)
 {
@@ -295,7 +337,7 @@ Arithmetic_Codec::decode(Adaptive_Bit_Model &M)
     AC_Error("decoder not initialized");
 #endif
 
-  unsigned x = M.bit_0_prob * (length >> BM__LengthShift); // product l x p0
+  unsigned x = M.bit_0_prob * (length >> BM__LengthShift()); // product l x p0
   unsigned bit = (value >= x);                             // decision
                                                            // update interval
   if(bit == 0)
@@ -309,7 +351,7 @@ Arithmetic_Codec::decode(Adaptive_Bit_Model &M)
     length -= x;
   }
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   if(--M.bits_until_update == 0)
@@ -320,6 +362,7 @@ Arithmetic_Codec::decode(Adaptive_Bit_Model &M)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::encode(unsigned data, Static_Data_Model &M)
 {
@@ -334,13 +377,13 @@ Arithmetic_Codec::encode(unsigned data, Static_Data_Model &M)
   // compute products
   if(data == M.last_symbol)
   {
-    x = M.distribution[data] * (length >> DM__LengthShift);
+    x = M.distribution[data] * (length >> DM__LengthShift());
     base += x;   // update interval
     length -= x; // no product needed
   }
   else
   {
-    x = M.distribution[data] * (length >>= DM__LengthShift);
+    x = M.distribution[data] * (length >>= DM__LengthShift());
     base += x; // update interval
     length = M.distribution[data + 1] * length - x;
   }
@@ -348,12 +391,13 @@ Arithmetic_Codec::encode(unsigned data, Static_Data_Model &M)
   if(init_base > base)
     propagate_carry(); // overflow = carry
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::decode(Static_Data_Model &M)
 {
@@ -367,7 +411,7 @@ Arithmetic_Codec::decode(Static_Data_Model &M)
   if(M.decoder_table)
   { // use table look-up for faster decoding
 
-    unsigned dv = value / (length >>= DM__LengthShift);
+    unsigned dv = value / (length >>= DM__LengthShift());
     unsigned t = dv >> M.table_shift;
 
     s = M.decoder_table[t]; // initial decision based on table look-up
@@ -391,7 +435,7 @@ Arithmetic_Codec::decode(Static_Data_Model &M)
   { // decode using only multiplications
 
     x = s = 0;
-    length >>= DM__LengthShift;
+    length >>= DM__LengthShift();
     unsigned m = (n = M.data_symbols) >> 1;
     // decode via bisection search
     do
@@ -413,7 +457,7 @@ Arithmetic_Codec::decode(Static_Data_Model &M)
   value -= x; // update interval
   length = y - x;
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   return s;
@@ -421,6 +465,7 @@ Arithmetic_Codec::decode(Static_Data_Model &M)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::encode(unsigned data, Adaptive_Data_Model &M)
 {
@@ -435,13 +480,13 @@ Arithmetic_Codec::encode(unsigned data, Adaptive_Data_Model &M)
   // compute products
   if(data == M.last_symbol)
   {
-    x = M.distribution[data] * (length >> DM__LengthShift);
+    x = M.distribution[data] * (length >> DM__LengthShift());
     base += x;   // update interval
     length -= x; // no product needed
   }
   else
   {
-    x = M.distribution[data] * (length >>= DM__LengthShift);
+    x = M.distribution[data] * (length >>= DM__LengthShift());
     base += x; // update interval
     length = M.distribution[data + 1] * length - x;
   }
@@ -449,7 +494,7 @@ Arithmetic_Codec::encode(unsigned data, Adaptive_Data_Model &M)
   if(init_base > base)
     propagate_carry(); // overflow = carry
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_enc_interval(); // renormalization
 
   ++M.symbol_count[data];
@@ -459,6 +504,7 @@ Arithmetic_Codec::encode(unsigned data, Adaptive_Data_Model &M)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::decode(Adaptive_Data_Model &M)
 {
@@ -472,7 +518,7 @@ Arithmetic_Codec::decode(Adaptive_Data_Model &M)
   if(M.decoder_table)
   { // use table look-up for faster decoding
 
-    unsigned dv = value / (length >>= DM__LengthShift);
+    unsigned dv = value / (length >>= DM__LengthShift());
     unsigned t = dv >> M.table_shift;
 
     s = M.decoder_table[t]; // initial decision based on table look-up
@@ -496,7 +542,7 @@ Arithmetic_Codec::decode(Adaptive_Data_Model &M)
   { // decode using only multiplications
 
     x = s = 0;
-    length >>= DM__LengthShift;
+    length >>= DM__LengthShift();
     unsigned m = (n = M.data_symbols) >> 1;
     // decode via bisection search
     do
@@ -518,7 +564,7 @@ Arithmetic_Codec::decode(Adaptive_Data_Model &M)
   value -= x; // update interval
   length = y - x;
 
-  if(length < AC__MinLength)
+  if(length < AC__MinLength())
     renorm_dec_interval(); // renormalization
 
   ++M.symbol_count[s];
@@ -532,12 +578,14 @@ Arithmetic_Codec::decode(Adaptive_Data_Model &M)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - Other Arithmetic_Codec implementations  - - - - - - - - - - - - - - - -
 
+inline
 Arithmetic_Codec::Arithmetic_Codec(void)
 {
   mode = buffer_size = 0;
   new_buffer = code_buffer = 0;
 }
 
+inline
 Arithmetic_Codec::Arithmetic_Codec(unsigned max_code_bytes,
                                    unsigned char *user_buffer)
 {
@@ -546,10 +594,12 @@ Arithmetic_Codec::Arithmetic_Codec(unsigned max_code_bytes,
   set_buffer(max_code_bytes, user_buffer);
 }
 
+inline
 Arithmetic_Codec::~Arithmetic_Codec(void) { delete[] new_buffer; }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::set_buffer(unsigned max_code_bytes,
                              unsigned char *user_buffer)
@@ -581,6 +631,7 @@ Arithmetic_Codec::set_buffer(unsigned max_code_bytes,
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::start_encoder(void)
 {
@@ -591,12 +642,13 @@ Arithmetic_Codec::start_encoder(void)
 
   mode = 1;
   base = 0; // initialize encoder variables: interval and pointer
-  length = AC__MaxLength;
+  length = AC__MaxLength();
   ac_pointer = code_buffer; // pointer to next data byte
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::start_decoder(void)
 {
@@ -607,7 +659,7 @@ Arithmetic_Codec::start_decoder(void)
 
   // initialize decoder: interval, pointer, initial code value
   mode = 2;
-  length = AC__MaxLength;
+  length = AC__MaxLength();
   ac_pointer = code_buffer + 3;
   value = (unsigned(code_buffer[0]) << 24) | (unsigned(code_buffer[1]) << 16) |
           (unsigned(code_buffer[2]) << 8) | unsigned(code_buffer[3]);
@@ -615,6 +667,7 @@ Arithmetic_Codec::start_decoder(void)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::read_from_file(FILE *code_file)
 {
@@ -639,6 +692,7 @@ Arithmetic_Codec::read_from_file(FILE *code_file)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::stop_encoder(void)
 {
@@ -648,15 +702,15 @@ Arithmetic_Codec::stop_encoder(void)
 
   unsigned init_base = base; // done encoding: set final data bytes
 
-  if(length > 2 * AC__MinLength)
+  if(length > 2 * AC__MinLength())
   {
-    base += AC__MinLength;       // base offset
-    length = AC__MinLength >> 1; // set new length for 1 more byte
+    base += AC__MinLength();       // base offset
+    length = AC__MinLength() >> 1; // set new length for 1 more byte
   }
   else
   {
-    base += AC__MinLength >> 1;  // base offset
-    length = AC__MinLength >> 9; // set new length for 2 more bytes
+    base += AC__MinLength() >> 1;  // base offset
+    length = AC__MinLength() >> 9; // set new length for 2 more bytes
   }
 
   if(init_base > base)
@@ -673,6 +727,7 @@ Arithmetic_Codec::stop_encoder(void)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 unsigned
 Arithmetic_Codec::write_to_file(FILE *code_file)
 {
@@ -697,6 +752,7 @@ Arithmetic_Codec::write_to_file(FILE *code_file)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Arithmetic_Codec::stop_decoder(void)
 {
@@ -709,47 +765,52 @@ Arithmetic_Codec::stop_decoder(void)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - Static bit model implementation - - - - - - - - - - - - - - - - - - - - -
 
+inline
 Static_Bit_Model::Static_Bit_Model(void)
 {
-  bit_0_prob = 1U << (BM__LengthShift - 1); // p0 = 0.5
+  bit_0_prob = 1U << (BM__LengthShift() - 1); // p0 = 0.5
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Static_Bit_Model::set_probability_0(double p0)
 {
   if((p0 < 0.0001) || (p0 > 0.9999))
     AC_Error("invalid bit probability");
-  bit_0_prob = unsigned(p0 * (1 << BM__LengthShift));
+  bit_0_prob = unsigned(p0 * (1 << BM__LengthShift()));
 }
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - Adaptive bit model implementation - - - - - - - - - - - - - - - - - - - -
 
+inline
 Adaptive_Bit_Model::Adaptive_Bit_Model(void) { reset(); }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Adaptive_Bit_Model::reset(void)
 {
   // initialization to equiprobable model
   bit_0_count = 1;
   bit_count = 2;
-  bit_0_prob = 1U << (BM__LengthShift - 1);
+  bit_0_prob = 1U << (BM__LengthShift() - 1);
   update_cycle = bits_until_update = 4; // start with frequent updates
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Adaptive_Bit_Model::update(void)
 {
   // halve counts when a threshold is reached
 
-  if((bit_count += update_cycle) > BM__MaxCount)
+  if((bit_count += update_cycle) > BM__MaxCount())
   {
     bit_count = (bit_count + 1) >> 1;
     bit_0_count = (bit_0_count + 1) >> 1;
@@ -758,7 +819,7 @@ Adaptive_Bit_Model::update(void)
   }
   // compute scaled bit 0 probability
   unsigned scale = 0x80000000U / bit_count;
-  bit_0_prob = (bit_0_count * scale) >> (31 - BM__LengthShift);
+  bit_0_prob = (bit_0_count * scale) >> (31 - BM__LengthShift());
 
   // set frequency of model updates
   update_cycle = (5 * update_cycle) >> 2;
@@ -771,16 +832,19 @@ Adaptive_Bit_Model::update(void)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - Static data model implementation  - - - - - - - - - - - - - - - - - - -
 
+inline
 Static_Data_Model::Static_Data_Model(void)
 {
   data_symbols = 0;
   distribution = 0;
 }
 
+inline
 Static_Data_Model::~Static_Data_Model(void) { delete[] distribution; }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Static_Data_Model::set_distribution(unsigned number_of_symbols,
                                     const double probability[])
@@ -800,7 +864,7 @@ Static_Data_Model::set_distribution(unsigned number_of_symbols,
       while(data_symbols > (1U << (table_bits + 2)))
         ++table_bits;
       table_size = (1 << table_bits) + 4;
-      table_shift = DM__LengthShift - table_bits;
+      table_shift = DM__LengthShift() - table_bits;
       distribution = new unsigned[data_symbols + table_size + 6];
       decoder_table = distribution + data_symbols;
     }
@@ -823,7 +887,7 @@ Static_Data_Model::set_distribution(unsigned number_of_symbols,
       p = probability[k];
     if((p < 0.0001) || (p > 0.9999))
       AC_Error("invalid symbol probability");
-    distribution[k] = unsigned(sum * (1 << DM__LengthShift));
+    distribution[k] = unsigned(sum * (1 << DM__LengthShift()));
     sum += p;
     if(table_size == 0)
       continue;
@@ -846,12 +910,14 @@ Static_Data_Model::set_distribution(unsigned number_of_symbols,
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - Adaptive data model implementation  - - - - - - - - - - - - - - - - - -
 
+inline
 Adaptive_Data_Model::Adaptive_Data_Model(void)
 {
   data_symbols = 0;
   distribution = 0;
 }
 
+inline
 Adaptive_Data_Model::Adaptive_Data_Model(unsigned number_of_symbols)
 {
   data_symbols = 0;
@@ -859,10 +925,12 @@ Adaptive_Data_Model::Adaptive_Data_Model(unsigned number_of_symbols)
   set_alphabet(number_of_symbols);
 }
 
+inline
 Adaptive_Data_Model::~Adaptive_Data_Model(void) { delete[] distribution; }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols)
 {
@@ -881,7 +949,7 @@ Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols)
       while(data_symbols > (1U << (table_bits + 2)))
         ++table_bits;
       table_size = (1 << table_bits) + 4;
-      table_shift = DM__LengthShift - table_bits;
+      table_shift = DM__LengthShift() - table_bits;
       distribution = new unsigned[2 * data_symbols + table_size + 6];
       decoder_table = distribution + 2 * data_symbols;
     }
@@ -901,12 +969,13 @@ Adaptive_Data_Model::set_alphabet(unsigned number_of_symbols)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Adaptive_Data_Model::update(bool from_encoder)
 {
   // halve counts when a threshold is reached
 
-  if((total_count += update_cycle) > DM__MaxCount)
+  if((total_count += update_cycle) > DM__MaxCount())
   {
     total_count = 0;
     for(unsigned n = 0; n < data_symbols; n++)
@@ -919,14 +988,14 @@ Adaptive_Data_Model::update(bool from_encoder)
   if(from_encoder || (table_size == 0))
     for(k = 0; k < data_symbols; k++)
     {
-      distribution[k] = (scale * sum) >> (31 - DM__LengthShift);
+      distribution[k] = (scale * sum) >> (31 - DM__LengthShift());
       sum += symbol_count[k];
     }
   else
   {
     for(k = 0; k < data_symbols; k++)
     {
-      distribution[k] = (scale * sum) >> (31 - DM__LengthShift);
+      distribution[k] = (scale * sum) >> (31 - DM__LengthShift());
       sum += symbol_count[k];
       unsigned w = distribution[k] >> table_shift;
       while(s < w)
@@ -946,6 +1015,7 @@ Adaptive_Data_Model::update(bool from_encoder)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+inline
 void
 Adaptive_Data_Model::reset(void)
 {
