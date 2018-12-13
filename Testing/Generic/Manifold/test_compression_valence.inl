@@ -3,7 +3,7 @@
 #include "FEVV/Filters/Generic/Manifold/Compression_Valence/compression_valence.h"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "Testing/Utils/utils_identical_text_based_files.hpp"
 
 #include <iostream>

@@ -10,7 +10,7 @@
 #include <CGAL/boost/graph/graph_traits_PolyMesh_ArrayKernelT.h>
 #include <CGAL/boost/graph/properties_PolyMesh_ArrayKernelT.h>
 
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 
 #include <fstream>
 #include <iostream>

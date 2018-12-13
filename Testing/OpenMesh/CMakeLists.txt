@@ -30,7 +30,6 @@ add_test(Test_openmesh
 
 #####
 add_executable( test_collapse_edge_openmesh
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_collapse_edge_openmesh.cpp )
 target_link_libraries( test_collapse_edge_openmesh ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
 add_test(Collapse_edge_openmesh_1
@@ -46,7 +45,6 @@ add_test(Collapse_edge_openmesh_2
 
 #####
 add_executable( test_collapse_edge_Euler_openmesh
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_collapse_edge_euler_openmesh.cpp )
 target_link_libraries( test_collapse_edge_Euler_openmesh
                        ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
@@ -79,7 +77,6 @@ add_test( Geometry_traits_unit_normal_openmesh
 
 #####
 add_executable( test_euler_add_center_vertex_openmesh
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_euler_add_center_vertex_openmesh.cpp )
 target_link_libraries( test_euler_add_center_vertex_openmesh
                        ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
@@ -126,7 +123,6 @@ target_link_libraries(  test_curvature_filter_openmesh
 #####
 add_executable( test_generic_writer_openmesh
                 test_generic_writer_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_generic_writer_openmesh
                        ${OPENMESH_LIBRARIES}
@@ -166,7 +162,6 @@ add_test( Generic_writer_openmesh_off_with_face-color
 #####
 add_executable( test_compression_valence_openmesh
                 test_compression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_openmesh
                        ${OPENMESH_LIBRARIES}
@@ -378,7 +373,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_openmesh
                 test_decompression_valence_openmesh.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_openmesh
                        ${OPENMESH_LIBRARIES}

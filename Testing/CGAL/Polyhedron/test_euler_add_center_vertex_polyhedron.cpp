@@ -5,7 +5,7 @@
 #include <CGAL/boost/graph/Euler_operations.h>
 
 #include "FEVV/Wrappings/Geometry_traits_cgal_polyhedron_3.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 
 #include <fstream>
 #include <iostream>

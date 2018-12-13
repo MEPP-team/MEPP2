@@ -2,7 +2,7 @@
 #include <CGAL/Cartesian.h>
 
 #include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 
 #include <CGAL/boost/graph/Euler_operations.h>
 

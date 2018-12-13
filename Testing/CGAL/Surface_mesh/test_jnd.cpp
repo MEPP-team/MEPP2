@@ -11,7 +11,7 @@
 #include "FEVV/Filters/Generic/Manifold/calculate_vertex_normals.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "Testing/Utils/utils_identical_text_based_files.hpp"
 
 #include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/just_noticeable_distortion.hpp"

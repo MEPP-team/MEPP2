@@ -1,7 +1,6 @@
 ####
 add_executable( test_msdm2
                 test_msdm2.cpp
-                "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
                 )
 target_link_libraries( test_msdm2
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
@@ -17,7 +16,6 @@ add_test(Test_MSDM2_Cow
 ####
 add_executable( test_jnd
                 test_jnd.cpp
-                "${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
                 )
 target_link_libraries( test_jnd
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
@@ -47,7 +45,6 @@ add_test( Geometry_traits_unit_normal_surfacemesh
 
 #####
 add_executable( test_euler_add_center_vertex_surfacemesh
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_euler_add_center_vertex_surfacemesh.cpp )
 target_link_libraries( test_euler_add_center_vertex_surfacemesh
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
@@ -107,7 +104,6 @@ target_link_libraries(test_curvature_filter_surfacemesh
 #####
 add_executable( test_generic_writer_surfacemesh
                 test_generic_writer_surfacemesh.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_generic_writer_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -142,7 +138,6 @@ add_test( Generic_writer_surfacemesh_obj_with_multitexture
 #####
 add_executable( test_compression_valence_surfacemesh
                 test_compression_valence_surfacemesh.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -355,7 +350,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_surfacemesh
                 test_decompression_valence_surfacemesh.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
