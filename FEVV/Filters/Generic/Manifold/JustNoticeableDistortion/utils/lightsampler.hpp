@@ -1,5 +1,4 @@
-#ifndef JNDUtils_LIGHTSAMPLER_H
-#define JNDUtils_LIGHTSAMPLER_H
+#pragma once
 
 #include <random>
 #include <cmath>
@@ -44,4 +43,4 @@ protected:
                     bool use_random = true) const;
 };
 
-#endif // JNDUtils_LIGHTSAMPLER_H
+#include "lightsampler.inl"

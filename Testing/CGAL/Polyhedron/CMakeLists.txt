@@ -1,6 +1,5 @@
 ####
 add_executable( test_flip_edge_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_flip_edge_polyhedron.cpp )
 target_link_libraries( test_flip_edge_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
@@ -22,7 +21,6 @@ add_test(Flip_edge_polyhedron_2
 
 ####
 add_executable( test_split_edge_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_split_edge_polyhedron.cpp )
 target_link_libraries( test_split_edge_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
@@ -68,7 +66,6 @@ add_test(Split_edge_polyhedron_6
 
 ####
 add_executable( test_split_edge_Euler_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_split_edge_euler_polyhedron.cpp )
 target_link_libraries( test_split_edge_Euler_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
@@ -114,7 +111,6 @@ add_test(Split_edge_Euler_polyhedron_6
 
 #####
 add_executable( test_collapse_edge_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_collapse_edge_polyhedron.cpp )
 target_link_libraries( test_collapse_edge_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
@@ -140,7 +136,6 @@ add_test(Collapse_edge_polyhedron_4
 
 #####
 add_executable( test_collapse_edge_Euler_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_collapse_edge_polyhedron.cpp )
 target_link_libraries( test_collapse_edge_Euler_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
@@ -175,7 +170,6 @@ add_test( Geometry_traits_unit_normal_polyhedron
 
 #####
 add_executable( test_euler_add_center_vertex_polyhedron
-                "${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp"
                 test_euler_add_center_vertex_polyhedron.cpp )
 target_link_libraries( test_euler_add_center_vertex_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
@@ -223,7 +217,6 @@ add_test( Smoothing_polyhedron_border
 #####
 add_executable( test_curvature_filter_polyhedron
                 test_curvature_filter_polyhedron.cpp
-                "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
                 )
 target_link_libraries(test_curvature_filter_polyhedron
                       ${CGAL_LIBRARY}
@@ -236,8 +229,6 @@ target_link_libraries(test_curvature_filter_polyhedron
 #####
 add_executable( test_generic_writer_polyhedron
                 test_generic_writer_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_generic_writer_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -270,9 +261,6 @@ add_test( Generic_writer_polyhedron_obj_with_face-normal
 #####
 add_executable( test_compression_valence_polyhedron
                 test_compression_valence_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_compression_valence_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -485,9 +473,6 @@ endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 #####
 add_executable( test_decompression_valence_polyhedron
                 test_decompression_valence_polyhedron.cpp
-        				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-        				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 				)
 target_link_libraries( test_decompression_valence_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}

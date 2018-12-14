@@ -1,5 +1,5 @@
-#include "lightsampler.h"
 
+inline
 void
 LightSampler::sample(MatrixX3d &samples,
                      int n,
@@ -17,6 +17,7 @@ LightSampler::sample(MatrixX3d &samples,
   }
 }
 
+inline
 void
 LightSampler::sample_to_global(MatrixX3d &samples,
                                int n,
@@ -31,6 +32,7 @@ LightSampler::sample_to_global(MatrixX3d &samples,
   to_global(local, samples, up);
 }
 
+inline
 void
 LightSampler::to_global(const MatrixX3d &local,
                         MatrixX3d &global,
@@ -57,6 +59,7 @@ LightSampler::to_global(const MatrixX3d &local,
   }
 }
 
+inline
 void
 LightSampler::sample_naive(MatrixX3d &samples,
                            int n,

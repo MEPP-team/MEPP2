@@ -10,7 +10,7 @@
 #include <iostream>
 
 #include "Testing/Utils/utils_retrieve_edge.h"
-#include "Testing/Utils/utils_are_meshes_identical.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "FEVV/Operators/AIF/collapse_edge.hpp"
 // DBG #include "FEVV/Filters/Generic/print_points.hpp"
 

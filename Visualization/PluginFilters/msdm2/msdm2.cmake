@@ -15,7 +15,6 @@ if (BUILD_USE_GUI_MSDM2Plugin AND BUILD_USE_CGAL)
 
   add_library(MSDM2Plugin SHARED
     "${PROJECT_SOURCE_DIR}/FEVV/Filters/CGAL/Surface_mesh/msdm2.h"
-    "${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
     "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/MSDM2Plugin.cpp"
     "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/msdm2/Dialogs/DialogMSDM21.cpp"
     ${MSDM2_Qt_Plugin_SRC}

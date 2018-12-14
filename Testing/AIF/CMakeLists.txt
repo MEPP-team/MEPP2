@@ -54,8 +54,7 @@ add_test(AIFHelpers
 #####
 add_executable( test_reader_writer_aif
                 test_reader_writer_aif.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp" )
+				        )
 target_link_libraries(test_reader_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
@@ -196,7 +195,6 @@ add_test( Test_test_not_2_manifold_aif
 
 #####
 add_executable( test_collapse_edge_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_collapse_edge_aif.cpp)
 target_link_libraries(test_collapse_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -214,7 +212,6 @@ add_test(Collapse_edge_aif_2
 
 #####
 add_executable( test_collapse_edge_Euler_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_collapse_edge_euler_aif.cpp)
 target_link_libraries(test_collapse_edge_Euler_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -235,7 +232,6 @@ add_test(Collapse_edge_Euler_aif_2
 
 #####
 add_executable( test_flip_edge_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_flip_edge_aif.cpp
                 )
 target_link_libraries(test_flip_edge_aif
@@ -255,7 +251,6 @@ add_test(Flip_edge_aif_2
          ${TESTING_DATA_DIR}/square3.off )
 #####
 add_executable( test_split_edge_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_split_edge_aif.cpp
                 )
 target_link_libraries(test_split_edge_aif
@@ -299,7 +294,6 @@ add_test(Split_edge_aif_6
          ${TESTING_DATA_DIR}/square4.off )
 #####
 add_executable( test_non_manifold_split_edge_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_non_manifold_split_edge_aif.cpp)
 target_link_libraries(test_non_manifold_split_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -354,7 +348,6 @@ add_test(Non_manifold_split_edge_aif_8
          ${TESTING_DATA_DIR}/square4.off )
 #####
 add_executable( test_non_manifold_collapse_edge_aif
-                ${TESTING_DIR}/Utils/utils_are_meshes_identical.cpp
                 test_non_manifold_collapse_edge_aif.cpp)
 target_link_libraries(test_non_manifold_collapse_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -423,7 +416,6 @@ add_test( Smoothing_aif_gmesh
 #####
 add_executable( test_curvature_filter_aif
                 test_curvature_filter_aif.cpp
-				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Curvature/extract_Vpropres.cpp"
                 )
 target_link_libraries(test_curvature_filter_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
@@ -441,8 +433,7 @@ target_link_libraries(test_complying_concepts_aif
 #####
 add_executable( test_generic_writer_aif
                 test_generic_writer_aif.cpp
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp" )
+				        )
 target_link_libraries(test_generic_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
@@ -511,9 +502,6 @@ add_test( Test_load_dangling_edge_aif_off_3
 #TODO-elo disabled because of compilation error
 #TODO-elo-off  add_executable( test_compression_valence_aif
 #TODO-elo-off                  test_compression_valence_aif.cpp
-#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/FEVV/Filters/Generic/Manifold/Compression_Valence/arithmetic_codec.cpp"
-#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_identical_text_based_files.cpp"
-#TODO-elo-off  				"${PROJECT_SOURCE_DIR}/Testing/Utils/utils_are_meshes_identical.cpp"
 #TODO-elo-off  				)
 #TODO-elo-off  target_link_libraries(test_compression_valence_aif
 #TODO-elo-off                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}

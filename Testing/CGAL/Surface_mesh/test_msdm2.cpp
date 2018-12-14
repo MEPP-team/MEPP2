@@ -11,8 +11,8 @@
 #include "FEVV/Filters/Generic/calculate_face_normals.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
-#include "Testing/Utils/utils_are_meshes_identical.h"
-#include "Testing/Utils/utils_identical_text_based_files.h"
+#include "Testing/Utils/utils_are_meshes_identical.hpp"
+#include "Testing/Utils/utils_identical_text_based_files.hpp"
 
 #include "FEVV/Filters/CGAL/Surface_mesh/msdm2.h"
 #include "FEVV/Filters/Generic/minmax_map.h"
