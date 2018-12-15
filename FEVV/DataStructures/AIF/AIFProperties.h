@@ -1,6 +1,7 @@
 #ifndef __AIFProperties_h
 #define __AIFProperties_h
 
+#include <vector>
 #include <limits>
 #include <stdexcept>
 #include <cmath>
@@ -480,6 +481,41 @@ public:
       return true;
     else
       return false;
+  }
+  /**
+   * Test if there is at least one property map starting with prefix.
+   *
+   * \param  prefix  prefix of the property map
+   * \return true if there is at least one property map starting 
+   *         with given prefix, else false
+   */  
+  bool isAPropertyMapStartingWithPrefix(const std::string &prefix) const
+  {
+    auto iter = m_PropertyMaps.lower_bound(prefix);
+	  if( iter != m_PropertyMaps.end() )
+	  {
+      return (iter->first.compare(0, prefix.size(), prefix) == 0);
+	  }
+	  return false;
+  }
+
+  /**
+  * Get property map names starting with prefix.
+  *
+  * \param  prefix  prefix of the property map
+  * \return std::vector of property map names starting with prefix
+  */
+  std::vector< std::string > GetPropertyMapNamesStartingWithPrefix(const std::string &prefix) const
+  {
+    std::vector< std::string > res;
+    auto iter = m_PropertyMaps.lower_bound(prefix);
+    auto iter_end = m_PropertyMaps.end();
+    for( ; iter!=iter_end; ++iter)
+    {
+      if (iter->first.compare(0, prefix.size(), prefix) == 0)
+        res.push_back(iter->first);
+    }
+    return res;
   }
 
   /**

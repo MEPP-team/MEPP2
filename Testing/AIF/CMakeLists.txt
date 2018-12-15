@@ -391,6 +391,11 @@ add_test(Non_manifold_collapse_edge_aif_6
 #####
 add_executable( test_smoothing_aif
                 test_smoothing_aif.cpp)
+
+target_link_libraries(test_smoothing_aif
+                      ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      )
+
 if (BUILD_USE_VTK )
 	add_test( Smoothing_aif_vtk
 			 test_smoothing_aif
@@ -398,9 +403,6 @@ if (BUILD_USE_VTK )
        #${TESTING_DATA_DIR}/egea.vtk # time consuming test
        )
 endif()
-target_link_libraries(test_smoothing_aif
-                      ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
-                      )
 
 add_test( Smoothing_aif
          test_smoothing_aif
@@ -408,7 +410,9 @@ add_test( Smoothing_aif
 add_test( Smoothing_aif_border
          test_smoothing_aif
          ${TESTING_DATA_DIR}/flat.off )
-
+add_test( Smoothing_aif_gmesh
+         test_smoothing_aif
+         ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh )
 #####
 add_executable( test_curvature_filter_aif
                 test_curvature_filter_aif.cpp
@@ -455,7 +459,13 @@ add_test( Generic_writer_aif_off_with_face-color
           test_generic_writer_aif  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off  test_generic_writer_off_with_face-color.off  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off)
 add_test( Generic_writer_aif_obj_with_face-normal
           test_generic_writer_aif  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  test_generic_writer_obj_with_face-normal.obj  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.writer-output.obj.ref)
-
+# For the 2 next tests, the comparison beteween files fails, but it should not
+#if (BUILD_USE_VTK )
+#  add_test( Generic_writer_aif_vtk_cube
+#          test_generic_writer_aif  ${TESTING_DATA_DIR}/cube.vtk test_generic_writer_vtk_cube.vtk ${TESTING_DATA_DIR}/cube.vtk)
+#endif()
+#add_test( Generic_writer_aif_msh_SimpleBeam
+#          test_generic_writer_aif  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh  test_generic_writer_msh_SimpleBeam.msh  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh)
 #####
 add_executable( test_mesh_defects_aif
                 test_mesh_defects_aif.cpp

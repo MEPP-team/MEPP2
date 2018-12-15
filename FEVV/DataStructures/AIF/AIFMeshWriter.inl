@@ -4,10 +4,10 @@
 
 #include "FEVV/Tools/IO/ObjFileWriter.h"
 #include "FEVV/Tools/IO/OffFileWriter.h"
-
 #ifdef FEVV_USE_VTK
 #include "FEVV/Tools/IO/VtkFileWriter.h"
 #endif
+#include "FEVV/Tools/IO/MshFileWriter.h"
 
 #include "FEVV/Types/Material.h"
 
@@ -76,13 +76,14 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
 
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-
   // which vertex attribute are available for export ?
 
   bool useNorm = false;
   bool useVertexColor = false;
   bool useFaceColor = false;
   bool useVertexTextureCoord = false;
+  bool useVertexDatafield = false;
+  bool useFaceDatafield = false;
 
 #ifdef FEVV_USE_VTK
   bool useEdgeColor =
@@ -99,7 +100,14 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
     useFaceColor = true;
   if(inputMesh.isPropertyMap< AIFVertex::ptr >("v:texcoord"))
     useVertexTextureCoord = true;
-
+  if (inputMesh.isAPropertyMapStartingWithPrefix< AIFVertex::ptr >("v:datafield:"))
+    useVertexDatafield = true;
+  if (inputMesh.isAPropertyMapStartingWithPrefix< AIFFace::ptr >("f:datafield:"))
+    useFaceDatafield = true;
+  
+  std::vector<std::string> dfv_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
+  std::vector<std::string> dff_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
+  
   unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long >
@@ -152,6 +160,26 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
               "v:texcoord", (*itV)->GetIndex());
       std::vector< coordT_type > vt(uv.cbegin(), uv.cend());
       texture_coords.push_back(vt);
+    }
+
+    if (useVertexDatafield)
+    {
+      auto it_s = dfv_names.begin(), it_se = dfv_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          inputMesh.GetProperty< AIFVertex::ptr, std::vector< double > >(
+            *it_s, (*itV)->GetIndex());
+
+        if (itV == vRange.begin())
+        {
+          field_names.push_back("POINT_DATA_" + it_s->substr(12));
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+
+        field_attributes[i].push_back(vdata);
+      }
     }
   }
 
@@ -266,6 +294,28 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
       std::vector< coordC_type > color(fc.cbegin(), fc.cend());
       face_color_coords.push_back(color);
     }
+
+    if (useFaceDatafield)
+    {
+      auto it_s = dff_names.begin(), it_se = dff_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          inputMesh.GetProperty< AIFFace::ptr, std::vector< double > >(
+            *it_s, (*itF)->GetIndex());
+
+        if (itF == fRange.begin())
+        {
+          field_names.push_back("CELL_DATA_" + it_s->substr(12));
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+        if (useVertexDatafield && (it_s == dff_names.begin()))
+          i = dfv_names.size();
+
+        field_attributes[i].push_back(vdata);
+      }
+    }
   }
 
   if(has_extension(filePath, ".obj"))
@@ -299,8 +349,16 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
   }
   else if(has_extension(filePath, ".msh"))
   {
-    throw std::runtime_error(
-        "Writer::write -> msh writer has not been implemented yet");
+    IO::write_gmesh_file(filePath,
+                         points_coords,
+                         normals_coords,
+                         vertex_color_coords,
+                         lines_indices,
+                         line_colors_coords,
+                         faces_indices,
+                         face_color_coords,
+                         field_attributes,
+                         field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(has_extension(filePath, ".vtk") || has_extension(filePath, ".vtp") ||

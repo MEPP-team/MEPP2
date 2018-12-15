@@ -43,7 +43,7 @@ test_calculate_scaling_aif(const std::string &input_file_path)
 #ifdef USE_GENERIC_READER_WRITER
   MeshT m;
   FEVV::PMapsContainer pmaps_bag;
-  FEVV::Filters::read_mesh(inputFilePath, m, pmaps_bag);
+  FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
 #else
   PtrMeshT pm;
   FEVV::DataStructures::AIF::AIFMeshReader in;
@@ -52,7 +52,7 @@ test_calculate_scaling_aif(const std::string &input_file_path)
     std::cout << "reading failed";
     return;
   }
-  MeshT m(*pm);
+  MeshT m(*pm); // copy contructor use
 #endif
   /**********************************************************************************************************/
   try
@@ -78,8 +78,8 @@ test_calculate_scaling_aif(const std::string &input_file_path)
 #ifdef USE_GENERIC_READER_WRITER
   /**********************************************************************************************************/
   FEVV::Filters::write_mesh(
-      "smoothed_aif_" + FEVV::FileUtils::get_file_name(inputFilePath) +
-          FEVV::FileUtils::get_file_extension(inputFilePath),
+      "smoothed_aif_" + FEVV::FileUtils::get_file_name(input_file_path) +
+          FEVV::FileUtils::get_file_extension(input_file_path),
       m,
       pmaps_bag);
 #else

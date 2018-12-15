@@ -45,15 +45,17 @@ AIFMesh::AIFMesh(const Self &other)
   std::vector< std::vector< index_type > > texture_face_indices;
   std::vector< std::vector< index_type > > normal_face_indices;
   std::vector< std::vector< coordC_type > > line_color_coords;
-  // std::vector< std::vector< std::vector< double > > > field_attributes ;
-  // std::vector< std::string > field_names ;
+  std::vector< std::vector< std::vector< double > > > field_attributes ;
+  std::vector< std::string > field_names ;
   // std::vector< Material > materials;
   std::string texture_file_name;
 
   bool useVertexNormal = false;
   bool useVertexColor = false;
   bool useVertexTextureCoord = false;
-
+  bool useVertexDatafield = false;
+  bool useFaceDatafield = false;
+  
   AddPropertyMap< AIFVertex::ptr, Point >(
       "v:point"); // create vertex coordinates property map (mandatory, else
                   // cannot set vertex positions)
@@ -72,8 +74,15 @@ AIFMesh::AIFMesh(const Self &other)
   bool useFaceColor = false;
   if(other.isPropertyMap< AIFFace::ptr >("f:color"))
     useFaceColor = true;
-
-
+	
+  if (other.isAPropertyMapStartingWithPrefix< AIFVertex::ptr >("v:datafield:"))
+    useVertexDatafield = true;
+  if (other.isAPropertyMapStartingWithPrefix< AIFFace::ptr >("f:datafield:"))
+    useFaceDatafield = true;
+  
+  std::vector<std::string> dfv_names = other.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
+  std::vector<std::string> dff_names = other.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
+  
   unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long > indexMap;
@@ -126,6 +135,26 @@ AIFMesh::AIFMesh(const Self &other)
       std::vector< coordT_type > vt(uv.cbegin(), uv.cend());
       texture_coords.push_back(vt);
     }
+	
+    if (useVertexDatafield)
+    {
+      auto it_s = dfv_names.begin(), it_se = dfv_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          other.GetProperty< AIFVertex::ptr, std::vector< double > >(
+            *it_s, (*itV)->GetIndex());
+
+        if (itV == vRange.begin())
+        {
+          field_names.push_back(*it_s);
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+
+        field_attributes[i].push_back(vdata);
+      }	
+	}
   }
 
   // EDGES IN CONTAINER (needed to take into accound dangling or isolated edges)
@@ -191,6 +220,28 @@ AIFMesh::AIFMesh(const Self &other)
               "f:color", (*itF)->GetIndex());
       std::vector< coordC_type > color(vc.cbegin(), vc.cend());
       face_color_coords.push_back(color);
+    }
+
+    if (useFaceDatafield)
+    {
+      auto it_s = dff_names.begin(), it_se = dff_names.end();
+      size_t i = 0;
+      for (; it_s != it_se; ++it_s, ++i)
+      {
+        const std::vector< double >&vdata =
+          other.GetProperty< AIFFace::ptr, std::vector< double > >(
+            *it_s, (*itF)->GetIndex());
+
+        if (itF == fRange.begin())
+        {
+          field_names.push_back(*it_s);
+          field_attributes.resize(field_attributes.size() + 1);
+        }
+        if (useVertexDatafield && (it_s == dff_names.begin()))
+          i = other.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:").size();
+
+        field_attributes[i].push_back(vdata);
+      }
     }
   }
 
@@ -323,6 +374,34 @@ AIFMesh::AIFMesh(const Self &other)
     std::cout << "AIF property map for face-color created." << std::endl;
   }
 
+  if (!field_names.empty())
+  {
+    auto it = field_names.begin();
+    auto ite = field_names.end();
+    for (; it != ite; ++it)
+    {
+      if (it->find("v:datafield:") != std::string::npos)
+      { // property map associated to vertices
+
+        // create property map to store vertex current data field
+        this->AddPropertyMap< AIFVertex::ptr, std::vector<double> >(
+         *it);
+        if (!this->isPropertyMap< AIFVertex::ptr >(*it))
+          throw std::runtime_error(
+            "Failed to create a vertex data field property map.");
+      }
+      else if (it->find("f:datafield:") != std::string::npos)
+      { // property map associated to faces
+
+        // create property map to store face current data field
+        this->AddPropertyMap< AIFFace::ptr, std::vector<double> >(
+          *it);
+        if (!this->isPropertyMap< AIFFace::ptr >(*it))
+          throw std::runtime_error(
+            "Failed to create a face data field property map.");
+      }
+    }
+  }
   /////////////////////////////// VERTICES ADDITION
   //////////////////////////////////////
   std::vector< helpers::vertex_type::ptr > vertices;
@@ -385,6 +464,21 @@ AIFMesh::AIFMesh(const Self &other)
         AIFMesh::PointUV texCoords = {coords[0], coords[1]};
         this->SetProperty< AIFVertex::ptr, AIFMesh::PointUV >(
             "v:texcoord", currentVertex->GetIndex(), texCoords);
+      }
+    }
+    if (!field_names.empty())
+    {
+      auto it = field_names.begin();
+      auto ite = field_names.end();
+      auto it_d = field_attributes.begin();
+      for (; it != ite; ++it, ++it_d)
+      {
+        if (it->find("v:datafield:") != std::string::npos)
+        { // property map associated to vertices
+
+          this->SetProperty< AIFVertex::ptr, std::vector<double> >(
+            *it, currentVertex->GetIndex(), (*it_d)[index - 1]);
+        }
       }
     }
   }
@@ -558,6 +652,21 @@ AIFMesh::AIFMesh(const Self &other)
         AIFMesh::Vector vc(coords[0], coords[1], coords[2]);
         this->SetProperty< AIFFace::ptr, AIFMesh::Vector >(
             "f:color", currentFace->GetIndex(), vc);
+      }
+      if (!field_names.empty())
+      {
+        auto it = field_names.begin();
+        auto ite = field_names.end();
+        auto it_d = field_attributes.begin();
+        for (; it != ite; ++it, ++it_d)
+        {
+          if (it->find("f:datafield:") != std::string::npos)
+          { // property map associated to faces
+
+            this->SetProperty< AIFFace::ptr, std::vector<double> >(
+              *it, currentFace->GetIndex(), (*it_d)[faceId]);
+          }
+        }
       }
     }
   }

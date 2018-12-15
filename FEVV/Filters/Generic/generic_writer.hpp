@@ -13,6 +13,7 @@
 #ifdef FEVV_USE_VTK
 #include "FEVV/Tools/IO/VtkFileWriter.h"
 #endif
+#include "FEVV/Tools/IO/MshFileWriter.h"
 
 #include "FEVV/Types/Material.h"
 
@@ -72,7 +73,7 @@ write_mesh(const std::string &filename,
             << std::endl;
 
   std::vector< std::string > valid_extensions = {".obj", ".off", ".coff",
-                                                 /*".ply", ".msh"*/};
+                                                 /*".ply",*/ ".msh"};
   std::vector< std::string > valid_vtk_extensions = {".vtk", ".vtp", ".vtu"};
   if(!(FEVV::FileUtils::has_extension(filename, valid_extensions)
 #ifdef FEVV_USE_VTK
@@ -98,10 +99,8 @@ write_mesh(const std::string &filename,
       lines_colors;
   std::vector< index_type > face_material;
   std::vector< FEVV::Types::Material > materials;
-#ifdef FEVV_USE_VTK
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-#endif
 
 
   // which vertex attribute are available for export ?
@@ -348,7 +347,16 @@ write_mesh(const std::string &filename,
   }
   else if(FEVV::FileUtils::has_extension(filename, ".msh"))
   {
-    throw std::runtime_error("write_mesh(): msh writer not yet implemented");
+    IO::write_gmesh_file(filename,
+                         points_coords,
+                         normals_coords,
+                         points_colors,
+                         lines_indices,
+                         lines_colors,
+                         faces_indices,
+                         faces_colors,
+                         field_attributes,
+                         field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(FEVV::FileUtils::has_extension(filename, ".vtk") ||

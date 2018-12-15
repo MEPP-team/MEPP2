@@ -371,6 +371,32 @@ public:
   }
 
   /*!
+  *		  Indicate if at least one property map with given prefix exists for the given cell type.
+  * \tparam  CellType  type of the cell the property map container
+  *                   is associated to (AIFVertex/AIFEdge/AIFFace)
+  * \param  mapPrefixName  property map prefix name
+  */
+  template< typename CellType >
+  bool isAPropertyMapStartingWithPrefix(const std::string &mapPrefixName) const
+  {
+    const PropertyMapContainer *pmc = GetPropertyMapContainer< CellType >();
+    return pmc->isAPropertyMapStartingWithPrefix(mapPrefixName);
+  }
+
+  /*!
+  *		  Get property map names starting with prefix.
+  * \tparam  CellType  type of the cell the property map container
+  *                   is associated to (AIFVertex/AIFEdge/AIFFace)
+  * \param  mapPrefixName  property map prefix name
+  */
+  template< typename CellType >
+  std::vector< std::string > GetPropertyMapNamesStartingWithPrefix(const std::string &mapPrefixName) const
+  {
+    const PropertyMapContainer *pmc = GetPropertyMapContainer< CellType >();
+    return pmc->GetPropertyMapNamesStartingWithPrefix(mapPrefixName);
+  }
+
+  /*!
    *		  Remove a property map.
    * \param  CellType  type of the cell the property map container
    *                   is associated to (AIFVertex/AIFEdge/AIFFace)

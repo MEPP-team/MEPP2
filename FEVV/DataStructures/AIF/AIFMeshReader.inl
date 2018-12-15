@@ -6,6 +6,7 @@
 #include "FEVV/Tools/IO/ObjFileReader.h"
 #include "FEVV/Tools/IO/OffFileReader.h"
 #include "FEVV/Tools/IO/PlyFileReader.h"
+#include "FEVV/Tools/IO/MshFileReader.h"
 
 #include <vector>
 #include <array>
@@ -26,6 +27,7 @@ AIFMeshReader::ptr_output
 AIFMeshReader::read(const std::string &filePath)
 {
   using namespace FileUtils;
+  using namespace StrUtils;
 
   if(!boost::filesystem::exists(filePath))
     throw std::invalid_argument(
@@ -64,10 +66,8 @@ AIFMeshReader::read(const std::string &filePath)
   std::vector< std::vector< index_type > > normal_face_indices;
   std::vector< std::vector< coordC_type > > points_colors, faces_colors,
       lines_colors;
-#ifdef FEVV_USE_VTK
   std::vector< std::vector< std::vector< double > > > field_attributes;
   std::vector< std::string > field_names;
-#endif
   // std::vector< Material > materials;
   std::string texture_file_name; // TODO-elo-rm  when this file really supports
                                  // multitexture
@@ -111,8 +111,16 @@ AIFMeshReader::read(const std::string &filePath)
   }
   else if(has_extension(filePath, ".msh"))
   {
-    throw std::runtime_error(
-        "AIFMeshReader::read -> msh reader has not been implemented yet");
+    IO::read_gmsh_file(filePath,
+                       points_coords,
+                       normals_coords,
+                       vertex_color_coords,
+                       lines_indices,
+                       lines_colors,
+                       faces_indices,
+                       faces_colors,
+                       field_attributes,
+                       field_names);
   }
 #ifdef FEVV_USE_VTK
   else if(has_extension(filePath, ".vtk") || has_extension(filePath, ".vtp") ||
@@ -185,6 +193,45 @@ AIFMeshReader::read(const std::string &filePath)
     (*tfn_pm)[outputMesh.get()] = texture_file_name;
 
     std::cout << "AIF property map for texture-filename created." << std::endl;
+  }
+
+  if (!field_names.empty())
+  {
+    auto it = field_names.begin();
+    auto ite = field_names.end();
+    for (; it != ite; ++it)
+    {
+      if (it->find("POINT_DATA_") != std::string::npos )
+      { // property map associated to vertices
+
+        // create property map to store vertex current data field
+        outputMesh->AddPropertyMap< AIFVertex::ptr, std::vector<double> >(
+          "v:datafield:"+ it->substr(11));
+        if (!outputMesh->isPropertyMap< AIFVertex::ptr >("v:datafield:" + it->substr(11)))
+          throw std::runtime_error(
+            "Failed to create a vertex data field property map.");
+      }
+      else if (it->find("ELEMENT_DATA_") != std::string::npos)
+      { // property map associated to faces
+
+        // create property map to store face current data field
+        outputMesh->AddPropertyMap< AIFFace::ptr, std::vector<double> >(
+          "f:datafield:" + it->substr(13));
+        if (!outputMesh->isPropertyMap< AIFFace::ptr >("f:datafield:" + it->substr(13)))
+          throw std::runtime_error(
+            "Failed to create a face data field property map.");
+      }
+      else if (it->find("CELL_DATA_") != std::string::npos)
+      { // property map associated to faces
+
+        // create property map to store face current data field
+        outputMesh->AddPropertyMap< AIFFace::ptr, std::vector<double> >(
+          "f:datafield:" + it->substr(10));
+        if (!outputMesh->isPropertyMap< AIFFace::ptr >("f:datafield:" + it->substr(10)))
+          throw std::runtime_error(
+            "Failed to create a face data field property map.");
+      }
+    }
   }
 
   // import data into AIF datastructure
@@ -350,6 +397,21 @@ AIFMeshReader::read(const std::string &filePath)
         AIFMesh::PointUV texCoords = {coords[0], coords[1]};
         outputMesh->SetProperty< AIFVertex::ptr, AIFMesh::PointUV >(
             "v:texcoord", currentVertex->GetIndex(), texCoords);
+      }
+    }
+    if (!field_names.empty())
+    {
+      auto it = field_names.begin();
+      auto ite = field_names.end();
+      auto it_d = field_attributes.begin();
+      for (; it != ite; ++it, ++it_d)
+      {
+        if (it->find("POINT_DATA_") != std::string::npos)
+        { // property map associated to vertices
+
+          outputMesh->SetProperty< AIFVertex::ptr, std::vector<double> >(
+            ("v:datafield:" + it->substr(11)), currentVertex->GetIndex(), (*it_d)[vertexNbr - 1]);
+        }
       }
     }
   }
@@ -604,6 +666,27 @@ AIFMeshReader::read(const std::string &filePath)
         AIFMesh::Vector fc(color[0], color[1], color[2]);
         outputMesh->SetProperty< AIFFace::ptr, AIFMesh::Vector >(
             "f:color", currentFace->GetIndex(), fc);
+      }
+      if (!field_names.empty())
+      {
+        auto it = field_names.begin();
+        auto ite = field_names.end();
+        auto it_d = field_attributes.begin();
+        for (; it != ite; ++it, ++it_d)
+        {
+          if (it->find("ELEMENT_DATA_") != std::string::npos)
+          { // property map associated to faces
+
+            outputMesh->SetProperty< AIFFace::ptr, std::vector<double> >(
+              ("f:datafield:" + it->substr(13)), currentFace->GetIndex(), (*it_d)[faceId]);
+          }
+          else if (it->find("CELL_DATA_") != std::string::npos)
+          { // property map associated to faces
+
+            outputMesh->SetProperty< AIFFace::ptr, std::vector<double> >(
+              ("f:datafield:" + it->substr(10)), currentFace->GetIndex(), (*it_d)[faceId]);
+          }
+        }
       }
     }
   }
