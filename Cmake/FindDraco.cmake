@@ -25,6 +25,10 @@ mark_as_advanced(draco_VERSION_STRING)
 
 set(draco_version_file_no_prefix "draco/core/draco_version.h")
 
+if( DEFINED ENV{DRACO_DIR} )
+  set( DRACO_DIR $ENV{DRACO_DIR} )
+endif()
+
 # Set draco_INCLUDE_DIRS
 find_path(draco_INCLUDE_DIRS NAMES "${draco_version_file_no_prefix}"
     PATHS
