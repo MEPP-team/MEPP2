@@ -27,6 +27,7 @@ Other optional dependencies are:
  - VTK
  - PCL
  - FBX
+ - Draco
 
 ## Linux installation
 
@@ -90,19 +91,19 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ make install && cd
 
   # FBX SDK (a readme is available when uncompressing the archive) - primary support, not finished !
-  $ mkdir ~/FBX_SDK && mkdir ~/FBX_SDK/2019.0
+  $ mkdir ~/FBX_SDK && mkdir ~/FBX_SDK/2019.2
   $ cd /tmp
-  $ wget http://download.autodesk.com/us/fbx/2019/2019.0/fbx20190_fbxsdk_linux.tar.gz
-  $ tar -xzf fbx20190_fbxsdk_linux.tar.gz
-  $ ./fbx20190_fbxsdk_linux ~/FBX_SDK/2019.0
-  $ ln -s ~/FBX_SDK/2019.0/lib/gcc4/x64/release ~/FBX_SDK/2019.0/lib/release
-  $ ln -s ~/FBX_SDK/2019.0/lib/gcc4/x64/debug ~/FBX_SDK/2019.0/lib/debug
+  $ wget https://www.autodesk.com/content/dam/autodesk/www/adn/fbx/20192/fbx20192_fbxsdk_linux.tar.gz
+  $ tar -xzf fbx20192_fbxsdk_linux.tar.gz
+  $ ./fbx20192_fbxsdk_linux ~/FBX_SDK/2019.2
+  $ ln -s ~/FBX_SDK/2019.2/lib/gcc/x64/release ~/FBX_SDK/2019.2/lib/release
+  $ ln -s ~/FBX_SDK/2019.2/lib/gcc/x64/debug ~/FBX_SDK/2019.2/lib/debug
   $ cd
 
   # Draco (installation in user home directory)
   $ cd /tmp
   $ wget https://github.com/google/draco/archive/1.3.4.tar.gz
-  $ tar -xzf draco-1.3.4.tar.gz
+  $ tar -xzf 1.3.4.tar.gz
   $ cd draco-1.3.4 && mkdir build && cd build
   $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.4 ..
   $ make
