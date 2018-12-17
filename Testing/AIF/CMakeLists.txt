@@ -168,10 +168,8 @@ target_link_libraries(test_complex_one_ring_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
 
-# this test randomly fails on Windows
-# disabled until the behaviour is fixed
-#add_test( Test_complex_one_ring_aif
-#          test_complex_one_ring_aif )
+add_test( Test_complex_one_ring_aif
+          test_complex_one_ring_aif )
 
 #####
 add_executable( test_matrix_operations_aif
