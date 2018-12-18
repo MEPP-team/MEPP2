@@ -1,14 +1,5 @@
 #pragma once
 
-#if defined(SplitEdgeNonManifoldFilter_RECURSES)
-#error Recursive header files inclusion detected in SplitEdgeNonManifoldFilter.h
-#else // defined(SplitEdgeNonManifoldFilter_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define SplitEdgeNonManifoldFilter_RECURSES
-
-#if !defined SplitEdgeNonManifoldFilter_h
-/** Prevents repeated inclusion of headers. */
-#define SplitEdgeNonManifoldFilter_h
 //#include <CGAL/boost/graph/internal/helpers.h> // set_border
 #include <boost/graph/graph_traits.hpp>
 #include <CGAL/boost/graph/iterator.h>
@@ -240,8 +231,3 @@ typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // !defined SplitEdgeNonManifoldFilter_h
-
-#undef SplitEdgeNonManifoldFilter_RECURSES
-#endif // else defined(SplitEdgeNonManifoldFilter_RECURSES)

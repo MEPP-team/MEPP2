@@ -1,14 +1,5 @@
 #pragma once
 
-#if defined(SplitEdgeEulerFilter_RECURSES)
-#error Recursive header files inclusion detected in split_edge_euler.h
-#else // defined(SplitEdgeEulerFilter_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define SplitEdgeEulerFilter_RECURSES
-
-#if !defined SplitEdgeEulerFilter_h
-/** Prevents repeated inclusion of headers. */
-#define SplitEdgeEulerFilter_h
 #include <CGAL/boost/graph/internal/helpers.h> // set_border
 #include <boost/graph/graph_traits.hpp>
 #include <CGAL/boost/graph/iterator.h>
@@ -106,8 +97,3 @@ split_edge_euler(
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // !defined SplitEdgeEulerFilter_h
-
-#undef SplitEdgeEulerFilter_RECURSES
-#endif // else defined(SplitEdgeEulerFilter_RECURSES)

@@ -19,14 +19,15 @@ namespace Operators {
  * \tparam  PointMap A modifiable point map to manage vertex positions.
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
- * \param   v The vertex whose one-ring barycenter is computed.
- * \param   g The FaceGraph instance from which the v vertex will be taken.
- * \param   pm The point map which associate a vertex descriptor with a vertex
- *          position.
- * \param   SMOOTHING_FACTOR A (usually positive) factor used to compute the
- *          position of the returned centroid following
- *          V_pos + SMOOTHING_FACTORx(C_computed - V_pos).
- * \param   gt The geometry trait object.
+ * \param[in] v The vertex whose one-ring barycenter is computed.
+ * \param[in] g The FaceGraph instance from which the v vertex will be taken.
+ * \param[in] pm The point map which associate a vertex descriptor with a vertex
+ *            position.
+ * \param[in] SMOOTHING_FACTOR A (usually positive) factor used to compute the
+ *            position of the returned centroid following
+ *            V_pos + SMOOTHING_FACTORx(C_computed - V_pos).
+ * \param[in] gt The geometry trait object.
+ * \return The barycenter centroid of the vertex v.
  * \pre     g must be a triangular mesh.
  * \ingroup GenericManifoldFilters
  */
@@ -57,7 +58,6 @@ vertex_one_ring_barycenter(
       ite(qv.end());
   for(; it != ite; ++it, ++cpt)
   {
-    // Point tmp(pm[*it]); // works for all mesh structures except OpenMesh
     Point tmp = get(pm, *it); // works for all mesh structures
     center = Point(gt.get_x(tmp) + gt.get_x(center),
                    gt.get_y(tmp) + gt.get_y(center),
@@ -65,9 +65,6 @@ vertex_one_ring_barycenter(
   }
   if(cpt > 0)
   {
-    // std::cout << " center(" << gt.get_x(center) / cpt << ", " <<
-    // gt.get_y(center) / cpt << ", " << gt.get_z(center) / cpt << ")" <<
-    // std::endl;
     return gt.add_p(get(pm, v),
                     gt.scalar_mult(smoothing_factor,
                                    gt.sub(Point(gt.get_x(center) / cpt,

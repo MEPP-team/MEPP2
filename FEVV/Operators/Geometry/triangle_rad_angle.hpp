@@ -1,5 +1,4 @@
-#ifndef TRIANGLE_RAD_ANGLE_HXX
-#define TRIANGLE_RAD_ANGLE_HXX
+#pragma once
 
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Operators/Geometry/AngleOperations.hpp"
@@ -12,10 +11,10 @@ namespace Geometry {
  * \brief   Compute the angle of a triangle (given by 3 points).
  *
  * \tparam GeometryTraits The geometric kernel.
- * \param a The first point.
- * \param b The second point.
- * \param c The third point.
- * \param gt The geometry trait object.
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] gt The geometry trait object.
  * \return The triangle angle in rad (Scalar).
  */
 template< typename GeometryTraits >
@@ -49,5 +48,3 @@ triangle_rad_angle(const typename GeometryTraits::Point &a,
 } // namespace Geometry
 } // namespace Operators
 } // namespace FEVV
-
-#endif // TRIANGLE_RAD_ANGLE_HXX

@@ -1,14 +1,5 @@
 #pragma once
 
-#if defined(FlipEdgeFilter_RECURSES)
-#error Recursive header files inclusion detected in FlipEdgeFilter.h
-#else // defined(FlipEdgeFilter_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define FlipEdgeFilter_RECURSES
-
-#if !defined FlipEdgeFilter_h
-/** Prevents repeated inclusion of headers. */
-#define FlipEdgeFilter_h
 #include <CGAL/boost/graph/internal/helpers.h> // set_border
 #include <boost/graph/graph_traits.hpp>
 #include <CGAL/boost/graph/iterator.h>
@@ -28,10 +19,13 @@ namespace Operators {
  * \brief Flip an edge of the graph.
  *        The edge to flip is given as a halfedge.
  *
- * Template parameters:
- *           MutableFaceGraph: a Mesh type that provides
- *                 a Model of the MutableFaceGraph Concept
- *                 through a boost::graph_traits<> specialization.
+ * \tparam  MutableFaceGraph a Mesh type that provides a Model of the
+ *          MutableFaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param g The MutableFaceGraph instance out of which the h edge will be
+ *          deleted.
+ * \param h The edge to be flipped designated through one of its
+ *          halfedges.
  */
 template< typename MutableFaceGraph >
 void
@@ -125,8 +119,3 @@ flip_edge(
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // !defined FlipEdgeFilter_h
-
-#undef FlipEdgeFilter_RECURSES
-#endif // else defined(FlipEdgeFilter_RECURSES)
