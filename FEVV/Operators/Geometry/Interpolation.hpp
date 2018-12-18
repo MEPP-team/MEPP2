@@ -1,164 +1,206 @@
-#ifndef __Interpolation_hxx
-#define __Interpolation_hxx
+#pragma once
+
 #include <vector>
 
 namespace FEVV {
 namespace Operators {
 namespace Geometry {
-template< class P, class V >
+
+/**
+ * \brief  Predicate fonction to know whether the 
+ *         Pos position is inside the abcd tetrahedron.
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] d The fourth point.
+ * \param[in] Pos The point that is either inside 
+              or outside the tetrahedron (abcd). 
+ * \param[in] gt The geometry trait object.			  
+ * \return True if Pos is inside the tetrahedron (abcd),
+                else false.
+ */	
+template< typename GeometryTraits >
 static inline bool
-is_in_tetrahedron(const P &a, const P &b, const P &c, const P &d, const P &Pos)
+is_in_tetrahedron(const typename GeometryTraits::Point &a, 
+                  const typename GeometryTraits::Point &b, 
+                  const typename GeometryTraits::Point &c, 
+                  const typename GeometryTraits::Point &d, 
+                  const typename GeometryTraits::Point &Pos,
+				  const GeometryTraits &gt)
 {
-  V vap = Pos - a, vbp = Pos - b,
+  typedef typename GeometryTraits::Vector Vector;
+  typedef typename GeometryTraits::Scalar Scalar;
+  
+  Vector vap = Pos - a, vbp = Pos - b,
     // vcp = Pos - c,
     // vdp = Pos - d,
       vab = b - a, vac = c - a, vad = d - a, vbc = c - b, vbd = d - b;
 
-  V temp_ac_ad(vac[1] * vad[2] - vac[2] * vad[1],
-               vac[2] * vad[0] - vac[0] * vad[2],
-               vac[0] * vad[1] - vac[1] * vad[0]);
+  Vector temp_ac_ad(vac[1] * vad[2] - vac[2] * vad[1],
+                    vac[2] * vad[0] - vac[0] * vad[2],
+                    vac[0] * vad[1] - vac[1] * vad[0]);
 
-  V temp(vbd[1] * vbc[2] - vbd[2] * vbc[1],
-         vbd[2] * vbc[0] - vbd[0] * vbc[2],
-         vbd[0] * vbc[1] - vbd[1] * vbc[0]);
-#ifdef _KERNEL_EXACT_
-  double va = CGAL::to_double(vbp * temp) * 1. / 6;
-#else
-  double va = (vbp * temp) * 1. / 6;
-#endif
+  Vector temp(vbd[1] * vbc[2] - vbd[2] * vbc[1],
+              vbd[2] * vbc[0] - vbd[0] * vbc[2],
+              vbd[0] * vbc[1] - vbd[1] * vbc[0]);
 
-#ifdef _KERNEL_EXACT_
-  double vb = CGAL::to_double(vap * temp_ac_ad) * 1. / 6;
-#else
-  double vb = (vap * temp_ac_ad) * 1. / 6;
-#endif
+  Scalar va = (vbp * temp) * 1.f / 6;
 
-  temp = V(vad[1] * vab[2] - vad[2] * vab[1],
+  Scalar vb = (vap * temp_ac_ad) * 1.f / 6;
+
+  temp = Vector(vad[1] * vab[2] - vad[2] * vab[1],
            vad[2] * vab[0] - vad[0] * vab[2],
            vad[0] * vab[1] - vad[1] * vab[0]);
-#ifdef _KERNEL_EXACT_
-  double vc = CGAL::to_double(vap * temp) * 1. / 6;
-#else
-  double vc = (vap * temp) * 1. / 6;
-#endif
 
-  temp = V(vab[1] * vac[2] - vab[2] * vac[1],
-           vab[2] * vac[0] - vab[0] * vac[2],
-           vab[0] * vac[1] - vab[1] * vac[0]);
-#ifdef _KERNEL_EXACT_
-  double vd = CGAL::to_double(vap * temp) * 1. / 6;
-#else
-  double vd = (vap * temp) * 1. / 6;
-#endif
+  Scalar vc = (vap * temp) * 1.f / 6;
 
-#ifdef _KERNEL_EXACT_
-  double v = CGAL::to_double(vab * temp_ac_ad) * 1. / 6;
-#else
-  double v = (vab * temp_ac_ad) * 1. / 6;
-#endif
-  double alpha = va / v, beta = vb / v, gamma = vc / v, delta = vd / v;
+  temp = Vector(vab[1] * vac[2] - vab[2] * vac[1],
+                vab[2] * vac[0] - vab[0] * vac[2],
+                vab[0] * vac[1] - vab[1] * vac[0]);
+
+  Scalar vd = (vap * temp) * 1.f / 6;
+
+  Scalar v = (vab * temp_ac_ad) * 1.f / 6;
+
+  Scalar alpha = va / v, beta = vb / v, gamma = vc / v, delta = vd / v;
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // std::cout << "barycentric coordinates: (" << alpha << ", " << beta << ", "
   // << gamma << ", " << delta << ")" << std::endl ;
 
-  return !((alpha < 0.0) || (beta < 0.0) || (gamma < 0.0) || (delta < 0.0));
+  return !((alpha < 0.f) || (beta < 0.f) || (gamma < 0.f) || (delta < 0.f));
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-template< class P, class V >
-static inline double
-trilinear_interpolation(const P &a,
-                        const P &b,
-                        const P &c,
-                        const P &d,
-                        const P &Pos,
-                        double vala,
-                        double valb,
-                        double valc,
-                        double vald)
+
+/**
+ * \brief  Trilinear interpolation of values at tetrahedron
+ *         points.
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] d The fourth point.
+ * \param[in] Pos The point for which the trilinear 
+              interpolation of values is computed.	
+ * \param[in] vala The value of the first point.
+ * \param[in] valb The value of the second point.
+ * \param[in] valc The value of the third point.
+ * \param[in] vald The value of the fourth point. 			  
+ * \param[in] gt The geometry trait object.			  
+ * \return The trilinear interpolation of values vala, valb, valc,
+           and vald, at Pos position.
+ * \pre    Pos must be inside the tetrahedron (abcd), else 
+	       the trilinear interpolation coefficients are
+	       truncated to [0,1].			  
+ */
+template< typename GeometryTraits >
+static inline 
+typename GeometryTraits::Scalar
+trilinear_interpolation(const typename GeometryTraits::Point &a,
+                        const typename GeometryTraits::Point &b,
+                        const typename GeometryTraits::Point &c,
+                        const typename GeometryTraits::Point &d,
+                        const typename GeometryTraits::Point &Pos,
+                        typename GeometryTraits::Scalar vala,
+                        typename GeometryTraits::Scalar valb,
+                        typename GeometryTraits::Scalar valc,
+                        typename GeometryTraits::Scalar vald,
+						const GeometryTraits &gt)
 {
-  V vap = Pos - a, vbp = Pos - b,
+  typedef typename GeometryTraits::Vector Vector;
+  typedef typename GeometryTraits::Scalar Scalar;
+  
+  Vector vap = Pos - a, vbp = Pos - b,
     // vcp = Pos - c,
     // vdp = Pos - d,
       vab = b - a, vac = c - a, vad = d - a, vbc = c - b, vbd = d - b;
 
-  V temp_ac_ad(vac[1] * vad[2] - vac[2] * vad[1],
+  Vector temp_ac_ad(vac[1] * vad[2] - vac[2] * vad[1],
                vac[2] * vad[0] - vac[0] * vad[2],
                vac[0] * vad[1] - vac[1] * vad[0]);
 
-  V temp(vbd[1] * vbc[2] - vbd[2] * vbc[1],
+  Vector temp(vbd[1] * vbc[2] - vbd[2] * vbc[1],
          vbd[2] * vbc[0] - vbd[0] * vbc[2],
          vbd[0] * vbc[1] - vbd[1] * vbc[0]);
-#ifdef _KERNEL_EXACT_
-  double va = CGAL::to_double(vbp * temp) * 1. / 6;
-#else
-  double va = (vbp * temp) * 1. / 6;
-#endif
 
-#ifdef _KERNEL_EXACT_
-  double vb = CGAL::to_double(vap * temp_ac_ad) * 1. / 6;
-#else
-  double vb = (vap * temp_ac_ad) * 1. / 6;
-#endif
+  Scalar va = (vbp * temp) * 1.f / 6;
 
-  temp = V(vad[1] * vab[2] - vad[2] * vab[1],
-           vad[2] * vab[0] - vad[0] * vab[2],
-           vad[0] * vab[1] - vad[1] * vab[0]);
-#ifdef _KERNEL_EXACT_
-  double vc = CGAL::to_double(vap * temp) * 1. / 6;
-#else
-  double vc = (vap * temp) * 1. / 6;
-#endif
+  Scalar vb = (vap * temp_ac_ad) * 1.f / 6;
 
-  temp = V(vab[1] * vac[2] - vab[2] * vac[1],
-           vab[2] * vac[0] - vab[0] * vac[2],
-           vab[0] * vac[1] - vab[1] * vac[0]);
-#ifdef _KERNEL_EXACT_
-  double vd = CGAL::to_double(vap * temp) * 1. / 6;
-#else
-  double vd = (vap * temp) * 1. / 6;
-#endif
+  temp = Vector(vad[1] * vab[2] - vad[2] * vab[1],
+                vad[2] * vab[0] - vad[0] * vab[2],
+                vad[0] * vab[1] - vad[1] * vab[0]);
 
-#ifdef _KERNEL_EXACT_
-  double v = CGAL::to_double(vab * temp_ac_ad) * 1. / 6;
-#else
-  double v = (vab * temp_ac_ad) * 1. / 6;
-#endif
-  double alpha = va / v, beta = vb / v, gamma = vc / v, delta = vd / v;
+  Scalar vc = (vap * temp) * 1.f / 6;
+
+  temp = Vector(vab[1] * vac[2] - vab[2] * vac[1],
+                vab[2] * vac[0] - vab[0] * vac[2],
+                vab[0] * vac[1] - vab[1] * vac[0]);
+
+  Scalar vd = (vap * temp) * 1.f / 6;
+
+  Scalar v = (vab * temp_ac_ad) * 1.f / 6;
+
+  Scalar alpha = va / v, beta = vb / v, gamma = vc / v, delta = vd / v;
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  if(alpha < 0)
-    alpha = 0.0;
-  if(alpha > 1)
-    alpha = 1.0;
+  if(alpha < 0.f)
+    alpha = 0.f;
+  if(alpha > 1.f)
+    alpha = 1.f;
 
-  if(beta < 0)
-    beta = 0.0;
-  if(beta > 1)
-    beta = 1.0;
+  if(beta < 0.f)
+    beta = 0.f;
+  if(beta > 1.f)
+    beta = 1.f;
 
-  if(gamma < 0)
-    gamma = 0.0;
-  if(gamma > 1)
-    gamma = 1.0;
+  if(gamma < 0.f)
+    gamma = 0.f;
+  if(gamma > 1.f)
+    gamma = 1.f;
 
-  if(delta < 0)
-    delta = 0.0;
-  if(delta > 1)
-    delta = 1.0;
+  if(delta < 0.f)
+    delta = 0.f;
+  if(delta > 1.f)
+    delta = 1.f;
   /////////////////////////////////////////////////////////////////////////////////////////////////
   return alpha * vala + beta * valb + gamma * valc + delta * vald;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-template< class P, class V >
-static inline std::vector< double >
-trilinear_interpolation(const P &a,
-                        const P &b,
-                        const P &c,
-                        const P &d,
-                        const P &Pos,
-                        const std::vector< double > &vala,
-                        const std::vector< double > &valb,
-                        const std::vector< double > &valc,
-                        const std::vector< double > &vald)
+
+/**
+ * \brief  Trilinear interpolation of values at tetrahedron
+ *         points.
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] d The fourth point.
+ * \param[in] Pos The point for which the trilinear 
+              interpolations of values are computed.	
+ * \param[in] vala The vector of values at the first point.
+ * \param[in] valb The vector of values at the second point.
+ * \param[in] valc The vector of values at the third point.
+ * \param[in] vald The vector of values at the fourth point. 			  
+ * \param[in] gt The geometry trait object.			  
+ * \return The vector of the trilinear interpolation of values 
+           at a, b, c, d positions for Pos position.
+ * \pre    Pos must be inside the tetrahedron (abcd), else 
+	       the trilinear interpolation coefficients are
+	       truncated to [0,1].			  
+ */
+template< typename GeometryTraits >
+static inline std::vector< typename GeometryTraits::Scalar >
+trilinear_interpolation(const typename GeometryTraits::Point &a,
+                        const typename GeometryTraits::Point &b,
+                        const typename GeometryTraits::Point &c,
+                        const typename GeometryTraits::Point &d,
+                        const typename GeometryTraits::Point &Pos,
+                        const std::vector< typename GeometryTraits::Scalar > &vala,
+                        const std::vector< typename GeometryTraits::Scalar > &valb,
+                        const std::vector< typename GeometryTraits::Scalar > &valc,
+                        const std::vector< typename GeometryTraits::Scalar > &vald,
+						const GeometryTraits &gt)
 {
   size_t nbe = vala.size();
   if(valb.size() < nbe)
@@ -168,25 +210,40 @@ trilinear_interpolation(const P &a,
   if(vald.size() < nbe)
     nbe = vald.size();
   ///////////////////////////////////////////////////////////////////
-  std::vector< double > res(nbe, 0.);
+  std::vector< typename GeometryTraits::Scalar > res(nbe, 0.f);
 
   for(size_t i = 0; i < nbe; ++i)
   {
-    res[i] = trilinear_interpolation< P, V >(
-        a, b, c, d, Pos, vala[i], valb[i], valc[i], vald[i]);
+    res[i] = trilinear_interpolation< GeometryTraits >(
+        a, b, c, d, Pos, vala[i], valb[i], valc[i], vald[i], gt);
   }
 
   return res;
 };
 
-//------------------------------------------------------------------------------------------------
+/**
+ * \brief  Predicate fonction to know whether the 
+ *         Pos position is over the ab segment.
+ *
+ * \tparam  GeometryTraits The geometric kernel.
+ * \param[in]  a The first point.
+ * \param[in]  b The second point.
+ * \param[in]  Pos The point that is either over 
+               or beside the segment (ab). 
+ * \param[out] diff	The orthogonal vector to translate
+ *             Pos onto the segment (ab) (or line when
+ *             Pos is not over the segment). 
+ * \param[in]  gt The geometry trait object.	 
+ * \return True if Pos is over the segment (ab),
+                else false.
+ */	
 template< typename GeometryTraits >
 static inline bool
 is_over_segment(const typename GeometryTraits::Point &a,
-              const typename GeometryTraits::Point &b,
-              const typename GeometryTraits::Point &Pos,
-              typename GeometryTraits::Vector &diff,
-              const GeometryTraits &gt)
+                const typename GeometryTraits::Point &b,
+                const typename GeometryTraits::Point &Pos,
+                typename GeometryTraits::Vector &diff,
+                const GeometryTraits &gt)
 {
   typedef typename GeometryTraits::Vector Vector;
   typedef typename GeometryTraits::Point Point;
@@ -214,34 +271,41 @@ is_over_segment(const typename GeometryTraits::Point &a,
               Vector(b[0] - interp[0], b[1] - interp[1], b[2] - interp[2]),
               vab) >= 0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-// is the projection of point Pos on the triangle plane in the triangle (a,b,c)?
+
+/**
+ * \brief  Predicate fonction to know whether the 
+ *         projection of point Pos on the triangle 
+ *         plane is in the triangle (abc).
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] Pos The point whose projection is either  
+              inside or outside the triangle (abc).
+ * \param[in] gt The geometry trait object.			  
+ * \return True if the projection of point Pos is inside
+ *         the triangle (abc), else false.
+ */
 template< typename GeometryTraits >
 static inline bool
 is_in_triangle(const typename GeometryTraits::Point &a,
-             const typename GeometryTraits::Point &b,
-             const typename GeometryTraits::Point &c,
-             const typename GeometryTraits::Point &Pos,
-             const GeometryTraits &gt)
+               const typename GeometryTraits::Point &b,
+               const typename GeometryTraits::Point &c,
+               const typename GeometryTraits::Point &Pos,
+               const GeometryTraits &gt)
 {
   typedef typename GeometryTraits::Vector Vector;
   typedef typename GeometryTraits::Scalar Scalar;
   // Pos =
-  // we are going to compute the barycentric coordinates of Pos   (from
-  // numerical recipes)
+  // we are going to compute the barycentric coordinates of Pos
   Vector p1p(a[0] - c[0], a[1] - c[1], a[2] - c[2]),
       p2p(b[0] - c[0], b[1] - c[1], b[2] - c[2]),
       Posp(Pos[0] - c[0], Pos[1] - c[1], Pos[2] - c[2]);
-#ifdef _KERNEL_EXACT_
-  double p1p2 = CGAL::to_double(p1p * p1p), p2p2 = CGAL::to_double(p2p * p2p),
-         p1pp2p = CGAL::to_double(p1p * p2p),
-         p1pPosp = CGAL::to_double(p1p * Posp),
-         p2pPosp = CGAL::to_double(p2p * Posp);
-#else
+
   Scalar p1p2 = gt.dot_product(p1p, p1p), p2p2 = gt.dot_product(p2p, p2p),
          p1pp2p = gt.dot_product(p1p, p2p), p1pPosp = gt.dot_product(p1p, Posp),
          p2pPosp = gt.dot_product(p2p, Posp);
-#endif
   /////////////////////////////////////////////////////////////////////////////////////////////////
   Scalar den = p1p2 * p2p2 - p1pp2p * p1pp2p;
   Scalar alpha = (p2p2 * p1pPosp - p1pp2p * p2pPosp) / den,
@@ -252,8 +316,26 @@ is_in_triangle(const typename GeometryTraits::Point &a,
            (beta > 1.0) || (gamma > 1.0));
 };
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * \brief  Bilinear interpolation of values at triangle
+ *         points.
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] Pos The point for which the bilinear 
+              interpolation of values is computed.	
+ * \param[in] vala The value of the first point.
+ * \param[in] valb The value of the second point.
+ * \param[in] valc The value of the third point.		  
+ * \param[in] gt The geometry trait object.			  
+ * \return The bilinear interpolation of values vala, valb, valc,
+              and vald, at Pos position.
+ * \pre    Pos must be inside the triangle (abc), else 
+	       the bilinear interpolation coefficients are
+	       truncated to [0,1].			  
+ */
 template< typename GeometryTraits >
 static inline typename GeometryTraits::Scalar
 bilinear_interpolation(const typename GeometryTraits::Point &a,
@@ -269,43 +351,54 @@ bilinear_interpolation(const typename GeometryTraits::Point &a,
   typedef typename GeometryTraits::Scalar Scalar;
 
   Vector p1p = a - c, p2p = b - c, Posp = Pos - c;
-#ifdef _KERNEL_EXACT_
-  double p1p2 = CGAL::to_double(gt.dot_product(p1p, p1p)),
-         p2p2 = CGAL::to_double(gt.dot_product(p2p, p2p)),
-         p1pp2p = CGAL::to_double(gt.dot_product(p1p, p2p)),
-         p1pPosp = CGAL::to_double(gt.dot_product(p1p, Posp)),
-         p2pPosp = CGAL::to_double(gt.dot_product(p2p, Posp));
-#else
   Scalar p1p2 = gt.dot_product(p1p, p1p), p2p2 = gt.dot_product(p2p, p2p),
          p1pp2p = gt.dot_product(p1p, p2p), p1pPosp = gt.dot_product(p1p, Posp),
          p2pPosp = gt.dot_product(p2p, Posp);
-#endif
   /////////////////////////////////////////////////////////////////////////////////////////////////
   Scalar den = p1p2 * p2p2 - p1pp2p * p1pp2p;
   Scalar alpha = (p2p2 * p1pPosp - p1pp2p * p2pPosp) / den,
          beta = (p1p2 * p2pPosp - p1pp2p * p1pPosp) / den, gamma;
   gamma = 1 - (alpha + beta);
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  if(alpha < 0)
-    alpha = 0;
-  if(alpha > 1)
-    alpha = 1;
+  if(alpha < 0.f)
+    alpha = 0.f;
+  if(alpha > 1.f)
+    alpha = 1.f;
 
-  if(beta < 0)
-    beta = 0;
-  if(beta > 1)
-    beta = 1;
+  if(beta < 0.f)
+    beta = 0.f;
+  if(beta > 1.f)
+    beta = 1.f;
 
-  if(gamma < 0)
-    gamma = 0;
-  if(gamma > 1)
-    gamma = 1;
+  if(gamma < 0.f)
+    gamma = 0.f;
+  if(gamma > 1.f)
+    gamma = 1.f;
   /////////////////////////////////////////////////////////////////////////////////////////////////
   return alpha * vala + beta * valb + gamma * valc;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * \brief  Bilinear interpolation of values at triangle
+ *         points.
+ *
+ * \tparam  GeometryTraits The geometric kernel. 
+ * \param[in] a The first point.
+ * \param[in] b The second point.
+ * \param[in] c The third point.
+ * \param[in] Pos The point for which the bilinear 
+              interpolations of values are computed.	
+ * \param[in] vala The vector of values at the first point.
+ * \param[in] valb The vector of values at the second point.
+ * \param[in] valc The vector of values at the third point.			  
+ * \param[in] gt The geometry trait object.			  
+ * \return The vector of the bilinear interpolation of values 
+           at a, b, c positions for Pos position.
+ * \pre    Pos must be inside the triangle (abc), else 
+	       the bilinear interpolation coefficients are
+	       truncated to [0,1].			  
+ */
 template< typename GeometryTraits >
-static inline std::vector< double >
+static inline std::vector< typename GeometryTraits::Scalar >
 bilinear_interpolation(
     const typename GeometryTraits::Point &a,
     const typename GeometryTraits::Point &b,
@@ -335,4 +428,3 @@ bilinear_interpolation(
 } // namespace Geometry
 } // namespace Operators
 } // namespace FEVV
-#endif

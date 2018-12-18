@@ -1,5 +1,4 @@
-#ifndef CALCULATE_FACE_NORMAL_H
-#define CALCULATE_FACE_NORMAL_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -106,5 +105,3 @@ calculate_face_normal(
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // CALCULATE_FACE_NORMAL_H
