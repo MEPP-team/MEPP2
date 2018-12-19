@@ -1,6 +1,4 @@
-
-#ifndef __AngleOperations_hxx
-#define __AngleOperations_hxx
+#pragma once
 
 #include <cmath> // M_PI, asin
 
@@ -12,7 +10,13 @@ namespace Operators {
 
 namespace Geometry {
 
-/// sine can be either a float, a double or a long double
+/**
+ * \brief  Safe call to the std::asin function.
+ *         
+ * \param[in] sine The sinus value.  
+ * \return The arcsin (in rad) of sine value, sine value being 
+ *         truncated to [-1,1] range to avoid input domain error.
+ */
 template< class T >
 static T
 asin(T sine)
@@ -25,7 +29,13 @@ asin(T sine)
     return std::asin(sine);
 }
 
-/// sine can be either a float, a double or a long double
+/**
+ * \brief  Safe call to the std::asin function.
+ *         
+ * \param[in] sine The sinus value.  
+ * \return The arcsin (in degree) of sine value, sine value being 
+ *         truncated to [-1,1] range to avoid input domain error.
+ */
 template< class T >
 static T
 asin_degree(T sine)
@@ -33,8 +43,13 @@ asin_degree(T sine)
   return RAD2DEG(Geometry::asin< T >(sine));
 }
 
-///////////////////////////////////////////////////////////////////////////
-/// cosine can be either a float, a double or a long double
+/**
+ * \brief  Safe call to the std::acos function.
+ *         
+ * \param[in] cosine The cosine value.  
+ * \return The arccos (in rad) of cosine value, cosine value being 
+ *         truncated to [-1,1] range to avoid input domain error.
+ */
 template< class T >
 inline T
 acos(T cosine)
@@ -46,7 +61,14 @@ acos(T cosine)
 
   return std::acos(cosine);
 }
-/// cosine can be either a float, a double or a long double
+
+/**
+ * \brief  Safe call to the std::acos function.
+ *         
+ * \param[in] cosine The cosine value.  
+ * \return The arccos (in degree) of cosine value, cosine value being 
+ *         truncated to [-1,1] range to avoid input domain error.
+ */
 template< class T >
 inline T
 acos_degree(T cosine)
@@ -57,5 +79,3 @@ acos_degree(T cosine)
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif /* __AngleOperations_hxx */

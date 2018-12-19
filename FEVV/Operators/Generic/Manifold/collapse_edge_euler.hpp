@@ -1,5 +1,4 @@
-#ifndef COLLAPSE_EDGE_EULER_H
-#define COLLAPSE_EDGE_EULER_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <CGAL/boost/graph/iterator.h>
@@ -14,10 +13,13 @@ namespace Operators {
  *        The halfedge source vertex is kept, and the halfedge
  *        target vertex is removed from the graph.
  *
- * Template parameters:
- *           MutableFaceGraph: a Mesh type that provides
- *                 a Model of the MutableFaceGraph Concept
- *                 through a boost::graph_traits<> specialization.
+ * \tparam  MutableFaceGraph a Mesh type that provides a Model of the
+ *          MutableFaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param g The MutableFaceGraph instance out of which the h edge will be
+ *          deleted.
+ * \param h The edge to be deleted designated through one of its
+ *          halfedges.
  */
 template< typename MutableFaceGraph >
 void
@@ -42,10 +44,13 @@ collapse_edge_keep_source_euler(
  *        The halfedge target vertex is kept, and the halfedge
  *        source vertex is removed from the graph.
  *
- * Template parameters:
- *           MutableFaceGraph: a Mesh type that provides
- *                 a Model of the MutableFaceGraph Concept
- *                 through a boost::graph_traits<> specialization.
+ * \tparam  MutableFaceGraph a Mesh type that provides a Model of the
+ *          MutableFaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param g The MutableFaceGraph instance out of which the h edge will be
+ *          deleted.
+ * \param h The edge to be deleted designated through one of its
+ *          halfedges.
  */
 template< typename MutableFaceGraph >
 void
@@ -65,5 +70,3 @@ collapse_edge_keep_target_euler(
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // COLLAPSE_EDGE_EULER_H

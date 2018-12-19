@@ -13,15 +13,15 @@ namespace Operators {
  * \brief  Calculate a face tangent, then accumulate its value on every
  *         vertices it contains to average them; final vertex tangents are
  *         normalized later.
- *
- * \param  f    the face descriptor representing the face on which we compute
- *              the tangent.
- * \param  g    the halfedge graph from which we take the mesh's informations.
- * \param  pm   point map containing vertices' positions.
- * \param  uv1  first vertex's texture coordinates.
- * \param  uv2  second vertex's texture coordinates.
- * \param  uv3  third vertex's texture coordinates.
- * \param  vtm  vertex tangent map to be filled with computed tangents.
+ * \tparam  PointMap A modifiable point map to manage vertex positions.
+ * \param[in]  f    the face descriptor representing the face on which we compute
+ *                  the tangent.
+ * \param[in]  g    the halfedge graph from which we take the mesh's informations.
+ * \param[in]  pm   point map containing vertices' positions.
+ * \param[in]  uv1  first vertex's texture coordinates.
+ * \param[in]  uv2  second vertex's texture coordinates.
+ * \param[in]  uv3  third vertex's texture coordinates.
+ * \param[in,out] vtm  vertex tangent map to be filled with computed tangents.
  *
  * \ingroup  GenericManifoldFilters
  */

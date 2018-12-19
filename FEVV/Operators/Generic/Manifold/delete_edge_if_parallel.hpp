@@ -1,5 +1,4 @@
-#ifndef DELETE_EDGE_IF_PARALLEL_H
-#define DELETE_EDGE_IF_PARALLEL_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <CGAL/boost/graph/iterator.h>
@@ -68,5 +67,3 @@ delete_edge_if_parallel(
 
 } // namespace Operators
 } // namespace FEVV
-
-#endif // DELETE_EDGE_IF_PARALLEL_H

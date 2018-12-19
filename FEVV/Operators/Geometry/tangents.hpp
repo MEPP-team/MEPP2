@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-
 namespace FEVV {
 namespace Operators {
 
@@ -10,12 +9,12 @@ namespace Operators {
  * \brief  Calculate the actual face tangent from three connected vertices'
  * positions & texture coordinates.
  *
- * \param  pt1                 first vertex's position.
- * \param  pt2                 second vertex's position.
- * \param  pt3                 third vertex's position.
- * \param  uv1                 first vertex's texture coordinates.
- * \param  uv2                 second vertex's texture coordinates.
- * \param  uv3                 third vertex's texture coordinates.
+ * \param[in]  pt1                 first vertex's position.
+ * \param[in]  pt2                 second vertex's position.
+ * \param[in]  pt3                 third vertex's position.
+ * \param[in]  uv1                 first vertex's texture coordinates.
+ * \param[in]  uv2                 second vertex's texture coordinates.
+ * \param[in]  uv3                 third vertex's texture coordinates.
  *
  * \return  calculated face tangent.
  */
