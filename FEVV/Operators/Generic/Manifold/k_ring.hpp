@@ -20,8 +20,7 @@ namespace Operators {
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
  * \param[in]  v The vertex whose k-rings are computed. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[in]  k The maximum distance to include a vertex v' neighbor. 
  * \param[out] qv The std::vector of vertices at most k (inclusive)
  *             far from vertex v in the graph of edges
@@ -89,8 +88,7 @@ extract_k_ring(
  *          FaceGraph Concept through a boost::graph_traits<>
  *          specialization.
  * \param[in]  v The vertex whose incident halfedges are extracted. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[out] qh The std::vector of halfedges incident to v.
  */  
 template< typename FaceGraph >
@@ -175,8 +173,7 @@ extract_vertex_star(
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
  * \param[in]  v The vertex whose 1-ring is computed. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[out] qv The std::vector of vertices at exactly 1
  *             far from vertex v in the graph of edges
  */ 
