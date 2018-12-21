@@ -1,5 +1,4 @@
-#ifndef JNDModels_VISIBILITY_H
-#define JNDModels_VISIBILITY_H
+#pragma once
 
 #include "genericparametricmodel.h"
 #include "psychometricfunction.h"
@@ -58,5 +57,3 @@ protected:
   /// initialise the weibul distribution with beta = 3.5;
   virtual void default_params() { m_param = ParameterType(3.5); }
 };
-
-#endif // VISIBLITY_H

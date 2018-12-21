@@ -1,5 +1,4 @@
-#ifndef TRANSLATION_H
-#define TRANSLATION_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -83,5 +82,3 @@ translate(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // TRANSLATION_H

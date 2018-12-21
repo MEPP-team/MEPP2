@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(ComputeMeshBoundingBox_RECURSES)
-#error Recursive header files inclusion detected in compute_mesh_bounding_box.h
-#else // defined(ComputeMeshBoundingBox_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define ComputeMeshBoundingBox_RECURSES
-
-#if !defined ComputeMeshBoundingBox_h
-/** Prevents repeated inclusion of headers. */
-#define ComputeMeshBoundingBox_h
-
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -72,8 +62,3 @@ compute_mesh_bounding_box(
 
 } // namespace Tools
 } // namespace FEVV
-
-#endif // !defined ComputeMeshBoundingBox_h
-
-#undef ComputeMeshBoundingBox_RECURSES
-#endif // else defined(ComputeMeshBoundingBox_RECURSES)

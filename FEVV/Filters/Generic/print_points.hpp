@@ -1,5 +1,4 @@
-#ifndef PRINT_POINTS_H
-#define PRINT_POINTS_H
+#pragma once
 
 #include <iostream>
 #include <boost/graph/graph_traits.hpp>
@@ -32,5 +31,3 @@ print_points(const HalfedgeGraph &g, PointMap pm)
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // PRINT_POINTS_H

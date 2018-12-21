@@ -1,5 +1,4 @@
-#ifndef MSDM2_Filter_H
-#define MSDM2_Filter_H
+#pragma once
 
 #include "FEVV/DataStructures/DataStructures_cgal_surface_mesh.h"
 
@@ -766,5 +765,3 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // MSDM2_Filter_H

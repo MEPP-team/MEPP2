@@ -1,5 +1,4 @@
-#ifndef CURVATURE_H
-#define CURVATURE_H
+#pragma once
 
 #include <set>
 #include <stack>
@@ -541,5 +540,3 @@ calculate_curvature(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // CURVATURE_H

@@ -1,5 +1,4 @@
-#ifndef JNDModels_TYPES_H
-#define JNDModels_TYPES_H
+#pragma once
 
 #include <Eigen/Core>
 using namespace Eigen;
@@ -51,5 +50,3 @@ struct SceneParam
 };
 
 //-----------------------------------------------------------------------------------
-
-#endif // JNDModels_TYPES_H

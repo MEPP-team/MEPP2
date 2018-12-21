@@ -1,5 +1,4 @@
-#ifndef Compression_Valence_COMPONENT_H
-#define Compression_Valence_COMPONENT_H
+#pragma once
 
 #include "arithmetic_codec.hpp"
 
@@ -2234,5 +2233,3 @@ public: // private:
  * 18 May, 2011
  *
  */
-
-#endif // Compression_Valence_COMPONENT_H

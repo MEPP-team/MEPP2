@@ -1,5 +1,4 @@
-#ifndef CALCULATE_VERTEX_NORMALS_H
-#define CALCULATE_VERTEX_NORMALS_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -91,5 +90,3 @@ calculate_vertex_normals(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // CALCULATE_VERTEX_NORMALS_H

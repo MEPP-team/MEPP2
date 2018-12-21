@@ -1,5 +1,4 @@
-#ifndef SCALING_H
-#define SCALING_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -88,5 +87,3 @@ calculate_scaling(const Graph &g,
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // SCALING_H

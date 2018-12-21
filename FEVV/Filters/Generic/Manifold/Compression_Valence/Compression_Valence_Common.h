@@ -1,5 +1,4 @@
-#ifndef Compression_Valence_COMMON_H
-#define Compression_Valence_COMMON_H
+#pragma once
 
 #ifdef _MSC_VER
 // disable some warnings on Windows
@@ -276,6 +275,4 @@ fixed_CGAL_Euler_add_vertex_and_face_to_border(
 
 #ifdef _MSC_VER
 #pragma warning(pop)
-#endif
-
 #endif

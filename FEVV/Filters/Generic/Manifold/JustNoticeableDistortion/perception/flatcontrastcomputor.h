@@ -1,5 +1,4 @@
-#ifndef JNDPerception_FLATCONTRASTCOMPUTOR_H
-#define JNDPerception_FLATCONTRASTCOMPUTOR_H
+#pragma once
 
 #include <cmath>
 #include <algorithm> // for std::max()
@@ -52,6 +51,3 @@ compute_flat_contrast(const GeometryTraits &geom,
   auto normal_f2 = get(f_nm, f2);
   return compute_flat_contrast(geom, normal_f1, normal_f2, ldir);
 }
-
-
-#endif // JNDPerception_FLATCONTRASTCOMPUTOR_H

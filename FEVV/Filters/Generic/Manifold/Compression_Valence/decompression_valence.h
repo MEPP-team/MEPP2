@@ -1,5 +1,4 @@
-#ifndef DECOMPRESSION_VALENCE_H
-#define DECOMPRESSION_VALENCE_H
+#pragma once
 
 #include "FEVV/Filters/Generic/Manifold/Compression_Valence/Compression_Valence_Component.h"
 
@@ -148,5 +147,3 @@ decompression_valence(
 
 } // namespace Filters
 } // namespace FEVV
-
-#endif // DECOMPRESSION_VALENCE_H

@@ -1,5 +1,4 @@
-#ifndef JND_Filter_H
-#define JND_Filter_H
+#pragma once
 
 #include <time.h>
 #include <boost/foreach.hpp>
@@ -577,5 +576,3 @@ just_noticeable_distortion_filter(const HalfedgeGraph &g,
 }
 } // namespace Filters
 } // namespace FEVV
-
-#endif // JND_Filter_H

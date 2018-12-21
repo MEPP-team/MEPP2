@@ -1,5 +1,4 @@
-#ifndef JNDModels_VISUALMASKING_H
-#define JNDModels_VISUALMASKING_H
+#pragma once
 
 #include <cmath>
 
@@ -57,5 +56,3 @@ protected:
     m_param = ParameterType(0.0078, 88.29, 1.0, 4.207);
   }
 };
-
-#endif // JNDModels_VISUALMASKING_H

@@ -44,11 +44,10 @@
 
 // - - Definitions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#ifndef ARITHMETIC_CODEC
-#define ARITHMETIC_CODEC
+#pragma once
 
 
-#include <stdio.h>
+#include <cstdio>
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -212,5 +211,3 @@ private: //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "arithmetic_codec.inl"
-
-#endif
