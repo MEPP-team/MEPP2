@@ -19,12 +19,15 @@ namespace Operators {
  * \brief Split an edge of the graph.
  *        The edge to split is given as a halfedge.
  *
- * Template parameters:
- *           MutableFaceGraph: a Mesh type that provides
- *                 a Model of the MutableFaceGraph Concept
- *                 through a boost::graph_traits<> specialization.
- *			PointMap: a modifiable point map to manage vertex
- *positions
+ * \tparam  MutableFaceGraph a Mesh type that provides a Model of the
+ *          MutableFaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \tparam  PointMap A modifiable point map to manage vertex positions.
+ * \param g The MutableFaceGraph instance from which the edge will be
+ *          split.
+ * \param pm The mesh point map which associates vertex to positions.
+ * \param h The edge to be split designated through one of its
+ *          halfedges. 
  */
 template< typename MutableFaceGraph, typename PointMap >
 void
