@@ -76,22 +76,6 @@ osx - Release - QT5 - ALL:
     - make -j 3
     - ctest -j 3 --output-on-failure
 
-########################################
-windows - 2015 - REBOOT OR DO_NOTHING:
-  tags:
-    - MEPP2,windows,VS2015
-  script:
-#    - echo reboot & shutdown -t 5 -r -f
-    - echo do nothing
-
-windows - 2017 - REBOOT OR DO_NOTHING:
-  tags:
-    - MEPP2,windows,VS2017
-  script:
-#    - echo reboot & shutdown -t 5 -r -f
-    - echo do nothing
-########################################
-
 windows - Debug - 2015 - QT4 - ALL:
   tags:
     - MEPP2,windows,VS2015
