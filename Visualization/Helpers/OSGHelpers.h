@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(OSGHelpers_RECURSES)
-#error Recursive header files inclusion detected in OSGHelpers.h
-#else // defined(OSGHelpers_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define OSGHelpers_RECURSES
-
-#if !defined OSGHelpers_h
-/** Prevents repeated inclusion of headers. */
-#define OSGHelpers_h
-
 #include <osg/Vec3>
 #include <osg/Vec4>
 #include <osg/Group>
@@ -69,8 +59,3 @@ ColorConverter(const Color &_color)
 } // namespace Helpers
 
 } // namespace FEVV
-
-#endif // !defined OSGHelpers_h
-
-#undef OSGHelpers_RECURSES
-#endif // else defined(OSGHelpers_RECURSES)

@@ -1,5 +1,3 @@
-#pragma once
-
 namespace FEVV {
 namespace DataStructures {
 namespace AIF {

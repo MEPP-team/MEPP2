@@ -1,5 +1,3 @@
-#pragma once
-
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 #include "FEVV/Tools/IO/FaceIndicesUtilities.h"
 

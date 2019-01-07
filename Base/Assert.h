@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(Assert_RECURSES)
-#error Recursive header files inclusion detected in Assert.h
-#else // defined(Assert_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define Assert_RECURSES
-
-#if !defined Assert_h
-/** Prevents repeated inclusion of headers. */
-#define Assert_h
-
 #include <iostream>
 #include <boost/assert.hpp>
 
@@ -93,8 +83,3 @@ public:
   }
 };
 } // namespace FEVV
-
-#endif // !defined Assert_h
-
-#undef Assert_RECURSES
-#endif // else defined(Assert_RECURSES)

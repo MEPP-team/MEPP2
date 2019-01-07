@@ -1,5 +1,3 @@
-#pragma once
-
 #include "FEVV/DataStructures/AIF/AIFTopologyHelpers.h" // for copy constructor
 #include "FEVV/DataStructures/AIF/AIFPropertiesHelpers.h" // for copy constructor
 

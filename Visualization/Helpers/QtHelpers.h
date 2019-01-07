@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(QtHelpers_RECURSES)
-#error Recursive header files inclusion detected in QtHelpers.h
-#else // defined(QtHelpers_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define QtHelpers_RECURSES
-
-#if !defined QtHelpers_h
-/** Prevents repeated inclusion of headers. */
-#define QtHelpers_h
-
 #include <QWidget>
 #include "Base/Color.hpp"
 
@@ -58,8 +48,3 @@ public:
 } // namespace Helpers
 
 } // namespace FEVV
-
-#endif // !defined QtHelpers_h
-
-#undef QtHelpers_RECURSES
-#endif // else defined(QtHelpers_RECURSES)

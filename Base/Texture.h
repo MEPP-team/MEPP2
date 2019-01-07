@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(Texture_RECURSES)
-#error Recursive header files inclusion detected in Texture.h
-#else // defined(Texture_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define Texture_RECURSES
-
-#if !defined Texture_h
-/** Prevents repeated inclusion of headers. */
-#define Texture_h
-
 namespace FEVV {
 
 // TODO : make a class or an enum...
@@ -23,8 +13,3 @@ namespace FEVV {
 #define HALFEDGE_TEXCOORDS3D 4 // not implemented
 
 } // namespace FEVV
-
-#endif // !defined Texture_h
-
-#undef Texture_RECURSES
-#endif // else defined(Texture_RECURSES)
