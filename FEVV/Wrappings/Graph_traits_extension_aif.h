@@ -1,6 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_AIF_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_AIF_H
-
+#pragma once
 
 /*
  * Specialization of graph traits extension
@@ -70,5 +68,3 @@ size_of_faces(const FEVV::DataStructures::AIF::AIFMesh &g)
 
 } // namespace FEVV
 
-
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_AIF_H

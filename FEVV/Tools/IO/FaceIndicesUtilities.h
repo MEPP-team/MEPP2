@@ -1,5 +1,4 @@
-#ifndef __FaceIndicesUtilities_h
-#define __FaceIndicesUtilities_h
+#pragma once
 
 #include <vector>
 #include <set>
@@ -144,4 +143,3 @@ face_indices_to_face_and_lines_indices(
 } // namespace FaceIndicesUtils
 } // namespace FEVV
 
-#endif

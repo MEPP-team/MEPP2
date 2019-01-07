@@ -1,6 +1,4 @@
-#ifndef GENERIC_WRITER_H
-#define GENERIC_WRITER_H
-
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -405,5 +403,3 @@ write_mesh(const std::string &filename, HalfedgeGraph &g, PMapsContainer &pmaps)
 } // namespace Filters
 } // namespace FEVV
 
-
-#endif // GENERIC_WRITER_H

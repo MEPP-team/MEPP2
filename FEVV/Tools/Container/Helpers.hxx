@@ -1,5 +1,4 @@
-#ifndef __Helpers_hxx
-#define __Helpers_hxx
+#pragma once
 
 #include <vector>
 #include <list>
@@ -57,4 +56,3 @@ is_sequential_container(const std::set< ContainedType > &container)
 } // namespace Container
 } // namespace FEVV
 
-#endif /* __Helpers_hxx */

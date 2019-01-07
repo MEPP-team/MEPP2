@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_CGAL_LINEAR_CELL_COMPLEX_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_CGAL_LINEAR_CELL_COMPLEX_H
+#pragma once
 
 /*
  * Specialization of graph traits extension
@@ -115,4 +114,3 @@ size_of_faces(const CGAL_LCC_TYPE &lcc)
 #undef CGAL_LCC_TYPE
 
 
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_CGAL_LINEAR_CELL_COMPLEX_H

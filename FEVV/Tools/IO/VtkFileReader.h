@@ -1,5 +1,4 @@
-#ifndef __VtkFileReader_h
-#define __VtkFileReader_h
+#pragma once
 
 #include <iostream>
 #include <exception>
@@ -1063,4 +1062,3 @@ read_vtk_or_vtp_or_vtu_file(
 } // namespace IO
 } // namespace FEVV
 
-#endif /* __VtkFileReader_h */

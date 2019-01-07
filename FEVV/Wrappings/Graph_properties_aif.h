@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_PROPERTIES_AIF_H
-#define FEVV_GRAPH_PROPERTIES_AIF_H
+#pragma once
 
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"
 #include "FEVV/Wrappings/Graph_traits_aif.h"
@@ -269,5 +268,3 @@ add_vertex(typename boost::graph_traits<
 } // namespace DataStructures
 } // namespace FEVV
 
-
-#endif // FEVV_GRAPH_PROPERTIES_AIF_H

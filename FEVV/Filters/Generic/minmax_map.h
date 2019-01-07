@@ -1,5 +1,4 @@
-#ifndef Minmaxmap_Filter_H
-#define Minmaxmap_Filter_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/foreach.hpp>
@@ -129,4 +128,3 @@ compute_min_max_halfedges(const HalfedgeGraph &g,
 } // namespace Filters
 } // namespace FEVV
 
-#endif // Minmaxmap_Filter_H

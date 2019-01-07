@@ -1,5 +1,4 @@
-#ifndef __FbxFileReader_h
-#define __FbxFileReader_h
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -624,4 +623,3 @@ read_fbx_file(const std::string &filePath,
 } // namespace IO
 } // namespace FEVV
 
-#endif

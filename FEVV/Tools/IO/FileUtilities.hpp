@@ -1,5 +1,4 @@
-#ifndef __FileUtilities_h
-#define __FileUtilities_h
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -220,4 +219,3 @@ copy_file(const std::string &from, const std::string &to)
 } // namespace FileUtils
 } // namespace FEVV
 
-#endif

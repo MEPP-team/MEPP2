@@ -1,5 +1,4 @@
-#ifndef TranslationPlugin_H
-#define TranslationPlugin_H
+#pragma once
 
 #include "Visualization/PluginFilters/BasePlugin.h"
 
@@ -81,4 +80,3 @@ protected:
 
 } // namespace FEVV
 
-#endif // TranslationPlugin_H

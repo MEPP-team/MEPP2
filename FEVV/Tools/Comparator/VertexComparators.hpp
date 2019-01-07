@@ -4,8 +4,7 @@
  * \date     	2017-12-01
  */
 
-#ifndef __VertexComparators_hxx
-#define __VertexComparators_hxx
+#pragma once
 
 #include <limits>
 
@@ -48,4 +47,3 @@ namespace Comparator
 } // namespace Container
 } // namespace FEVV
 
-#endif /* __VertexComparators_hxx */

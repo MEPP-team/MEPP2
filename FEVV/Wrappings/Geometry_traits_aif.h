@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_AIF_H
-#define GEOMETRY_TRAITS_AIF_H
+#pragma once
 
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -188,4 +187,3 @@ const typename Geometry_traits< MeshT, AIF_mesh_kernel_generator >::Vector
 
 } // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_AIF_H

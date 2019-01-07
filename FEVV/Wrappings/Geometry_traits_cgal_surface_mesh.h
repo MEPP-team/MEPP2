@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_CGAL_SURFACE_MESH_H
-#define GEOMETRY_TRAITS_CGAL_SURFACE_MESH_H
+#pragma once
 
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/Kernel_traits.h>
@@ -24,4 +23,3 @@ struct RetrieveKernel< CGAL::Surface_mesh< PointT > >
 
 } // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_CGAL_SURFACE_MESH_H

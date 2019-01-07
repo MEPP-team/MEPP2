@@ -1,5 +1,4 @@
-#ifndef FEVV_WRAPPINGS_H
-#define FEVV_WRAPPINGS_H
+#pragma once
 
 #include <CGAL/boost/graph/properties.h>
 
@@ -17,5 +16,3 @@
 #include "FEVV/Wrappings/Wrappings_aif.h"
 #endif
 
-
-#endif // FEVV_WRAPPINGS_H

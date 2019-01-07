@@ -1,5 +1,4 @@
-#ifndef ColorMesh_Filter_H
-#define ColorMesh_Filter_H
+#pragma once
 
 #include <CGAL/boost/graph/properties.h>
 #include <boost/foreach.hpp>
@@ -315,4 +314,3 @@ color_halfedge_from_bool_map(const HalfedgeGraph &g,
 } // namespace Filters
 } // namespace FEVV
 
-#endif // ColorMesh_Filter_H

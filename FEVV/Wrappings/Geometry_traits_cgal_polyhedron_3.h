@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_CGAL_POLYHEDRON_3_H
-#define GEOMETRY_TRAITS_CGAL_POLYHEDRON_3_H
+#pragma once
 
 #include <CGAL/Polyhedron_3.h>
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -38,4 +37,3 @@ struct RetrieveKernel< CGAL::Polyhedron_3< T1, T2, T3, T4 > >
 
 } // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_CGAL_POLYHEDRON_3_H

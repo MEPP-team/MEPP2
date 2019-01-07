@@ -1,5 +1,4 @@
-#ifndef PRINT_FACE_NORMALS_H
-#define PRINT_FACE_NORMALS_H
+#pragma once
 
 #include <iostream>
 #include <boost/graph/graph_traits.hpp>
@@ -35,4 +34,3 @@ print_face_normals(const HalfedgeGraph &g, NormalMap nm)
 } // namespace Filters
 } // namespace FEVV
 
-#endif // PRINT_FACE_NORMALS_H

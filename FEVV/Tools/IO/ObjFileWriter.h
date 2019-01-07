@@ -1,5 +1,4 @@
-#ifndef __ObjFileWriter_h
-#define __ObjFileWriter_h
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -353,4 +352,3 @@ write_obj_file(const std::string &file_path,
 } // namespace IO
 } // namespace FEVV
 
-#endif

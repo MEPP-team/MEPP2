@@ -1,5 +1,4 @@
-#ifndef BasePlugin_H
-#define BasePlugin_H
+#pragma once
 
 #include "FEVV/Wrappings/Wrappings.h"
 
@@ -110,4 +109,3 @@ protected:
 
 } // namespace FEVV
 
-#endif // BasePlugin_H

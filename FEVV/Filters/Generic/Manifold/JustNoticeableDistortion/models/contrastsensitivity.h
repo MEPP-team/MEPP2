@@ -1,5 +1,4 @@
-#ifndef JNDModels_CONTRASTSENSITIVITY_H
-#define JNDModels_CONTRASTSENSITIVITY_H
+#pragma once
 
 #include <cmath>
 
@@ -106,4 +105,3 @@ protected:
   virtual void default_params() { m_param << 125.42, 0.009, 0.343, 0.17, 0.19; }
 };
 
-#endif // CONTRASTSENSITIVTY_H

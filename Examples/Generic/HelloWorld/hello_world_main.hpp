@@ -1,3 +1,5 @@
+#pragma once
+
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 #include "Examples/Generic/HelloWorld/hello_world_filter.hpp"

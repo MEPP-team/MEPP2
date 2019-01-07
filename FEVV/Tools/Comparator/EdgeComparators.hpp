@@ -1,5 +1,4 @@
-#ifndef __EdgeComparators_hxx
-#define __EdgeComparators_hxx
+#pragma once
 
 #include <limits>
 #include <iterator>
@@ -173,4 +172,3 @@ namespace Comparator
 } // namespace Container
 } // namespace FEVV
 
-#endif /* __EdgeComparators_hxx */

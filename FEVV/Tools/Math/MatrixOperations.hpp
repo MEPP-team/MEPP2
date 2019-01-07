@@ -1,5 +1,4 @@
-#ifndef __MatrixOperations_hxx
-#define __MatrixOperations_hxx
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -1040,4 +1039,3 @@ is_diagonal(const ElementType p_matrix[DIM][DIM])
 } // namespace Math
 } // namespace FEVV
 
-#endif /* __MatrixOperations_hxx */

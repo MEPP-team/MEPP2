@@ -1,5 +1,4 @@
-#ifndef __STLmshWriter_h
-#define __STLmshWriter_h
+#pragma once
 
 #include <iostream>
 #include <cstdio>
@@ -278,4 +277,3 @@ template< typename CoordType,
 
 }
 }
-#endif

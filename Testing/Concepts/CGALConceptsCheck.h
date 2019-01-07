@@ -1,5 +1,4 @@
-#ifndef FEVV_CGAL_CONCEPT_CHECK_H
-#define FEVV_CGAL_CONCEPT_CHECK_H
+#pragma once
 
 //#include <boost/concept_check.hpp>
 //#include <boost/concept/assert.hpp>
@@ -192,4 +191,3 @@ BOOST_concept(MutableHalfedgeFaceListGraph, (G))
 
 } // namespace FEVV
 
-#endif // FEVV_CGAL_CONCEPT_CHECK_H

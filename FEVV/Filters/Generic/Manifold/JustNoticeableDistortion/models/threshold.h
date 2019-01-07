@@ -1,5 +1,4 @@
-#ifndef JNDModels_THRESHOLD_H
-#define JNDModels_THRESHOLD_H
+#pragma once
 
 #include "genericparametricmodel.h"
 
@@ -72,4 +71,3 @@ protected:
 //=================================================================================//
 
 
-#endif // JNDModels_THRESHOLD_H

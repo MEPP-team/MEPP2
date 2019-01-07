@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_CGAL_EXACT_PREDICATES_INEXACT_CONSTRUCTIONS_KERNEL_H
-#define GEOMETRY_TRAITS_CGAL_EXACT_PREDICATES_INEXACT_CONSTRUCTIONS_KERNEL_H
+#pragma once
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include "FEVV/Wrappings/Geometry_traits_cgal_common.h"
@@ -34,4 +33,3 @@ public:
 
 }; // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_CGAL_EXACT_PREDICATES_INEXACT_CONSTRUCTIONS_KERNEL_H

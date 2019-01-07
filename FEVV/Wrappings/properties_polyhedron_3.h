@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_POLYHEDRON_3_H
-#define FEVV_PROPERTIES_POLYHEDRON_3_H
-
+#pragma once
 
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_cgal_polyhedron_3.h"
@@ -12,5 +10,3 @@ namespace FEVV {
 
 } // namespace FEVV
 
-
-#endif // FEVV_PROPERTIES_POLYHEDRON_3_H

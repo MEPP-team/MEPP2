@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_OPENMESH_H
-#define GEOMETRY_TRAITS_OPENMESH_H
+#pragma once
 
 #if(_MSC_VER >= 1400)
 #ifndef _SCL_SECURE_NO_WARNINGS
@@ -200,4 +199,3 @@ const typename Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >,
 
 } // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_OPENMESH_H

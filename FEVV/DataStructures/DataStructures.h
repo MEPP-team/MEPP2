@@ -1,6 +1,4 @@
-#ifndef FEVV_DATASTRUCTURES_H
-#define FEVV_DATASTRUCTURES_H
-
+#pragma once
 
 #ifdef FEVV_USE_CGAL
 #include "FEVV/DataStructures/DataStructures_cgal_polyhedron_3.h"
@@ -16,4 +14,3 @@
 #include "FEVV/DataStructures/DataStructures_aif.h"
 #endif
 
-#endif // FEVV_DATASTRUCTURES_H

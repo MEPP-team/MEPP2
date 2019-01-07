@@ -1,5 +1,4 @@
-#ifndef __AIFProperties_h
-#define __AIFProperties_h
+#pragma once
 
 #include <vector>
 #include <limits>
@@ -681,4 +680,3 @@ private:
 } // namespace DataStructures
 } // namespace FEVV
 
-#endif // __AIFProperties_h

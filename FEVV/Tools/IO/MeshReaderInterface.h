@@ -1,5 +1,4 @@
-#ifndef __MeshReaderInterface_h
-#define __MeshReaderInterface_h
+#pragma once
 
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -23,4 +22,3 @@ public:
 } // namespace DataStructures
 } // namespace FEVV
 
-#endif

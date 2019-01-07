@@ -1,5 +1,4 @@
-#ifndef FEVV_AIFMESH_HELPERS_H
-#define FEVV_AIFMESH_HELPERS_H
+#pragma once
 
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"
 #include "FEVV/Tools/Math/MatrixOperations.hpp"
@@ -167,4 +166,3 @@ public:
 } // namespace DataStructures
 } // namespace FEVV
 
-#endif
