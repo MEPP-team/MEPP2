@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_OPENMESH_H
-#define FEVV_PROPERTIES_OPENMESH_H
-
+#pragma once
 
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/DataStructures/DataStructures_openmesh.h"
@@ -291,5 +289,3 @@ struct _PMap_traits< OpenMesh::PolyMesh_ArrayKernelT< OMTraits >,
 
 } // namespace FEVV
 
-
-#endif // FEVV_PROPERTIES_OPENMESH_H

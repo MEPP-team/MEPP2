@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(GradientColorMap_RECURSES)
-#error Recursive header files inclusion detected in GradientColorMap.h
-#else // defined(GradientColorMap_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define GradientColorMap_RECURSES
-
-#if !defined GradientColorMap_h
-/** Prevents repeated inclusion of headers. */
-#define GradientColorMap_h
-
 #include <iostream>
 #include "Base/Color.hpp"
 
@@ -164,9 +154,3 @@ protected:
 
 
 #include "Base/GradientColorMap.inl"
-
-
-#endif // !defined GradientColorMap_h
-
-#undef GradientColorMap_RECURSES
-#endif // else defined(GradientColorMap_RECURSES)

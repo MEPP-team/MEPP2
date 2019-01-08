@@ -1,5 +1,4 @@
-#ifndef __AIFCellContainer_h
-#define __AIFCellContainer_h
+#pragma once
 
 namespace FEVV {
 namespace DataStructures {
@@ -128,4 +127,3 @@ private:
 } // namespace DataStructures
 } // namespace FEVV
 
-#endif // __AIFCellContainer_h

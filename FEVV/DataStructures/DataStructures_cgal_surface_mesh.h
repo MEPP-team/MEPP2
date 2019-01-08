@@ -1,5 +1,4 @@
-#ifndef FEVV_DATASTRUCTURES_CGAL_SURFACE_MESH_H
-#define FEVV_DATASTRUCTURES_CGAL_SURFACE_MESH_H
+#pragma once
 
 // IMPORTANT !!!
 // NOTE : if we include <CGAL/version_macros.h> we have macro redefinition of
@@ -29,4 +28,3 @@ using MeshSurface = CGAL::Surface_mesh< CGALPoint >;
 
 } // namespace FEVV
 
-#endif // FEVV_DATASTRUCTURES_CGAL_SURFACE_MESH_H

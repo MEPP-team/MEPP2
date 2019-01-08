@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_AIF_H
-#define FEVV_GRAPH_TRAITS_AIF_H
+#pragma once
 
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"
 
@@ -1164,4 +1163,3 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
 #pragma warning(pop)
 #endif
 
-#endif // FEVV_GRAPH_TRAITS_AIF_H

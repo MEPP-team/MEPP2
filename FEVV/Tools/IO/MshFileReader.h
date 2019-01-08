@@ -1,5 +1,4 @@
-#ifndef __STLmshReader_h
-#define __STLmshReader_h
+#pragma once
 
 /*
  * gmsh ref:
@@ -936,4 +935,3 @@ template< typename CoordType,
 
 }
 }
-#endif

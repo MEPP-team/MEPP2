@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_CGAL_POLYHEDRON_3_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_CGAL_POLYHEDRON_3_H
+#pragma once
 
 /*
  * Specialization of graph traits extension
@@ -114,5 +113,3 @@ size_of_faces(const CGAL::Polyhedron_3< T1, T2, T3, T4 > &g)
 //   void clear()
 //   removes all vertices, halfedges, and facets.
 
-
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_CGAL_POLYHEDRON_3_H

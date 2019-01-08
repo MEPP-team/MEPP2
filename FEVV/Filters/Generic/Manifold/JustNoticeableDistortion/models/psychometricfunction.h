@@ -1,5 +1,4 @@
-#ifndef JNDModels_PSYCHOMETRICFUNCTION_H
-#define JNDModels_PSYCHOMETRICFUNCTION_H
+#pragma once
 
 #include <cmath>
 
@@ -49,4 +48,3 @@ protected:
   virtual void default_params() { m_param = 3.5; }
 };
 
-#endif // JNDModels_PSYCHOMETRICFUNCTION_H

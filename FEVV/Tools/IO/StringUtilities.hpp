@@ -1,5 +1,4 @@
-#ifndef __StringUtilities_h
-#define __StringUtilities_h
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -114,4 +113,3 @@ convert(const ScalarType &s)
 } // namespace StrUtils
 } // namespace FEVV
 
-#endif

@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(SimpleCheckBox_RECURSES)
-#error Recursive header files inclusion detected in SimpleCheckBox.h
-#else // defined(SimpleCheckBox_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define SimpleCheckBox_RECURSES
-
-#if !defined SimpleCheckBox_h
-/** Prevents repeated inclusion of headers. */
-#define SimpleCheckBox_h
-
 #include <QCheckBox>
 #include <functional>
 
@@ -57,8 +47,3 @@ signals:
 };
 
 } // namespace FEVV
-
-#endif // !defined SimpleCheckBox_h
-
-#undef SimpleCheckBox_RECURSES
-#endif // else defined(SimpleCheckBox_RECURSES)

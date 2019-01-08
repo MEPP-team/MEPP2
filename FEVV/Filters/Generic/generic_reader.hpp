@@ -1,5 +1,4 @@
-#ifndef GENERIC_READER_H
-#define GENERIC_READER_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
@@ -798,4 +797,3 @@ read_mesh(const std::string &filename, HalfedgeGraph &g, PMapsContainer &pmaps)
 } // namespace Filters
 } // namespace FEVV
 
-#endif // GENERIC_READER_H

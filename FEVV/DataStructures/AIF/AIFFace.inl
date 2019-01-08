@@ -1,5 +1,3 @@
-#pragma once
-
 #include "FEVV/DataStructures/AIF/AIFEdge.hpp"
 
 namespace FEVV {

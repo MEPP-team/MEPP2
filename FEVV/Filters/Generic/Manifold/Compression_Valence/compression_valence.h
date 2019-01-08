@@ -1,5 +1,4 @@
-#ifndef COMPRESSION_VALENCE_H
-#define COMPRESSION_VALENCE_H
+#pragma once
 
 #include "FEVV/Filters/Generic/Manifold/Compression_Valence/Compression_Valence_Component.h"
 
@@ -147,4 +146,3 @@ compression_valence(HalfedgeGraph &g,
 } // namespace Filters
 } // namespace FEVV
 
-#endif // COMPRESSION_VALENCE_H

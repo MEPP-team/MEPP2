@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_CGAL_LINEAR_CELL_COMPLEX_H
-#define GEOMETRY_TRAITS_CGAL_LINEAR_CELL_COMPLEX_H
+#pragma once
 
 #include <CGAL/Linear_cell_complex_for_combinatorial_map.h>
 
@@ -44,4 +43,3 @@ struct RetrieveKernel<
 
 } // namespace FEVV
 
-#endif // GEOMETRY_TRAITS_CGAL_LINEAR_CELL_COMPLEX_H

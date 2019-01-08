@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_H
-#define FEVV_PROPERTIES_H
-
+#pragma once
 
 #include <CGAL/boost/graph/properties.h>
 #include <boost/shared_ptr.hpp>
@@ -609,4 +607,3 @@ make_halfedge_property_map(const MeshT &m)
 
 } // namespace FEVV
 
-#endif // FEVV_PROPERTIES_H

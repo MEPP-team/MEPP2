@@ -1,5 +1,4 @@
-#ifndef __VtkFileWriter_h
-#define __VtkFileWriter_h
+#pragma once
 
 #include <iostream>
 #include <exception>
@@ -913,4 +912,3 @@ write_vtk_or_vtp_or_vtu_file(
 } // namespace IO
 } // namespace FEVV
 
-#endif /* __VtkFileWriter_h */

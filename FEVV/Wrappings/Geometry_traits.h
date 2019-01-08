@@ -1,5 +1,4 @@
-#ifndef FEVV_GEOMETRY_TRAITS_H
-#define FEVV_GEOMETRY_TRAITS_H
+#pragma once
 
 namespace FEVV {
 
@@ -221,6 +220,5 @@ public:
   Vector add_v(const Vector &v1, const Vector &v2);
 };
 
-}; // namespace FEVV
+} // namespace FEVV
 
-#endif //  FEVV_GEOMETRY_TRAITS_H

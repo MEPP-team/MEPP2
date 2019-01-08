@@ -1,5 +1,4 @@
-#ifndef GEOMETRY_TRAITS_CGAL_COMMON_H
-#define GEOMETRY_TRAITS_CGAL_COMMON_H
+#pragma once
 
 #include "FEVV/Wrappings/Geometry_traits.h" // For forward convenience
 #include "FEVV/Wrappings/Geometry_traits_operators.h"
@@ -200,6 +199,5 @@ template< typename MeshT, typename KernelT >
 const typename Geometry_traits_for_cgal< MeshT, KernelT >::Vector
     Geometry_traits_for_cgal< MeshT, KernelT >::NULL_VECTOR = CGAL::NULL_VECTOR;
 
-}; // namespace FEVV
+} // namespace FEVV
 
-#endif //  GEOMETRY_TRAITS_CGAL_COMMON_H

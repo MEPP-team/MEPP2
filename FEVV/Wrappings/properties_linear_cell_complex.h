@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_LINEAR_CELL_COMPLEX_H
-#define FEVV_PROPERTIES_LINEAR_CELL_COMPLEX_H
-
+#pragma once
 
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_cgal_linear_cell_complex.h"
@@ -277,4 +275,3 @@ struct _PMap_traits< CGAL_LCC_TYPE, FEVV::face_material_t >
 #undef CGAL_LCC_TYPE
 
 
-#endif // FEVV_PROPERTIES_FEVV_PROPERTIES_LINEAR_CELL_COMPLEX_H

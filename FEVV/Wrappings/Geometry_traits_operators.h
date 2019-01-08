@@ -1,5 +1,4 @@
-#ifndef FEVV_GEOMETRY_TRAITS_OPERATORS_H
-#define FEVV_GEOMETRY_TRAITS_OPERATORS_H
+#pragma once
 
 #include <iostream> // due to some std::cout
 
@@ -106,7 +105,6 @@ verify_operator_results(GeometryTraits gt)
 }
 
 
-}; // namespace GeometryTraits
-}; // namespace FEVV
+} // namespace GeometryTraits
+} // namespace FEVV
 
-#endif // FEVV_GEOMETRY_TRAITS_OPERATORS_H

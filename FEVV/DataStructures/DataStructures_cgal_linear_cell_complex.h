@@ -1,5 +1,4 @@
-#ifndef FEVV_DATASTRUCTURES_CGAL_LINEAR_CELL_COMPLEX_H
-#define FEVV_DATASTRUCTURES_CGAL_LINEAR_CELL_COMPLEX_H
+#pragma once
 
 // IMPORTANT !!!
 // NOTE : if we include <CGAL/version_macros.h> we have macro redefinition of
@@ -49,4 +48,3 @@ using MeshLCC = CGAL::
 
 } // namespace FEVV
 
-#endif // FEVV_DATASTRUCTURES_CGAL_LINEAR_CELL_COMPLEX_H

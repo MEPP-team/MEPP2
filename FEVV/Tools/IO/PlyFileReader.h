@@ -1,5 +1,4 @@
-#ifndef __PlyFileReader_h
-#define __PlyFileReader_h
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -330,4 +329,3 @@ read_ply_file(std::string file_path,
 } // namespace IO
 } // namespace FEVV
 
-#endif

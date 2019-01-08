@@ -1,3 +1,5 @@
+#pragma once
+
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Wrappings/properties.h"
 

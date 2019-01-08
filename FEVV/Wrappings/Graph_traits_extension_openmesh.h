@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_CGAL_OPENMESH_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_CGAL_OPENMESH_H
+#pragma once
 
 /*
  * Specialization of graph traits extension
@@ -32,5 +31,3 @@ namespace FEVV {
 //   clear all item containers. The properties will also be removed from the
 //   mesh
 
-
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_CGAL_OPENMESH_H

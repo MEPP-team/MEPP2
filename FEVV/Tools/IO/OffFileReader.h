@@ -1,5 +1,4 @@
-#ifndef __OffFileReader_h
-#define __OffFileReader_h
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -279,4 +278,3 @@ read_off_file(std::string file_path,
 } // namespace IO
 } // namespace FEVV
 
-#endif

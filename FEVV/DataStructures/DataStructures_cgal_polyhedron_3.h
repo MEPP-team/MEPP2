@@ -1,5 +1,4 @@
-#ifndef FEVV_DATASTRUCTURES_CGAL_POLYHEDRON_3_H
-#define FEVV_DATASTRUCTURES_CGAL_POLYHEDRON_3_H
+#pragma once
 
 // IMPORTANT !!!
 // NOTE : if we include <CGAL/version_macros.h> we have macro redefinition of
@@ -31,4 +30,3 @@ using MeshPolyhedron =
 
 } // namespace FEVV
 
-#endif // FEVV_DATASTRUCTURES_CGAL_POLYHEDRON_3_H

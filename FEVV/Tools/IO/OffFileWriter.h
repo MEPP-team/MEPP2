@@ -1,5 +1,4 @@
-#ifndef __OffFileWriter_h
-#define __OffFileWriter_h
+#pragma once
 
 /*
  * Imported from
@@ -204,4 +203,3 @@ write_off_file(std::string file_path,
 } // namespace IO
 } // namespace FEVV
 
-#endif // __OffFileWriter_h

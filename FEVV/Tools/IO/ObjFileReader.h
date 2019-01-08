@@ -1,5 +1,4 @@
-#ifndef __ObjFileReader_h
-#define __ObjFileReader_h
+#pragma once
 
 /*
  * OBJ ref:
@@ -525,4 +524,3 @@ read_obj_file(const std::string &file_path,
 } // namespace IO
 } // namespace FEVV
 
-#endif

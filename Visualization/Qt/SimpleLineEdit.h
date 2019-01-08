@@ -1,15 +1,5 @@
 #pragma once
 
-#if defined(SimpleLineEdit_RECURSES)
-#error Recursive header files inclusion detected in SimpleLineEdit.h
-#else // defined(SimpleLineEdit_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define SimpleLineEdit_RECURSES
-
-#if !defined SimpleLineEdit_h
-/** Prevents repeated inclusion of headers. */
-#define SimpleLineEdit_h
-
 #include <QLineEdit>
 #include <functional>
 
@@ -113,8 +103,3 @@ signals:
 };
 
 } // namespace FEVV
-
-#endif // !defined SimpleLineEdit_h
-
-#undef SimpleLineEdit_RECURSES
-#endif // else defined(SimpleLineEdit_RECURSES)

@@ -1,5 +1,4 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#pragma once
 
 #include <string>
 
@@ -65,4 +64,3 @@ struct Material
 } // namespace Types
 } // namespace FEVV
 
-#endif // MATERIAL_H

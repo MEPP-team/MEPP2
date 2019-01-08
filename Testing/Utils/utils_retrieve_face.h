@@ -1,3 +1,5 @@
+#pragma once
+
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/include/next.hpp>
 

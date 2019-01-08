@@ -1,5 +1,4 @@
-#ifndef ScalingPlugin_H
-#define ScalingPlugin_H
+#pragma once
 
 #if(_MSC_VER >= 1400)
 #ifndef _SCL_SECURE_NO_WARNINGS
@@ -203,4 +202,3 @@ protected:
 
 } // namespace FEVV
 
-#endif // ScalingPlugin_H

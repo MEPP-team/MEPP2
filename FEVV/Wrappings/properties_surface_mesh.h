@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_SURFACE_MESH_H
-#define FEVV_PROPERTIES_SURFACE_MESH_H
-
+#pragma once
 
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_cgal_surface_mesh.h"
@@ -264,5 +262,3 @@ struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::face_material_t >
 
 } // namespace FEVV
 
-
-#endif // FEVV_PROPERTIES_SURFACE_MESH_H

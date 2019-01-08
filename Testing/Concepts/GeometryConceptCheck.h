@@ -1,5 +1,4 @@
-#ifndef FEVV_GEOMETRY_CONCEPT_CHECK_H
-#define FEVV_GEOMETRY_CONCEPT_CHECK_H
+#pragma once
 
 #include <boost/concept_check.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -117,4 +116,3 @@ private:
 
 } // namespace FEVV
 
-#endif // FEVV_GEOMETRY_CONCEPT_CHECK_H

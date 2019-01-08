@@ -1,5 +1,4 @@
-#ifndef JNDModels_GENERICPARAMETRICMODEL_H
-#define JNDModels_GENERICPARAMETRICMODEL_H
+#pragma once
 
 #include <vector>
 #include <Eigen/Core>
@@ -79,4 +78,3 @@ protected:
   ParameterType m_param;
 };
 
-#endif // JNDModels_GENERICPARAMETRICMODEL_H

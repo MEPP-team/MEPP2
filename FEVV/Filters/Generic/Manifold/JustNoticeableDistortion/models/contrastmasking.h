@@ -1,5 +1,4 @@
-#ifndef JNDModels_VISUALMASKING_H
-#define JNDModels_VISUALMASKING_H
+#pragma once
 
 #include <cmath>
 
@@ -58,4 +57,3 @@ protected:
   }
 };
 
-#endif // JNDModels_VISUALMASKING_H

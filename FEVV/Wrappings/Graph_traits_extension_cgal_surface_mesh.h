@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_CGAL_SURFACE_MESH_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_CGAL_SURFACE_MESH_H
+#pragma once
 
 /*
  * Specialization of graph traits extension
@@ -92,4 +91,3 @@ size_of_faces(const CGAL::Surface_mesh< PointT > &g)
 //
 
 
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_CGAL_SURFACE_MESH_H

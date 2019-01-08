@@ -1,6 +1,4 @@
-#ifndef FEVV_DATASTRUCTURES_OPENMESH_H
-#define FEVV_DATASTRUCTURES_OPENMESH_H
-
+#pragma once
 
 #include <OpenMesh/Core/IO/MeshIO.hh>
 
@@ -44,5 +42,3 @@ using MeshOpenMesh = OpenMesh::PolyMesh_ArrayKernelT< MyTraits >;
 
 } // namespace FEVV
 
-
-#endif // FEVV_DATASTRUCTURES_OPENMESH_H

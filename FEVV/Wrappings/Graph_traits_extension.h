@@ -1,5 +1,4 @@
-#ifndef FEVV_GRAPH_TRAITS_EXTENSION_H
-#define FEVV_GRAPH_TRAITS_EXTENSION_H
+#pragma once
 
 #include <boost/graph/graph_traits.hpp>
 #include <iterator> // for std::distance
@@ -77,4 +76,3 @@ size_of_faces(const MeshT &g)
 
 } // namespace FEVV
 
-#endif //  FEVV_GRAPH_TRAITS_EXTENSION_H

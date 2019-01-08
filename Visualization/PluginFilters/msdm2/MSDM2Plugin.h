@@ -1,5 +1,4 @@
-#ifndef MSDM2Plugin_H
-#define MSDM2Plugin_H
+#pragma once
 
 #if(_MSC_VER >= 1400)
 #ifndef _SCL_SECURE_NO_WARNINGS
@@ -1111,4 +1110,3 @@ protected:
 
 } // namespace FEVV
 
-#endif // MSDM2Plugin_H

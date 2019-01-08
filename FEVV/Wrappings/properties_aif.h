@@ -1,6 +1,4 @@
-#ifndef FEVV_PROPERTIES_AIF_H
-#define FEVV_PROPERTIES_AIF_H
-
+#pragma once
 
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_aif.h"
@@ -296,4 +294,3 @@ struct _PMap_traits< AIFMesh, FEVV::face_material_t >
 
 } // namespace FEVV
 
-#endif // FEVV_PROPERTIES_AIF_H
