@@ -265,7 +265,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
  - Update Windows 7/8/8.1/10 (services packs and Windows Update)
 
  - Download and install Visual Studio Express 2015 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
-   (download size 7.4 GB, installation size ~>14 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/Visual%20Studio%20Community%202017/vs2017layout-fr.7z) (download size 1.8 GB, installation size ~2.4 GB).
+   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/Visual%20Studio%20Community%202017/vs2017layout-fr.7z) (download size 1.8 GB, installation size ~2.4 GB).
 
 ### Installing dependencies
 

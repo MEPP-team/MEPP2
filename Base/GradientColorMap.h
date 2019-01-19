@@ -1,14 +1,14 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
-
-#if defined(GradientColorMap_RECURSES)
-#error Recursive header files inclusion detected in GradientColorMap.h
-#else // defined(GradientColorMap_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define GradientColorMap_RECURSES
-
-#if !defined GradientColorMap_h
-/** Prevents repeated inclusion of headers. */
-#define GradientColorMap_h
 
 #include <iostream>
 #include "Base/Color.hpp"
@@ -164,9 +164,3 @@ protected:
 
 
 #include "Base/GradientColorMap.inl"
-
-
-#endif // !defined GradientColorMap_h
-
-#undef GradientColorMap_RECURSES
-#endif // else defined(GradientColorMap_RECURSES)

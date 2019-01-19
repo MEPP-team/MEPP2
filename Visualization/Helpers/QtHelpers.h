@@ -1,14 +1,14 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; either version 3 of the License, 
+// or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
-
-#if defined(QtHelpers_RECURSES)
-#error Recursive header files inclusion detected in QtHelpers.h
-#else // defined(QtHelpers_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define QtHelpers_RECURSES
-
-#if !defined QtHelpers_h
-/** Prevents repeated inclusion of headers. */
-#define QtHelpers_h
 
 #include <QWidget>
 #include "Base/Color.hpp"
@@ -58,8 +58,3 @@ public:
 } // namespace Helpers
 
 } // namespace FEVV
-
-#endif // !defined QtHelpers_h
-
-#undef QtHelpers_RECURSES
-#endif // else defined(QtHelpers_RECURSES)

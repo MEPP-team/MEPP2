@@ -1,14 +1,14 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; either version 3 of the License, 
+// or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
-
-#if defined(VisualizationDataStructures_RECURSES)
-#error Recursive header files inclusion detected in VisualizationDataStructures.h
-#else // defined(VisualizationDataStructures_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define VisualizationDataStructures_RECURSES
-
-#if !defined VisualizationDataStructures_h
-/** Prevents repeated inclusion of headers. */
-#define VisualizationDataStructures_h
 
 #include <QMetaType>
 #include "Base/Color.hpp"
@@ -39,8 +39,3 @@ struct Model
 } // namespace FEVV
 
 Q_DECLARE_METATYPE(FEVV::Helpers::Model< osg::Node >)
-
-#endif // !defined VisualizationDataStructures_h
-
-#undef VisualizationDataStructures_RECURSES
-#endif // else defined(VisualizationDataStructures_RECURSES)

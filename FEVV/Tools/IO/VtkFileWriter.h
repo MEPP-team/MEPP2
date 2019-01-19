@@ -1,5 +1,14 @@
-#ifndef __VtkFileWriter_h
-#define __VtkFileWriter_h
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#pragma once
 
 #include <iostream>
 #include <exception>
@@ -913,4 +922,3 @@ write_vtk_or_vtp_or_vtu_file(
 } // namespace IO
 } // namespace FEVV
 
-#endif /* __VtkFileWriter_h */
