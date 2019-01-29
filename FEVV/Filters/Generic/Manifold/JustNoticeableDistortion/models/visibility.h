@@ -1,5 +1,14 @@
-#ifndef JNDModels_VISIBILITY_H
-#define JNDModels_VISIBILITY_H
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#pragma once
 
 #include "genericparametricmodel.h"
 #include "psychometricfunction.h"
@@ -58,5 +67,3 @@ protected:
   /// initialise the weibul distribution with beta = 3.5;
   virtual void default_params() { m_param = ParameterType(3.5); }
 };
-
-#endif // VISIBLITY_H

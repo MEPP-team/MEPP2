@@ -1,14 +1,14 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
-
-#if defined(Assert_RECURSES)
-#error Recursive header files inclusion detected in Assert.h
-#else // defined(Assert_RECURSES)
-/** Prevents recursive inclusion of headers. */
-#define Assert_RECURSES
-
-#if !defined Assert_h
-/** Prevents repeated inclusion of headers. */
-#define Assert_h
 
 #include <iostream>
 #include <boost/assert.hpp>
@@ -93,8 +93,3 @@ public:
   }
 };
 } // namespace FEVV
-
-#endif // !defined Assert_h
-
-#undef Assert_RECURSES
-#endif // else defined(Assert_RECURSES)

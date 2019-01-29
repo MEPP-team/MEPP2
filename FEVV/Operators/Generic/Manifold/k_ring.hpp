@@ -1,3 +1,13 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
 #include <map>
@@ -20,8 +30,7 @@ namespace Operators {
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
  * \param[in]  v The vertex whose k-rings are computed. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[in]  k The maximum distance to include a vertex v' neighbor. 
  * \param[out] qv The std::vector of vertices at most k (inclusive)
  *             far from vertex v in the graph of edges
@@ -89,8 +98,7 @@ extract_k_ring(
  *          FaceGraph Concept through a boost::graph_traits<>
  *          specialization.
  * \param[in]  v The vertex whose incident halfedges are extracted. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[out] qh The std::vector of halfedges incident to v.
  */  
 template< typename FaceGraph >
@@ -175,8 +183,7 @@ extract_vertex_star(
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
  * \param[in]  v The vertex whose 1-ring is computed. 
- * \param[in]  g The FaceGraph instance out of which the h edge will be
- *             deleted.
+ * \param[in]  g The FaceGraph instance.
  * \param[out] qv The std::vector of vertices at exactly 1
  *             far from vertex v in the graph of edges
  */ 

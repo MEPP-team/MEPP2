@@ -1,0 +1,129 @@
+linux - Debug - GCC - CGAL-4.11 - QT4 - ALL:
+  tags:
+    - MEPP2,linux,CGAL-4.11
+  script:
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - xvfb-run ctest -j 3 --output-on-failure
+
+linux - Release - GCC - CGAL-4.11 - QT4 - ALL:
+  tags:
+    - MEPP2,linux,CGAL-4.11
+  script:
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - xvfb-run ctest -j 3 --output-on-failure
+
+linux - Debug - CLANG - CGAL-4.13 - QT5 - ALL:
+  tags:
+    - MEPP2,linux,CGAL-4.13
+  script:
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - xvfb-run ctest -j 3 --output-on-failure
+
+linux - Release - CLANG - CGAL-4.13 - QT5 - ALL:
+  tags:
+    - MEPP2,linux,CGAL-4.13
+  script:
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - xvfb-run ctest -j 3 --output-on-failure
+
+osx - Debug - QT4 - ALL:
+  tags:
+    - MEPP2,osx
+  script:
+    - brew link qt@4
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - ctest -j 3 --output-on-failure
+
+osx - Release - QT4 - ALL:
+  tags:
+    - MEPP2,osx
+  script:
+    - brew link qt@4
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - ctest -j 3 --output-on-failure
+
+osx - Debug - QT5 - ALL:
+  tags:
+    - MEPP2,osx
+  script:
+    - brew unlink qt@4; export QT5_DIR=/usr/local/Cellar/qt/5.12.0
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - ctest -j 3 --output-on-failure
+
+osx - Release - QT5 - ALL:
+  tags:
+    - MEPP2,osx
+  script:
+    - brew unlink qt@4; export QT5_DIR=/usr/local/Cellar/qt/5.12.0
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 3
+    - ctest -j 3 --output-on-failure
+
+windows - Debug - 2015 - QT4 - ALL:
+  tags:
+    - MEPP2,windows,VS2015
+  script:
+    - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
+    - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
+    - set MSVC_KIT_ROOT=E:\local_vs2015_64
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - mkdir build & cd build
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure
+
+windows - Release - 2015 - QT4 - ALL:
+  tags:
+    - MEPP2,windows,VS2015
+  script:
+    - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
+    - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
+    - set MSVC_KIT_ROOT=E:\local_vs2015_64
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - mkdir build & cd build
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure
+
+windows - Debug - 2017 - QT5 - ALL:
+  tags:
+    - MEPP2,windows,VS2017
+  script:
+    - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
+    - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
+    - set MSVC_KIT_ROOT=E:\local_vs2015_64
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - mkdir build & cd build
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure
+
+windows - Release - 2017 - QT5 - ALL:
+  tags:
+    - MEPP2,windows,VS2017
+  script:
+    - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
+    - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
+    - set MSVC_KIT_ROOT=E:\local_vs2015_64
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - mkdir build & cd build
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure

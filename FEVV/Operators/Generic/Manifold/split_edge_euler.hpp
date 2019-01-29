@@ -1,3 +1,13 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
 #include <CGAL/boost/graph/internal/helpers.h> // set_border
@@ -19,12 +29,15 @@ namespace Operators {
  * \brief Split an edge of the graph.
  *        The edge to split is given as a halfedge.
  *
- * Template parameters:
- *           MutableFaceGraph: a Mesh type that provides
- *                 a Model of the MutableFaceGraph Concept
- *                 through a boost::graph_traits<> specialization.
- *			PointMap: a modifiable point map to manage vertex
- *positions
+ * \tparam  MutableFaceGraph a Mesh type that provides a Model of the
+ *          MutableFaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \tparam  PointMap A modifiable point map to manage vertex positions.
+ * \param g The MutableFaceGraph instance from which the edge will be
+ *          split.
+ * \param pm The mesh point map which associates vertex to positions.
+ * \param h The edge to be split designated through one of its
+ *          halfedges. 
  */
 template< typename MutableFaceGraph, typename PointMap >
 void

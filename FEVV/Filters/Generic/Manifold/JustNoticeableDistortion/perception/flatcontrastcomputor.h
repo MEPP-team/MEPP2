@@ -1,5 +1,14 @@
-#ifndef JNDPerception_FLATCONTRASTCOMPUTOR_H
-#define JNDPerception_FLATCONTRASTCOMPUTOR_H
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#pragma once
 
 #include <cmath>
 #include <algorithm> // for std::max()
@@ -52,6 +61,3 @@ compute_flat_contrast(const GeometryTraits &geom,
   auto normal_f2 = get(f_nm, f2);
   return compute_flat_contrast(geom, normal_f1, normal_f2, ldir);
 }
-
-
-#endif // JNDPerception_FLATCONTRASTCOMPUTOR_H
