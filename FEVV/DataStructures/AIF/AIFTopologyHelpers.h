@@ -3794,10 +3794,13 @@ private:
     auto vRange = incident_vertices(edge);
     for(auto vIt = vRange.begin(); vIt != vRange.end(); ++vIt)
     {
-      (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
-      (*vIt)->m_One_Ring_Vertices.clear(); // free memory
-      (*vIt)->m_Incident_PtrFaces_Computed = false;
-      (*vIt)->m_Incident_PtrFaces.clear(); // free memory
+      if (*vIt != null_vertex())
+      {
+        (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
+        (*vIt)->m_One_Ring_Vertices.clear(); // free memory
+        (*vIt)->m_Incident_PtrFaces_Computed = false;
+        (*vIt)->m_Incident_PtrFaces.clear(); // free memory
+      }
     }
 
     FEVV::Container::erase(edge->m_incident_PtrFaces, face);
