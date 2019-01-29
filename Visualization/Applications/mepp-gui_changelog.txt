@@ -1,3 +1,6 @@
+v0.7.3 - 29/01/2019 :
+ - add a new information message box when plugins are applied
+
 v0.7.2 - 15/11/2018 :
  - update 'About' and 'Help'
 
