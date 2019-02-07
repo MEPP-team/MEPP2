@@ -215,7 +215,7 @@ Optional dependencies:
   # PCL
   $ brew install pcl
 
-  # FBX SDK - primary support, not finished !
+  # FBX SDK (primary support, not finished !)
   # get and install the sdk from here: https://www.autodesk.com/content/dam/autodesk/www/adn/fbx/20192/fbx20192_fbxsdk_clang_mac.pkg.tgz
   # double click to decompress the .tgz and then install the .pkg by clicking on it
   $ ln -s "/Applications/Autodesk/FBX SDK/2019.2/lib/clang/release" "/Applications/Autodesk/FBX SDK/2019.2/lib/release"
