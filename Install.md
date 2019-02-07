@@ -193,7 +193,7 @@ Optional dependencies:
   $ brew tap-pin cartr/qt4
   $ brew install qt@4
 
-  # OpenSceneGraph (version 3.4.x !)
+  # OpenSceneGraph (use version 3.4.x !)
   $ brew install open-scene-graph
   $ brew info open-scene-graph
   # -> if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
