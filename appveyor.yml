@@ -212,6 +212,6 @@ build_script:
 
 # to run your custom scripts instead of automatic tests
 test_script:
-#  - IF %CONFIGURATION%==Debug  dumpbin /dependents "C:\projects\mepp2\Testing\CGAL\Polyhedron\Debug\test_boolean_operations_polyhedron.exe"
-# - IF %CONFIGURATION%==Release  dumpbin /dependents "C:\projects\mepp2\Testing\CGAL\Polyhedron\Release\test_boolean_operations_polyhedron.exe"
+#  - IF %CONFIGURATION%==Debug dumpbin /dependents "C:\projects\mepp2\Testing\CGAL\Polyhedron\Debug\test_boolean_operations_polyhedron.exe"
+#  - IF %CONFIGURATION%==Release dumpbin /dependents "C:\projects\mepp2\Testing\CGAL\Polyhedron\Release\test_boolean_operations_polyhedron.exe"
   - ctest -j 2 --output-on-failure
