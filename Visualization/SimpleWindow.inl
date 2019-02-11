@@ -393,10 +393,14 @@ FEVV::SimpleWindow::onModificationParam(std::string _pluginName,
 inline void
 FEVV::SimpleWindow::onApplyButton()
 {
-  if(!Assert::check(isValid(),
-                    "is not valid (see init() or attach()). Leaving ...",
-                    "SimpleWindow::onApplyButton"))
+  if(!isValid())
   {
+    QMessageBox::information(this, "",
+		QObject::tr("Please, first <b>open a mesh</b><br>"
+					"<br>"
+					"or if necessary with some plugins <b>use an empty child window</b><br>"
+					"(see 'Open -> EMPTY mode' <b>key</b> in 'About MEPP2 / Help' menu)."));
+
     return;
   }
 
@@ -535,7 +539,7 @@ inline void
 FEVV::SimpleWindow::notify()
 {
   if(!Assert::check(isValid(),
-                    "is not valid (see init() or attach()). Leaving ...",
+                    "is not valid (see init() or attach()). Leaving...",
                     "SimpleWindow::notify"))
   {
     return;
@@ -3206,7 +3210,7 @@ inline void
 FEVV::SimpleWindow::onAddBall()
 {
   if(!Assert::check(isValid(),
-                    "is not valid (see init() or attach()). Leaving ...",
+                    "is not valid (see init() or attach()). Leaving...",
                     "SimpleWindow::onAddBall"))
   {
     return;

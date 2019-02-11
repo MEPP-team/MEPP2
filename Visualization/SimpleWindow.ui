@@ -324,7 +324,7 @@
   </action>
   <action name="actionAbout_MEPP_Help">
    <property name="text">
-    <string>About MEPP / Help</string>
+    <string>About MEPP2 / Help</string>
    </property>
   </action>
   <action name="actionOpen_Polyhedron_3">
