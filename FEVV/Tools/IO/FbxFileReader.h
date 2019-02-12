@@ -1,14 +1,5 @@
-// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
-// All rights reserved.
-//
-// This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as
-// published by the Free Software Foundation; either version 3 of
-// the License, or (at your option) any later version.
-//
-// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#pragma once
+#ifndef __FbxFileReader_h
+#define __FbxFileReader_h
 
 #include <iostream>
 #include <vector>
@@ -274,8 +265,8 @@ read_fbx_file(const std::string &filePath,
       {
         const auto &texcoords = meshTexcoords->GetDirectArray()[texIndex];
 
-        texture_coords[currentTexIndex][0] = texcoords[0]; // U
-        texture_coords[currentTexIndex][1] = texcoords[1]; // V
+        texture_coords[currentTexIndex][0] =  static_cast<coordT_type>(texcoords[0]); // U
+        texture_coords[currentTexIndex][1] = static_cast<coordT_type>(texcoords[1]); // V
       }
     }
 
@@ -633,3 +624,4 @@ read_fbx_file(const std::string &filePath,
 } // namespace IO
 } // namespace FEVV
 
+#endif
