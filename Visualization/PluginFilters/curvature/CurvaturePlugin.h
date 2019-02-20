@@ -927,8 +927,9 @@ public:
     }
   }
 
-  template< typename HalfedgeGraph, typename VertexCurvatureMap >
+  template< typename HalfedgeGraph, typename VertexCurvatureMap, typename GuiPropertiesMap >
   void curvature(HalfedgeGraph *_mesh,
+                 GuiPropertiesMap &m_gpm,
                  VertexCurvatureMap &v_cm,
                  double &MinNrmMinCurvature,
                  double &MaxNrmMinCurvature,
@@ -959,6 +960,12 @@ public:
         MaxNrmMaxCurvature); // minimum and maximum values of the minimum and
                              // maximum curvature fields (usefull for color
                              // rendering)
+
+    // change display mode to show filter result
+    auto gui_props = get(m_gpm, 0);
+    gui_props.display_mode = FEVV::Types::DisplayMode::VERTEX_COLOR;
+    gui_props.is_visible = true;
+    put(m_gpm, 0, gui_props);
 
     std::cout << "Curvature mesh, isGeod: " << *value_isGeod
               << " - radius: " << *value_radius << "." << std::endl;
@@ -1004,6 +1011,9 @@ public:
 
     if((*value_forceCompute) || (map_v_cmHG.find(p) == map_v_cmHG.end()))
     {
+      auto m_gpm =
+          get_property_map(FEVV::mesh_guiproperties, *_mesh, *pmaps_bag);
+
       map_v_cmHG[p] = std::make_tuple(
           FEVV::make_vertex_property_map< HalfedgeGraph,
                                           Filters::v_Curv< HalfedgeGraph > >(
@@ -1011,6 +1021,7 @@ public:
           std::array< double, 4 >());
 
       curvature(_mesh,
+                m_gpm,
                 std::get< 0 >(map_v_cmHG[p]),
                 std::get< 1 >(map_v_cmHG[p])[0],
                 std::get< 1 >(map_v_cmHG[p])[1],
