@@ -16,7 +16,7 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
-#include "FEVV/Filters/CGAL/Polyhedron/Boolean_Operations/boolean_operations.hpp"
+#include "FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp"
 
 #include "Testing/Utils/utils_are_meshes_identical.hpp"
 

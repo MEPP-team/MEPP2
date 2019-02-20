@@ -29,7 +29,7 @@
 
 #include "Visualization/SimpleWindow.h"
 
-#include "FEVV/Filters/CGAL/Polyhedron/Boolean_Operations/boolean_operations.hpp"
+#include "FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
