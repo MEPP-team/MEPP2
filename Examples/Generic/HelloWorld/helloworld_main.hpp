@@ -12,17 +12,17 @@
 
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "Examples/Generic/HelloWorld/hello_world_filter.hpp"
+#include "Examples/Generic/HelloWorld/helloworld_filter.hpp"
 
 /**
  * \brief A mesh type templated main(argc, argv) function that
  *         - loads a mesh from a file,
- *         - applies the \ref hello_world_filter generic filter,
+ *         - applies the \ref helloworld_filter generic filter,
  *         - write the resulting mesh to a file
  */
 template< typename MeshT >
 int
-hello_world_main(int argc, const char **argv)
+helloworld_main(int argc, const char **argv)
 {
   if(argc != 2)
   {
@@ -85,7 +85,7 @@ hello_world_main(int argc, const char **argv)
   auto pm = get(boost::vertex_point, m);
 
   // apply filter
-  hello_world_filter(m, pm, v_cm, v_nm);
+  helloworld_filter(m, pm, v_cm, v_nm);
 
   // write mesh to file
   FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag);

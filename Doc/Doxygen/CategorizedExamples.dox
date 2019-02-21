@@ -36,11 +36,11 @@ Trying out FEVV can thus be simply achieved by copying the code of this
 example and start experiencing/hacking with it.
 
 This generic example is instantiated for the following mesh data structures:
-  - an \ref AIF/HelloWorld/hello_world_filter_aif.cpp "AIF version"
-  - a \ref CGAL/HelloWorld/hello_world_filter_cgal_linear_cell_complex.cpp "CGAL::Linear Cell Complex version"
-  - a \ref CGAL/HelloWorld/hello_world_filter_cgal_polyhedron_3.cpp "CGAL::Polyhedron_3 version"
-  - a \ref CGAL/HelloWorld/hello_world_filter_cgal_surface_mesh.cpp "CGAL::SurfaceMesh version"
-  - an \ref OpenMesh/HelloWorld/hello_world_filter_openmesh.cpp "OpenMesh version"
+  - an \ref AIF/HelloWorld/helloworld_filter_aif.cpp "AIF version"
+  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_linear_cell_complex.cpp "CGAL::Linear Cell Complex version"
+  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_polyhedron_3.cpp "CGAL::Polyhedron_3 version"
+  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_surface_mesh.cpp "CGAL::SurfaceMesh version"
+  - an \ref OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp "OpenMesh version"
 
 Notice that all the above versions only differ by the respective data
 structures (AIF, OpenMesh, CGAL::Surface_mesh, CGAL::Polyhedron...)
@@ -170,37 +170,37 @@ illustrates how to define a simple filter test:
 \todo
 
 ************************************
-\example AIF/HelloWorld/hello_world_filter_aif.cpp
+\example AIF/HelloWorld/helloworld_filter_aif.cpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example CGAL/HelloWorld/hello_world_filter_cgal_linear_cell_complex.cpp
+\example CGAL/HelloWorld/helloworld_filter_cgal_linear_cell_complex.cpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example CGAL/HelloWorld/hello_world_filter_cgal_polyhedron_3.cpp
+\example CGAL/HelloWorld/helloworld_filter_cgal_polyhedron_3.cpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example CGAL/HelloWorld/hello_world_filter_cgal_surface_mesh.cpp
+\example CGAL/HelloWorld/helloworld_filter_cgal_surface_mesh.cpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example Generic/HelloWorld/hello_world_filter.hpp
+\example Generic/HelloWorld/helloworld_filter.hpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example Generic/HelloWorld/hello_world_main.hpp
+\example Generic/HelloWorld/helloworld_main.hpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 
 ************************************
-\example OpenMesh/HelloWorld/hello_world_filter_openmesh.cpp
+\example OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp
 Refer \ref ExampleComprehensive "here" for a presentation of what the
 self contained and comprehensive following example code does.
 

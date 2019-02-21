@@ -33,8 +33,8 @@ Because the HelloWorld example is \ref GenericDefinition "generic", notice
 that the `Examples/Generic/HelloWorld` only holds [templated code](https://en.wikipedia.org/wiki/Template_%28C%2B%2B%29).
 
 This is in particular true for the [`template< typename MeshT >
-int hello_world_main(int argc, const char **argv)`](https://github.com/MEPP-team/MEPP2/blob/master/Examples/Generic/HelloWorld/hello_world_main.hpp#L13) function.
-That template function thus needs to be instantiated with a concrete (mesh) data type which is done e.g. in [Examples/OpenMesh/HelloWorld/hello_world_filter_openmesh.cpp] (https://github.com/MEPP-team/MEPP2/blob/master/Examples/OpenMesh/HelloWorld/hello_world_filter_openmesh.cpp) for the OpenMesh data structure or in [Examples/AIF/HelloWorld/hello_world_filter_aif.cpp](https://github.com/MEPP-team/MEPP2/blob/master/Examples/AIF/HelloWorld/hello_world_filter_aif.cpp) for the AIF data structure.
+int helloworld_main(int argc, const char **argv)`](https://github.com/MEPP-team/MEPP2/blob/master/Examples/Generic/HelloWorld/helloworld_main.hpp#L13) function.
+That template function thus needs to be instantiated with a concrete (mesh) data type which is done e.g. in [Examples/OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp] (https://github.com/MEPP-team/MEPP2/blob/master/Examples/OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp) for the OpenMesh data structure or in [Examples/AIF/HelloWorld/helloworld_filter_aif.cpp](https://github.com/MEPP-team/MEPP2/blob/master/Examples/AIF/HelloWorld/helloworld_filter_aif.cpp) for the AIF data structure.
 
 ### Duplicate the HelloWorld filter example and adapt it to your needs
 First duplicate the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld)
@@ -44,8 +44,8 @@ sub-directory (that implements a trivial Hello World
 cd MEPP2/Examples/Generic/
 cp -r HelloWorld MyExample
 cd MyExample
-mv hello_world_filter.hpp myexample_filter.hpp
-mv hello_world_main.hpp myexample_main.hpp
+mv helloworld_filter.hpp myexample_filter.hpp
+mv helloworld_main.hpp myexample_main.hpp
 ```
 Then proceed with editing the `myexample_filter.hpp` and `myexample_main.hpp`
 files and change every occurrence of `helloworld` to become `myexample`.
@@ -81,10 +81,10 @@ version of your newly created `MyExample` generic code. That is
 cd Examples/CGAL
 cp -r HelloWorld MyExample
 cd MyExample
-mv hello_world_filter_cgal_linear_cell_complex.cpp my_filter_cgal_linear_cell_complex.cpp
+mv helloworld_filter_cgal_linear_cell_complex.cpp my_filter_cgal_linear_cell_complex.cpp
 # We will only adapt the Linear Cell Complex
-rm hello_world_filter_cgal_polyhedron_3.cpp
-rm hello_world_filter_cgal_surface_mesh.cpp
+rm helloworld_filter_cgal_polyhedron_3.cpp
+rm helloworld_filter_cgal_surface_mesh.cpp
 ```
 Edit the `Examples/CGAL/MyExample/CMakeLists.txt` and adapt the build instructions to your new `MyExample` example.
 

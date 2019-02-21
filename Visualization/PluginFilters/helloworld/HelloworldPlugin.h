@@ -19,7 +19,7 @@
 #include "Visualization/SimpleWindow.h"
 
 //#include "FEVV/Filters/Generic/scaling.hpp" // A) include the header of the filter corresponding to your operation
-#include "Examples/Generic/HelloWorld/hello_world_filter.hpp"
+#include "Examples/Generic/HelloWorld/helloworld_filter.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -126,7 +126,7 @@ public:
     auto pm = get(boost::vertex_point, *_mesh);
 
     // apply filter
-    hello_world_filter(*_mesh, pm, v_cm, v_nm);
+    helloworld_filter(*_mesh, pm, v_cm, v_nm);
 
     std::cout << "Helloworld mesh of " << value_x << ";" << value_y << ";"
               << value_z << "." << std::endl;
