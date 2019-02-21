@@ -8,21 +8,30 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#pragma once
+
+#include <string>
 
 
-
-#include "Examples/Generic/HelloWorld/hello_world_main.hpp"
-
-// The following include defines the FEVV::MeshLCC type
-#include "FEVV/DataStructures/DataStructures_cgal_linear_cell_complex.h"
-
-#include "FEVV/Wrappings/Geometry_traits_cgal_linear_cell_complex.h"
-#include "FEVV/Wrappings/properties_linear_cell_complex.h"
+namespace FEVV {
+namespace Types {
 
 
-// Main: load a mesh, apply the filter, write the mesh
-int
-main(int argc, const char **argv)
+enum class DisplayMode { NO_COLOR, VERTEX_COLOR, FACE_COLOR, TEXTURE };
+
+/**
+ * This is the datastructure used to store the GUI properties for a mesh.
+ * It is used to trigger a change in GUI from within a plugin.
+ */
+struct GuiProperties
 {
-  return hello_world_main< FEVV::MeshLCC >(argc, argv);
-}
+  std::string mesh_name;
+  DisplayMode display_mode = DisplayMode::NO_COLOR;
+  bool is_visible = true;
+  bool is_selected = false;
+};
+
+
+} // namespace Types
+} // namespace FEVV
+

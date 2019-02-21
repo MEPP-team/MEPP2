@@ -8,32 +8,30 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#pragma once
-
+#include "helloworld_dialog.h"
+#include "ui_helloworld_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
-////////////////////////////////////////////////////////////////////////////////
-namespace Ui {
-class DialogProcessing1;
+FEVV::HelloworldDialog::HelloworldDialog(QWidget *parent)
+    : QDialog(parent), ui(new Ui::HelloworldDialog)
+{
+  ui->setupUi(this);
 }
 ////////////////////////////////////////////////////////////////////////////////
-namespace FEVV {
-
-class DialogProcessing1 : public QDialog
+FEVV::HelloworldDialog::~HelloworldDialog() { delete ui; }
+////////////////////////////////////////////////////////////////////////////////
+void
+FEVV::HelloworldDialog::setParameters(double x, double y, double z)
 {
-  Q_OBJECT
-
-public:
-  explicit DialogProcessing1(QWidget *parent = 0);
-  ~DialogProcessing1();
-
-  void setProcess(double x, double y, double z);
-  void getProcess(double &x, double &y, double &z);
-
-private:
-  Ui::DialogProcessing1 *ui;
-};
-
-} // namespace FEVV
-
+  ui->lineEdit_X->setText(QString::number(x));
+  ui->lineEdit_Y->setText(QString::number(y));
+  ui->lineEdit_Z->setText(QString::number(z));
+}
+////////////////////////////////////////////////////////////////////////////////
+void
+FEVV::HelloworldDialog::getParameters(double &x, double &y, double &z)
+{
+  x = ui->lineEdit_X->text().toDouble();
+  y = ui->lineEdit_Y->text().toDouble();
+  z = ui->lineEdit_Z->text().toDouble();
+}
 ////////////////////////////////////////////////////////////////////////////////

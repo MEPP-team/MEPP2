@@ -3,8 +3,8 @@
 @page GenericPropertyMapConceptPage Generic property map concept
 
 Quick links:
- - an \ref OpenMesh/hello_world_filter.cpp "OpenMesh based example"
- - a \ref CGAL/hello_world_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
+ - an \ref OpenMesh/helloworld_filter.cpp "OpenMesh based example"
+ - a \ref CGAL/helloworld_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
  - \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes"
 
 <b>Introduction</b>

@@ -3,8 +3,8 @@
 @page DevelopersDesignGenericPropertyMapsPage  Generic property maps (design notes)
 
 Quick links:
- - an \ref OpenMesh/hello_world_filter.cpp "OpenMesh based example"
- - a \ref CGAL/hello_world_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
+ - an \ref Examples/OpenMesh/helloworld_filter_openmesh.cpp "OpenMesh based example"
+ - a \ref Examples/CGAL/Surface_mesh/helloworld_filter_cgal_surface_mesh.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
 
 ### Property maps management and implementation
 
@@ -51,7 +51,7 @@ dedicated code specialisations.
 Hence `FEVV/Wrappings/properties.h` must be included in generic code (for
 example in \ref FEVV/Filters/Generic/generic_reader.hpp) whereas
 \ref FEVV/Wrappings/properties_<datastructure>.h must be included in
-applications (for example in \ref Examples/OpenMesh/hello_world_filter.cpp).
+applications (for example in \ref Examples/OpenMesh/helloworld_filter_openmesh.cpp).
 
 `FEVV/Wrappings/properties_<datastructure>.h` is also the file where to place
 the PMap_traits specialization for a specific `<datastructure>` datastructure.

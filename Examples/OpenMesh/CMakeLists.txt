@@ -28,4 +28,10 @@ add_executable( example_accessing_geometry
 target_link_libraries( example_accessing_geometry
                        ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
 
-add_subdirectory( HelloWorld )
+#####
+add_executable( helloworld_filter_openmesh
+                helloworld_filter_openmesh.cpp )
+target_link_libraries( helloworld_filter_openmesh
+                       ${OPENMESH_LIBRARIES}
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )

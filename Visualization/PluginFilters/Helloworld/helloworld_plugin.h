@@ -19,7 +19,7 @@
 #include "Visualization/Plugins/PluginInterface.h"
 
 #include <QStringList>
-#include "Dialogs/DialogProcessing1.h"
+#include "Dialogs/helloworld_dialog.h"
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
@@ -28,7 +28,8 @@
 
 #include "Visualization/SimpleWindow.h"
 
-#include "FEVV/Filters/Generic/scaling.hpp" // A) include the header of the filter corresponding to your operation
+// A) include the header of the filter corresponding to your operation
+#include "Examples/Generic/Helloworld/helloworld_filter.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -47,32 +48,30 @@
 
 namespace FEVV {
 
-class ProcessingPlugin : public QObject,
+class HelloworldPlugin : public QObject,
                          public Generic_PluginInterface,
                          public BasePlugin
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
 #if(FEVV_USE_QT5) // see at the end of .cpp for QT4
-  Q_PLUGIN_METADATA(IID "ProcessingPlugin")
+  Q_PLUGIN_METADATA(IID "HelloworldPlugin")
 #endif
 
   /*public:
       using BasePlugin::apply;*/
 public:
-  ProcessingPlugin() = default;
-  ~ProcessingPlugin() = default;
+  HelloworldPlugin() = default;
+  ~HelloworldPlugin() = default;
 
 public:
-  void init() override { init(true, 1.0, 1.0, 1.0); }
+  void init() override { init(1.0, 1.0, 1.0); }
 
-  void init(bool _forceCompute, double _x, double _y, double _z)
+  void init(double _x, double _y, double _z)
   {
-    *value_forceCompute = _forceCompute;
-
-    *value_x = _x;
-    *value_y = _y;
-    *value_z = _z;
+    value_x = _x;
+    value_y = _y;
+    value_z = _z;
   }
 
   void reset() override
@@ -90,29 +89,58 @@ public:
       std::cerr << "BaseWindow is null or not initialized." << std::endl;
       return;
     }
-
-    // window->setParam( "(Qt) Process: X", value_x, "processing_qt_p", this );
-    // window->setParam( "(Qt) Process: Y", value_y, "processing_qt_p", this );
-    // window->setParam( "(Qt) Process: Z", value_z, "processing_qt_p", this );
   }
 
   template< typename HalfedgeGraph >
-  void process(HalfedgeGraph *_mesh)
+  void process(HalfedgeGraph *_mesh, FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cout << "Asking to Process mesh ! " << std::endl;
+    std::cout << "Asking to Helloworld mesh ! " << std::endl;
 
+    // retrieve or create vertex-color property map
+    using VertexColorMap =
+        typename FEVV::PMap_traits< FEVV::vertex_color_t,
+		                            HalfedgeGraph >::pmap_type;
+    VertexColorMap v_cm;
+    if(has_map(*pmaps_bag, FEVV::vertex_color))
+    {
+      std::cout << "use existing vertex-color map" << std::endl;
+      v_cm = get_property_map(FEVV::vertex_color, *_mesh, *pmaps_bag);
+    }
+    else
+    {
+      std::cout << "create vertex-color map" << std::endl;
+      v_cm = make_property_map(FEVV::vertex_color, *_mesh);
+      // store property map in property maps bag
+      put_property_map(FEVV::vertex_color, *_mesh, *pmaps_bag, v_cm);
+    }
+
+    // retrieve or create vertex-normal property map
+    using VertexNormalMap =
+        typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+		                            HalfedgeGraph >::pmap_type;
+    VertexNormalMap v_nm;
+    if(has_map(*pmaps_bag, FEVV::vertex_normal))
+    {
+      std::cout << "use existing vertex-normal map" << std::endl;
+      v_nm = get_property_map(FEVV::vertex_normal, *_mesh, *pmaps_bag);
+    }
+    else
+    {
+      std::cout << "create vertex-normal map" << std::endl;
+      v_nm = make_property_map(FEVV::vertex_normal, *_mesh);
+      // store property map in property maps bag
+      put_property_map(FEVV::vertex_normal, *_mesh, *pmaps_bag, v_nm);
+    }
+
+    // retrieve point property map (aka geometry)
     auto pm = get(boost::vertex_point, *_mesh);
 
-    Filters::calculate_scaling( // B) call the filter corresponding to your
-                                // operation
-        *_mesh,
-        pm,
-        *value_x,
-        *value_y,
-        *value_z);
+    // apply filter
+    // B) call the filter corresponding to your operation
+    helloworld_filter(*_mesh, pm, v_cm, v_nm);
 
-    std::cout << "Process mesh of " << *value_x << ";" << *value_y << ";"
-              << *value_z << "." << std::endl;
+    std::cout << "Helloworld mesh of " << value_x << ";" << value_y << ";"
+              << value_z << "." << std::endl;
   }
 
   template< typename HalfedgeGraph >
@@ -120,14 +148,16 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    if(*value_forceCompute)
-      process(_mesh);
+    std::cout << "here applyHG ! " << std::endl;
+
+    process(_mesh, pmaps_bag);
 
     SimpleViewer< HalfedgeGraph > *viewer =
         dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
+    // comment next line to keep parameters values between calls
     reset();
 
     viewer->frame();
@@ -176,21 +206,24 @@ public:
 
   QStringList Generic_plugins() const override
   {
-    return QStringList() << "ProcessingPlugin";
+    return QStringList() << "HelloworldPlugin";
   }
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogProcessing1 dial1;
-    dial1.setProcess(*value_x, *value_y, *value_z);
-    if(dial1.exec() == QDialog::Accepted)
+    // setup and display filter parameters dialog window
+    HelloworldDialog dialog;
+    dialog.setParameters(value_x, value_y, value_z);
+
+    // get filter parameters from dialog window
+    if(dialog.exec() == QDialog::Accepted)
     {
-      dial1.getProcess(*value_x, *value_y, *value_z);
+      dialog.getParameters(value_x, value_y, value_z);
 
       SimpleWindow *sw = static_cast< SimpleWindow * >(
           window); // dynamic_cast fails under OS X
 
-      sw->onModificationParam("processing_qt_p", this);
+      sw->onModificationParam("helloworld_qt_p", this);
       sw->onApplyButton();
 
       return true;
@@ -203,11 +236,10 @@ signals:
   void resetSignal();
 
 protected:
-  bool *value_forceCompute = new bool(false);
-
-  double *value_x = new double(0.0);
-  double *value_y = new double(0.0);
-  double *value_z = new double(0.0);
+  // filter parameters
+  double value_x = 0;
+  double value_y = 0;
+  double value_z = 0;
 };
 
 } // namespace FEVV
