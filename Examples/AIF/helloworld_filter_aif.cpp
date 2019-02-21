@@ -18,7 +18,7 @@
 /// This behaviour is different from the ones of the equivalent examples
 /// using other data structures like OpenMesh or the ones of CGAL.
 /// Inquire on this (peculiar?) behavioral difference of AIF.
-#include "Examples/Generic/HelloWorld/helloworld_main.hpp"
+#include "Examples/Generic/Helloworld/helloworld_main.hpp"
 
 int
 main(int argc, const char **argv)

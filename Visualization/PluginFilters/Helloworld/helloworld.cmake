@@ -2,11 +2,11 @@
 OPTION( BUILD_USE_GUI_HelloworldPlugin "BUILD HelloworldPlugin " ON )
 if (BUILD_USE_GUI_HelloworldPlugin)
   set( Helloworld_Qt_Plugin_HEADER
-       "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/helloworld/HelloworldPlugin.h"
-       "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/helloworld/Dialogs/DialogHelloworld1.h"
+       "${CMAKE_CURRENT_LIST_DIR}/helloworld_plugin.h"
+       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/helloworld_dialog.h"
        )
   set( Helloworld_Qt_Plugin_UI
-       "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/helloworld/Dialogs/DialogHelloworld1.ui"
+       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/helloworld_dialog.ui"
        )
   if (BUILD_USE_QT5)
     QT5_WRAP_CPP(Helloworld_Qt_Plugin_MOC_CPP ${Helloworld_Qt_Plugin_HEADER})
@@ -21,8 +21,8 @@ if (BUILD_USE_GUI_HelloworldPlugin)
   add_library(
       HelloworldPlugin
       SHARED
-      "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/helloworld/HelloworldPlugin.cpp"
-      "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/helloworld/Dialogs/DialogHelloworld1.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/helloworld_plugin.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/Dialogs/helloworld_dialog.cpp"
       ${Helloworld_Qt_Plugin_SRC}
       ${osgQt_SRC} # from viewer
       )

@@ -4,24 +4,24 @@
 #include <QDialog>
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
-class DialogHelloworld1;
+class HelloworldDialog;
 }
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogHelloworld1 : public QDialog
+class HelloworldDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit DialogHelloworld1(QWidget *parent = 0);
-  ~DialogHelloworld1();
+  explicit HelloworldDialog(QWidget *parent = 0);
+  ~HelloworldDialog();
 
-  void setHelloworld(double x, double y, double z);
-  void getHelloworld(double &x, double &y, double &z);
+  void setParameters(double x, double y, double z);
+  void getParameters(double &x, double &y, double &z);
 
 private:
-  Ui::DialogHelloworld1 *ui;
+  Ui::HelloworldDialog *ui;
 };
 
 } // namespace FEVV

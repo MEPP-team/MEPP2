@@ -11,7 +11,7 @@
 
 
 
-#include "Examples/Generic/HelloWorld/helloworld_main.hpp"
+#include "Examples/Generic/Helloworld/helloworld_main.hpp"
 
 // The following include defines the FEVV::MeshLCC type
 #include "FEVV/DataStructures/DataStructures_cgal_linear_cell_complex.h"

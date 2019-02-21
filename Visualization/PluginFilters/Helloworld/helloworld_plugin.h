@@ -9,7 +9,7 @@
 #include "Visualization/Plugins/PluginInterface.h"
 
 #include <QStringList>
-#include "Dialogs/DialogHelloworld1.h"
+#include "Dialogs/helloworld_dialog.h"
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
@@ -19,7 +19,7 @@
 #include "Visualization/SimpleWindow.h"
 
 //#include "FEVV/Filters/Generic/scaling.hpp" // A) include the header of the filter corresponding to your operation
-#include "Examples/Generic/HelloWorld/helloworld_filter.hpp"
+#include "Examples/Generic/Helloworld/helloworld_filter.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -201,13 +201,13 @@ public:
   bool Generic_plugin(const QString &plugin) override
   {
     // setup and display filter parameters dialog window
-    DialogHelloworld1 dial1;
-    dial1.setHelloworld(value_x, value_y, value_z);
+    HelloworldDialog dialog;
+    dialog.setParameters(value_x, value_y, value_z);
 
     // get filter parameters from dialog window
-    if(dial1.exec() == QDialog::Accepted)
+    if(dialog.exec() == QDialog::Accepted)
     {
-      dial1.getHelloworld(value_x, value_y, value_z);
+      dialog.getParameters(value_x, value_y, value_z);
 
       SimpleWindow *sw = static_cast< SimpleWindow * >(
           window); // dynamic_cast fails under OS X

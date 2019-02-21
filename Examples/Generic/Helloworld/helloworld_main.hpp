@@ -12,7 +12,7 @@
 
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "Examples/Generic/HelloWorld/helloworld_filter.hpp"
+#include "Examples/Generic/Helloworld/helloworld_filter.hpp"
 
 /**
  * \brief A mesh type templated main(argc, argv) function that

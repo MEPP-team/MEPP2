@@ -11,7 +11,7 @@
 
 
 
-#include "Examples/Generic/HelloWorld/helloworld_main.hpp"
+#include "Examples/Generic/Helloworld/helloworld_main.hpp"
 
 // The following include defines the FEVV::MeshSurface type
 #include "FEVV/DataStructures/DataStructures_cgal_surface_mesh.h"

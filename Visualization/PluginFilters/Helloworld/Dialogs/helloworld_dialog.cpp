@@ -1,16 +1,16 @@
-#include "DialogHelloworld1.h"
-#include "ui_DialogHelloworld1.h"
+#include "helloworld_dialog.h"
+#include "ui_helloworld_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
-FEVV::DialogHelloworld1::DialogHelloworld1(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogHelloworld1)
+FEVV::HelloworldDialog::HelloworldDialog(QWidget *parent)
+    : QDialog(parent), ui(new Ui::HelloworldDialog)
 {
   ui->setupUi(this);
 }
 ////////////////////////////////////////////////////////////////////////////////
-FEVV::DialogHelloworld1::~DialogHelloworld1() { delete ui; }
+FEVV::HelloworldDialog::~HelloworldDialog() { delete ui; }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::DialogHelloworld1::setHelloworld(double x, double y, double z)
+FEVV::HelloworldDialog::setParameters(double x, double y, double z)
 {
   ui->lineEdit_X->setText(QString::number(x));
   ui->lineEdit_Y->setText(QString::number(y));
@@ -18,7 +18,7 @@ FEVV::DialogHelloworld1::setHelloworld(double x, double y, double z)
 }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::DialogHelloworld1::getHelloworld(double &x, double &y, double &z)
+FEVV::HelloworldDialog::getParameters(double &x, double &y, double &z)
 {
   x = ui->lineEdit_X->text().toDouble();
   y = ui->lineEdit_Y->text().toDouble();

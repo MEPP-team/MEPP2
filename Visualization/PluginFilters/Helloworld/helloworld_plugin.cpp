@@ -1,4 +1,4 @@
-#include "HelloworldPlugin.h"
+#include "helloworld_plugin.h"
 
 #include <QtPlugin>
 
