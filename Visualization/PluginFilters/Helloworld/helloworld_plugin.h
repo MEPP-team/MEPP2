@@ -1,3 +1,13 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; either version 3 of the License, 
+// or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
 #if(_MSC_VER >= 1400)
@@ -18,7 +28,7 @@
 
 #include "Visualization/SimpleWindow.h"
 
-//#include "FEVV/Filters/Generic/scaling.hpp" // A) include the header of the filter corresponding to your operation
+// A) include the header of the filter corresponding to your operation
 #include "Examples/Generic/Helloworld/helloworld_filter.hpp"
 
 #include "FEVV/Wrappings/properties.h"
@@ -126,6 +136,7 @@ public:
     auto pm = get(boost::vertex_point, *_mesh);
 
     // apply filter
+    // B) call the filter corresponding to your operation
     helloworld_filter(*_mesh, pm, v_cm, v_nm);
 
     std::cout << "Helloworld mesh of " << value_x << ";" << value_y << ";"
