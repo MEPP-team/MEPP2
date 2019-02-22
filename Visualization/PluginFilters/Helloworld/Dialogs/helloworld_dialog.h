@@ -14,24 +14,24 @@
 #include <QDialog>
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
-class DialogProcessing1;
+class HelloworldDialog;
 }
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogProcessing1 : public QDialog
+class HelloworldDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit DialogProcessing1(QWidget *parent = 0);
-  ~DialogProcessing1();
+  explicit HelloworldDialog(QWidget *parent = 0);
+  ~HelloworldDialog();
 
-  void setProcess(double x, double y, double z);
-  void getProcess(double &x, double &y, double &z);
+  void setParameters(double x, double y, double z);
+  void getParameters(double &x, double &y, double &z);
 
 private:
-  Ui::DialogProcessing1 *ui;
+  Ui::HelloworldDialog *ui;
 };
 
 } // namespace FEVV

@@ -8,30 +8,33 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include "DialogProcessing1.h"
-#include "ui_DialogProcessing1.h"
+
+#pragma once
+
 ////////////////////////////////////////////////////////////////////////////////
-FEVV::DialogProcessing1::DialogProcessing1(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogProcessing1)
-{
-  ui->setupUi(this);
+#include <QDialog>
+////////////////////////////////////////////////////////////////////////////////
+namespace Ui {
+class DialogBooleanOperations1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-FEVV::DialogProcessing1::~DialogProcessing1() { delete ui; }
-////////////////////////////////////////////////////////////////////////////////
-void
-FEVV::DialogProcessing1::setProcess(double x, double y, double z)
+namespace FEVV {
+
+class DialogBooleanOperations1 : public QDialog
 {
-  ui->lineEdit_X->setText(QString::number(x));
-  ui->lineEdit_Y->setText(QString::number(y));
-  ui->lineEdit_Z->setText(QString::number(z));
-}
-////////////////////////////////////////////////////////////////////////////////
-void
-FEVV::DialogProcessing1::getProcess(double &x, double &y, double &z)
-{
-  x = ui->lineEdit_X->text().toDouble();
-  y = ui->lineEdit_Y->text().toDouble();
-  z = ui->lineEdit_Z->text().toDouble();
-}
+  Q_OBJECT
+
+public:
+  explicit DialogBooleanOperations1(QWidget *parent = 0);
+  ~DialogBooleanOperations1();
+
+  void setParameters(const std::string &operation);
+  void getParameters(std::string &operation);
+
+private:
+  Ui::DialogBooleanOperations1 *ui;
+};
+
+} // namespace FEVV
+
 ////////////////////////////////////////////////////////////////////////////////

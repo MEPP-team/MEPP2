@@ -9,20 +9,10 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+#include "BooleanOperationsPlugin.h"
 
+#include <QtPlugin>
 
-#include "Examples/Generic/HelloWorld/hello_world_main.hpp"
-
-// The following include defines the FEVV::MeshPolyhedron type
-#include "FEVV/DataStructures/DataStructures_cgal_polyhedron_3.h"
-
-#include "FEVV/Wrappings/Geometry_traits_cgal_polyhedron_3.h"
-#include "FEVV/Wrappings/properties_polyhedron_3.h"
-
-
-// Main: load a mesh, apply the filter, write the mesh
-int
-main(int argc, const char **argv)
-{
-  return hello_world_main< FEVV::MeshPolyhedron >(argc, argv);
-}
+#if QT_VERSION < 0x050000 // (for QT4)
+Q_EXPORT_PLUGIN2(BooleanOperationsPlugin, FEVV::BooleanOperationsPlugin)
+#endif

@@ -11,7 +11,7 @@
 
 
 
-#include "Examples/Generic/HelloWorld/hello_world_main.hpp"
+#include "Examples/Generic/Helloworld/helloworld_main.hpp"
 
 // The following include defines the FEVV::MeshSurface type
 #include "FEVV/DataStructures/DataStructures_cgal_surface_mesh.h"
@@ -24,5 +24,5 @@
 int
 main(int argc, const char **argv)
 {
-  return hello_world_main< FEVV::MeshSurface >(argc, argv);
+  return helloworld_main< FEVV::MeshSurface >(argc, argv);
 }

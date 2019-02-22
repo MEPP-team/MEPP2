@@ -8,10 +8,35 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include "ProcessingPlugin.h"
 
-#include <QtPlugin>
+#pragma once
 
-#if QT_VERSION < 0x050000 // (for QT4)
-Q_EXPORT_PLUGIN2(ProcessingPlugin, FEVV::ProcessingPlugin)
-#endif
+/*!
+ * \file Boolean_Operations_Polyhedron.h
+ * \brief Defines four types used in polyhedra
+ * \author Cyril Leconte
+ */
+
+/*!
+ * \typedef VertexId
+ * \brief Vertex Id
+ */
+typedef unsigned long   VertexId;
+
+/*!
+ * \typedef HalfedgeId
+ * \brief Halfedge Id
+ */
+typedef unsigned long   HalfedgeId;
+
+/*!
+ * \typedef FacetId
+ * \brief Facet Id
+ */
+typedef unsigned long   FacetId;
+
+/*!
+ * \typedef InterId
+ * \brief Intersection Id
+ */
+typedef unsigned long   InterId;
