@@ -12,7 +12,7 @@ option( BUILD_USE_PCL                        "PCL usage toggle." OFF )
 option( BUILD_USE_VTK                        "VTK usage toggle." OFF )
 option( BUILD_USE_FBX                        "FBX usage toggle." OFF )
 option( BUILD_USE_DRACO                      "Draco usage toggle." OFF )
-option( BUILD_EXAMPLES                       "Build the examples." OFF )
+option( BUILD_EXAMPLES                       "Build the examples." ON )
 option( BUILD_TESTS                          "Build the tests." ON )
 option( BUILD_ADVANCED_TESTS_COMPR_VALENCE   "Build advanced compression-decompression valence tests." OFF )
 

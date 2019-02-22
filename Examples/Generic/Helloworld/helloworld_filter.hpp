@@ -24,7 +24,7 @@ template< typename HalfedgeGraph,
           typename VertexNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-hello_world_filter(const HalfedgeGraph &g,
+helloworld_filter(const HalfedgeGraph &g,
                    PointMap &pm,
                    VertexColorMap &v_cm,
                    VertexNormalMap &v_nm,
@@ -103,19 +103,19 @@ hello_world_filter(const HalfedgeGraph &g,
   }
 }
 
-// Helper function to simplify (syntactic sugar) the call to hello_world_filter
+// Helper function to simplify (syntactic sugar) the call to helloworld_filter
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,
           typename VertexNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-hello_world_filter(const HalfedgeGraph &g,
+helloworld_filter(const HalfedgeGraph &g,
                    PointMap &pm,
                    VertexColorMap &v_cm,
                    VertexNormalMap &v_nm)
 
 {
   GeometryTraits gt(g);
-  hello_world_filter(g, pm, v_cm, v_nm, gt);
+  helloworld_filter(g, pm, v_cm, v_nm, gt);
 }

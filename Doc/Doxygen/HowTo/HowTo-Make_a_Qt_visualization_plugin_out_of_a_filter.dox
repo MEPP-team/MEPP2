@@ -5,53 +5,36 @@
 FEVV provides a reference Qt plugin directory to be used as scafolding tool.
 The following describes the step by step process you should follow in order to easily "wrap" an given existing filter
 
-<b>Caveat emptor</b> : in the following, mind the lowercase/uppercase difference between &nbsp;<small><i><your_process_name></i></small>&nbsp; (as for directory name) and the corresponding &nbsp;<small><i><Your_process_name></i></small>&nbsp; for file names as well as their content.
+<b>Caveat emptor</b> : in the following, mind the lowercase/uppercase difference between &nbsp;<small><i><Your_filter_name></i></small>&nbsp; (as for directory name and class name) and the corresponding &nbsp;<small><i><your_filter_name></i></small>&nbsp; for file name and function name.
 This distinction is due to respect the \ref DevelopersCodingStyleGeneralitiesPage "coding style".
 
 ### Directory/files creation
 
- - Copy the folder &nbsp;<small><i>Visualization/PluginFilters/processing</i></small>&nbsp; to your newly created &nbsp;<small><i>Visualization/PluginFilters/<your_process_name></i></small>&nbsp;. Make sure to use a lowercase name for &nbsp;<small><i><your_process_name></i></small>&nbsp;.
+ - Copy the folder &nbsp;<small><i>Visualization/PluginFilters/Helloworld</i></small>&nbsp; to a new directory &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp;.
 
- - Within &nbsp;<small><i><your_process_name></i></small>&nbsp; folder rename the files &nbsp;<small><i>ProcessingPlugin.*</i></small>&nbsp; to &nbsp;<small><i><Your_process_name>Plugin.*</i></small>&nbsp; and rename the file &nbsp;<small><i>processing.cmake</i></small>&nbsp; to &nbsp;<small><i><your_process_name>.cmake</i></small>&nbsp;
-
- - Within &nbsp;<small><i><your_process_name>/Dialogs</i></small>&nbsp; subfolder rename the files &nbsp;<small><i>DialogProcessing*.*</i></small>&nbsp; to &nbsp;<small><i>Dialog<Your_process_name>*.*</i></small>&nbsp;
+ - Within &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory rename the files &nbsp;<small><i>helloworld*</i></small>&nbsp; to &nbsp;<small><i><your_filter_name>*</i></small>&nbsp;
 
 ### Editing files
-<b>Reminder</b> : watch out case sensitivity.
 
- - Edit the &nbsp;<small><i><your_process_name>/<Your_process_name>Plugin.cpp</i></small>&nbsp; file and replace the &nbsp;<small><i>ProcessingPlugin</i></small>&nbsp; occurences with &nbsp;<small><i><Your_process_name>Plugin</i></small>&nbsp;
+Reminder : <b>watch out case sensitivity</b>.
 
- - Edit the &nbsp;<small><i><your_process_name>/<Your_process_name>Plugin.h</i></small>&nbsp; file in order to
-   - replace &nbsp;<small><i>ProcessingPlugin</i></small>&nbsp; occurences with &nbsp;<small><i><Your_process_name>Plugin</i></small>&nbsp;
-   - replace &nbsp;<small><i>DialogProcessing</i></small>&nbsp; with &nbsp;<small><i>Dialog<Your_process_name></i></small>&nbsp;
-   - replace &nbsp;<small><i>processing_qt_p</i></small>&nbsp; with &nbsp;<small><i><your_process_name>_qt_p</i></small>&nbsp;
-   - replace &nbsp;<small><i>Process</i></small>&nbsp; with &nbsp;<small><i><Your_process_name></i></small>&nbsp;
+ - Edit all files in &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory
+   - replace &nbsp;<small><i><Helloworld></i></small>&nbsp; by &nbsp;<small><i><Your_filter_name></i></small>&nbsp;
+   - replace &nbsp;<small><i><helloworld></i></small>&nbsp; by &nbsp;<small><i><your_filter_name></i></small>&nbsp;
 
- - Edit the &nbsp;<small><i><your_process_name>/Dialogs/Dialog<Your_process_name>*.[cpp|h|.ui]</i></small>&nbsp; files and
-   - replace &nbsp;<small><i> DialogProcessing</i></small>&nbsp; with &nbsp;<small><i> Dialog<Your_process_name></i></small>&nbsp;
-   - replace &nbsp;<small><i> Process</i></small>&nbsp; with &nbsp;<small><i> <Your_process_name></i></small>&nbsp;
+### Modification of &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp;
 
-### Modification of \<your_process_name\>.cmake and Visualization/PluginFilters/PluginFilters.cmake
+ - add this line to the file (in alphabetical order please):<br>
+    &nbsp;<small><i>include( "${CMAKE_CURRENT_LIST_DIR}/<Your_filter_name>/<your_filter_name>.cmake" )</i></small>&nbsp;
 
- - Edit &nbsp;<small><i><your_process_name>.cmake</i></small>&nbsp; in order to (<b>reminder</b> : case sensitivity matters)
-    - replace &nbsp;<small><i>ProcessingPlugin</i></small>&nbsp; with &nbsp;<small><i><Your_process_name>Plugin</i></small>&nbsp;
-    - replace &nbsp;<small><i> DialogProcessing</i></small>&nbsp; with &nbsp;<small><i> Dialog<Your_process_name></i></small>&nbsp;
-    - replace &nbsp;<small><i> Processing_Qt_Plugin</i></small>&nbsp; with &nbsp;<small><i> <Your_process_name>_Qt_Plugin</i></small>&nbsp;,
-    - replace &nbsp;<small><i> processing</i></small>&nbsp; with &nbsp;<small><i> <your_process_name></i></small>&nbsp; (caution : lowercase)
+### Call your filter from the plugin
 
- - Edit &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp; and add this line to the file (in alphabetical order please):<br>
-    &nbsp;<small><i>include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/<your_process_name>/<your_process_name>.cmake" )</i></small>&nbsp;
-
-### Call your filter code (corresponding to your process)
- - Within &nbsp;<small><i> <your_process_name>/<Your_process_name>Plugin.h</i></small>&nbsp;, find the comment line
-   <br>
- 	 &nbsp;<small><i> // A) include the header of the filter corresponding to your operation</i></small>&nbsp;
-   <br>
-   and change the &nbsp;<small><i> #include</i></small>&nbsp; directive with the header of the filter corresponding to your process.
- - Still within &nbsp;<small><i> <your_process_name>/<Your_process_name>Plugin.h</i></small>&nbsp; find the comment line
-   <br>
-   &nbsp;<small><i>// B) call the filter corresponding to your operation</i></small>&nbsp;
-   <br>
-   and change the function call with the function call of your filter corresponding to your operation.
+ - Within &nbsp;<small><i><Your_filter_name>/<your_filter_name>_plugin.h</i></small>&nbsp;
+   - find the comment line<br>
+ 	   &nbsp;<small><i> // A) include the header of the filter corresponding to your operation</i></small>&nbsp; <br>
+     and change the &nbsp;<small><i>#include</i></small>&nbsp; directive with the header of your filter
+   - find the comment line<br>
+     &nbsp;<small><i>// B) call the filter corresponding to your operation</i></small>&nbsp; <br>
+     and change the function call with the function call of your filter
 
 **/

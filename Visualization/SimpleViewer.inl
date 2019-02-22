@@ -489,6 +489,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   using MeshMaterialsMap =
       typename FEVV::PMap_traits< FEVV::mesh_materials_t,
                                   HalfedgeGraph >::pmap_type;
+  using MeshGuipropertiesMap =
+      typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
+                                  HalfedgeGraph >::pmap_type;
   // RM: tangents are used primarily for normal mapping
   using VertexTangentMap =
       typename FEVV::PMap_traits< FEVV::vertex_tangent_t,
@@ -504,6 +507,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   VertexTangentMap vt_m;
   FaceMaterialMap f_mm;
   MeshMaterialsMap m_mm;
+  MeshGuipropertiesMap m_gpm;
 
   _vt_nm = nullptr;
   _f_nm = nullptr;
@@ -515,6 +519,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   VertexTangentMap *v_tan_m = nullptr;
   FaceMaterialMap *_f_mm = nullptr;
   MeshMaterialsMap *_m_mm = nullptr;
+  MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
 
   // textures stuff
@@ -527,6 +532,21 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   FEVV::Filters::translate(
       *_g, *_pm, m_step, 0., 0.); // TEMP for test
 
+  // retrieve or create mesh gui-properties property map
+  if(has_map(*_pmaps, FEVV::mesh_guiproperties))
+  {
+    m_gpm = get_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps);
+    _m_gpm = &m_gpm;
+  }
+  else
+  {
+    m_gpm = make_property_map(FEVV::mesh_guiproperties, *_g);
+    FEVV::Types::GuiProperties gui_props;
+    put(m_gpm, 0, gui_props);
+    put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
+    _m_gpm = &m_gpm;
+  }
+  
   // --- face_normal
   if(has_map(*_pmaps, FEVV::face_normal))
   {
