@@ -43,8 +43,8 @@ osx - Debug - QT4 - ALL:
     - brew link qt@4
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
-    - ctest -j 3 --output-on-failure
+    - make -j 11
+    - ctest -j 11 --output-on-failure
 
 osx - Release - QT4 - ALL:
   tags:
@@ -53,8 +53,8 @@ osx - Release - QT4 - ALL:
     - brew link qt@4
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
-    - ctest -j 3 --output-on-failure
+    - make -j 11
+    - ctest -j 11 --output-on-failure
 
 osx - Debug - QT5 - ALL:
   tags:
@@ -63,8 +63,8 @@ osx - Debug - QT5 - ALL:
     - brew unlink qt@4; export QT5_DIR=/usr/local/Cellar/qt/5.12.0
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
-    - ctest -j 3 --output-on-failure
+    - make -j 11
+    - ctest -j 11 --output-on-failure
 
 osx - Release - QT5 - ALL:
   tags:
@@ -73,8 +73,8 @@ osx - Release - QT5 - ALL:
     - brew unlink qt@4; export QT5_DIR=/usr/local/Cellar/qt/5.12.0
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
-    - ctest -j 3 --output-on-failure
+    - make -j 11
+    - ctest -j 11 --output-on-failure
 
 osx - DOC (Release - QT5 - ALL):
   tags:
@@ -83,7 +83,7 @@ osx - DOC (Release - QT5 - ALL):
     - brew unlink qt@4; export QT5_DIR=/usr/local/Cellar/qt/5.12.0
     - mkdir build; cd build
     - cmake .. -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3 doc
+    - make -j 11 doc
     - rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly-gitlab/
 
 windows - Debug - 2015 - QT4 - ALL:
