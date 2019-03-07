@@ -1,7 +1,7 @@
-###########################################################
-# OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF - 12 configs #
-###########################################################
-linux - Debug - GCC - CGAL-4.11 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+###################################################################
+# CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
+###################################################################
+linux - Debug - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -10,7 +10,7 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.11 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Release - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -19,7 +19,7 @@ linux - Release - GCC - CGAL-4.11 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.13 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -29,7 +29,7 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.13 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Release - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -39,7 +39,7 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRA
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-osx - Debug - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -49,7 +49,7 @@ osx - Debug - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -59,7 +59,7 @@ osx - Release - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Debug - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -69,7 +69,7 @@ osx - Debug - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -79,7 +79,7 @@ osx - Release - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-windows - Debug - 2015 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Debug - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -92,7 +92,7 @@ windows - Debug - 2015 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Release - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -105,7 +105,7 @@ windows - Release - 2015 - QT4 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Debug - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -118,7 +118,7 @@ windows - Debug - 2017 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -131,10 +131,10 @@ windows - Release - 2017 - QT5 - OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-###################################################
-# CGAL=OFF and PCL/VTK/FBX/DRACO=OFF - 12 configs #
-###################################################
-linux - Debug - GCC - CGAL-4.11 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+###########################################################
+# CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
+###########################################################
+linux - Debug - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -143,7 +143,7 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.11 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Release - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -152,7 +152,7 @@ linux - Release - GCC - CGAL-4.11 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.13 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -162,7 +162,7 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.13 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+linux - Release - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -172,7 +172,7 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-osx - Debug - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -182,7 +182,7 @@ osx - Debug - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -192,7 +192,7 @@ osx - Release - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Debug - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -202,7 +202,7 @@ osx - Debug - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -212,7 +212,7 @@ osx - Release - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-windows - Debug - 2015 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Debug - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -225,7 +225,7 @@ windows - Debug - 2015 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Release - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -238,7 +238,7 @@ windows - Release - 2015 - QT4 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Debug - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -251,7 +251,7 @@ windows - Debug - 2017 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
+windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -264,10 +264,10 @@ windows - Release - 2017 - QT5 - CGAL=OFF and PCL/VTK/FBX/DRACO=OFF:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-####################
-# ALL - 12 configs #
-####################
-linux - Debug - GCC - CGAL-4.11 - QT4 - ALL:
+############################
+# CONF3 (ALL) - 12 configs #
+############################
+linux - Debug - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -276,7 +276,7 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - ALL:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.11 - QT4 - ALL:
+linux - Release - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -285,7 +285,7 @@ linux - Release - GCC - CGAL-4.11 - QT4 - ALL:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.13 - QT5 - ALL:
+linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -295,7 +295,7 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - ALL:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.13 - QT5 - ALL:
+linux - Release - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -305,7 +305,7 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - ALL:
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-osx - Debug - QT4 - ALL:
+osx - Debug - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -315,7 +315,7 @@ osx - Debug - QT4 - ALL:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT4 - ALL:
+osx - Release - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -325,7 +325,7 @@ osx - Release - QT4 - ALL:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Debug - QT5 - ALL:
+osx - Debug - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -335,7 +335,7 @@ osx - Debug - QT5 - ALL:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-osx - Release - QT5 - ALL:
+osx - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -345,7 +345,7 @@ osx - Release - QT5 - ALL:
     - make -j 11
     - ctest -j 11 --output-on-failure
 
-windows - Debug - 2015 - QT4 - ALL:
+windows - Debug - 2015 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -358,7 +358,7 @@ windows - Debug - 2015 - QT4 - ALL:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - ALL:
+windows - Release - 2015 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -371,7 +371,7 @@ windows - Release - 2015 - QT4 - ALL:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - ALL:
+windows - Debug - 2017 - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -384,7 +384,7 @@ windows - Debug - 2017 - QT5 - ALL:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - ALL:
+windows - Release - 2017 - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -397,10 +397,10 @@ windows - Release - 2017 - QT5 - ALL:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-#############
-# DOC - ALL #
-#############
-osx - DOC (Release - QT5 - ALL):
+#####################
+# DOC - CONF3 (ALL) #
+#####################
+osx - DOC [Release - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,Mojave
   script:
