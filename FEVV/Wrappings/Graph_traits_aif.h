@@ -1154,8 +1154,9 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
             vtarget, edge, AIFHelpers::vertex_pos::SECOND);
       }
 
-      // link the edge and the face
-      AIFHelpers::link_edge_and_face(edge, face);
+      // link the edge and the face (when needed -> else dangling edge)
+	  if(! AIFHelpers::are_incident(edge, face) ||  ! AIFHelpers::are_incident(face, edge) )
+        AIFHelpers::link_edge_and_face(edge, face);
 
       // the target of the current edge is the source of the next edge
       vsource = vtarget;
