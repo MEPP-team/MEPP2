@@ -1132,7 +1132,7 @@ public:
     }
     else
       throw std::invalid_argument(
-          "AIFTopologyHelpers::link_edge_and_face -> incident relation already "
+          "AIFTopologyHelpers::link_edge_and_face_around_face_after_edge -> incident relation already "
           "exists between the two elements.");
   }
 
