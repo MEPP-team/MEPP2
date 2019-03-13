@@ -30,6 +30,7 @@
 #include "Visualization/SimpleWindow.h"
 
 #include "FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp"
+#include "FEVV/Filters/Generic/homogeneous_transform.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -93,10 +94,18 @@ public:
   template< typename HalfedgeGraph >
   void process(HalfedgeGraph *mesh_A,
                FEVV::PMapsContainer *pmaps_bag_A,
+               Eigen::Matrix4d &matrix_A,
                HalfedgeGraph *mesh_B,
-               FEVV::PMapsContainer *pmaps_bag_B)
+               FEVV::PMapsContainer *pmaps_bag_B,
+               Eigen::Matrix4d &matrix_B)
   {
     std::cout << "Asking to apply BooleanOperations filter ! " << std::endl;
+
+    // translate/rotate input meshes according to manipulators
+    auto pm_A = get(boost::vertex_point, *mesh_A);
+    FEVV::Filters::homogeneous_transform(*mesh_A, pm_A, matrix_A);
+    auto pm_B = get(boost::vertex_point, *mesh_B);
+    FEVV::Filters::homogeneous_transform(*mesh_B, pm_B, matrix_B);
 
     // create output mesh
     HalfedgeGraph *output_mesh = new HalfedgeGraph;
@@ -156,12 +165,22 @@ public:
         viewer->get_properties_maps();
     if(meshes.size() >= 2)
     {
+      // retrieve the two input meshes
       auto mA = meshes[0];
       auto pmaps_bagA = pmaps_bags[0];
+      auto matrix44_A = viewer->getTransformMatrixEigen(0);
+
       auto mB = meshes[1];
       auto pmaps_bagB = pmaps_bags[1];
+      auto matrix44_B = viewer->getTransformMatrixEigen(1);
 
-      process(mA, pmaps_bagA, mB, pmaps_bagB); // apply filter
+      // apply filter
+      process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+
+      // reset transform matrix of A and B because transformation
+      // is now applied to mesh coordinates
+      viewer->resetTransformMatrix(0);
+      viewer->resetTransformMatrix(1);
     }
     else
     {
@@ -177,6 +196,14 @@ public:
     {
       // space_time mode ON
       viewer->m_space_time = true;
+
+      // redraw input meshes
+      //TODO-elo: maybe not necessary;
+      //          better: hide input meshes to only display output mesh;
+      //          positive side-effect: remove blinking due to transform
+      //          matrix being reset before redraw
+      viewer->draw_or_redraw_mesh(meshes[0], pmaps_bags[0], true, false);
+      viewer->draw_or_redraw_mesh(meshes[1], pmaps_bags[1], true, false);
 
       // draw output mesh
       auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
