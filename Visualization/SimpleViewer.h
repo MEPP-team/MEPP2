@@ -40,6 +40,8 @@
 #include <map>
 #include <utility>
 
+#include <Eigen/Dense> // for Eigen::matrix
+
 #ifdef FEVV_USE_CGAL
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
@@ -271,6 +273,30 @@ public:
   HalfedgeGraph *getMesh(unsigned int _position);
 
   DataModelVector *getDataModel() override;
+
+  
+  /**
+   * Returns the transformation matrix of the mesh at a given position.
+   *
+   * @note If there is no mesh at the given positon, an assert will be raised.
+   *
+   * @param[in] position A given position (lower than v_meshes.size()).
+   *
+   * @return a 4x4 homogeneous matrix.
+   */
+  osg::Matrix getTransformMatrixOsg(unsigned int position);
+  Eigen::Matrix4d getTransformMatrixEigen(unsigned int position);
+
+
+  /**
+   * Reset the transformation matrix of the mesh at a given position.
+   *
+   * @note If there is no mesh at the given positon, an assert will be raised.
+   *
+   * @param[in] position A given position (lower than v_meshes.size()).
+   */
+  void resetTransformMatrix(unsigned int position);
+
 
   /**
    * Draw mesh into the scene.
