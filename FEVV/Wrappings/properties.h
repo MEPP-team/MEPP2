@@ -548,6 +548,8 @@ using Halfedge_pmap = typename Halfedge_pmap_traits< MeshT, ValueT >::pmap_type;
 // Using the property maps traits, the functions that
 // manage the property maps can be written in a generic way.
 
+// --- property maps bag management ---
+
 /// Make (aka build) a new property map for a given property
 /// (refer to \ref GenericPropertyMapConceptPage)
 template< typename PropertyT, typename MeshT >
@@ -602,6 +604,57 @@ put_property_map(
   pmaps[map_name] = pmap;
 }
 
+
+/// Remove a property map from the property maps container by name,
+/// if it exists
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline
+void
+remove_property_map_by_name(const std::string &name, PMapsContainer &pmaps)
+{
+  pmaps.erase(name);
+}
+
+
+/// Remove a property map from the property maps container by type,
+/// if it exists
+/// (refer to \ref GenericPropertyMapConceptPage)
+template< typename PropertyT >
+void
+remove_property_map(PropertyT p, PMapsContainer &pmaps)
+{
+  std::string map_name = get_property_map_name(p);
+  remove_property_map_by_name(map_name, pmaps);
+}
+
+
+/// List the property maps from the property maps container
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline
+std::vector< std::string >
+list_property_maps(const PMapsContainer &pmaps)
+{
+  std::vector< std::string > names;
+  for(auto it = pmaps.begin(); it != pmaps.end(); ++it)
+    names.push_back(it->first);
+
+  return names;
+}
+
+
+/// Print the list of the property maps from the property maps container
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline
+void
+print_property_maps(const PMapsContainer &pmaps)
+{
+  std::vector< std::string > names = list_property_maps(pmaps);
+  for(auto it = names.begin(); it != names.end(); ++it)
+    std::cout << *it << std::endl;
+}
+
+
+// --- easy property maps creation ---
 
 /// Make a new vertex property map to store data of type ValueT
 /// (refer to \ref GenericPropertyMapConceptPage)
