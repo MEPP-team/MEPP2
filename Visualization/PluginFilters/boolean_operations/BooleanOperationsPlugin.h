@@ -107,6 +107,12 @@ public:
     auto pm_B = get(boost::vertex_point, *mesh_B);
     FEVV::Filters::homogeneous_transform(*mesh_B, pm_B, matrix_B);
 
+    // normals of input meshes may be invalid due to mesh rotation
+    remove_property_map(FEVV::vertex_normal, *pmaps_bag_A);
+    remove_property_map(FEVV::face_normal, *pmaps_bag_A);
+    remove_property_map(FEVV::vertex_normal, *pmaps_bag_B);
+    remove_property_map(FEVV::face_normal, *pmaps_bag_B);
+
     // create output mesh
     HalfedgeGraph *output_mesh = new HalfedgeGraph;
 
