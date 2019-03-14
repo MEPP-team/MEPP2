@@ -1,6 +1,7 @@
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
+#
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
@@ -134,6 +135,7 @@ windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
 ###########################################################
 # CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###########################################################
+#
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.11
@@ -267,6 +269,7 @@ windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 ############################
 # CONF3 (ALL) - 12 configs #
 ############################
+#
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.11
