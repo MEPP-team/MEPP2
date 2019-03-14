@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -546,7 +546,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
     _m_gpm = &m_gpm;
   }
-  
+
   // --- face_normal
   if(has_map(*_pmaps, FEVV::face_normal))
   {
@@ -1451,6 +1451,8 @@ createDragger(const std::string &name)
     dragger = d;
   }
 
+  dragger->setName(name);
+
   return dragger;
 }
 
@@ -1469,6 +1471,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   // osg::StateAttribute::ON); // necessary ? // this ensures correct lighting
   // for scaled draggers
 
+  // osg::Group "GroupRoot"
+  //    |
+  //    |__ osg::MatrixTransform "MatrixTransform"
+  //    |   |
+  //    |   |__ osg::Group "DraggerGrp2_rotate"
+  //    |       |
+  //    |       |__ osgManipulator::TrackballDragger "TrackballDragger"
+  //    |
+  //    |__ osg::Group "DraggerGrp1_translate"
+  //        |
+  //        |__ osgManipulator::TabBoxDragger "TabBoxDragger"
+
   osg::MatrixTransform *transform = new osg::MatrixTransform;
   transform->setName("MatrixTransform");
   transform->addChild(scene);
@@ -1482,7 +1496,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   osgManipulator::Dragger *dragger1 = createDragger(nameDrag1);
   // here, we create a group only for the DataVisitor
   osg::Group *draggergroup1 = new osg::Group;
-  draggergroup1->setName("Dragger");
+  draggergroup1->setName("DraggerGrp1_translate");
   draggergroup1->addChild(dragger1);
   root->addChild(draggergroup1);
   scale = scene->getBound().radius() * fScaleDrag1;
@@ -1498,7 +1512,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   osgManipulator::Dragger *dragger2 = createDragger(nameDrag2);
   // here, we create a group only for the DataVisitor
   osg::Group *draggergroup2 = new osg::Group;
-  draggergroup2->setName("Dragger");
+  draggergroup2->setName("DraggerGrp2_rotate");
   draggergroup2->addChild(dragger2);
   transform->addChild(
       draggergroup2); // IMPORTANT for the SECOND dragger -> NOT addChild from
@@ -2032,6 +2046,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
   {
 #ifdef MANIPULATOR
     _osgView->getCameraManipulator()->setNode(v_geodes[position]->getParent(0));
+    //ELO-note: v_geodes[position]->getParent(0) is an osg::MatrixTransform
+    //          which is a group with an osg::Matrix
+    //          see http://camlosg.sourceforge.net/osg/classosg_1_1MatrixTransform.html
     // std::cout << "centerMesh (MANIPULATOR) \"" <<
     // v_geodes[position]/*->getParent(0)*/->getName() << "\"" << std::endl;
 #else
@@ -2041,7 +2058,57 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
 #endif
     _osgView->getCameraManipulator()->computeHomePosition();
     _osgView->home();
+
+    //DBG FEVV::Debug::print_osg_tree_from_node(
+    //    v_geodes[position]->getParent(0)->getParent(0));
   }
+}
+
+
+template< typename HalfedgeGraph >
+osg::Matrix
+FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixOsg(unsigned int position)
+{
+  assert(position < v_geodes.size());
+  osg::MatrixTransform *grp_MatrixTransform =
+      dynamic_cast< osg::MatrixTransform * >(v_geodes[position]->getParent(0));
+  assert(grp_MatrixTransform != nullptr);
+  osg::Matrix matrix = grp_MatrixTransform->getMatrix();
+
+  return matrix; // 4x4 homogeneous matrix
+}
+
+template< typename HalfedgeGraph >
+Eigen::Matrix4d
+FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixEigen(unsigned int position)
+{
+  osg::Matrix osg_mat = getTransformMatrixOsg(position);
+
+  // convert OSG transform matrix to Eigen matrix
+  // transposition needed!
+  Eigen::Matrix4d eigen_mat;
+  eigen_mat << osg_mat(0, 0), osg_mat(1, 0), osg_mat(2, 0),    osg_mat(3, 0),
+               osg_mat(0, 1), osg_mat(1, 1), osg_mat(2, 1),    osg_mat(3, 1),
+               osg_mat(0, 2), osg_mat(1, 2), osg_mat(2, 2),    osg_mat(3, 2),
+               osg_mat(0, 3), osg_mat(1, 3), osg_mat(2, 3),    osg_mat(3, 3);
+  
+  //DBG std::cout << "eigen_mat = \n" << eigen_mat << std::endl;
+
+  return eigen_mat; // 4x4 homogeneous matrix
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::resetTransformMatrix(unsigned int position)
+{
+  assert(position < v_geodes.size());
+  osg::MatrixTransform *grp_MatrixTransform =
+      dynamic_cast< osg::MatrixTransform * >(v_geodes[position]->getParent(0));
+  assert(grp_MatrixTransform != nullptr);
+
+  osg::Matrix identity;
+  identity.makeIdentity();
+  grp_MatrixTransform->setMatrix(identity);
 }
 
 template< typename HalfedgeGraph >
