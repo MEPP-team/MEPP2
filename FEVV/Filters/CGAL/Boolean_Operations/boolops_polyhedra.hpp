@@ -36,10 +36,6 @@
 #include <list>
 #include <stack>
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-#include <chrono>
-#endif // BOOLEAN_OPERATIONS_DEBUG
-
 
 typedef typename EnrichedPolyhedron::Vertex_iterator Vertex_iterator;
 typedef typename EnrichedPolyhedron::Halfedge_handle Halfedge_handle;
@@ -206,11 +202,20 @@ public:
                 Bool_Op BOOP)
       : m_BOOP(BOOP)
   {
+#ifdef BOOLEAN_OPERATIONS_TIME
+    auto time_total_start = std::chrono::steady_clock::now();
+    auto time_start = time_total_start;
+#endif // BOOLEAN_OPERATIONS_TIME
+
     // convert input meshes to enriched Polyhedrons
     EnrichedPolyhedron gA;
     EnrichedPolyhedron gB;
     CGAL::copy_face_graph(_gA, gA);
     CGAL::copy_face_graph(_gB, gB);
+
+#ifdef BOOLEAN_OPERATIONS_TIME
+    duration_Inputs_copy = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
 #ifdef BOOLEAN_OPERATIONS_DEBUG
     {
@@ -219,68 +224,49 @@ public:
       std::ofstream ofstrMB("boolean_operation__input_B.off");
       ofstrMB << gB;
     }
-    auto time_total_start = std::chrono::steady_clock::now();
-    auto time_start = time_total_start;
 #endif // BOOLEAN_OPERATIONS_DEBUG
 
     Init(&gA, &gB);
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-    auto time_end = std::chrono::steady_clock::now();
-    std::chrono::duration< double > duration = time_end - time_start;
-    duration_Init = duration.count();
-    time_start = time_end;
-#endif // BOOLEAN_OPERATIONS_DEBUG
+#ifdef BOOLEAN_OPERATIONS_TIME
+    duration_Init = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
     FindCouples();
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-    time_end = std::chrono::steady_clock::now();
-    duration = time_end - time_start;
-    duration_FindCouples = duration.count();
-    time_start = time_end;
-#endif // BOOLEAN_OPERATIONS_DEBUG
+#ifdef BOOLEAN_OPERATIONS_TIME
+    duration_FindCouples = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
     if(!m_Couples.empty())
     {
       ComputeIntersections();
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-      time_end = std::chrono::steady_clock::now();
-      duration = time_end - time_start;
-      duration_ComputeIntersections = duration.count();
-      time_start = time_end;
-#endif // BOOLEAN_OPERATIONS_DEBUG
+#ifdef BOOLEAN_OPERATIONS_TIME
+      duration_ComputeIntersections = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
       CutIntersectedFacets();
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-      time_end = std::chrono::steady_clock::now();
-      duration = time_end - time_start;
-      duration_CutIntersectedFacets = duration.count();
-      time_start = time_end;
-#endif // BOOLEAN_OPERATIONS_DEBUG
+#ifdef BOOLEAN_OPERATIONS_TIME
+      duration_CutIntersectedFacets = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
       PropagateFacets();
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-      time_end = std::chrono::steady_clock::now();
-      duration = time_end - time_start;
-      duration_PropagateFacets = duration.count();
-      time_start = time_end;
-#endif // BOOLEAN_OPERATIONS_DEBUG
+#ifdef BOOLEAN_OPERATIONS_TIME
+      duration_PropagateFacets = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
       // build output mesh
       EnrichedPolyhedron g_out;
       g_out.delegate(ppbuilder);
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
-      time_end = std::chrono::steady_clock::now();
-      duration = time_end - time_start;
-      duration_delegate = duration.count();
-      duration = time_end - time_total_start;
-      duration_total = duration.count();
+#ifdef BOOLEAN_OPERATIONS_TIME
+      duration_delegate = get_time_and_reset(time_start);
+#endif // BOOLEAN_OPERATIONS_TIME
 
+#ifdef BOOLEAN_OPERATIONS_DEBUG
       std::ofstream ofstrMS("boolean_operation_output.off");
       ofstrMS << g_out;
       WriteData(g_out);
@@ -292,6 +278,67 @@ public:
       // convert output mesh from enriched Polyhedrons
       CGAL::clear(_g_out);
       CGAL::copy_face_graph(g_out, _g_out);
+
+#ifdef BOOLEAN_OPERATIONS_TIME
+      duration_Output_copy = get_time_and_reset(time_start);
+      duration_total = get_time_and_reset(time_total_start);
+
+      // print short stats about times and mesh sizes
+      std::cout << "Computation time :" << std::endl;
+      std::cout << " + Copying input meshes       : "
+                << tr(duration_Inputs_copy)
+                << " s"
+                << std::endl;
+      std::cout << " + Initialization             : "
+                << tr(duration_Init)
+                << " s"
+                << std::endl;
+      std::cout << " + Finding the Intersections  : "
+                << tr(duration_FindCouples)
+                << " s"
+                << std::endl;
+      std::cout << " + Compute the Intersections  : "
+                << tr(duration_ComputeIntersections)
+                << " s"
+                << std::endl;
+      std::cout << " + Cut the Intersected Facets : "
+                << tr(duration_CutIntersectedFacets)
+                << " s"
+                << std::endl;
+      std::cout << " + Complete the result        : "
+                << tr(duration_PropagateFacets)
+                << " s"
+                << std::endl;
+      std::cout << " + Create the polyhedron      : "
+                << tr(duration_delegate)
+                << " s"
+                << std::endl;
+      std::cout << " + Copying output mesh        : "
+                << tr(duration_Output_copy)
+                << " s"
+                << std::endl;
+      std::cout << "---------------------------------------"
+                << std::endl;
+      std::cout << " Total                        : "
+                << tr(duration_total)
+                << " s"
+                << std::endl;
+
+      std::cout << std::endl;
+      std::cout << "Details :" << std::endl;
+      std::cout << std::endl;
+      std::cout << "Polyedron A :" << std::endl;
+      std::cout << "Number of Facets :                   "
+                << m_pA->size_of_facets() << std::endl;
+      std::cout << std::endl;
+      std::cout << "Polyedron B :" << std::endl;
+      std::cout << "Number of Facets :                   "
+                << m_pB->size_of_facets() << std::endl;
+      std::cout << std::endl;
+      std::cout << "Result :" << std::endl;
+      std::cout << "Number of Facets :                   "
+                << g_out.size_of_facets() << std::endl;
+#endif // BOOLEAN_OPERATIONS_TIME
     }
   }
 
@@ -1878,7 +1925,8 @@ private:
   /*! \brief the AABB-tree*/
   AABB_Tree tree;
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
+  /*! \brief Input meshes copy time*/
+  double duration_Inputs_copy; // in secs
   /*! \brief Initialisation time*/
   double duration_Init; // in secs
   /*! \brief Time to find all the couples of facet that intersect*/
@@ -1891,8 +1939,9 @@ private:
   double duration_PropagateFacets; // in secs
   /*! \brief Time to create the result polyhedron*/
   double duration_delegate; // in secs
+  /*! \brief Output mesh copy time*/
+  double duration_Output_copy; // in secs
   /*! \brief Time to Compute a Boolean operation*/
   double duration_total; // in secs
-#endif // BOOLEAN_OPERATIONS_DEBUG
 };
 
