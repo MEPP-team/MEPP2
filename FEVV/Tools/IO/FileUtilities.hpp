@@ -17,6 +17,7 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <cctype> // for tolower()
 
 #include <boost/filesystem.hpp>
 
@@ -73,11 +74,19 @@ has_extension(const char *file_name)
  * Returns true if the file name ends up with the provided
  * extension.
  */
-inline
-bool
-has_extension(const std::string &file_name, const std::string &ext_name)
+inline bool
+has_extension(const std::string &file_name,
+              const std::string &ext_name,
+              bool case_sensitive = false)
 {
   std::string file_ext = get_file_extension(file_name);
+
+  if(! case_sensitive)
+  {
+    std::transform(
+        file_ext.begin(), file_ext.end(), file_ext.begin(), ::tolower);
+  }
+
   return ext_name.compare(file_ext) == 0;
 }
 
@@ -85,25 +94,27 @@ has_extension(const std::string &file_name, const std::string &ext_name)
  * Returns true if the file name ends up with the provided
  * extension.
  */
-inline
-bool
-has_extension(const char *file_name, const char *ext_name)
+inline bool
+has_extension(const char *file_name,
+              const char *ext_name,
+              bool case_sensitive = false)
 {
-  return has_extension(std::string(file_name), std::string(ext_name));
+  return has_extension(
+      std::string(file_name), std::string(ext_name), case_sensitive);
 }
 
 /**
  * Returns true if the file name ends up with one of the provided
  * extensions.
  */
-inline
-bool
+inline bool
 has_extension(const std::string &file_name,
-              const std::vector< std::string > &ext_names)
+              const std::vector< std::string > &ext_names,
+              bool case_sensitive = false)
 {
   return std::any_of(
       ext_names.cbegin(), ext_names.cend(), [&](const std::string &ext) {
-        return has_extension(file_name, ext);
+        return has_extension(file_name, ext, case_sensitive);
       });
 }
 
