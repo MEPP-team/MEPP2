@@ -1,3 +1,6 @@
+only:
+  - master
+
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
@@ -403,6 +406,7 @@ windows - Release - 2017 - QT5 - CONF3 (ALL):
 #####################
 # DOC - CONF3 (ALL) #
 #####################
+#
 osx - DOC [Release - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,Mojave
