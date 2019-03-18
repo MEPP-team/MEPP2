@@ -630,7 +630,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     if(!m_redraw)
       std::cout << "[SimpleViewer] using vertex texture-coordinates"
-                << std::endl;
+                << std::endl
+                << "[SimpleViewer] computing vertex tangents" << std::endl;
     v_uvm = get_property_map(FEVV::vertex_texcoord, *_g, *_pmaps);
     _vt_uv_m = &v_uvm;
     _texture_type = VERTEX_TEXCOORDS2D;
@@ -644,7 +645,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     if(has_map(*_pmaps, FEVV::vertex_tangent) && (!m_recomputeNT_if_redraw))
     {
-      *v_tan_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
+      vt_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
+      v_tan_m = &vt_m;
     }
     else
     {
@@ -918,7 +920,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   bool texture_corner_mode_on =
       (_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D);
+  bool texture_vertex_mode_on =
+      (_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D);
 
+  //std::cout << "---------> texture_corner_mode_on: " << texture_corner_mode_on << std::endl;
+  //std::cout << "---------> texture_vertex_mode_on: " << texture_vertex_mode_on << std::endl;
+
+#if 0
   if(!texture_corner_mode_on)
   {
     // if we are not in corner mode for texture, we do not need to duplicate
@@ -970,6 +978,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       ++sizeVertex;
     }
   }
+#endif
 
   /// Adding edges - superimpose only
   if(m_RenderSuperimposedEdges)
@@ -994,8 +1003,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     edge_iterator eb, ee;
     for(boost::tie(eb, ee) = edges(*_g); eb != ee; ++eb)
     {
-      osg::ref_ptr< osg::DrawElementsUInt > line; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
-      line = new osg::DrawElementsUInt(osg::PrimitiveSet::LINES, 0);
+      //osg::ref_ptr< osg::DrawElementsUInt > line; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
+      //line = new osg::DrawElementsUInt(osg::PrimitiveSet::LINES, 0);
 
       // retrieve vertex (source)
       vs = source(*eb, *_g);
@@ -1019,8 +1028,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       //if(texture_corner_mode_on)
       {
-        line->push_back(vertexArrays_edges[mtl_id]->size() - 2);
-        line->push_back(vertexArrays_edges[mtl_id]->size() - 1);
+        //line->push_back(vertexArrays_edges[mtl_id]->size() - 2);
+        //line->push_back(vertexArrays_edges[mtl_id]->size() - 1);
       }
       /*else
       {
@@ -1037,7 +1046,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
         }
       }*/
 
-      geometries_edges[mtl_id]->addPrimitiveSet(line);
+      //geometries_edges[mtl_id]->addPrimitiveSet(line);
 
       // set line width
       osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
@@ -1052,13 +1061,24 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
           osg::StateAttribute::OFF); // light always OFF for superimpose edges
 
       if(_e_cm)
+      {
         colorsArrays_edges[mtl_id]->push_back(
             Helpers::VectorColorConverter< HalfedgeGraph >(
                 get(e_cm, *eb))); // user/filter/plugin colors
+        colorsArrays_edges[mtl_id]->push_back(
+            Helpers::VectorColorConverter< HalfedgeGraph >(
+                get(e_cm, *eb))); // user/filter/plugin colors
+      }
       else
+      {
         colorsArrays_edges[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Yellow())); // default color
+        colorsArrays_edges[mtl_id]->push_back(
+            Helpers::ColorConverter(Color::Yellow())); // default color
+      }
     }
+
+    geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(/*GL_LINES*/osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
   }
 
   /// Adding vertices - superimpose only
@@ -1080,8 +1100,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
         v_it != vertices(*_g).second;
         ++v_it)
     {
-      osg::ref_ptr< osg::DrawElementsUInt > vertex; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
-      vertex = new osg::DrawElementsUInt(osg::PrimitiveSet::POINTS, 0);
+      //osg::ref_ptr< osg::DrawElementsUInt > vertex; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
+      //vertex = new osg::DrawElementsUInt(osg::PrimitiveSet::POINTS, 0);
 
       // retrieve vertex
       vd0 = *v_it;
@@ -1095,7 +1115,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       //if( texture_corner_mode_on )
       {
-        vertex->push_back(vertexArrays_vertices[mtl_id]->size() - 1);
+        //vertex->push_back(vertexArrays_vertices[mtl_id]->size() - 1);
       }
       /*else
       {
@@ -1111,7 +1131,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
         }
       }*/
 
-      geometries_vertices[mtl_id]->addPrimitiveSet(vertex);
+      //geometries_vertices[mtl_id]->addPrimitiveSet(vertex);
 
       // set point size
       osg::ref_ptr< osg::Point > pt = new osg::Point();
@@ -1135,6 +1155,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
             Helpers::ColorConverter(Color::Green())); // default color
     }
 
+    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(/*GL_POINTS*/osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
+
     // ---
 
     _vt_cm = SAVE_vt_cm;
@@ -1145,7 +1167,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     // retrieve the material/texture ID of the current face (ONLY in
     // HALFEDGE_TEXCOORDS2D mode)
-    if(texture_corner_mode_on)
+    if(texture_corner_mode_on || texture_vertex_mode_on)
     {
       mtl_id = get(*_f_mm, *fb);
       // std::cout << "---------> mtl_id for current face: " << mtl_id <<
@@ -1166,7 +1188,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       vd.push_back(target(edg, *_g));
       p.push_back((*_pm)[vd.back()]);
 
-      if(texture_corner_mode_on)
+      //if(texture_corner_mode_on)
       {
 #if 0
         _mapVertex.insert(std::make_pair(
@@ -1184,8 +1206,16 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                   (*_vt_cm)[vd.back()]));
         }
 
-        texcoordsArrays[mtl_id]->push_back(
-            osg::Vec2((*_het_uv_m)[edg][0], (*_het_uv_m)[edg][1]));
+        if(_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D)
+        {
+          texcoordsArrays[mtl_id]->push_back(
+              osg::Vec2((*_het_uv_m)[edg][0], (*_het_uv_m)[edg][1]));
+        }
+        else if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
+        {
+          texcoordsArrays[mtl_id]->push_back(
+              osg::Vec2((*_vt_uv_m)[vd.back()][0], (*_vt_uv_m)[vd.back()][1]));
+        }
 
         if(_vt_nm != nullptr) // normal per vertex -> already calculated
         {
@@ -1226,7 +1256,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     // create and populate OSG face object
     uint num_vertices_in_face = static_cast< uint >(p.size());
 
-    osg::ref_ptr< osg::DrawElementsUInt > face; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
+    //osg::ref_ptr< osg::DrawElementsUInt > face; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
 
     auto drawing_method =
         static_cast< osg::PrimitiveSet::Mode >(m_RenderMethod);
@@ -1236,17 +1266,27 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       if(num_vertices_in_face == 3)
         drawing_method = osg::PrimitiveSet::TRIANGLES;
       else if(num_vertices_in_face == 4)
+      {
         drawing_method = osg::PrimitiveSet::QUADS;
+        //std::cout << "---> QUAD-QUAD-QUAD-QUAD-QUAD" << std::endl;
+      }
+      else
+      {
+        //std::cout << "---> POLY-POLY-POLY-POLY-POLY" << std::endl;
+      }
     }
-    face = new osg::DrawElementsUInt(drawing_method, 0);
+    //face = new osg::DrawElementsUInt(drawing_method, 0);
 
+#if 0
     if(texture_corner_mode_on)
     {
       for(uint i = num_vertices_in_face; i > 0; i--)
         face->push_back(vertexArrays[mtl_id]->size() - i);
     }
     else
+#endif
     {
+#if 0
       try
       {
         for(uint i = 0; i < num_vertices_in_face; i++)
@@ -1258,9 +1298,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                      "not given. "
                   << e.what() << std::endl;
       }
+#endif
     }
 
-    geometries[mtl_id]->addPrimitiveSet(face);
+    //geometries[mtl_id]->addPrimitiveSet(face);
+    geometries[mtl_id]->addPrimitiveSet(new osg::DrawArrays(drawing_method, vertexArrays[mtl_id]->size() - num_vertices_in_face, num_vertices_in_face));
 
     // populate face normal array
     if(_vt_nm != nullptr) // normal per vertex (see above) -> already calculated
@@ -1308,6 +1350,24 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     ++sizeFace;
   }
+
+#if 0
+  std::cout << "--------------> _m_mm_size " << _m_mm_size << std::endl;
+  {
+    size_t mi2 = 0;
+    /*osg::DrawArrays* drawArrays = new osg::DrawArrays(GL_POINTS, 0, vertexArrays[mi2]->size());
+    geometries[mi2]->addPrimitiveSet(drawArrays);*/
+
+    std::cout << "----------------------> mi2 " << mi2 << std::endl;
+  }
+  for(size_t mi2 = 1; mi2 < _m_mm_size; mi2++)
+  {
+    /*osg::DrawArrays* drawArrays = new osg::DrawArrays(GL_POINTS, 0, vertexArrays[mi2]->size());
+    geometries[mi2]->addPrimitiveSet(drawArrays);*/
+
+    std::cout << "----------------------> mi2 " << mi2 << std::endl;
+  }
+#endif
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
@@ -1471,6 +1531,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   // osg::StateAttribute::ON); // necessary ? // this ensures correct lighting
   // for scaled draggers
 
+
   // osg::Group "GroupRoot"
   //    |
   //    |__ osg::MatrixTransform "MatrixTransform"
@@ -1482,6 +1543,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   //    |__ osg::Group "DraggerGrp1_translate"
   //        |
   //        |__ osgManipulator::TabBoxDragger "TabBoxDragger"
+
 
   osg::MatrixTransform *transform = new osg::MatrixTransform;
   transform->setName("MatrixTransform");
@@ -2046,9 +2108,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
   {
 #ifdef MANIPULATOR
     _osgView->getCameraManipulator()->setNode(v_geodes[position]->getParent(0));
-    //ELO-note: v_geodes[position]->getParent(0) is an osg::MatrixTransform
-    //          which is a group with an osg::Matrix
-    //          see http://camlosg.sourceforge.net/osg/classosg_1_1MatrixTransform.html
+
+
+    // ELO-note: v_geodes[position]->getParent(0) is an osg::MatrixTransform
+    //           which is a group with an osg::Matrix
+    //           see http://camlosg.sourceforge.net/osg/classosg_1_1MatrixTransform.html
+
+
     // std::cout << "centerMesh (MANIPULATOR) \"" <<
     // v_geodes[position]/*->getParent(0)*/->getName() << "\"" << std::endl;
 #else
@@ -2059,8 +2125,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
     _osgView->getCameraManipulator()->computeHomePosition();
     _osgView->home();
 
-    //DBG FEVV::Debug::print_osg_tree_from_node(
-    //    v_geodes[position]->getParent(0)->getParent(0));
+
+    //FEVV::Debug::print_osg_tree_from_node(v_geodes[position]->getParent(0)->getParent(0));
   }
 }
 
@@ -2110,6 +2176,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::resetTransformMatrix(unsigned int position)
   identity.makeIdentity();
   grp_MatrixTransform->setMatrix(identity);
 }
+
 
 template< typename HalfedgeGraph >
 void

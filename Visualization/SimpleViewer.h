@@ -287,7 +287,6 @@ public:
   osg::Matrix getTransformMatrixOsg(unsigned int position);
   Eigen::Matrix4d getTransformMatrixEigen(unsigned int position);
 
-
   /**
    * Reset the transformation matrix of the mesh at a given position.
    *

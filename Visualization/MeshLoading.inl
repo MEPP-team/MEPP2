@@ -542,7 +542,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geometries_edges[unit_ii]->setVertexAttribArray(
             1,
             _colorsArrays_edges[unit_ii],
-            osg::Array::BIND_PER_PRIMITIVE_SET);
+            osg::Array::BIND_PER_VERTEX);
         _geometries_edges[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
             superimpProgram.get(),
             osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
@@ -563,7 +563,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geometries_vertices[unit_ii]->setVertexAttribArray(
             1,
             _colorsArrays_vertices[unit_ii],
-            osg::Array::BIND_PER_PRIMITIVE_SET);
+            osg::Array::BIND_PER_VERTEX);
         _geometries_vertices[unit_ii]
             ->getOrCreateStateSet()
             ->setAttributeAndModes(superimpProgram.get(),
@@ -872,7 +872,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     {
       _geometries_edges[unit_ii]->setVertexArray(_vertexArrays_edges[unit_ii]);
       _geometries_edges[unit_ii]->setColorArray(
-          _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_PRIMITIVE_SET);
+          _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
       _geode->addDrawable(_geometries_edges[unit_ii]);
     }
 
@@ -882,7 +882,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
       _geometries_vertices[unit_ii]->setVertexArray(
           _vertexArrays_vertices[unit_ii]);
       _geometries_vertices[unit_ii]->setColorArray(
-          _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_PRIMITIVE_SET);
+          _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
       _geode->addDrawable(_geometries_vertices[unit_ii]);
     }
 
