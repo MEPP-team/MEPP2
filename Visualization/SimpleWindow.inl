@@ -2765,7 +2765,7 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
           draggers2[i]->setNodeMask(viewer->m_ShowRotateDragger ? 0xffffffff
                                                                 : 0x0);
 
-        actionHG(viewer, 'D', '_'); // 19/03/19 - important for re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
+        //actionHG(viewer, 'D', '_'); // 19/03/19 - test for calling a re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
       }
     }
   }
