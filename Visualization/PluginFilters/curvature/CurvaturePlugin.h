@@ -963,8 +963,8 @@ public:
 
     // change display mode to show filter result
     auto gui_props = get(m_gpm, 0);
-    gui_props.display_mode = FEVV::Types::DisplayMode::VERTEX_COLOR;
-    gui_props.is_visible = true;
+    //gui_props.display_mode = FEVV::Types::DisplayMode::VERTEX_COLOR; // not used yet...
+    //gui_props.is_visible = true; // not necessary because true by default...
     put(m_gpm, 0, gui_props);
 
     std::cout << "Curvature mesh, isGeod: " << *value_isGeod
