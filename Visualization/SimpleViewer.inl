@@ -537,6 +537,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     m_gpm = get_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps);
     _m_gpm = &m_gpm;
+    //std::cout << "[SimpleViewer] **************get mesh_guiproperties property_map" << std::endl;
   }
   else
   {
@@ -545,6 +546,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     put(m_gpm, 0, gui_props);
     put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
     _m_gpm = &m_gpm;
+    //std::cout << "[SimpleViewer] **************make mesh_guiproperties property_map" << std::endl;
   }
 
   // --- face_normal
@@ -733,8 +735,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   FEVV::Tools::compute_bounding_box(*_g, *_pm, minAABB, maxAABB, gt);*/
   // TEMP - not used
 
-  if(m_redraw)
+  if(m_redraw) // ONLY IF REDRAW via GUI or CODE
   {
+   if( (m_UseVertexColor) || (m_UseFaceColor) || (m_UseTexture) ) // else automatic detection, as for a first DRAW
     if((!m_space_time) || (m_space_time && m_space_time_changeColorMode))
     {
       //_vt_nm = nullptr;
@@ -1374,6 +1377,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   std::cout << "[SimpleViewer] I have drawn " << sizeVertex << " vertices and "
             << sizeFace << " faces." << std::endl;
+
+  //auto gui_props = get((*_m_gpm), 0);
+  //geode->setNodeMask(gui_props.is_visible ? 0xffffffff : 0x0); // 19/03/19
 
   const auto loadingStartTime = std::chrono::system_clock::now();
 
@@ -2263,6 +2269,24 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
                _mesh_filename                 /*mesh filename*/
     );
   }
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::activate_time_mode()
+{
+  SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+
+  sw->activate_time_mode();
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
+{
+  SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+  
+  sw->activate_space_mode();
 }
 
 template< typename HalfedgeGraph >

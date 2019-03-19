@@ -389,6 +389,9 @@ public:
                            std::string _mesh_filename = std::string(""),
                            float _step = 0.);
 
+  void activate_time_mode();
+  void activate_space_mode();
+
   osg::Node *addDraggersToScene(osg::Node *scene,
                                 const std::string &nameDrag1,
                                 float fScaleDrag1,

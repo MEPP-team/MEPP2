@@ -2547,6 +2547,44 @@ FEVV::SimpleWindow::on_actionChange_viewer_mode_triggered()
 }
 
 inline void
+FEVV::SimpleWindow::activate_time_mode()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    if(bavQt->getViewer()->m_space_time)
+    {
+      bavQt->getViewer()->m_time = true;
+
+      pre_actionHG(bavQt->getViewer(), 'M');
+
+      updateActiveChildTitle();
+    }
+  }
+}
+
+inline void
+FEVV::SimpleWindow::activate_space_mode()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    if(bavQt->getViewer()->m_space_time)
+    {
+      bavQt->getViewer()->m_time = false;
+
+      pre_actionHG(bavQt->getViewer(), 'M');
+
+      updateActiveChildTitle();
+    }
+  }
+}
+
+inline void
 FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
 {
   QMessageBox::about(
@@ -2726,6 +2764,8 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
         for(unsigned i = 0; i < draggers2.size(); i++)
           draggers2[i]->setNodeMask(viewer->m_ShowRotateDragger ? 0xffffffff
                                                                 : 0x0);
+
+        actionHG(viewer, 'D', '_'); // 19/03/19 - important for re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
       }
     }
   }

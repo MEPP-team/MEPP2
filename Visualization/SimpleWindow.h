@@ -180,6 +180,9 @@ public:
                            std::string _mesh_filename = std::string(""),
                            float _step = 0.);
 
+  void activate_time_mode();
+  void activate_space_mode();
+
   template< typename HalfedgeGraph >
   void writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer);
 
