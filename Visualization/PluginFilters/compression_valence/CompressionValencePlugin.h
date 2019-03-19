@@ -224,6 +224,8 @@ public:
 
     reset();
 
+    viewer->activate_time_mode();
+
     viewer->frame();
   }
 

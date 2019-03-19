@@ -131,19 +131,19 @@ public:
     auto m_gpm_A =
         get_property_map(FEVV::mesh_guiproperties, *mesh_A, *pmaps_bag_A);
     auto gui_props_A = get(m_gpm_A, 0);
-    gui_props_A.is_visible = false;
+    //gui_props_A.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
     put(m_gpm_A, 0, gui_props_A);
 
     // hide mesh B
     auto m_gpm_B =
         get_property_map(FEVV::mesh_guiproperties, *mesh_B, *pmaps_bag_B);
     auto gui_props_B = get(m_gpm_B, 0);
-    gui_props_B.is_visible = false;
+    //gui_props_B.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
     put(m_gpm_B, 0, gui_props_B);
 
     // show output mesh
     FEVV::Types::GuiProperties gui_props_output;
-    gui_props_output.is_visible = true;
+    //gui_props_output.is_visible = true; // not necessary because true by default...
 
     // create a property map and a bag to store output mesh GUI properties
     auto m_gpm_output = make_property_map(FEVV::mesh_guiproperties, *output_mesh);
@@ -200,16 +200,9 @@ public:
     // draw output mesh
     if(viewer)
     {
-      // space_time mode ON
-      viewer->m_space_time = true;
-
-      // redraw input meshes
-      //TODO-elo: maybe not necessary;
-      //          better: hide input meshes to only display output mesh;
-      //          positive side-effect: remove blinking due to transform
-      //          matrix being reset before redraw
-      viewer->draw_or_redraw_mesh(meshes[0], pmaps_bags[0], true, false);
-      viewer->draw_or_redraw_mesh(meshes[1], pmaps_bags[1], true, false);
+      // redraw input meshes (for hiding them...), but we finally use TIME mode (see function 'activate_time_mode' below...)
+      //viewer->draw_or_redraw_mesh(meshes[0], pmaps_bags[0], true, false);
+      //viewer->draw_or_redraw_mesh(meshes[1], pmaps_bags[1], true, false);
 
       // draw output mesh
       auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
@@ -226,6 +219,8 @@ public:
 
     //ELO comment next line to keep parameters between calls
     //reset();
+
+    viewer->activate_time_mode();
 
     viewer->frame();
   }
