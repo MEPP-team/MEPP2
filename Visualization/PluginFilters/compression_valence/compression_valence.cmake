@@ -13,11 +13,15 @@ if (BUILD_USE_GUI_CompressionValencePlugin)
     set(CompressionValence_Qt_Plugin_SRC ${CompressionValence_Qt_Plugin_SRC} ${CompressionValence_Qt_Plugin_MOC_CPP} ${CompressionValence_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
+  if( APPLE )
+    set( MOC_FILES_FOR_APPLE ${MOC_FILES} )
+  endif()
   add_library(CompressionValencePlugin SHARED
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.cpp"
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.cpp"
               ${CompressionValence_Qt_Plugin_SRC}
               ${osgQt_SRC} # from viewer
+              ${MOC_FILES_FOR_APPLE} # because of activate_time_mode() and activate_space_mode() in SimpleWindow -> WHY ?
               )
   target_link_libraries (CompressionValencePlugin ${CompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
