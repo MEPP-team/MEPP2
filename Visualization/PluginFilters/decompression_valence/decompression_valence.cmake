@@ -13,15 +13,11 @@ if (BUILD_USE_GUI_DecompressionValencePlugin)
     set(DecompressionValence_Qt_Plugin_SRC ${DecompressionValence_Qt_Plugin_SRC} ${DecompressionValence_Qt_Plugin_MOC_CPP} ${DecompressionValence_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
-  if( APPLE )
-    set( MOC_FILES_FOR_APPLE ${MOC_FILES} )
-  endif()
   add_library(DecompressionValencePlugin SHARED
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/DecompressionValencePlugin.cpp"
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/Dialogs/DialogDecompressionValence1.cpp"
               ${DecompressionValence_Qt_Plugin_SRC}
               ${osgQt_SRC} # from viewer
-              ${MOC_FILES_FOR_APPLE} # because of activate_time_mode() and activate_space_mode() in SimpleWindow -> WHY ?
               )
   target_link_libraries (DecompressionValencePlugin ${DecompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

@@ -20,13 +20,9 @@ if (BUILD_USE_GUI_BooleanOperationsPlugin)
     set(BooleanOperations_Qt_Plugin_SRC ${BooleanOperations_Qt_Plugin_SRC} ${BooleanOperations_Qt_Plugin_MOC_CPP} ${BooleanOperations_Qt_Plugin_UI_CPP})
   endif(BUILD_USE_QT5)
 
-  if( APPLE )
-    set( MOC_FILES_FOR_APPLE ${MOC_FILES} )
-  endif()
   add_library(BooleanOperationsPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/BooleanOperationsPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/Dialogs/DialogBooleanOperations1.cpp"
     ${BooleanOperations_Qt_Plugin_SRC}
     ${osgQt_SRC} # from viewer
-    ${MOC_FILES_FOR_APPLE} # because of activate_time_mode() and activate_space_mode() in SimpleWindow -> WHY ?
     )
   target_link_libraries (BooleanOperationsPlugin ${BooleanOperations_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
