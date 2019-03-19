@@ -2275,7 +2275,9 @@ template< typename HalfedgeGraph >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::activate_time_mode()
 {
-  SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+  SimpleWindow *sw = static_cast< SimpleWindow * >(
+      getWindow()); // here static_cast instead of dynamic_cast only for OSX and
+                    // because of plugins... don't understand why...
 
   sw->activate_time_mode();
 }
@@ -2284,7 +2286,9 @@ template< typename HalfedgeGraph >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
 {
-  SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+  SimpleWindow *sw = static_cast< SimpleWindow * >(
+      getWindow()); // here static_cast instead of dynamic_cast only for OSX and
+                    // because of plugins... don't understand why...
   
   sw->activate_space_mode();
 }
