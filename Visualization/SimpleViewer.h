@@ -493,8 +493,7 @@ private:
    *                                 material index.
    *
    * @param[in]   _geode                 the geode which we want to load.
-   * @param[in]   _g                     the hafledge graph we want to create
-   *our color map from (if needed).
+   * @param[in]   _g                     the halfedge graph.
    * @param[in]   _geometries            the geometries which we load into the
    *geode.
    * @param[in]   _geometries_edges      the superimposed edges geometries which
@@ -577,6 +576,7 @@ private:
    *                                 material index.
    *
    * @param[in]   _geode                 the geode which we want to load.
+   * @param[in]   _g                     the halfedge graph.
    * @param[in]   _geometries            the geometries which we load into the
    *geode.
    * @param[in]   _geometries_edges      the superimposed edges geometries which
@@ -618,6 +618,7 @@ private:
                 PMap_traits< FEVV::face_material_t, HalfedgeGraph >::pmap_type >
   void internal_loadLegacyMesh(
       osg::Geode *_geode,
+      HalfedgeGraph *_g,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,

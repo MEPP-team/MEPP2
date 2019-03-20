@@ -915,6 +915,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   unsigned int sizeVertex = 0;
   unsigned int sizeFace = 0;
+  unsigned int sizeSPoints = 0;
+  unsigned int sizeSLines = 0;
 
   face_iterator fb, fe;
   halfedge_point p0;
@@ -1029,6 +1031,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       vertexArrays_edges[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(pt));
 
+      sizeSLines++;
+
       //if(texture_corner_mode_on)
       {
         //line->push_back(vertexArrays_edges[mtl_id]->size() - 2);
@@ -1051,19 +1055,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       //geometries_edges[mtl_id]->addPrimitiveSet(line);
 
-      // set line width
-      osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-      linewidth->setWidth(3.0f);
-      geometries_edges[mtl_id]
-          ->getOrCreateStateSet()
-          ->setAttribute /*setAttributeAndModes*/ (linewidth,
-                                                   osg::StateAttribute::ON);
-
-      // light
-      geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
-          GL_LIGHTING,
-          osg::StateAttribute::OFF); // light always OFF for superimpose edges
-
       // color
       if(_e_cm)
       {
@@ -1084,10 +1075,24 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     }
 
     geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
+
+	// set line width
+	osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+	linewidth->setWidth(3.0f);
+	geometries_edges[mtl_id]
+	  ->getOrCreateStateSet()
+	  ->setAttribute /*setAttributeAndModes*/ (linewidth,
+	                                           osg::StateAttribute::ON);
+
+	// light
+	geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
+	  GL_LIGHTING,
+	  osg::StateAttribute::OFF); // light always OFF for superimpose edges
   }
 
-  /// Adding vertices - superimpose only
-  if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+  /// Adding vertices - superimpose and 'only_pts' mode only
+  size_t nb_faces = faces(*_g).size();
+  if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
   {
     VertexColorMap *SAVE_vt_cm = _vt_cm;
 
@@ -1118,6 +1123,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       vertexArrays_vertices[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(p0));
 
+      sizeSPoints++;
+
       //if( texture_corner_mode_on )
       {
         //vertex->push_back(vertexArrays_vertices[mtl_id]->size() - 1);
@@ -1138,20 +1145,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       //geometries_vertices[mtl_id]->addPrimitiveSet(vertex);
 
-      // set point size
-      osg::ref_ptr< osg::Point > pt = new osg::Point();
-      if(m_RenderSuperimposedVertices_Big)
-        pt->setSize(5.0f);
-      else
-        pt->setSize(3.0f);
-      geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
-          pt, osg::StateAttribute::ON);
-
-      // light
-      geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
-          GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
-                                                  // superimpose vertices
-
       // color
       if(_vt_cm)
         colorsArrays_vertices[mtl_id]->push_back(
@@ -1164,17 +1157,31 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
 
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+    {
+      // set point size
+      osg::ref_ptr< osg::Point > pt = new osg::Point();
+      if(m_RenderSuperimposedVertices_Big)
+        pt->setSize(5.0f);
+      else
+        pt->setSize(3.0f);
+      geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
+          pt, osg::StateAttribute::ON);
+    }
+
+	// light
+	geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
+	  GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
+	                                          // superimpose vertices
+
     // ---
 
     _vt_cm = SAVE_vt_cm;
   }
 
   /// Adding faces
-  bool has_faces = false;
   for(boost::tie(fb, fe) = faces(*_g); fb != fe; ++fb)
   {
-    has_faces = true;
-
     // retrieve the material/texture ID of the current face (ONLY in
     // HALFEDGE_TEXCOORDS2D mode)
     if(texture_corner_mode_on || texture_vertex_mode_on)
@@ -1361,57 +1368,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     ++sizeFace;
   }
 
-  /// 'only_pts' mode
-  if(!has_faces)
-  {
-    for(vertex_iterator v_it = vertices(*_g).first;
-        v_it != vertices(*_g).second;
-        ++v_it)
-    {
-      // retrieve vertex
-      vd0 = *v_it;
-
-      // retrieve vertex-point
-      p0 = (*_pm)[vd0];
-      vertexArrays_vertices[mtl_id]->push_back(
-          Helpers::VectorConverter< HalfedgeGraph >(p0));
-
-      // color
-      if(_vt_cm)
-        colorsArrays_vertices[mtl_id]->push_back(
-            Helpers::VectorColorConverter< HalfedgeGraph >(
-                get(v_cm, *v_it))); // user/filter/plugin colors
-      else
-        colorsArrays_vertices[mtl_id]->push_back(
-            Helpers::ColorConverter(Color::Green())); // default color
-    }
-
-    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
-  }
-
-#if 0
-  std::cout << "--------------> _m_mm_size " << _m_mm_size << std::endl;
-  {
-    size_t mi2 = 0;
-    /*osg::DrawArrays* drawArrays = new osg::DrawArrays(GL_POINTS, 0, vertexArrays[mi2]->size());
-    geometries[mi2]->addPrimitiveSet(drawArrays);*/
-
-    std::cout << "----------------------> mi2 " << mi2 << std::endl;
-  }
-  for(size_t mi2 = 1; mi2 < _m_mm_size; mi2++)
-  {
-    /*osg::DrawArrays* drawArrays = new osg::DrawArrays(GL_POINTS, 0, vertexArrays[mi2]->size());
-    geometries[mi2]->addPrimitiveSet(drawArrays);*/
-
-    std::cout << "----------------------> mi2 " << mi2 << std::endl;
-  }
-#endif
-
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
 
   std::cout << "[SimpleViewer] I have drawn " << sizeVertex << " vertices and "
             << sizeFace << " faces." << std::endl;
+  std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints << " (superimpose) points and "
+            << sizeSLines << " superimpose lines." << std::endl;
 
   //auto gui_props = get((*_m_gpm), 0);
   //geode->setNodeMask(gui_props.is_visible ? 0xffffffff : 0x0); // 19/03/19
@@ -1461,6 +1424,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   else
   {
     internal_loadLegacyMesh(geode,
+                            _g,
                             geometries,
                             geometries_edges,
                             geometries_vertices,

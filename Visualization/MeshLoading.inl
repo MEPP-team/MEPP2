@@ -507,9 +507,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     // attach geometry to geode
     _geode->addDrawable(_geometries[unit_ii]);
 
+    size_t nb_faces = faces(*_g).size();
+
     if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
        m_RenderSuperimposedVertices_Big ||
-       _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
+       (nb_faces==0)) // last test for 'only_pts' mode
     {
       // RM: adding predefined basic shaders to display superimposed features
       osg::ref_ptr< osg::Program > superimpProgram = new osg::Program;
@@ -552,7 +554,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
       }
 
       // vertices - superimpose and 'only_pts' mode only
-      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
+      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
       {
         std::cout << "[MeshLoading] Drawing superimposed vertices" << std::endl;
 
@@ -704,6 +706,7 @@ template< typename VertexNormalMap,
 void
 FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     osg::Geode *_geode,
+    HalfedgeGraph *_g,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
@@ -868,6 +871,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     // attach geometry to geode
     _geode->addDrawable(_geometries[unit_ii]);
 
+    size_t nb_faces = faces(*_g).size();
+
     // edges - superimpose only
     if(m_RenderSuperimposedEdges)
     {
@@ -878,7 +883,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     }
 
     // vertices - superimpose and 'only_pts' mode only
-    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
     {
       _geometries_vertices[unit_ii]->setVertexArray(
           _vertexArrays_vertices[unit_ii]);
