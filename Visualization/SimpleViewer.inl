@@ -1166,8 +1166,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   }
 
   /// Adding faces
+  bool has_faces = false;
   for(boost::tie(fb, fe) = faces(*_g); fb != fe; ++fb)
   {
+    has_faces = true;
+
     // retrieve the material/texture ID of the current face (ONLY in
     // HALFEDGE_TEXCOORDS2D mode)
     if(texture_corner_mode_on || texture_vertex_mode_on)
@@ -1352,6 +1355,42 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     }
 
     ++sizeFace;
+  }
+
+  /// 'only_pts' mode
+  if(!has_faces)
+  {
+    if(has_map(*_pmaps, FEVV::vertex_color))
+    {
+      v_cm = get_property_map(FEVV::vertex_color, *_g, *_pmaps);
+      _vt_cm = &v_cm;
+    }
+
+    // ---
+
+    for(vertex_iterator v_it = vertices(*_g).first;
+        v_it != vertices(*_g).second;
+        ++v_it)
+    {
+      // retrieve vertex
+      vd0 = *v_it;
+
+      // retrieve vertex-point
+      p0 = (*_pm)[vd0];
+      vertexArrays_vertices[mtl_id]->push_back(
+          Helpers::VectorConverter< HalfedgeGraph >(p0));
+
+      // color
+      if(_vt_cm)
+        colorsArrays_vertices[mtl_id]->push_back(
+            Helpers::VectorColorConverter< HalfedgeGraph >(
+                get(v_cm, *v_it))); // user/filter/plugin colors
+      else
+        colorsArrays_vertices[mtl_id]->push_back(
+            Helpers::ColorConverter(Color::Green())); // default color
+    }
+
+    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
   }
 
 #if 0

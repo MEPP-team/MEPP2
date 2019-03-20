@@ -665,7 +665,10 @@ FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
   statusBar()->showMessage(QObject::tr("Open mesh file...") /*, 2000*/);
 
   mesh = new MeshT;
-  FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag);
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, true);
+  else
+    FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag);
 
   statusBar()->showMessage(QObject::tr("") /*, 2000*/);
 }

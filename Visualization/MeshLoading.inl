@@ -508,7 +508,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     _geode->addDrawable(_geometries[unit_ii]);
 
     if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-       m_RenderSuperimposedVertices_Big)
+       m_RenderSuperimposedVertices_Big ||
+       _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
     {
       // RM: adding predefined basic shaders to display superimposed features
       osg::ref_ptr< osg::Program > superimpProgram = new osg::Program;
@@ -550,8 +551,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geode->addDrawable(_geometries_edges[unit_ii]);
       }
 
-      // vertices - superimpose only
-      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+      // vertices - superimpose and 'only_pts' mode only
+      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
       {
         std::cout << "[MeshLoading] Drawing superimposed vertices" << std::endl;
 
@@ -876,8 +877,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
       _geode->addDrawable(_geometries_edges[unit_ii]);
     }
 
-    // vertices - superimpose only
-    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+    // vertices - superimpose and 'only_pts' mode only
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || _vertexArrays[unit_ii]->size()==0) // last test for 'only_pts' mode
     {
       _geometries_vertices[unit_ii]->setVertexArray(
           _vertexArrays_vertices[unit_ii]);
