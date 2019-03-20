@@ -1059,6 +1059,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
           ->setAttribute /*setAttributeAndModes*/ (linewidth,
                                                    osg::StateAttribute::ON);
 
+      // light
       geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
           GL_LIGHTING,
           osg::StateAttribute::OFF); // light always OFF for superimpose edges
@@ -1146,6 +1147,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
           pt, osg::StateAttribute::ON);
 
+      // light
       geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
           GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
                                                   // superimpose vertices
@@ -1362,14 +1364,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   /// 'only_pts' mode
   if(!has_faces)
   {
-    if(has_map(*_pmaps, FEVV::vertex_color))
-    {
-      v_cm = get_property_map(FEVV::vertex_color, *_g, *_pmaps);
-      _vt_cm = &v_cm;
-    }
-
-    // ---
-
     for(vertex_iterator v_it = vertices(*_g).first;
         v_it != vertices(*_g).second;
         ++v_it)
