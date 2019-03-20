@@ -507,7 +507,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     // attach geometry to geode
     _geode->addDrawable(_geometries[unit_ii]);
 
+#ifdef FEVV_USE_AIF
+    size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
+#else
     size_t nb_faces = faces(*_g).size();
+#endif
 
     if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
        m_RenderSuperimposedVertices_Big ||
@@ -871,7 +875,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     // attach geometry to geode
     _geode->addDrawable(_geometries[unit_ii]);
 
+#ifdef FEVV_USE_AIF
+    size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
+#else
     size_t nb_faces = faces(*_g).size();
+#endif
 
     // edges - superimpose only
     if(m_RenderSuperimposedEdges)

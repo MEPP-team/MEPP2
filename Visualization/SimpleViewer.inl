@@ -1091,7 +1091,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   }
 
   /// Adding vertices - superimpose and 'only_pts' mode only
+#ifdef FEVV_USE_AIF
+  size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
+#else
   size_t nb_faces = faces(*_g).size();
+#endif
   if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
   {
     VertexColorMap *SAVE_vt_cm = _vt_cm;
