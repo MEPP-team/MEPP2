@@ -1063,6 +1063,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
           GL_LIGHTING,
           osg::StateAttribute::OFF); // light always OFF for superimpose edges
 
+      // color
       if(_e_cm)
       {
         colorsArrays_edges[mtl_id]->push_back(
@@ -1081,7 +1082,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       }
     }
 
-    geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(/*GL_LINES*/osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
+    geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
   }
 
   /// Adding vertices - superimpose only
@@ -1149,6 +1150,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
           GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
                                                   // superimpose vertices
 
+      // color
       if(_vt_cm)
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::VectorColorConverter< HalfedgeGraph >(
@@ -1158,7 +1160,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
             Helpers::ColorConverter(Color::Green())); // default color
     }
 
-    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(/*GL_POINTS*/osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
+    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
 
     // ---
 
