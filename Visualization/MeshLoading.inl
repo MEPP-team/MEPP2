@@ -504,15 +504,17 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     _geometries[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
         program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 
-    // attach geometry to geode
-    _geode->addDrawable(_geometries[unit_ii]);
-
 #ifdef FEVV_USE_AIF
     size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
 #else
     size_t nb_faces = faces(*_g).size();
 #endif
 
+    // attach geometry to geode
+    if (nb_faces!=0) // not to be done for 'only_pts' mode
+      _geode->addDrawable(_geometries[unit_ii]);
+
+  if (unit_ii==0) // MUST be done only one time
     if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
        m_RenderSuperimposedVertices_Big ||
        (nb_faces==0)) // last test for 'only_pts' mode
@@ -537,7 +539,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
 
       // RM: loading superimposed features
       // edges - superimpose only
-      if(m_RenderSuperimposedEdges)
+      if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
       {
         std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl;
 
@@ -872,17 +874,19 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
 #endif
     }
 
-    // attach geometry to geode
-    _geode->addDrawable(_geometries[unit_ii]);
-
 #ifdef FEVV_USE_AIF
     size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
 #else
     size_t nb_faces = faces(*_g).size();
 #endif
 
+    // attach geometry to geode
+    if (nb_faces!=0) // not to be done for 'only_pts' mode
+      _geode->addDrawable(_geometries[unit_ii]);
+
     // edges - superimpose only
-    if(m_RenderSuperimposedEdges)
+  if (unit_ii==0) // MUST be done only one time
+    if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
     {
       _geometries_edges[unit_ii]->setVertexArray(_vertexArrays_edges[unit_ii]);
       _geometries_edges[unit_ii]->setColorArray(
@@ -891,6 +895,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     }
 
     // vertices - superimpose and 'only_pts' mode only
+  if (unit_ii==0) // MUST be done only one time
     if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
     {
       _geometries_vertices[unit_ii]->setVertexArray(
