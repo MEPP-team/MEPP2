@@ -504,11 +504,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     _geometries[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
         program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 
-#ifdef FEVV_USE_AIF
-    size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
-#else
-    size_t nb_faces = faces(*_g).size();
-#endif
+    size_t nb_faces = size_of_faces(*_g);
 
     // attach geometry to geode
     if (nb_faces!=0) // not to be done for 'only_pts' mode
@@ -874,11 +870,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
 #endif
     }
 
-#ifdef FEVV_USE_AIF
-    size_t nb_faces = 1; // 'only_pts' mode disabled if AIF is ON (temp)
-#else
-    size_t nb_faces = faces(*_g).size();
-#endif
+    size_t nb_faces = size_of_faces(*_g);
 
     // attach geometry to geode
     if (nb_faces!=0) // not to be done for 'only_pts' mode

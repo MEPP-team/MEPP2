@@ -33,6 +33,7 @@
 // Generic mesh iterators
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
+#include "FEVV/Wrappings/Graph_traits_extension.h"
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include <CGAL/boost/graph/properties.h> /// included in External folder.
 
