@@ -332,14 +332,6 @@ public:
              std::string _mesh_file = std::string(""),
              osg::ref_ptr< osg::Group > _group = new osg::Group);
 
-  template< typename PCArray >
-  osg::ref_ptr< osg::Group >
-  createMesh(const PCArray &_pts,
-             const bool _withColor = false,
-             const Color _defaultColor = Color::Wisteria(),
-             std::string _mesh_file = std::string(""),
-             osg::ref_ptr< osg::Group > _group = new osg::Group);
-
   template< typename PointMap,
             typename VertexNormalMap = DefaultVertexNormalMap,
             typename FaceNormalMap = DefaultFaceNormalMap,
