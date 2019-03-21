@@ -53,8 +53,7 @@ else(BUILD_USE_QT5)
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)
 endif(BUILD_USE_QT5)
 
-#set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.4.0)
-set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.6.1)
+set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.4.0)
 
 ### addon 03 : PCL, FLANN
 
