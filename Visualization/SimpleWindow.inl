@@ -666,6 +666,7 @@ FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
 
   mesh = new MeshT;
   FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, open_only_pts_mode);
+  open_only_pts_mode = false; // ensure next load_mesh will be not in 'only_pts' mode unless specified...
 
   statusBar()->showMessage(QObject::tr("") /*, 2000*/);
 }
