@@ -665,10 +665,7 @@ FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
   statusBar()->showMessage(QObject::tr("Open mesh file...") /*, 2000*/);
 
   mesh = new MeshT;
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
-    FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, true);
-  else
-    FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag);
+  FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, open_only_pts_mode);
 
   statusBar()->showMessage(QObject::tr("") /*, 2000*/);
 }
@@ -984,6 +981,11 @@ FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1305,6 +1307,11 @@ FEVV::SimpleWindow::on_actionOpen_Surface_mesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Surface_mesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1624,6 +1631,11 @@ FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1944,6 +1956,11 @@ FEVV::SimpleWindow::on_actionOpen_OpenMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_OpenMesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -2254,6 +2271,11 @@ FEVV::SimpleWindow::on_actionOpen_AIFMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_AIFMesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys

@@ -339,6 +339,8 @@ protected:
 
   bool useMdiWindows = false;
 
+  bool open_only_pts_mode = false;
+
   Ui::MainWindow ui; //<! Interface : QtDesigner
 };
 
