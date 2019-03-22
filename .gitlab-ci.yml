@@ -4,10 +4,8 @@
 #
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -18,10 +16,8 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
 
 linux - Release - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -32,10 +28,8 @@ linux - Release - GCC - CGAL-4.11 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
 
 linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -47,10 +41,8 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
 
 linux - Release - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -62,10 +54,8 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
 
 osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -77,10 +67,8 @@ osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -92,10 +80,8 @@ osx - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -107,10 +93,8 @@ osx - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -122,10 +106,8 @@ osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 windows - Debug - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -140,10 +122,8 @@ windows - Debug - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF
 
 windows - Release - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -158,10 +138,8 @@ windows - Release - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
 
 windows - Debug - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -176,10 +154,8 @@ windows - Debug - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF
 
 windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -198,10 +174,8 @@ windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
 #
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -212,10 +186,8 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OF
 
 linux - Release - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -226,10 +198,8 @@ linux - Release - GCC - CGAL-4.11 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
 
 linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -241,10 +211,8 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
 
 linux - Release - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -256,10 +224,8 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -271,10 +237,8 @@ osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -286,10 +250,8 @@ osx - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -301,10 +263,8 @@ osx - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -316,10 +276,8 @@ osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 windows - Debug - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -334,10 +292,8 @@ windows - Debug - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 windows - Release - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -352,10 +308,8 @@ windows - Release - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 windows - Debug - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -370,10 +324,8 @@ windows - Debug - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -392,10 +344,8 @@ windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #
 linux - Debug - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -406,10 +356,8 @@ linux - Debug - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
 
 linux - Release - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.11
   script:
@@ -420,10 +368,8 @@ linux - Release - GCC - CGAL-4.11 - QT4 - CONF3 (ALL):
 
 linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -435,10 +381,8 @@ linux - Debug - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
 
 linux - Release - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,linux,CGAL-4.13
   script:
@@ -450,10 +394,8 @@ linux - Release - CLANG - CGAL-4.13 - QT5 - CONF3 (ALL):
 
 osx - Debug - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -465,10 +407,8 @@ osx - Debug - QT4 - CONF3 (ALL):
 
 osx - Release - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,HSierra
   script:
@@ -480,10 +420,8 @@ osx - Release - QT4 - CONF3 (ALL):
 
 osx - Debug - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -495,10 +433,8 @@ osx - Debug - QT5 - CONF3 (ALL):
 
 osx - Release - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
@@ -510,10 +446,8 @@ osx - Release - QT5 - CONF3 (ALL):
 
 windows - Debug - 2015 - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -528,10 +462,8 @@ windows - Debug - 2015 - QT4 - CONF3 (ALL):
 
 windows - Release - 2015 - QT4 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -546,10 +478,8 @@ windows - Release - 2015 - QT4 - CONF3 (ALL):
 
 windows - Debug - 2017 - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -564,10 +494,8 @@ windows - Debug - 2017 - QT5 - CONF3 (ALL):
 
 windows - Release - 2017 - QT5 - CONF3 (ALL):
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -586,10 +514,8 @@ windows - Release - 2017 - QT5 - CONF3 (ALL):
 #
 osx - DOC [Release - QT5 - CONF3 (ALL)]:
   only:
-    variables:
-      - $CI_COMMIT_REF_NAME == "master" # OR
-      - $CI_MERGE_REQUEST_IID # OR (here, variable presence check if a MR)
-      - $CI_COMMIT_MESSAGE =~ /ci-branches/ # OR
+    - master
+    - merge_requests
   tags:
     - MEPP2,osx,Mojave
   script:
