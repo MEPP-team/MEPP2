@@ -632,8 +632,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     if(!m_redraw)
       std::cout << "[SimpleViewer] using vertex texture-coordinates"
-                << std::endl
-                << "[SimpleViewer] computing vertex tangents" << std::endl;
+                << std::endl;
     v_uvm = get_property_map(FEVV::vertex_texcoord, *_g, *_pmaps);
     _vt_uv_m = &v_uvm;
     _texture_type = VERTEX_TEXCOORDS2D;
@@ -647,6 +646,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     if(has_map(*_pmaps, FEVV::vertex_tangent) && (!m_recomputeNT_if_redraw))
     {
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] using vertex tangents" << std::endl;
       vt_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
       v_tan_m = &vt_m;
     }
@@ -655,6 +656,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       // RM: compute vertex tangents
       //   Note: shouldn't be added if no normal map available, causing extra
       //   process
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] vertex tangents missing, computing it"
+                  << std::endl;
       vt_m = make_property_map(FEVV::vertex_tangent, *_g);
       v_tan_m = &vt_m;
       FEVV::Filters::calculate_vertices_tangent(*_g, *_pm, v_uvm, *v_tan_m);
@@ -665,8 +669,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     if(!m_redraw)
       std::cout << "[SimpleViewer] using halfedge texture-coordinates"
-                << std::endl
-                << "[SimpleViewer] computing halfedge tangents" << std::endl;
+                << std::endl;
     h_uvm = get_property_map(FEVV::halfedge_texcoord, *_g, *_pmaps);
     _het_uv_m = &h_uvm;
     _texture_type = HALFEDGE_TEXCOORDS2D;
@@ -680,6 +683,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     if(has_map(*_pmaps, FEVV::vertex_tangent) && (!m_recomputeNT_if_redraw))
     {
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] using halfedge tangents" << std::endl;
       vt_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
       v_tan_m = &vt_m;
     }
@@ -688,6 +693,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       // RM: compute halfedge tangents
       //   Note: shouldn't be added if no normal map available, causing extra
       //   process
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] halfedge tangents missing, computing it"
+                  << std::endl;
       vt_m = make_property_map(FEVV::vertex_tangent, *_g);
       v_tan_m = &vt_m;
       FEVV::Filters::calculate_halfedges_tangent(*_g, *_pm, h_uvm, *v_tan_m);
