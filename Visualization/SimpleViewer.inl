@@ -1092,60 +1092,58 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       vd.push_back(target(edg, *_g));
       p.push_back((*_pm)[vd.back()]);
 
+      vertexArrays[mtl_id]->push_back(
+          Helpers::VectorConverter< HalfedgeGraph >(p.back()));
+
+      if(_vt_cm != nullptr)
       {
-        vertexArrays[mtl_id]->push_back(
-            Helpers::VectorConverter< HalfedgeGraph >(p.back()));
-
-        if(_vt_cm != nullptr)
-        {
-          colorsArrays[mtl_id]->push_back(
-              Helpers::VectorColorConverter< HalfedgeGraph >(
-                  (*_vt_cm)[vd.back()]));
-        }
-
-        if(_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D)
-        {
-          texcoordsArrays[mtl_id]->push_back(
-              osg::Vec2((*_het_uv_m)[edg][0], (*_het_uv_m)[edg][1]));
-        }
-        else if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
-        {
-          texcoordsArrays[mtl_id]->push_back(
-              osg::Vec2((*_vt_uv_m)[vd.back()][0], (*_vt_uv_m)[vd.back()][1]));
-        }
-
-        if(_vt_nm != nullptr) // normal per vertex -> already calculated
-        {
-          if(m_SmoothFlat_Shading)
-          {
-            normal = (*_vt_nm)[vd.back()];
-            normalsArrays[mtl_id]->push_back(
-                Helpers::VectorConverter< HalfedgeGraph >(
-                    normal)); // smooth mode
-          }
-          else
-          {
-            normal = (*_f_nm)[*fb];
-            normalsArrays[mtl_id]->push_back(
-                Helpers::VectorConverter< HalfedgeGraph >(
-                    normal)); // flat mode (caution, here, instead we take n x
-                              // the normal per face)
-          }
-
-          if(v_tan_m != nullptr)
-          {
-            // RM: push tangents
-            //   Note: shouldn't be added if no normal map available, causing
-            //   extra process
-            tangentsArrays[mtl_id]->push_back(
-                osg::Vec3((*v_tan_m)[vd.back()][0],
-                          (*v_tan_m)[vd.back()][1],
-                          (*v_tan_m)[vd.back()][2]));
-          }
-        }
-
-        ++sizeVertex;
+        colorsArrays[mtl_id]->push_back(
+            Helpers::VectorColorConverter< HalfedgeGraph >(
+                (*_vt_cm)[vd.back()]));
       }
+
+      if(_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D)
+      {
+        texcoordsArrays[mtl_id]->push_back(
+            osg::Vec2((*_het_uv_m)[edg][0], (*_het_uv_m)[edg][1]));
+      }
+      else if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
+      {
+        texcoordsArrays[mtl_id]->push_back(
+            osg::Vec2((*_vt_uv_m)[vd.back()][0], (*_vt_uv_m)[vd.back()][1]));
+      }
+
+      if(_vt_nm != nullptr) // normal per vertex -> already calculated
+      {
+        if(m_SmoothFlat_Shading)
+        {
+          normal = (*_vt_nm)[vd.back()];
+          normalsArrays[mtl_id]->push_back(
+              Helpers::VectorConverter< HalfedgeGraph >(
+                  normal)); // smooth mode
+        }
+        else
+        {
+          normal = (*_f_nm)[*fb];
+          normalsArrays[mtl_id]->push_back(
+              Helpers::VectorConverter< HalfedgeGraph >(
+                  normal)); // flat mode (caution, here, instead we take n x
+                            // the normal per face)
+        }
+
+        if(v_tan_m != nullptr)
+        {
+          // RM: push tangents
+          //   Note: shouldn't be added if no normal map available, causing
+          //   extra process
+          tangentsArrays[mtl_id]->push_back(
+              osg::Vec3((*v_tan_m)[vd.back()][0],
+                        (*v_tan_m)[vd.back()][1],
+                        (*v_tan_m)[vd.back()][2]));
+        }
+      }
+
+      ++sizeVertex;
 
       edg = next(edg, *_g);
     } while(edg != edg_begin);
