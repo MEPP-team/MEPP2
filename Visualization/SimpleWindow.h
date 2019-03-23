@@ -180,6 +180,9 @@ public:
                            std::string _mesh_filename = std::string(""),
                            float _step = 0.);
 
+  void activate_time_mode();
+  void activate_space_mode();
+
   template< typename HalfedgeGraph >
   void writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer);
 
@@ -335,6 +338,8 @@ protected:
   QMdiArea *mdiArea = nullptr;
 
   bool useMdiWindows = false;
+
+  bool open_only_pts_mode = false;
 
   Ui::MainWindow ui; //<! Interface : QtDesigner
 };

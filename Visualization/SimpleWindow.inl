@@ -665,7 +665,7 @@ FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
   statusBar()->showMessage(QObject::tr("Open mesh file...") /*, 2000*/);
 
   mesh = new MeshT;
-  FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag);
+  FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, open_only_pts_mode);
 
   statusBar()->showMessage(QObject::tr("") /*, 2000*/);
 }
@@ -981,6 +981,11 @@ FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1302,6 +1307,11 @@ FEVV::SimpleWindow::on_actionOpen_Surface_mesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Surface_mesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1621,6 +1631,11 @@ FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -1941,6 +1956,11 @@ FEVV::SimpleWindow::on_actionOpen_OpenMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_OpenMesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -2251,6 +2271,11 @@ FEVV::SimpleWindow::on_actionOpen_AIFMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_AIFMesh_triggered()
 {
+  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
 #ifdef __APPLE__
   // on macOS, the ControlModifier value corresponds to the Command keys on the
   // keyboard, and the MetaModifier value corresponds to the Control keys
@@ -2547,6 +2572,44 @@ FEVV::SimpleWindow::on_actionChange_viewer_mode_triggered()
 }
 
 inline void
+FEVV::SimpleWindow::activate_time_mode()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    if(bavQt->getViewer()->m_space_time)
+    {
+      bavQt->getViewer()->m_time = true;
+
+      pre_actionHG(bavQt->getViewer(), 'M');
+
+      updateActiveChildTitle();
+    }
+  }
+}
+
+inline void
+FEVV::SimpleWindow::activate_space_mode()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    if(bavQt->getViewer()->m_space_time)
+    {
+      bavQt->getViewer()->m_time = false;
+
+      pre_actionHG(bavQt->getViewer(), 'M');
+
+      updateActiveChildTitle();
+    }
+  }
+}
+
+inline void
 FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
 {
   QMessageBox::about(
@@ -2726,6 +2789,8 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
         for(unsigned i = 0; i < draggers2.size(); i++)
           draggers2[i]->setNodeMask(viewer->m_ShowRotateDragger ? 0xffffffff
                                                                 : 0x0);
+
+        //actionHG(viewer, 'D', '_'); // 19/03/19 - test for calling a re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
       }
     }
   }
