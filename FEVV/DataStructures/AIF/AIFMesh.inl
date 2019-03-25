@@ -680,6 +680,7 @@ AIFMesh::AIFMesh(const Self &other)
   }
 }
 
+inline
 void 
 AIFMesh::clear() {
   while (m_Faces.begin() != m_Faces.end())
