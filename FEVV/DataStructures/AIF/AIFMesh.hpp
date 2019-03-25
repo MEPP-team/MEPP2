@@ -309,6 +309,12 @@ public:
     EraseIsolatedCell(m_Faces, face);
   }
 
+  /*!
+  * Removes all vertices, faces and edges from a graph.
+  * Property maps associated with vertices, faces and edges 
+  * are also cleared.
+  */
+  void clear();
 public:
   /*!
    * Print the textual description of the involved mesh on the

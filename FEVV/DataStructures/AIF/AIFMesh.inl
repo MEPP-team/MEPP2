@@ -680,6 +680,19 @@ AIFMesh::AIFMesh(const Self &other)
   }
 }
 
+void 
+AIFMesh::clear() {
+  while (m_Faces.begin() != m_Faces.end())
+    EraseIsolatedFace(*(m_Faces.begin()));
+  while (m_Edges.begin() != m_Edges.end())
+    EraseIsolatedEdge(*(m_Edges.begin()));
+  while (m_Vertices.begin() != m_Vertices.end())
+    EraseIsolatedVertex(*(m_Vertices.begin()));
+
+  m_VertexPropertyMaps.clear(); m_EdgePropertyMaps.clear();
+  m_FacePropertyMaps.clear(); m_AssocPropertyMaps.clear();
+}
+
 inline
 AIFMesh::ptr_mesh
 AIFMesh::New()

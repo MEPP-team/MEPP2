@@ -581,6 +581,13 @@ public:
   }
 
   /**
+  * Remove all property maps.
+  */
+  void clear() {
+    m_PropertyMaps.clear();
+  }
+
+  /**
    * Set value at index in property map.
    *
    * \param  name  name of the property map
