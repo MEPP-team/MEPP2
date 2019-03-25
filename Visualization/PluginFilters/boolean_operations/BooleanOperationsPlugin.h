@@ -30,6 +30,7 @@
 #include "Visualization/SimpleWindow.h"
 
 #include "FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp"
+#include "FEVV/Filters/Generic/homogeneous_transform.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -93,10 +94,24 @@ public:
   template< typename HalfedgeGraph >
   void process(HalfedgeGraph *mesh_A,
                FEVV::PMapsContainer *pmaps_bag_A,
+               Eigen::Matrix4d &matrix_A,
                HalfedgeGraph *mesh_B,
-               FEVV::PMapsContainer *pmaps_bag_B)
+               FEVV::PMapsContainer *pmaps_bag_B,
+               Eigen::Matrix4d &matrix_B)
   {
     std::cout << "Asking to apply BooleanOperations filter ! " << std::endl;
+
+    // translate/rotate input meshes according to manipulators
+    auto pm_A = get(boost::vertex_point, *mesh_A);
+    FEVV::Filters::homogeneous_transform(*mesh_A, pm_A, matrix_A);
+    auto pm_B = get(boost::vertex_point, *mesh_B);
+    FEVV::Filters::homogeneous_transform(*mesh_B, pm_B, matrix_B);
+
+    // normals of input meshes may be invalid due to mesh rotation
+    remove_property_map(FEVV::vertex_normal, *pmaps_bag_A);
+    remove_property_map(FEVV::face_normal, *pmaps_bag_A);
+    remove_property_map(FEVV::vertex_normal, *pmaps_bag_B);
+    remove_property_map(FEVV::face_normal, *pmaps_bag_B);
 
     // create output mesh
     HalfedgeGraph *output_mesh = new HalfedgeGraph;
@@ -116,19 +131,19 @@ public:
     auto m_gpm_A =
         get_property_map(FEVV::mesh_guiproperties, *mesh_A, *pmaps_bag_A);
     auto gui_props_A = get(m_gpm_A, 0);
-    gui_props_A.is_visible = false;
+    //gui_props_A.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
     put(m_gpm_A, 0, gui_props_A);
 
     // hide mesh B
     auto m_gpm_B =
         get_property_map(FEVV::mesh_guiproperties, *mesh_B, *pmaps_bag_B);
     auto gui_props_B = get(m_gpm_B, 0);
-    gui_props_B.is_visible = false;
+    //gui_props_B.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
     put(m_gpm_B, 0, gui_props_B);
 
     // show output mesh
     FEVV::Types::GuiProperties gui_props_output;
-    gui_props_output.is_visible = true;
+    //gui_props_output.is_visible = true; // not necessary because true by default...
 
     // create a property map and a bag to store output mesh GUI properties
     auto m_gpm_output = make_property_map(FEVV::mesh_guiproperties, *output_mesh);
@@ -156,12 +171,22 @@ public:
         viewer->get_properties_maps();
     if(meshes.size() >= 2)
     {
+      // retrieve the two input meshes
       auto mA = meshes[0];
       auto pmaps_bagA = pmaps_bags[0];
+      auto matrix44_A = viewer->getTransformMatrixEigen(0);
+
       auto mB = meshes[1];
       auto pmaps_bagB = pmaps_bags[1];
+      auto matrix44_B = viewer->getTransformMatrixEigen(1);
 
-      process(mA, pmaps_bagA, mB, pmaps_bagB); // apply filter
+      // apply filter
+      process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+
+      // reset transform matrix of A and B because transformation
+      // is now applied to mesh coordinates
+      viewer->resetTransformMatrix(0);
+      viewer->resetTransformMatrix(1);
     }
     else
     {
@@ -175,8 +200,9 @@ public:
     // draw output mesh
     if(viewer)
     {
-      // space_time mode ON
-      viewer->m_space_time = true;
+      // redraw input meshes (for hiding them...), but we finally use TIME mode (see function 'activate_time_mode' below...)
+      //viewer->draw_or_redraw_mesh(meshes[0], pmaps_bags[0], true, false);
+      //viewer->draw_or_redraw_mesh(meshes[1], pmaps_bags[1], true, false);
 
       // draw output mesh
       auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
@@ -193,6 +219,8 @@ public:
 
     //ELO comment next line to keep parameters between calls
     //reset();
+
+    viewer->activate_time_mode();
 
     viewer->frame();
   }

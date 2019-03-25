@@ -386,3 +386,32 @@ FEVV::Debug::createHud(osg::ref_ptr< osgText::Text > updateText,
 
   return _group;
 }
+
+inline
+void
+FEVV::Debug::print_osg_tree_from_node(osg::Node *nd, int level)
+{
+  std::string blanks(level*2, ' ');
+
+  osg::Geode *geode = dynamic_cast< osg::Geode * >(nd);
+  if(geode)
+  {
+    // the node is a geode
+    std::cout << blanks << "geode " << (void *)geode << geode->getName() << std::endl;
+  }
+  else
+  {
+    // the node is a group
+    osg::Group *gp = dynamic_cast< osg::Group * >(nd);
+    if(gp)
+    {
+      std::cout << blanks << "group " << gp->getName() << std::endl;
+      for(unsigned int ic = 0; ic < gp->getNumChildren(); ic++)
+        print_osg_tree_from_node(gp->getChild(ic), level + 1);
+    }
+    else
+    {
+      std::cout << blanks << "unknown node " << nd << std::endl;
+    }
+  }
+}

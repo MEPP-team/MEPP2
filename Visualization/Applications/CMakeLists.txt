@@ -47,6 +47,7 @@ endif()
 ### OPENMESH ###
 if( BUILD_USE_OPENMESH )
 
+  if(0)
     if( BUILD_USE_PCL ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
       include_directories( ${PCL_INCLUDE_DIRS} )
       add_definitions( ${PCL_DEFINITIONS} )
@@ -59,6 +60,7 @@ if( BUILD_USE_OPENMESH )
         ${GUILIB_DEMO}
         ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} )
     endif()
+  endif()
 
     if( NOT BUILD_USE_CGAL )
 
@@ -202,7 +204,7 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
   endif()
 
   if( APPLE )
-    if( NOT DEFINED ENV{TRAVIS} ) # OS X - random freeze under travis only
+    if( (NOT DEFINED ENV{TRAVIS}) AND (NOT DEFINED ENV{GITLAB_CI}) ) # OS X - random freeze under travis and GITLAB_CI (but only under OSX VMs)
       add_test( ${FILE}
                 ${FILE}.app/Contents/MacOS/${FILE}
                 ${DATA_TEST}

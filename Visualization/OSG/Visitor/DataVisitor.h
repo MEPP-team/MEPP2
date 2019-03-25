@@ -79,7 +79,8 @@ public:
     /// We remove from the list "debug" draws like the gizmo, the unit grid...
     if((_node.getName().size() > 0) &&
        ((_node.getName() == "Gizmo") || (_node.getName() == "UnitGrid") ||
-        (_node.getName() == "Hud") || (_node.getName() == "Dragger")))
+        (_node.getName() == "Hud") ||
+        (_node.getName().compare(0, 7, "Dragger") == 0)))
     {
       return;
     }

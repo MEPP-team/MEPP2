@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -537,6 +537,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     m_gpm = get_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps);
     _m_gpm = &m_gpm;
+    //std::cout << "[SimpleViewer] **************get mesh_guiproperties property_map" << std::endl;
   }
   else
   {
@@ -545,8 +546,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     put(m_gpm, 0, gui_props);
     put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
     _m_gpm = &m_gpm;
+    //std::cout << "[SimpleViewer] **************make mesh_guiproperties property_map" << std::endl;
   }
-  
+
   // --- face_normal
   if(has_map(*_pmaps, FEVV::face_normal))
   {
@@ -644,13 +646,19 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     if(has_map(*_pmaps, FEVV::vertex_tangent) && (!m_recomputeNT_if_redraw))
     {
-      *v_tan_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] using vertex tangents" << std::endl;
+      vt_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
+      v_tan_m = &vt_m;
     }
     else
     {
       // RM: compute vertex tangents
       //   Note: shouldn't be added if no normal map available, causing extra
       //   process
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] vertex tangents missing, computing it"
+                  << std::endl;
       vt_m = make_property_map(FEVV::vertex_tangent, *_g);
       v_tan_m = &vt_m;
       FEVV::Filters::calculate_vertices_tangent(*_g, *_pm, v_uvm, *v_tan_m);
@@ -661,8 +669,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     if(!m_redraw)
       std::cout << "[SimpleViewer] using halfedge texture-coordinates"
-                << std::endl
-                << "[SimpleViewer] computing halfedge tangents" << std::endl;
+                << std::endl;
     h_uvm = get_property_map(FEVV::halfedge_texcoord, *_g, *_pmaps);
     _het_uv_m = &h_uvm;
     _texture_type = HALFEDGE_TEXCOORDS2D;
@@ -676,6 +683,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     if(has_map(*_pmaps, FEVV::vertex_tangent) && (!m_recomputeNT_if_redraw))
     {
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] using halfedge tangents" << std::endl;
       vt_m = get_property_map(FEVV::vertex_tangent, *_g, *_pmaps);
       v_tan_m = &vt_m;
     }
@@ -684,6 +693,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       // RM: compute halfedge tangents
       //   Note: shouldn't be added if no normal map available, causing extra
       //   process
+      if(!m_redraw)
+        std::cout << "[SimpleViewer] halfedge tangents missing, computing it"
+                  << std::endl;
       vt_m = make_property_map(FEVV::vertex_tangent, *_g);
       v_tan_m = &vt_m;
       FEVV::Filters::calculate_halfedges_tangent(*_g, *_pm, h_uvm, *v_tan_m);
@@ -731,8 +743,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   FEVV::Tools::compute_bounding_box(*_g, *_pm, minAABB, maxAABB, gt);*/
   // TEMP - not used
 
-  if(m_redraw)
+  if(m_redraw) // ONLY IF REDRAW via GUI or CODE
   {
+   if( (m_UseVertexColor) || (m_UseFaceColor) || (m_UseTexture) ) // else automatic detection, as for a first DRAW
     if((!m_space_time) || (m_space_time && m_space_time_changeColorMode))
     {
       //_vt_nm = nullptr;
@@ -910,6 +923,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   unsigned int sizeVertex = 0;
   unsigned int sizeFace = 0;
+  unsigned int sizeSPoints = 0;
+  unsigned int sizeSLines = 0;
 
   face_iterator fb, fe;
   halfedge_point p0;
@@ -918,58 +933,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   bool texture_corner_mode_on =
       (_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D);
+  bool texture_vertex_mode_on =
+      (_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D);
 
-  if(!texture_corner_mode_on)
-  {
-    // if we are not in corner mode for texture, we do not need to duplicate
-    // vertex
-
-    /// Adding vertices
-    for(vertex_iterator v_it = vertices(*_g).first;
-        v_it != vertices(*_g).second;
-        ++v_it)
-    {
-      // retrieve vertex
-      vd0 = *v_it;
-      _mapVertex.insert(std::make_pair(
-          vd0, /*sizeVertex*/ (unsigned int)vertexArrays[mtl_id]->size()));
-
-      // retrieve vertex-point
-      p0 = (*_pm)[vd0];
-      vertexArrays[mtl_id]->push_back(
-          Helpers::VectorConverter< HalfedgeGraph >(p0));
-
-      if(_vt_cm != nullptr)
-      {
-        colorsArrays[mtl_id]->push_back(
-            Helpers::VectorColorConverter< HalfedgeGraph >((*_vt_cm)[vd0]));
-      }
-
-      if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
-      {
-        texcoordsArrays[mtl_id]->push_back(
-            osg::Vec2((*_vt_uv_m)[vd0][0], (*_vt_uv_m)[vd0][1]));
-      }
-
-      if(_vt_nm != nullptr) // normal per vertex -> already calculated
-      {
-        normal = (*_vt_nm)[vd0];
-        normalsArrays[mtl_id]->push_back(
-            Helpers::VectorConverter< HalfedgeGraph >(normal));
-
-        if(v_tan_m != nullptr)
-        {
-          // RM: push tangents
-          //   Note: shouldn't be added if no normal map available, causing
-          //   extra process
-          tangentsArrays[mtl_id]->push_back(osg::Vec3(
-              (*v_tan_m)[vd0][0], (*v_tan_m)[vd0][1], (*v_tan_m)[vd0][2]));
-        }
-      }
-
-      ++sizeVertex;
-    }
-  }
+  //std::cout << "---------> texture_corner_mode_on: " << texture_corner_mode_on << std::endl;
+  //std::cout << "---------> texture_vertex_mode_on: " << texture_vertex_mode_on << std::endl;
 
   /// Adding edges - superimpose only
   if(m_RenderSuperimposedEdges)
@@ -989,18 +957,12 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     vertex_descriptor vs, vt;
     halfedge_point ps, pt;
-    //std::map< vertex_descriptor, unsigned int > mapVertex_line;
 
     edge_iterator eb, ee;
     for(boost::tie(eb, ee) = edges(*_g); eb != ee; ++eb)
     {
-      osg::ref_ptr< osg::DrawElementsUInt > line; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
-      line = new osg::DrawElementsUInt(osg::PrimitiveSet::LINES, 0);
-
       // retrieve vertex (source)
       vs = source(*eb, *_g);
-      /*mapVertex_line.insert(
-          std::make_pair(vs, (unsigned int)vertexArrays_edges[mtl_id]->size()));*/
 
       // retrieve vertex-point (source)
       ps = (*_pm)[vs];
@@ -1009,60 +971,52 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       // retrieve vertex (target)
       vt = target(*eb, *_g);
-      /*mapVertex_line.insert(
-          std::make_pair(vt, (unsigned int)vertexArrays_edges[mtl_id]->size()));*/
 
       // retrieve vertex-point (target)
       pt = (*_pm)[vt];
       vertexArrays_edges[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(pt));
 
-      //if(texture_corner_mode_on)
-      {
-        line->push_back(vertexArrays_edges[mtl_id]->size() - 2);
-        line->push_back(vertexArrays_edges[mtl_id]->size() - 1);
-      }
-      /*else
-      {
-        try
-        {
-          line->push_back(mapVertex_line.at(vs));
-          line->push_back(mapVertex_line.at(vt));
-        }
-        catch(const std::out_of_range &e)
-        {
-          std::cerr << "---> [SimpleViewer] [edges] Try to find vertex who was "
-                       "not given. "
-                    << e.what() << std::endl;
-        }
-      }*/
+      sizeSLines++;
 
-      geometries_edges[mtl_id]->addPrimitiveSet(line);
-
-      // set line width
-      osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-      linewidth->setWidth(3.0f);
-      geometries_edges[mtl_id]
-          ->getOrCreateStateSet()
-          ->setAttribute /*setAttributeAndModes*/ (linewidth,
-                                                   osg::StateAttribute::ON);
-
-      geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
-          GL_LIGHTING,
-          osg::StateAttribute::OFF); // light always OFF for superimpose edges
-
+      // color
       if(_e_cm)
+      {
         colorsArrays_edges[mtl_id]->push_back(
             Helpers::VectorColorConverter< HalfedgeGraph >(
                 get(e_cm, *eb))); // user/filter/plugin colors
+        colorsArrays_edges[mtl_id]->push_back(
+            Helpers::VectorColorConverter< HalfedgeGraph >(
+                get(e_cm, *eb))); // user/filter/plugin colors
+      }
       else
+      {
         colorsArrays_edges[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Yellow())); // default color
+        colorsArrays_edges[mtl_id]->push_back(
+            Helpers::ColorConverter(Color::Yellow())); // default color
+      }
     }
+
+    geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
+
+	// set line width
+	osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+	linewidth->setWidth(3.0f);
+	geometries_edges[mtl_id]
+	  ->getOrCreateStateSet()
+	  ->setAttribute /*setAttributeAndModes*/ (linewidth,
+	                                           osg::StateAttribute::ON);
+
+	// light
+	geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
+	  GL_LIGHTING,
+	  osg::StateAttribute::OFF); // light always OFF for superimpose edges
   }
 
-  /// Adding vertices - superimpose only
-  if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+  /// Adding vertices - superimpose and 'only_pts' mode only
+  size_t nb_faces = size_of_faces(*_g);
+  if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
   {
     VertexColorMap *SAVE_vt_cm = _vt_cm;
 
@@ -1074,58 +1028,21 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     // ---
 
-    //std::map< vertex_descriptor, unsigned int > mapVertex_vertex;
-
     for(vertex_iterator v_it = vertices(*_g).first;
         v_it != vertices(*_g).second;
         ++v_it)
     {
-      osg::ref_ptr< osg::DrawElementsUInt > vertex; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
-      vertex = new osg::DrawElementsUInt(osg::PrimitiveSet::POINTS, 0);
-
       // retrieve vertex
       vd0 = *v_it;
-      /*mapVertex_vertex.insert(std::make_pair(
-          vd0, (unsigned int)vertexArrays_vertices[mtl_id]->size()));*/
 
       // retrieve vertex-point
       p0 = (*_pm)[vd0];
       vertexArrays_vertices[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(p0));
 
-      //if( texture_corner_mode_on )
-      {
-        vertex->push_back(vertexArrays_vertices[mtl_id]->size() - 1);
-      }
-      /*else
-      {
-        try
-        {
-          vertex->push_back(mapVertex_vertex.at(vd0));
-        }
-        catch(const std::out_of_range &e)
-        {
-          std::cerr << "---> [SimpleViewer] [vertices] Try to find vertex who "
-                       "was not given. "
-                    << e.what() << std::endl;
-        }
-      }*/
+      sizeSPoints++;
 
-      geometries_vertices[mtl_id]->addPrimitiveSet(vertex);
-
-      // set point size
-      osg::ref_ptr< osg::Point > pt = new osg::Point();
-      if(m_RenderSuperimposedVertices_Big)
-        pt->setSize(5.0f);
-      else
-        pt->setSize(3.0f);
-      geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
-          pt, osg::StateAttribute::ON);
-
-      geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
-          GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
-                                                  // superimpose vertices
-
+      // color
       if(_vt_cm)
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::VectorColorConverter< HalfedgeGraph >(
@@ -1134,6 +1051,25 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Green())); // default color
     }
+
+    geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
+
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+    {
+      // set point size
+      osg::ref_ptr< osg::Point > pt = new osg::Point();
+      if(m_RenderSuperimposedVertices_Big)
+        pt->setSize(5.0f);
+      else
+        pt->setSize(3.0f);
+      geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
+          pt, osg::StateAttribute::ON);
+    }
+
+	// light
+	geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
+	  GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
+	                                          // superimpose vertices
 
     // ---
 
@@ -1145,7 +1081,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     // retrieve the material/texture ID of the current face (ONLY in
     // HALFEDGE_TEXCOORDS2D mode)
-    if(texture_corner_mode_on)
+    if(texture_corner_mode_on || texture_vertex_mode_on)
     {
       mtl_id = get(*_f_mm, *fb);
       // std::cout << "---------> mtl_id for current face: " << mtl_id <<
@@ -1153,10 +1089,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     }
 
     halfedge_descriptor edg = halfedge(*fb, *_g);
-
     halfedge_descriptor edg_begin = edg;
 
-    //_mapFace.insert(std::make_pair(*fb, sizeFace)); // USELESS !!!
     std::vector< halfedge_point > p;
     std::vector< vertex_descriptor > vd;
 
@@ -1166,67 +1100,64 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       vd.push_back(target(edg, *_g));
       p.push_back((*_pm)[vd.back()]);
 
-      if(texture_corner_mode_on)
+      vertexArrays[mtl_id]->push_back(
+          Helpers::VectorConverter< HalfedgeGraph >(p.back()));
+
+      if(_vt_cm != nullptr)
       {
-#if 0
-        _mapVertex.insert(std::make_pair(
-            vd.back(),
-            (unsigned int)vertexArrays[mtl_id]->size())); // USELESS TOO !!!
-#endif
+        colorsArrays[mtl_id]->push_back(
+            Helpers::VectorColorConverter< HalfedgeGraph >(
+                (*_vt_cm)[vd.back()]));
+      }
 
-        vertexArrays[mtl_id]->push_back(
-            Helpers::VectorConverter< HalfedgeGraph >(p.back()));
-
-        if(_vt_cm != nullptr)
-        {
-          colorsArrays[mtl_id]->push_back(
-              Helpers::VectorColorConverter< HalfedgeGraph >(
-                  (*_vt_cm)[vd.back()]));
-        }
-
+      if(_het_uv_m != nullptr && _texture_type == HALFEDGE_TEXCOORDS2D)
+      {
         texcoordsArrays[mtl_id]->push_back(
             osg::Vec2((*_het_uv_m)[edg][0], (*_het_uv_m)[edg][1]));
+      }
+      else if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
+      {
+        texcoordsArrays[mtl_id]->push_back(
+            osg::Vec2((*_vt_uv_m)[vd.back()][0], (*_vt_uv_m)[vd.back()][1]));
+      }
 
-        if(_vt_nm != nullptr) // normal per vertex -> already calculated
+      if(_vt_nm != nullptr) // normal per vertex -> already calculated
+      {
+        if(m_SmoothFlat_Shading)
         {
-          if(m_SmoothFlat_Shading)
-          {
-            normal = (*_vt_nm)[vd.back()];
-            normalsArrays[mtl_id]->push_back(
-                Helpers::VectorConverter< HalfedgeGraph >(
-                    normal)); // smooth mode
-          }
-          else
-          {
-            normal = (*_f_nm)[*fb];
-            normalsArrays[mtl_id]->push_back(
-                Helpers::VectorConverter< HalfedgeGraph >(
-                    normal)); // flat mode (caution, here, instead we take n x
-                              // the normal per face)
-          }
-
-          if(v_tan_m != nullptr)
-          {
-            // RM: push tangents
-            //   Note: shouldn't be added if no normal map available, causing
-            //   extra process
-            tangentsArrays[mtl_id]->push_back(
-                osg::Vec3((*v_tan_m)[vd.back()][0],
-                          (*v_tan_m)[vd.back()][1],
-                          (*v_tan_m)[vd.back()][2]));
-          }
+          normal = (*_vt_nm)[vd.back()];
+          normalsArrays[mtl_id]->push_back(
+              Helpers::VectorConverter< HalfedgeGraph >(
+                  normal)); // smooth mode
+        }
+        else
+        {
+          normal = (*_f_nm)[*fb];
+          normalsArrays[mtl_id]->push_back(
+              Helpers::VectorConverter< HalfedgeGraph >(
+                  normal)); // flat mode (caution, here, instead we take n x
+                            // the normal per face)
         }
 
-        ++sizeVertex;
+        if(v_tan_m != nullptr)
+        {
+          // RM: push tangents
+          //   Note: shouldn't be added if no normal map available, causing
+          //   extra process
+          tangentsArrays[mtl_id]->push_back(
+              osg::Vec3((*v_tan_m)[vd.back()][0],
+                        (*v_tan_m)[vd.back()][1],
+                        (*v_tan_m)[vd.back()][2]));
+        }
       }
+
+      ++sizeVertex;
 
       edg = next(edg, *_g);
     } while(edg != edg_begin);
 
     // create and populate OSG face object
     uint num_vertices_in_face = static_cast< uint >(p.size());
-
-    osg::ref_ptr< osg::DrawElementsUInt > face; // see also osg::DrawArrays and osg::DrawArrayLengths in /src/osgPlugins/obj/ReaderWriterOBJ.cpp
 
     auto drawing_method =
         static_cast< osg::PrimitiveSet::Mode >(m_RenderMethod);
@@ -1236,31 +1167,17 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       if(num_vertices_in_face == 3)
         drawing_method = osg::PrimitiveSet::TRIANGLES;
       else if(num_vertices_in_face == 4)
+      {
         drawing_method = osg::PrimitiveSet::QUADS;
-    }
-    face = new osg::DrawElementsUInt(drawing_method, 0);
-
-    if(texture_corner_mode_on)
-    {
-      for(uint i = num_vertices_in_face; i > 0; i--)
-        face->push_back(vertexArrays[mtl_id]->size() - i);
-    }
-    else
-    {
-      try
-      {
-        for(uint i = 0; i < num_vertices_in_face; i++)
-          face->push_back(_mapVertex.at(vd[i]));
+        //std::cout << "---> QUAD-QUAD-QUAD-QUAD-QUAD" << std::endl;
       }
-      catch(const std::out_of_range &e)
+      else
       {
-        std::cerr << "---> [SimpleViewer] [faces] Try to find vertex who was "
-                     "not given. "
-                  << e.what() << std::endl;
+        //std::cout << "---> POLY-POLY-POLY-POLY-POLY" << std::endl;
       }
     }
 
-    geometries[mtl_id]->addPrimitiveSet(face);
+    geometries[mtl_id]->addPrimitiveSet(new osg::DrawArrays(drawing_method, vertexArrays[mtl_id]->size() - num_vertices_in_face, num_vertices_in_face));
 
     // populate face normal array
     if(_vt_nm != nullptr) // normal per vertex (see above) -> already calculated
@@ -1314,6 +1231,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   std::cout << "[SimpleViewer] I have drawn " << sizeVertex << " vertices and "
             << sizeFace << " faces." << std::endl;
+  std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints << " (superimpose) points and "
+            << sizeSLines << " superimpose lines." << std::endl;
+
+  //auto gui_props = get((*_m_gpm), 0);
+  //geode->setNodeMask(gui_props.is_visible ? 0xffffffff : 0x0); // 19/03/19
 
   const auto loadingStartTime = std::chrono::system_clock::now();
 
@@ -1360,6 +1282,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   else
   {
     internal_loadLegacyMesh(geode,
+                            _g,
                             geometries,
                             geometries_edges,
                             geometries_vertices,
@@ -1451,6 +1374,8 @@ createDragger(const std::string &name)
     dragger = d;
   }
 
+  dragger->setName(name);
+
   return dragger;
 }
 
@@ -1469,6 +1394,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   // osg::StateAttribute::ON); // necessary ? // this ensures correct lighting
   // for scaled draggers
 
+
+  // osg::Group "GroupRoot"
+  //    |
+  //    |__ osg::MatrixTransform "MatrixTransform"
+  //    |   |
+  //    |   |__ osg::Group "DraggerGrp2_rotate"
+  //    |       |
+  //    |       |__ osgManipulator::TrackballDragger "TrackballDragger"
+  //    |
+  //    |__ osg::Group "DraggerGrp1_translate"
+  //        |
+  //        |__ osgManipulator::TabBoxDragger "TabBoxDragger"
+
+
   osg::MatrixTransform *transform = new osg::MatrixTransform;
   transform->setName("MatrixTransform");
   transform->addChild(scene);
@@ -1482,7 +1421,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   osgManipulator::Dragger *dragger1 = createDragger(nameDrag1);
   // here, we create a group only for the DataVisitor
   osg::Group *draggergroup1 = new osg::Group;
-  draggergroup1->setName("Dragger");
+  draggergroup1->setName("DraggerGrp1_translate");
   draggergroup1->addChild(dragger1);
   root->addChild(draggergroup1);
   scale = scene->getBound().radius() * fScaleDrag1;
@@ -1498,7 +1437,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
   osgManipulator::Dragger *dragger2 = createDragger(nameDrag2);
   // here, we create a group only for the DataVisitor
   osg::Group *draggergroup2 = new osg::Group;
-  draggergroup2->setName("Dragger");
+  draggergroup2->setName("DraggerGrp2_rotate");
   draggergroup2->addChild(dragger2);
   transform->addChild(
       draggergroup2); // IMPORTANT for the SECOND dragger -> NOT addChild from
@@ -1587,85 +1526,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
           }
   }*/
   // time
-
-  return _group;
-}
-
-template< typename HalfedgeGraph >
-template< typename PCArray >
-osg::ref_ptr< osg::Group >
-FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
-    const PCArray &_pts,
-    const bool _withColor,
-    const Color _defaultColor,
-    std::string _mesh_file,
-    osg::ref_ptr< osg::Group > _group)
-{
-  osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-  osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-
-  geode->addDrawable(geometry);
-
-  osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
-  osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
-  // osg::ref_ptr<osg::Vec3Array> normals = new osg::Vec3Array;
-
-  for(unsigned int ii = 0; ii < _pts.size(); ++ii)
-  {
-    auto pt = _pts[ii];
-    vertices->push_back(osg::Vec3(pt.x, pt.y, pt.z));
-    if(_withColor)
-    {
-      uint32_t rgb = *reinterpret_cast< int * >(&pt.rgb);
-      uint8_t r = (rgb >> 16) & 0x0000ff;
-      uint8_t g = (rgb >> 8) & 0x0000ff;
-      uint8_t b = (rgb)&0x0000ff;
-
-      colors->push_back(osg::Vec4(
-          (float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, 1.0f));
-    }
-    else
-    {
-      colors->push_back(Helpers::ColorConverter(_defaultColor));
-    }
-  }
-
-  geometry->setVertexArray(vertices);
-  geometry->setColorArray(colors);
-  geometry->setColorBinding(osg::Geometry::BIND_PER_VERTEX);
-
-  geometry->addPrimitiveSet(
-      new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, _pts.size()));
-
-  bool _light = false; // TEMP
-  if(_light)
-    geode->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::ON);
-  else
-    geode->getOrCreateStateSet()->setMode(GL_LIGHTING,
-                                          osg::StateAttribute::OFF);
-
-  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
-  BaseAdapterVisuQt *bavQt =
-      dynamic_cast< BaseAdapterVisuQt * >(bv->getAdapter());
-  geode->setName(std::string("Point cloud ") +
-                 std::to_string(Helpers::nbMeshDrawed++) + std::string(" [") +
-                 bavQt->windowTitle().toStdString() + std::string("]"));
-  // geode->setName( std::string("Point cloud '") + _mesh_file + std::string("'
-  // [") + bavQt->windowTitle().toStdString() + std::string("]") );
-
-  _group->addChild(geode);
-
-  // TEMP - just here for proof of concept
-  // osgViewer::View* _osgView = getView(0); // for osgViewer::CompositeViewer
-  osgViewer::View *_osgView =
-      dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
-  if(_osgView)
-  {
-    _osgView->getCameraManipulator()->setNode(geode);
-    _osgView->getCameraManipulator()->computeHomePosition();
-    _osgView->home();
-  }
-  // TEMP - just here for proof of concept
 
   return _group;
 }
@@ -1787,7 +1647,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(bool _flushMesh,
   if(_mesh_file != std::string(""))
     v_meshes_names[position] = _mesh_file;
 
-  if(_flushMesh)
+  if(_flushMesh) // NOW always ON so delete this param in the future
   {
     // MT - IMPORTANT : remove previous MATERIAL
     // v_geodes[position]->getOrCreateStateSet()->removeAttribute(osg::StateAttribute::MATERIAL);
@@ -1814,183 +1674,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(bool _flushMesh,
                         _texture_file,
                         v_meshes_names[position]);
   }
-#if 0
-  else // remove ALL this block
-  {
-    std::cout << "!_flushMesh - !_flushMesh - !_flushMesh -> in redrawMesh"
-              << std::endl;
-
-    osg::Drawable *drawable = v_geodes[position]->getDrawable(0);
-    osg::Geometry *geometry = drawable ? drawable->asGeometry() : 0;
-
-    if(_pm != nullptr)
-    {
-      osg::Vec3Array *vertexArray =
-          geometry
-              ? dynamic_cast< osg::Vec3Array * >(geometry->getVertexArray())
-              : 0;
-
-      if(!Assert::check(
-             vertexArray, "Can't get vertexArray", "SimpleViewer::redrawMesh"))
-      {
-        return;
-      }
-
-      for(vertex_iterator v_it = vertices(*_g).first;
-          v_it != vertices(*_g).second;
-          ++v_it)
-      {
-        vertexArray->at(v_mapVertex[position][*v_it])[0] = (*_pm)[*v_it][0];
-        vertexArray->at(v_mapVertex[position][*v_it])[1] = (*_pm)[*v_it][1];
-        vertexArray->at(v_mapVertex[position][*v_it])[2] = (*_pm)[*v_it][2];
-      }
-
-      geometry->setVertexArray(vertexArray);
-      vertexArray->dirty();
-    }
-
-    if(_vt_nm != nullptr)
-    {
-      Assert::check(false,
-                    "changing normal map is not supported yet.",
-                    "SimpleViewer::redrawMesh");
-    }
-
-    if(_f_nm != nullptr)
-    {
-      Assert::check(false,
-                    "changing normal map is not supported yet.",
-                    "SimpleViewer::redrawMesh");
-    }
-
-    if(_vt_cm != nullptr)
-    {
-      osg::Vec4Array *colorsArray =
-          geometry ? dynamic_cast< osg::Vec4Array * >(geometry->getColorArray())
-                   : 0;
-
-      if(!Assert::check(
-             colorsArray, "Can't get colorsArray", "SimpleViewer::redrawMesh"))
-      {
-        return;
-      }
-
-      for(vertex_iterator v_it = vertices(*_g).first;
-          v_it != vertices(*_g).second;
-          ++v_it)
-      {
-        colorsArray->at(v_mapVertex[position][*v_it])[0] = (*_vt_cm)[*v_it][0];
-        colorsArray->at(v_mapVertex[position][*v_it])[1] = (*_vt_cm)[*v_it][1];
-        colorsArray->at(v_mapVertex[position][*v_it])[2] = (*_vt_cm)[*v_it][2];
-        colorsArray->at(v_mapVertex[position][*v_it])[3] = 1.0f;
-      }
-
-      geometry->setColorArray(colorsArray, osg::Array::BIND_PER_VERTEX);
-      colorsArray->dirty();
-    }
-
-    if(_f_cm != nullptr)
-    {
-      Assert::check(false,
-                    "changing color map is not supported yet.",
-                    "SimpleViewer::redrawMesh");
-    }
-
-    if(_vt_uv_m != nullptr && _texture_type == VERTEX_TEXCOORDS2D)
-    {
-      osg::Vec2Array *textArray =
-          geometry
-              ? dynamic_cast< osg::Vec2Array * >(geometry->getTexCoordArray(0))
-              : 0; // MT : bug corrected
-
-      if(!Assert::check(
-             textArray, "Can't get textArray", "SimpleViewer::redrawMesh"))
-      {
-        return;
-      }
-
-      for(vertex_iterator v_it = vertices(*_g).first;
-          v_it != vertices(*_g).second;
-          ++v_it)
-      {
-        textArray->at(v_mapVertex[position][*v_it])[0] = (*_vt_uv_m)[*v_it][0];
-        textArray->at(v_mapVertex[position][*v_it])[1] = (*_vt_uv_m)[*v_it][1];
-      }
-
-      geometry->setTexCoordArray(0, textArray);
-      textArray->dirty();
-
-      // CAUTION ! -> NOW DEPRECATED with multi-textures
-#if 1
-      if(!_texture_file.empty())
-      {
-        osg::ref_ptr< osg::Image > image = osgDB::readImageFile(_texture_file);
-        if(image)
-        {
-          osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D;
-          texture->setDataVariance(osg::Object::DYNAMIC);
-          texture->setImage(image);
-
-          texture->setWrap(osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT);
-          texture->setWrap(osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT);
-          texture->setFilter(osg::Texture2D::MIN_FILTER,
-                             osg::Texture2D::LINEAR);
-          texture->setFilter(osg::Texture2D::MAG_FILTER,
-                             osg::Texture2D::LINEAR);
-
-          // OLD version - assign texture unit '0' of our new StateSet to the
-          // texture we just created and enable the texture
-          // osg::ref_ptr<osg::StateSet> stateOne = new osg::StateSet();
-          // stateOne->setAttribute(new osg::Material/*,
-          // osg::StateAttribute::OVERRIDE*/); // IMPORTANT, pour suppression de
-          // l'ancien material (OSX PB - SPACE MODE)
-          // stateOne->setTextureAttributeAndModes( 0, texture,
-          // osg::StateAttribute::ON ); v_geodes[position]->setStateSet( stateOne
-          // );
-
-          // NEW version - without new StateSet - assign texture unit '0' to the
-          // texture we just created and enable the texture
-          v_geodes[position]->getOrCreateStateSet()->setAttribute(
-              new osg::
-                  Material /*, osg::StateAttribute::OVERRIDE*/); // IMPORTANT,
-                                                                 // pour
-                                                                 // suppression
-                                                                 // de l'ancien
-                                                                 // material
-                                                                 // (OSX PB -
-                                                                 // SPACE MODE)
-          v_geodes[position]
-              ->getOrCreateStateSet()
-              ->setTextureAttributeAndModes(
-                  0, texture, osg::StateAttribute::ON);
-        }
-        else
-        {
-          std::cerr << "-> [SimpleViewer] Couldn't find texture file: "
-                    << _texture_file << std::endl;
-        }
-      }
-#endif
-      // CAUTION ! -> NOW DEPRECATED with multi-textures
-    }
-
-    if(_het_uv_m != nullptr)
-    {
-      Assert::check(false,
-                    "changing texture map is not supported yet.",
-                    "SimpleViewer::redrawMesh");
-    }
-
-    v_geodes[position]->setDrawable(0, geometry);
-
-    BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
-    BaseAdapterVisuQt *bavQt =
-        dynamic_cast< BaseAdapterVisuQt * >(bv->getAdapter());
-    v_geodes[position]->setName(
-        std::string("Mesh '") + v_meshes_names[position] + std::string("' [") +
-        bavQt->windowTitle().toStdString() + std::string("]"));
-  }
-#endif
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
@@ -2032,6 +1715,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
   {
 #ifdef MANIPULATOR
     _osgView->getCameraManipulator()->setNode(v_geodes[position]->getParent(0));
+
+
+    // ELO-note: v_geodes[position]->getParent(0) is an osg::MatrixTransform
+    //           which is a group with an osg::Matrix
+    //           see http://camlosg.sourceforge.net/osg/classosg_1_1MatrixTransform.html
+
+
     // std::cout << "centerMesh (MANIPULATOR) \"" <<
     // v_geodes[position]/*->getParent(0)*/->getName() << "\"" << std::endl;
 #else
@@ -2041,8 +1731,59 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
 #endif
     _osgView->getCameraManipulator()->computeHomePosition();
     _osgView->home();
+
+
+    //FEVV::Debug::print_osg_tree_from_node(v_geodes[position]->getParent(0)->getParent(0));
   }
 }
+
+
+template< typename HalfedgeGraph >
+osg::Matrix
+FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixOsg(unsigned int position)
+{
+  assert(position < v_geodes.size());
+  osg::MatrixTransform *grp_MatrixTransform =
+      dynamic_cast< osg::MatrixTransform * >(v_geodes[position]->getParent(0));
+  assert(grp_MatrixTransform != nullptr);
+  osg::Matrix matrix = grp_MatrixTransform->getMatrix();
+
+  return matrix; // 4x4 homogeneous matrix
+}
+
+template< typename HalfedgeGraph >
+Eigen::Matrix4d
+FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixEigen(unsigned int position)
+{
+  osg::Matrix osg_mat = getTransformMatrixOsg(position);
+
+  // convert OSG transform matrix to Eigen matrix
+  // transposition needed!
+  Eigen::Matrix4d eigen_mat;
+  eigen_mat << osg_mat(0, 0), osg_mat(1, 0), osg_mat(2, 0),    osg_mat(3, 0),
+               osg_mat(0, 1), osg_mat(1, 1), osg_mat(2, 1),    osg_mat(3, 1),
+               osg_mat(0, 2), osg_mat(1, 2), osg_mat(2, 2),    osg_mat(3, 2),
+               osg_mat(0, 3), osg_mat(1, 3), osg_mat(2, 3),    osg_mat(3, 3);
+  
+  //DBG std::cout << "eigen_mat = \n" << eigen_mat << std::endl;
+
+  return eigen_mat; // 4x4 homogeneous matrix
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::resetTransformMatrix(unsigned int position)
+{
+  assert(position < v_geodes.size());
+  osg::MatrixTransform *grp_MatrixTransform =
+      dynamic_cast< osg::MatrixTransform * >(v_geodes[position]->getParent(0));
+  assert(grp_MatrixTransform != nullptr);
+
+  osg::Matrix identity;
+  identity.makeIdentity();
+  grp_MatrixTransform->setMatrix(identity);
+}
+
 
 template< typename HalfedgeGraph >
 void
@@ -2129,6 +1870,28 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
                _mesh_filename                 /*mesh filename*/
     );
   }
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::activate_time_mode()
+{
+  SimpleWindow *sw = static_cast< SimpleWindow * >(
+      getWindow()); // here static_cast instead of dynamic_cast only for OSX and
+                    // because of plugins... don't understand why...
+
+  sw->activate_time_mode();
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
+{
+  SimpleWindow *sw = static_cast< SimpleWindow * >(
+      getWindow()); // here static_cast instead of dynamic_cast only for OSX and
+                    // because of plugins... don't understand why...
+  
+  sw->activate_space_mode();
 }
 
 template< typename HalfedgeGraph >

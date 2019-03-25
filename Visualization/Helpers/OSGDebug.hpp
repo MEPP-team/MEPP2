@@ -83,6 +83,14 @@ osg::ref_ptr< osg::Group >
 createHud(osg::ref_ptr< osgText::Text > updateText,
           osg::ref_ptr< osg::Group > _group = new osg::Group);
 
+/**
+ * Print OSG tree starting from given node.
+ * 
+ * \param  nd     node to start from
+ * \param  level  first level of indentation, usually 0
+ */
+void print_osg_tree_from_node(osg::Node *nd, int level = 0);
+
 } // namespace Debug
 } // namespace FEVV
 

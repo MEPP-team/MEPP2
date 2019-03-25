@@ -33,12 +33,15 @@
 // Generic mesh iterators
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
+#include "FEVV/Wrappings/Graph_traits_extension.h"
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include <CGAL/boost/graph/properties.h> /// included in External folder.
 
 #include <iostream>
 #include <map>
 #include <utility>
+
+#include <Eigen/Dense> // for Eigen::matrix
 
 #ifdef FEVV_USE_CGAL
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
@@ -272,6 +275,29 @@ public:
 
   DataModelVector *getDataModel() override;
 
+  
+  /**
+   * Returns the transformation matrix of the mesh at a given position.
+   *
+   * @note If there is no mesh at the given positon, an assert will be raised.
+   *
+   * @param[in] position A given position (lower than v_meshes.size()).
+   *
+   * @return a 4x4 homogeneous matrix.
+   */
+  osg::Matrix getTransformMatrixOsg(unsigned int position);
+  Eigen::Matrix4d getTransformMatrixEigen(unsigned int position);
+
+  /**
+   * Reset the transformation matrix of the mesh at a given position.
+   *
+   * @note If there is no mesh at the given positon, an assert will be raised.
+   *
+   * @param[in] position A given position (lower than v_meshes.size()).
+   */
+  void resetTransformMatrix(unsigned int position);
+
+
   /**
    * Draw mesh into the scene.
    *
@@ -303,14 +329,6 @@ public:
              HalfedgeUVMap *_het_uv_m = nullptr,
              int _texture_type = NO_TEXCOORDS,
              std::string _texture_file = std::string(""),
-             std::string _mesh_file = std::string(""),
-             osg::ref_ptr< osg::Group > _group = new osg::Group);
-
-  template< typename PCArray >
-  osg::ref_ptr< osg::Group >
-  createMesh(const PCArray &_pts,
-             const bool _withColor = false,
-             const Color _defaultColor = Color::Wisteria(),
              std::string _mesh_file = std::string(""),
              osg::ref_ptr< osg::Group > _group = new osg::Group);
 
@@ -363,6 +381,9 @@ public:
                            bool _recomputeNT_if_redraw = false,
                            std::string _mesh_filename = std::string(""),
                            float _step = 0.);
+
+  void activate_time_mode();
+  void activate_space_mode();
 
   osg::Node *addDraggersToScene(osg::Node *scene,
                                 const std::string &nameDrag1,
@@ -465,8 +486,7 @@ private:
    *                                 material index.
    *
    * @param[in]   _geode                 the geode which we want to load.
-   * @param[in]   _g                     the hafledge graph we want to create
-   *our color map from (if needed).
+   * @param[in]   _g                     the halfedge graph.
    * @param[in]   _geometries            the geometries which we load into the
    *geode.
    * @param[in]   _geometries_edges      the superimposed edges geometries which
@@ -549,6 +569,7 @@ private:
    *                                 material index.
    *
    * @param[in]   _geode                 the geode which we want to load.
+   * @param[in]   _g                     the halfedge graph.
    * @param[in]   _geometries            the geometries which we load into the
    *geode.
    * @param[in]   _geometries_edges      the superimposed edges geometries which
@@ -590,6 +611,7 @@ private:
                 PMap_traits< FEVV::face_material_t, HalfedgeGraph >::pmap_type >
   void internal_loadLegacyMesh(
       osg::Geode *_geode,
+      HalfedgeGraph *_g,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,

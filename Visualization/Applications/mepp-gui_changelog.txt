@@ -1,3 +1,9 @@
+v0.8.0 - 23/03/2019 :
+ - improve viewer (drastic FPS performance update)
+ - improve superimpose edges & vertices in viewer
+ - TIME & SPACE modes can now be activated from plugins
+ - ability to load and display 'only points' from a mesh
+
 v0.7.3 - 29/01/2019 :
  - add a new information message box when plugins are applied
 

@@ -228,6 +228,8 @@ public:
 
     // TODO-elo-to-keep-parameters-between-calls   reset();
 
+    viewer->activate_time_mode();
+
     viewer->frame();
   }
 

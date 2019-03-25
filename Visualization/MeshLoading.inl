@@ -504,11 +504,16 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     _geometries[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
         program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 
-    // attach geometry to geode
-    _geode->addDrawable(_geometries[unit_ii]);
+    size_t nb_faces = size_of_faces(*_g);
 
+    // attach geometry to geode
+    if (nb_faces!=0) // not to be done for 'only_pts' mode
+      _geode->addDrawable(_geometries[unit_ii]);
+
+  if (unit_ii==0) // MUST be done only one time
     if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-       m_RenderSuperimposedVertices_Big)
+       m_RenderSuperimposedVertices_Big ||
+       (nb_faces==0)) // last test for 'only_pts' mode
     {
       // RM: adding predefined basic shaders to display superimposed features
       osg::ref_ptr< osg::Program > superimpProgram = new osg::Program;
@@ -530,7 +535,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
 
       // RM: loading superimposed features
       // edges - superimpose only
-      if(m_RenderSuperimposedEdges)
+      if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
       {
         std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl;
 
@@ -542,7 +547,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geometries_edges[unit_ii]->setVertexAttribArray(
             1,
             _colorsArrays_edges[unit_ii],
-            osg::Array::BIND_PER_PRIMITIVE_SET);
+            osg::Array::BIND_PER_VERTEX);
         _geometries_edges[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
             superimpProgram.get(),
             osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
@@ -550,8 +555,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geode->addDrawable(_geometries_edges[unit_ii]);
       }
 
-      // vertices - superimpose only
-      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+      // vertices - superimpose and 'only_pts' mode only
+      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
       {
         std::cout << "[MeshLoading] Drawing superimposed vertices" << std::endl;
 
@@ -563,7 +568,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         _geometries_vertices[unit_ii]->setVertexAttribArray(
             1,
             _colorsArrays_vertices[unit_ii],
-            osg::Array::BIND_PER_PRIMITIVE_SET);
+            osg::Array::BIND_PER_VERTEX);
         _geometries_vertices[unit_ii]
             ->getOrCreateStateSet()
             ->setAttributeAndModes(superimpProgram.get(),
@@ -703,6 +708,7 @@ template< typename VertexNormalMap,
 void
 FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     osg::Geode *_geode,
+    HalfedgeGraph *_g,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
@@ -864,25 +870,30 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
 #endif
     }
 
+    size_t nb_faces = size_of_faces(*_g);
+
     // attach geometry to geode
-    _geode->addDrawable(_geometries[unit_ii]);
+    if (nb_faces!=0) // not to be done for 'only_pts' mode
+      _geode->addDrawable(_geometries[unit_ii]);
 
     // edges - superimpose only
-    if(m_RenderSuperimposedEdges)
+  if (unit_ii==0) // MUST be done only one time
+    if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
     {
       _geometries_edges[unit_ii]->setVertexArray(_vertexArrays_edges[unit_ii]);
       _geometries_edges[unit_ii]->setColorArray(
-          _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_PRIMITIVE_SET);
+          _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
       _geode->addDrawable(_geometries_edges[unit_ii]);
     }
 
-    // vertices - superimpose only
-    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+    // vertices - superimpose and 'only_pts' mode only
+  if (unit_ii==0) // MUST be done only one time
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
     {
       _geometries_vertices[unit_ii]->setVertexArray(
           _vertexArrays_vertices[unit_ii]);
       _geometries_vertices[unit_ii]->setColorArray(
-          _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_PRIMITIVE_SET);
+          _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
       _geode->addDrawable(_geometries_vertices[unit_ii]);
     }
 

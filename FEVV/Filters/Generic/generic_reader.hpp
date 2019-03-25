@@ -62,7 +62,7 @@ void
 read_mesh(const std::string &filename,
           HalfedgeGraph &g,
           PMapsContainer &pmaps,
-          const GeometryTraits &gt)
+          const GeometryTraits &gt, bool only_pts/*=false*/)
 {
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
@@ -208,6 +208,22 @@ read_mesh(const std::string &filename,
                       face_material);
   }
 #endif
+
+  if (only_pts)
+  {
+    //normals_coords.clear(); // we can also keep that...
+    texture_coords.clear();
+    //vertex_color_coords.clear();
+    face_color_coords.clear();
+    lines_indices.clear(); faces_indices.clear();
+    texture_face_indices.clear();
+    normal_face_indices.clear();
+    points_colors.clear(); faces_colors.clear(); lines_colors.clear();
+    field_attributes.clear();
+    field_names.clear();
+    materials.clear();
+    face_material.clear();
+  }
 
   ///////////////////////// CREATE NEEDED PROPERTY MAPS
   //////////////////////////////
@@ -798,10 +814,10 @@ read_mesh(const std::string &filename,
 template< typename HalfedgeGraph,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-read_mesh(const std::string &filename, HalfedgeGraph &g, PMapsContainer &pmaps)
+read_mesh(const std::string &filename, HalfedgeGraph &g, PMapsContainer &pmaps, bool only_pts=false)
 {
   GeometryTraits gt(g);
-  read_mesh< HalfedgeGraph, GeometryTraits >(filename, g, pmaps, gt);
+  read_mesh< HalfedgeGraph, GeometryTraits >(filename, g, pmaps, gt, only_pts);
 }
 
 } // namespace Filters
