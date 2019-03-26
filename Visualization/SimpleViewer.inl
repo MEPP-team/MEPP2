@@ -1000,18 +1000,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
 
-	// set line width
-	osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-	linewidth->setWidth(3.0f);
-	geometries_edges[mtl_id]
-	  ->getOrCreateStateSet()
-	  ->setAttribute /*setAttributeAndModes*/ (linewidth,
-	                                           osg::StateAttribute::ON);
+    // set line width
+    osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+    linewidth->setWidth(3.0f);
+    geometries_edges[mtl_id]
+      ->getOrCreateStateSet()
+      ->setAttribute /*setAttributeAndModes*/ (linewidth,
+                                               osg::StateAttribute::ON);
 
-	// light
-	geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
-	  GL_LIGHTING,
-	  osg::StateAttribute::OFF); // light always OFF for superimpose edges
+    // light
+    geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
+      GL_LIGHTING,
+      osg::StateAttribute::OFF); // light always OFF for superimpose edges
   }
 
   /// Adding vertices - superimpose and 'only_pts' mode only
@@ -1066,10 +1066,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
           pt, osg::StateAttribute::ON);
     }
 
-	// light
-	geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
-	  GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
-	                                          // superimpose vertices
+    // light
+    geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
+      GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
+                                              // superimpose vertices
 
     // ---
 
@@ -1229,8 +1229,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
 
-  std::cout << "[SimpleViewer] I have drawn " << sizeVertex << " vertices and "
-            << sizeFace << " faces." << std::endl;
+  std::cout << "[SimpleViewer] I have drawn " << sizeFace << " faces (with "
+            << sizeVertex << " vertices)." << std::endl;
   std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints << " (superimpose) points and "
             << sizeSLines << " superimpose lines." << std::endl;
 
