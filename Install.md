@@ -154,6 +154,8 @@ Scripting commands for compiling Mepp2:
 ### Install dependencies
 Mandatory dependencies:
 ````
+  # CAUTION : if you are under OSX Mojave (10.14), you have to upgrade to 10.14.4 (March 25, 2019) at least in order to avoid black blinking video problem
+
   # install homebrew package manager (see http://brew.sh/), then
   $ brew update
 
@@ -354,3 +356,4 @@ The automatically generated documentation is [available online](https://liris.cn
    ```
    $ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpi.so /usr/lib/libmpi.so
    ```
+* If you are under OSX Mojave (10.14), you have to upgrade to 10.14.4 (March 25, 2019) at least in order to avoid black blinking video problem
