@@ -199,14 +199,11 @@ public:
       auto intermediate_vertexColorMaps =
           static_cast< std::vector< VertexColorMap * > * >(
               intermediate_vertexColorMaps_void);
+
       if(intermediate_meshes_void && intermediate_vertexColorMaps_void)
       {
         // loop over intermediate meshes
-        for(int i = 0; i < intermediate_meshes->size();
-            i++) // original ELO loop
-                 // if (intermediate_meshes->size()) for (int i =
-                 // intermediate_meshes->size()-1; i >= 0; i--) // MTO : just a
-                 // test, try reverse loop for time mode
+        for(int i = intermediate_meshes->size() - 1; i >=0; i--)
         {
           HalfedgeGraph *mesh_i = (*intermediate_meshes)[i];
           VertexColorMap *v_cm_i = (*intermediate_vertexColorMaps)[i];
@@ -223,6 +220,7 @@ public:
                                       std::string("level") + std::to_string(i));
         }
       }
+
       delete(intermediate_meshes);
       intermediate_meshes_void = nullptr;
       delete(intermediate_vertexColorMaps);
