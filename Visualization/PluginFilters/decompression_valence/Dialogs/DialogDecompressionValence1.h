@@ -28,10 +28,12 @@ public:
   ~DialogDecompressionValence1();
 
   void setDecompressionValenceParams(const std::string &p3dFilePath,
+                                     int stop_level,
                                      bool write_info,
                                      bool write_intermediate_meshes,
                                      bool display_intermediate_meshes);
   void getDecompressionValenceParams(std::string &p3dFilePath,
+                                     int &stop_level,
                                      bool &write_info,
                                      bool &write_intermediate_meshes,
                                      bool &display_intermediate_meshes);
