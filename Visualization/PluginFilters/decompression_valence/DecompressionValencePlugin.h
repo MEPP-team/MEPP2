@@ -64,16 +64,18 @@ public:
   ~DecompressionValencePlugin() = default;
 
 public:
-  void init() override { init(true, "example.p3d", true, false); }
+  void init() override { init(true, "example.p3d", -1, true, false); }
 
   void init(bool _forceCompute,
             const std::string &_p3dFilePath,
+            int _stop_level,
             bool _write_info,
             bool _write_intermediate_meshes)
   {
     *value_forceCompute = _forceCompute;
 
     p3dFilePath = _p3dFilePath;
+    stop_level = _stop_level;
     write_info = _write_info;
     write_intermediate_meshes = _write_intermediate_meshes;
     keep_intermediate_meshes = true;
@@ -143,8 +145,8 @@ public:
                                                write_info,
                                                intermediate_meshes,
                                                intermediate_vertexColorMaps,
-                                               write_intermediate_meshes,
-                                               keep_intermediate_meshes);
+                                               stop_level,
+                                               write_intermediate_meshes);
 
       // existing property maps are no more valid due to topological changes
       // purge the property maps bag except the vertex color map
@@ -292,12 +294,14 @@ public:
   {
     DialogDecompressionValence1 dial1;
     dial1.setDecompressionValenceParams(p3dFilePath,
+                                        stop_level,
                                         write_info,
                                         write_intermediate_meshes,
                                         keep_intermediate_meshes);
     if(dial1.exec() == QDialog::Accepted)
     {
       dial1.getDecompressionValenceParams(p3dFilePath,
+                                          stop_level,
                                           write_info,
                                           write_intermediate_meshes,
                                           keep_intermediate_meshes);
@@ -322,6 +326,7 @@ protected:
 
   // filter parameters
   std::string p3dFilePath;
+  int stop_level;
   bool write_info;
   bool keep_intermediate_meshes;  // keep into RAM
   bool write_intermediate_meshes; // write to files
