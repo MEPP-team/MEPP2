@@ -187,6 +187,7 @@ public:
 
       // redraw main mesh -> which is NOW the uncompressed one
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, true, "uncompressed");
+      viewer->centerMesh(_mesh);
 
       // space_time mode ON
       viewer->m_space_time = true;
