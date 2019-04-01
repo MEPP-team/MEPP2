@@ -64,16 +64,18 @@ public:
   ~DecompressionValencePlugin() = default;
 
 public:
-  void init() override { init(true, "example.p3d", true, false); }
+  void init() override { init(true, "example.p3d", -1, true, false); }
 
   void init(bool _forceCompute,
             const std::string &_p3dFilePath,
+            int _stop_level,
             bool _write_info,
             bool _write_intermediate_meshes)
   {
     *value_forceCompute = _forceCompute;
 
     p3dFilePath = _p3dFilePath;
+    stop_level = _stop_level;
     write_info = _write_info;
     write_intermediate_meshes = _write_intermediate_meshes;
     keep_intermediate_meshes = true;
@@ -143,8 +145,8 @@ public:
                                                write_info,
                                                intermediate_meshes,
                                                intermediate_vertexColorMaps,
-                                               write_intermediate_meshes,
-                                               keep_intermediate_meshes);
+                                               stop_level,
+                                               write_intermediate_meshes);
 
       // existing property maps are no more valid due to topological changes
       // purge the property maps bag except the vertex color map
@@ -185,6 +187,7 @@ public:
 
       // redraw main mesh -> which is NOW the uncompressed one
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, true, "uncompressed");
+      viewer->centerMesh(_mesh);
 
       // space_time mode ON
       viewer->m_space_time = true;
@@ -196,14 +199,11 @@ public:
       auto intermediate_vertexColorMaps =
           static_cast< std::vector< VertexColorMap * > * >(
               intermediate_vertexColorMaps_void);
+
       if(intermediate_meshes_void && intermediate_vertexColorMaps_void)
       {
         // loop over intermediate meshes
-        for(int i = 0; i < intermediate_meshes->size();
-            i++) // original ELO loop
-                 // if (intermediate_meshes->size()) for (int i =
-                 // intermediate_meshes->size()-1; i >= 0; i--) // MTO : just a
-                 // test, try reverse loop for time mode
+        for(int i = intermediate_meshes->size() - 1; i >=0; i--)
         {
           HalfedgeGraph *mesh_i = (*intermediate_meshes)[i];
           VertexColorMap *v_cm_i = (*intermediate_vertexColorMaps)[i];
@@ -220,6 +220,7 @@ public:
                                       std::string("level") + std::to_string(i));
         }
       }
+
       delete(intermediate_meshes);
       intermediate_meshes_void = nullptr;
       delete(intermediate_vertexColorMaps);
@@ -292,12 +293,14 @@ public:
   {
     DialogDecompressionValence1 dial1;
     dial1.setDecompressionValenceParams(p3dFilePath,
+                                        stop_level,
                                         write_info,
                                         write_intermediate_meshes,
                                         keep_intermediate_meshes);
     if(dial1.exec() == QDialog::Accepted)
     {
       dial1.getDecompressionValenceParams(p3dFilePath,
+                                          stop_level,
                                           write_info,
                                           write_intermediate_meshes,
                                           keep_intermediate_meshes);
@@ -322,6 +325,7 @@ protected:
 
   // filter parameters
   std::string p3dFilePath;
+  int stop_level;
   bool write_info;
   bool keep_intermediate_meshes;  // keep into RAM
   bool write_intermediate_meshes; // write to files

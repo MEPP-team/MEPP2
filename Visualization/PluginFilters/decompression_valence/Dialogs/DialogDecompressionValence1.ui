@@ -69,6 +69,24 @@
            <item>
             <widget class="QLabel" name="label_2nd_param">
              <property name="text">
+              <string>stop at level (-1 for all levels)</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="stop_level"/>
+           </item>
+          </layout>
+         </item>
+         <!-- 3rd parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3rd_param">
+           <item>
+            <widget class="QLabel" name="label_3rd_param">
+             <property name="text">
               <string>write compression levels information</string>
              </property>
              <property name="alignment">
@@ -81,11 +99,11 @@
            </item>
           </layout>
          </item>
-         <!-- 3rd parameter -->
+         <!-- 4th parameter -->
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3rd_param">
+          <layout class="QHBoxLayout" name="horizontalLayout_4th_param">
            <item>
-            <widget class="QLabel" name="label_3rd_param">
+            <widget class="QLabel" name="label_4th_param">
              <property name="text">
               <string>write intermediate meshes</string>
              </property>
@@ -99,11 +117,11 @@
            </item>
           </layout>
          </item>
-         <!-- 4th parameter -->
+         <!-- 5th parameter -->
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4th_param">
+          <layout class="QHBoxLayout" name="horizontalLayout_5th_param">
            <item>
-            <widget class="QLabel" name="label_4th_param">
+            <widget class="QLabel" name="label_5th_param">
              <property name="text">
               <string>display intermediate meshes</string>
              </property>

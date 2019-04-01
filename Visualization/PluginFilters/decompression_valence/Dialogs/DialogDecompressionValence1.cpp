@@ -27,6 +27,7 @@ FEVV::DialogDecompressionValence1::~DialogDecompressionValence1() { delete ui; }
 void
 FEVV::DialogDecompressionValence1::setDecompressionValenceParams(
     const std::string &p3dFilePath,
+    int stop_level,
     bool write_info,
     bool write_intermediate_meshes,
     bool display_intermediate_meshes)
@@ -41,6 +42,7 @@ FEVV::DialogDecompressionValence1::setDecompressionValenceParams(
                                   : Qt::CheckState::Unchecked;
 
   ui->p3dFilePath->setText(QString::fromStdString(p3dFilePath));
+  ui->stop_level->setText(QString::number(stop_level));
   ui->write_information->setCheckState(write_info_state);
   ui->write_intermediate_meshes->setCheckState(write_intermediate_meshes_state);
   ui->display_intermediate_meshes->setCheckState(
@@ -50,6 +52,7 @@ FEVV::DialogDecompressionValence1::setDecompressionValenceParams(
 void
 FEVV::DialogDecompressionValence1::getDecompressionValenceParams(
     std::string &p3dFilePath,
+    int &stop_level,
     bool &write_info,
     bool &write_intermediate_meshes,
     bool &display_intermediate_meshes)
@@ -66,6 +69,7 @@ FEVV::DialogDecompressionValence1::getDecompressionValenceParams(
   std::replace(p3dFilePath.begin(), p3dFilePath.end(), '\\', '/');
 #endif
 
+  stop_level = ui->stop_level->text().toInt();
   write_info = ui->write_information->isChecked();
   write_intermediate_meshes = ui->write_intermediate_meshes->isChecked();
   display_intermediate_meshes = ui->display_intermediate_meshes->isChecked();

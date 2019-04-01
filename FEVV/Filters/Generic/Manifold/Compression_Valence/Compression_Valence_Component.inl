@@ -6585,6 +6585,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
             *intermediate_meshes /* nullptr allowed */,
         std::vector< VertexColorMap * >
             *intermediate_vertexColorMaps /* nullptr allowed */,
+        int stop_level /* decompression level to stop at */,
         bool do_write_intermediate_meshes)
 {
   // start time measurement
@@ -6608,8 +6609,12 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     keep_intermediate_mesh(
         _pMesh, _v_cm, intermediate_meshes, intermediate_vertexColorMaps);
 
-  // ELO  note: loop over decompression levels
-  while(this->Current_level != this->Total_layer)
+  // check at which level to stop decompression
+  if(stop_level == -1  ||  stop_level > this->Total_layer)
+    stop_level = this->Total_layer;
+
+  // loop over decompression levels
+  while(this->Current_level != stop_level)
   {
 #ifdef DBG_Decompression_All_From_File
     std::cout << "DBG in " << __func__
@@ -6634,7 +6639,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
       write_intermediate_mesh(_pMesh, _v_cm);
 
     // keep intermediate meshes
-    if(intermediate_meshes && this->Current_level < this->Total_layer)
+    if(intermediate_meshes && this->Current_level < stop_level)
       keep_intermediate_mesh(
           _pMesh, _v_cm, intermediate_meshes, intermediate_vertexColorMaps);
 
@@ -6650,10 +6655,10 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   std::chrono::duration< double > time_diff = time_end - time_start;
   std::stringstream msgbuffer;
   msgbuffer << "Number of layers : " << this->Total_layer << std::endl;
-  msgbuffer << "Calculation time for decompressing layers 2 to "
-            << this->Total_layer << " : " << (float)time_diff.count()
+  msgbuffer << "Calculation time for decompressing layers 1 to "
+            << stop_level << " : " << (float)time_diff.count()
             << " seconds" << std::endl;
-  msgbuffer << "Time for loading .p3d and decompressing layer 1 was not taken "
+  msgbuffer << "Time for loading .p3d and decompressing layer 0 was not taken "
                "into account."
             << std::endl;
   std::cout << msgbuffer.str() << std::endl;
