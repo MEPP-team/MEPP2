@@ -1307,7 +1307,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
 
-  std::cout << "[SimpleViewer] Done loading mesh after "
+  std::cout << "[SimpleViewer] Done 'loading' mesh (in graphic card) in "
             << std::chrono::duration_cast< std::chrono::duration< float > >(
                    std::chrono::system_clock::now() - loadingStartTime)
                    .count()
@@ -1892,6 +1892,17 @@ FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
                     // because of plugins... don't understand why...
   
   sw->activate_space_mode();
+}
+
+template< typename HalfedgeGraph >
+void
+FEVV::SimpleViewer< HalfedgeGraph >::updateSWModelList()
+{
+  SimpleWindow *sw = static_cast< SimpleWindow * >(
+      getWindow()); // here static_cast instead of dynamic_cast only for OSX and
+                    // because of plugins... don't understand why...
+  
+  sw->update();
 }
 
 template< typename HalfedgeGraph >
