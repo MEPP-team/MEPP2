@@ -18,6 +18,7 @@ endif()
 
 set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.11-bug-patched)
 if(DEFINED ENV{GITLAB_CI}) # TEMP
+	set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
 	# -------
 	# for GMP
 	set(GMP_INCLUDE_DIR             ${MSVC_KIT_ROOT}/gmp/include)
@@ -27,6 +28,7 @@ if(DEFINED ENV{GITLAB_CI}) # TEMP
 	set(MPFR_LIBRARIES              ${MSVC_KIT_ROOT}/gmp/lib/libmpfr-4.lib)
 	# -------
 endif()
+message("--> CGAL_DIR used : ${CGAL_DIR}")
 
 set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-6.2)
 
