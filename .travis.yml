@@ -150,7 +150,7 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ls -al .travis; fi
 # ---> because under trusty cgal is v4.2 !!!
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /usr/local; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/CGAL-4.14-src-hdr-only.7z; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo 7z x CGAL-4.14-src-hdr-only.7z && cd $TRAVIS_BUILD_DIR; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/usr/local/CGAL-4.14-src-hdr-only; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip cgal-releases-CGAL-4.11-src-bug-patched.zip; cd cgal-releases-CGAL-4.11; mkdir buildR && cd buildR; fi
