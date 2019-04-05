@@ -76,7 +76,7 @@ init:
 #  - echo %QT5_DIR%
   - dir C:\Qt
 #
-  - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\CGAL-4.11-bug-patched\auxiliary\gmp\lib;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin\osgPlugins-3.4.0;%KIT_ROOT%\PCL\pcl-1.7.2\bin;%KIT_ROOT%\PCL\flann-1.8.4\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
+  - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\CGAL-4.11-bug-patched\auxiliary\gmp\lib;%KIT_ROOT%\gmp\lib;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.4.0\bin\osgPlugins-3.4.0;%KIT_ROOT%\PCL\pcl-1.7.2\bin;%KIT_ROOT%\PCL\flann-1.8.4\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
 #  - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin # for vs_2015 dumpbin (todo: check path for vs_2017 dumpbin)
   - set APPVEYOR=TRUE
   - set CACHE=FALSE
