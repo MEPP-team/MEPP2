@@ -135,6 +135,7 @@ addons:
       - doxygen
       - graphviz
       - cmake # or group: deprecated-2017Q4
+      - p7zip-full
 
 install:
   - export TRAVIS=YES
@@ -148,14 +149,17 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then openssl aes-256-cbc -K $encrypted_1b44e42e3841_key -iv $encrypted_1b44e42e3841_iv -in .travis/mepp-public-mt.enc -out .travis/mepp-public-mt -d; chmod 600 .travis/mepp-public-mt; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ls -al .travis; fi
 # ---> because under trusty cgal is v4.2 !!!
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /usr/local; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/CGAL-4.14-src-hdr-only.7z; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/usr/local/CGAL-4.14-src-hdr-only; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip cgal-releases-CGAL-4.11-src-bug-patched.zip; cd cgal-releases-CGAL-4.11; mkdir buildR && cd buildR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; cd cgal-releases-CGAL-4.11-bug-patched/buildR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/cgal-releases-CGAL-4.11-bug-patched /tmp/cgal-releases-CGAL-4.11; fi # because we changed the name of the folder with rsync because of the bug corrected...
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; fi
+#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; cd cgal-releases-CGAL-4.11-bug-patched/buildR; fi
+#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/cgal-releases-CGAL-4.11-bug-patched /tmp/cgal-releases-CGAL-4.11; fi # because we changed the name of the folder with rsync because of the bug corrected...
+#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make; cd ..; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/cgal-releases-CGAL-4.11-bug-patched/; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
