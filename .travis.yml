@@ -8,8 +8,8 @@ sudo: required # need by trusty
 dist: trusty # Ubuntu 14.04 LTS
 #group: deprecated-2017Q4
 
-#osx_image: xcode10.2 # Xcode 10.2 under Mojave (OS X 10.14)
-osx_image: xcode10.1 # Xcode 10.1 under High Sierra (OS X 10.13)
+osx_image: xcode10.2 # Xcode 10.2 under Mojave (OS X 10.14)
+#osx_image: xcode10.1 # Xcode 10.1 under High Sierra (OS X 10.13)
 #osx_image: xcode10 # Xcode 10.0 under High Sierra (OS X 10.13)
 #osx_image: xcode9.4 # Xcode 9.4.1 under High Sierra (OS X 10.13)
 #osx_image: xcode9.3 # Xcode 9.3 under High Sierra (OS X 10.13)
@@ -151,7 +151,7 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ls -al .travis; fi
 # ---> because under trusty cgal is v4.2 !!!
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/CGAL-4.14-src-hdr-only.7z; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z && ls -al /tmp && ls -al /tmp/CGAL-4.14-hdr-only && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z && cd $TRAVIS_BUILD_DIR; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14-hdr-only; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip cgal-releases-CGAL-4.11-src-bug-patched.zip; cd cgal-releases-CGAL-4.11; mkdir buildR && cd buildR; fi
