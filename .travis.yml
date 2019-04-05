@@ -275,7 +275,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
 #
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j 3; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j 2; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
 #
   - ctest -j 3 --output-on-failure
@@ -284,7 +284,7 @@ script:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtbase5-dev qt5-default; fi; fi # ---> now install qt5
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 3; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 2; fi; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then ctest -j 3 --output-on-failure; fi; fi
 #
 # osx only (add qt5 after qt4 in the same job) :
