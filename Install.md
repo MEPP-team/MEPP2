@@ -45,6 +45,7 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libeigen3-dev
 
   # CGAL 4.11
+  $ sudo apt install libgmp-dev libmpfr-dev
   $ sudo apt install libcgal-dev
 
   # --> ! apply patch for CGAL 4.11.0 ! <--
