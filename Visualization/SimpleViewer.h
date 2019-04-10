@@ -385,6 +385,8 @@ public:
   void activate_time_mode();
   void activate_space_mode();
 
+  void updateSWModelList();
+
   osg::Node *addDraggersToScene(osg::Node *scene,
                                 const std::string &nameDrag1,
                                 float fScaleDrag1,
