@@ -78,12 +78,19 @@ split_edge(
   // update edge properties accordingly.
   if (degree(e, g) == 0)
   {// one dangling edge is tranformed into 2 successive dangling edges
+#ifdef USE_ADD_EDGE_AIF // conflict with function in Euler_operations.h (CGAL)
     std::pair<edge_descriptor, bool> p = add_edge(vs, midpoint_vertex, g);
     add_edge(midpoint_vertex, vt, g);
-
+#else	
+    edge_descriptor p = CGAL::Euler::add_edge(vs, midpoint_vertex, g);
+    CGAL::Euler::add_edge(midpoint_vertex, vt, g);
+#endif
     remove_edge(e, g); // remove at the end, to make sure no vertex is removed
-
+#ifdef USE_ADD_EDGE_AIF
     return p.first;
+#else
+    return p;
+#endif	
   }
   else
   {

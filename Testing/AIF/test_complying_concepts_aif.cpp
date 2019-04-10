@@ -42,11 +42,13 @@ main(int narg, char **argv)
   BOOST_CONCEPT_ASSERT((VertexListGraphConcept< G >));
   BOOST_CONCEPT_ASSERT((EdgeListGraphConcept< G >));
   BOOST_CONCEPT_ASSERT((VertexAndEdgeListGraphConcept< G >));
-
+#ifdef USE_ADD_EDGE_AIF
   BOOST_CONCEPT_ASSERT((EdgeMutableGraphConcept< G >));
+#endif
   BOOST_CONCEPT_ASSERT((VertexMutableGraphConcept< G >));
+#ifdef USE_ADD_EDGE_AIF
   BOOST_CONCEPT_ASSERT((MutableGraphConcept< G >));
-
+#endif
   BOOST_CONCEPT_ASSERT(
       (PropertyGraphConcept< G,
                              typename graph_traits< G >::vertex_descriptor,
