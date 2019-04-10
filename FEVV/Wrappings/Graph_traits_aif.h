@@ -801,7 +801,7 @@ set_next(typename boost::graph_traits<
 {
   AIFHelpers::set_next(h1, h2, sm);
 }
-#define USE_ADD_EDGE_AIF 
+//#define USE_ADD_EDGE_AIF 
 #ifdef USE_ADD_EDGE_AIF // conflict with function in Euler_operations.h (CGAL)
 /// BGL MutableEdgeGraph Concept
 /// Inserts the edge (u,v) into the graph, and returns an edge descriptor
@@ -1082,7 +1082,7 @@ namespace Euler {
 */
 typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor
-add_edge(typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor s,
+inline add_edge(typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor s,
          typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor t,
          FEVV::DataStructures::AIF::AIFMesh & g)
 {

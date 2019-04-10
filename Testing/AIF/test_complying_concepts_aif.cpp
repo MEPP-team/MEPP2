@@ -54,7 +54,6 @@ main(int narg, char **argv)
                              typename graph_traits< G >::vertex_descriptor,
                              boost::vertex_point_t >));
 
-
   // CGAL concepts
   BOOST_CONCEPT_ASSERT((FEVV::CGALHalfedgeGraph< G >));
   BOOST_CONCEPT_ASSERT((FEVV::CGALMutableHalfedgeGraph< G >));
@@ -111,12 +110,15 @@ main(int narg, char **argv)
   BOOST_CONCEPT_ASSERT((VertexIndexGraphConcept< G >));
   // FAIL BOOST_CONCEPT_ASSERT((EdgeIndexGraphConcept< G>)); // usefull for AIF:
   // yes concept implemented in a future release
-
+#ifdef USE_ADD_EDGE_AIF
   BOOST_CONCEPT_ASSERT((MutableIncidenceGraphConcept< G >));
   BOOST_CONCEPT_ASSERT((MutableBidirectionalGraphConcept< G >));
   BOOST_CONCEPT_ASSERT((MutableEdgeListGraphConcept< G >));
+#endif
   BOOST_CONCEPT_ASSERT((VertexMutablePropertyGraphConcept< G >));
+#ifdef USE_ADD_EDGE_AIF
   // FAIL BOOST_CONCEPT_ASSERT((EdgeMutablePropertyGraphConcept< G>)); // do not
+#endif
   // attach any property to edge for the time being
   BOOST_CONCEPT_ASSERT((AdjacencyMatrixConcept< G >));
 
