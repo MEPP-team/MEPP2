@@ -359,8 +359,7 @@ public:
             typename FaceColorMap = DefaultFaceColorMap,
             typename VertexUVMap = DefaultVertexUVMap,
             typename HalfedgeUVMap = DefaultHalfedgeUVMap >
-  void redrawMesh(bool _flushMesh,
-                  HalfedgeGraph *_g,
+  void redrawMesh(HalfedgeGraph *_g,
                   PMapsContainer *_pmaps,
                   PointMap *_pm = nullptr,
                   VertexNormalMap *_vt_nm = nullptr,
@@ -419,8 +418,8 @@ protected:
   internal_createMesh(osg::Geode *&geode,
                       HalfedgeGraph *_g,
                       PMapsContainer *_pmaps,
-                      std::map< vertex_descriptor, unsigned int > &_mapVertex,
-                      std::map< face_descriptor, unsigned int > &_mapFace,
+                      //std::map< vertex_descriptor, unsigned int > &_mapVertex,
+                      //std::map< face_descriptor, unsigned int > &_mapFace,
                       PointMap *_pm,
                       VertexNormalMap *_vt_nm = nullptr,
                       FaceNormalMap *_f_nm = nullptr,
@@ -453,8 +452,8 @@ protected:
   osg::Geode *
   internal_createMesh(HalfedgeGraph *_g,
                       PMapsContainer *_pmaps,
-                      std::map< vertex_descriptor, unsigned int > &_mapVertex,
-                      std::map< face_descriptor, unsigned int > &_mapFace,
+                      //std::map< vertex_descriptor, unsigned int > &_mapVertex,
+                      //std::map< face_descriptor, unsigned int > &_mapFace,
                       PointMap *_pm,
                       VertexNormalMap *_vt_nm = nullptr,
                       FaceNormalMap *_f_nm = nullptr,
@@ -647,8 +646,8 @@ protected:
   std::vector< osg::Group * > v_draggers2;
   std::vector< bool > v_meshIsSelected;
   std::vector< osg::Geode * > v_geodes;
-  std::vector< std::map< vertex_descriptor, unsigned int > > v_mapVertex;
-  std::vector< std::map< face_descriptor, unsigned int > > v_mapFace;
+  //std::vector< std::map< vertex_descriptor, unsigned int > > v_mapVertex;
+  //std::vector< std::map< face_descriptor, unsigned int > > v_mapFace;
 
 public:
   osg::ref_ptr< osg::Group > gizmo;

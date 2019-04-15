@@ -422,8 +422,8 @@ inline osg::Geode *
 FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
-    std::map< vertex_descriptor, unsigned int > &_mapVertex,
-    std::map< face_descriptor, unsigned int > &_mapFace,
+    //std::map< vertex_descriptor, unsigned int > &_mapVertex,
+    //std::map< face_descriptor, unsigned int > &_mapFace,
     PointMap *_pm,
     VertexNormalMap *_vt_nm,
     FaceNormalMap *_f_nm,
@@ -441,8 +441,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   internal_createMesh(geode,
                       _g,
                       _pmaps,
-                      _mapVertex,
-                      _mapFace,
+                      //_mapVertex,
+                      //_mapFace,
                       _pm,
                       _vt_nm,
                       _f_nm,
@@ -469,8 +469,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     osg::Geode *&geode,
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
-    std::map< vertex_descriptor, unsigned int > &_mapVertex,
-    std::map< face_descriptor, unsigned int > &_mapFace,
+    //std::map< vertex_descriptor, unsigned int > &_mapVertex,
+    //std::map< face_descriptor, unsigned int > &_mapFace,
     PointMap *_pm,
     VertexNormalMap *_vt_nm,
     FaceNormalMap *_f_nm,
@@ -864,8 +864,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   GeometryTraits gt(*_g);
 
-  _mapVertex.clear();
-  _mapFace.clear();
+  //_mapVertex.clear();
+  //_mapFace.clear();
 
   if(geode == nullptr)
   {
@@ -1480,13 +1480,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
     std::string _mesh_file,
     osg::ref_ptr< osg::Group > _group)
 {
-  std::map< vertex_descriptor, unsigned int > mapVertex;
-  std::map< face_descriptor, unsigned int > mapFace;
+  //std::map< vertex_descriptor, unsigned int > mapVertex;
+  //std::map< face_descriptor, unsigned int > mapFace;
 
   osg::Geode *geode = internal_createMesh(_g,
                                           _pmaps,
-                                          mapVertex,
-                                          mapFace,
+                                          //mapVertex,
+                                          //mapFace,
                                           _pm,
                                           _vt_nm,
                                           _f_nm,
@@ -1505,8 +1505,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
   _group->addChild(geode); //_group->setName("_group");
 #endif
 
-  v_mapVertex.push_back(mapVertex);
-  v_mapFace.push_back(mapFace);
+  //v_mapVertex.push_back(mapVertex);
+  //v_mapFace.push_back(mapFace);
   v_meshes.push_back(_g);
   v_meshes_names.push_back(_mesh_file);
   v_properties_maps.push_back(_pmaps);
@@ -1591,8 +1591,7 @@ template< typename PointMap,
           typename VertexUVMap,
           typename HalfedgeUVMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(bool _flushMesh,
-                                                HalfedgeGraph *_g,
+FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
                                                 PMapsContainer *_pmaps,
                                                 PointMap *_pm,
                                                 VertexNormalMap *_vt_nm,
@@ -1647,7 +1646,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(bool _flushMesh,
   if(_mesh_file != std::string(""))
     v_meshes_names[position] = _mesh_file;
 
-  if(_flushMesh) // NOW always ON so delete this param in the future
+  //if(_flushMesh) // NOW always ON so delete this param in the future
   {
     // MT - IMPORTANT : remove previous MATERIAL
     // v_geodes[position]->getOrCreateStateSet()->removeAttribute(osg::StateAttribute::MATERIAL);
@@ -1655,14 +1654,14 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(bool _flushMesh,
     // MT - IMPORTANT and BETTER : reset StateSet
     v_geodes[position]->setStateSet(NULL);
 
-    v_mapFace[position].clear();
-    v_mapVertex[position].clear();
+    //v_mapVertex[position].clear();
+    //v_mapFace[position].clear();
 
     internal_createMesh(v_geodes[position],
                         _g,
                         _pmaps,
-                        v_mapVertex[position],
-                        v_mapFace[position],
+                        //v_mapVertex[position],
+                        //v_mapFace[position],
                         _pm,
                         _vt_nm,
                         _f_nm,
@@ -1854,9 +1853,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
     m_recomputeNT_if_redraw = _recomputeNT_if_redraw;
 
     // redraw mesh
-    redrawMesh(true, // here we flush (first param = true) because we add/change
-                     // something
-               _g,
+    redrawMesh(_g,
                _pmaps,
                &pm,                           /*point map*/
                v_nm_ptr,                      /*vertex-normal map*/
