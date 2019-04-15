@@ -411,13 +411,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::getMesh(unsigned int _position)
 }
 
 template< typename HalfedgeGraph >
-template< typename PointMap,
-          typename VertexNormalMap,
-          typename FaceNormalMap,
-          typename VertexColorMap,
-          typename FaceColorMap,
-          typename VertexUVMap,
-          typename HalfedgeUVMap >
+template< typename PointMap >
 inline osg::Geode *
 FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     HalfedgeGraph *_g,
@@ -425,14 +419,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     //std::map< vertex_descriptor, unsigned int > &_mapVertex,
     //std::map< face_descriptor, unsigned int > &_mapFace,
     PointMap *_pm,
-    VertexNormalMap *_vt_nm,
-    FaceNormalMap *_f_nm,
-    VertexColorMap *_vt_cm,
-    FaceColorMap *_f_cm,
-    VertexUVMap *_vt_uv_m,
-    HalfedgeUVMap *_het_uv_m,
-    int _texture_type,
-    std::string _texture_file,
     std::string _mesh_file)
 {
   osg::Geode *geode =
@@ -444,26 +430,12 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                       //_mapVertex,
                       //_mapFace,
                       _pm,
-                      _vt_nm,
-                      _f_nm,
-                      _vt_cm,
-                      _f_cm,
-                      _vt_uv_m,
-                      _het_uv_m,
-                      _texture_type,
-                      _texture_file,
                       _mesh_file);
   return geode;
 }
 
 template< typename HalfedgeGraph >
-template< typename PointMap,
-          typename VertexNormalMap,
-          typename FaceNormalMap,
-          typename VertexColorMap,
-          typename FaceColorMap,
-          typename VertexUVMap,
-          typename HalfedgeUVMap >
+template< typename PointMap >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     osg::Geode *&geode,
@@ -472,17 +444,35 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     //std::map< vertex_descriptor, unsigned int > &_mapVertex,
     //std::map< face_descriptor, unsigned int > &_mapFace,
     PointMap *_pm,
-    VertexNormalMap *_vt_nm,
-    FaceNormalMap *_f_nm,
-    VertexColorMap *_vt_cm,
-    FaceColorMap *_f_cm,
-    VertexUVMap *_vt_uv_m,
-    HalfedgeUVMap *_het_uv_m,
-    int _texture_type,
-    std::string _texture_file,
     std::string _mesh_file)
 {
   // property maps stuff
+  using VertexNormalMap =
+	  typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+	  HalfedgeGraph >::pmap_type;
+  using FaceNormalMap =
+	  typename FEVV::PMap_traits< FEVV::face_normal_t,
+	  HalfedgeGraph >::pmap_type;
+
+  using VertexColorMap =
+	  typename FEVV::PMap_traits< FEVV::vertex_color_t,
+	  HalfedgeGraph >::pmap_type;
+  using FaceColorMap =
+	  typename FEVV::PMap_traits< FEVV::face_color_t,
+	  HalfedgeGraph >::pmap_type;
+
+  using VertexUVMap =
+	  typename FEVV::PMap_traits< FEVV::vertex_texcoord_t,
+	  HalfedgeGraph >::pmap_type;
+  using HalfedgeUVMap =
+	  typename FEVV::PMap_traits< FEVV::halfedge_texcoord_t,
+	  HalfedgeGraph >::pmap_type;
+
+  // RM: tangents are used primarily for normal mapping
+  using VertexTangentMap =
+      typename FEVV::PMap_traits< FEVV::vertex_tangent_t,
+                                  HalfedgeGraph >::pmap_type;
+
   using FaceMaterialMap =
       typename FEVV::PMap_traits< FEVV::face_material_t,
                                   HalfedgeGraph >::pmap_type;
@@ -492,10 +482,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   using MeshGuipropertiesMap =
       typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
                                   HalfedgeGraph >::pmap_type;
-  // RM: tangents are used primarily for normal mapping
-  using VertexTangentMap =
-      typename FEVV::PMap_traits< FEVV::vertex_tangent_t,
-                                  HalfedgeGraph >::pmap_type;
 
   VertexNormalMap v_nm;
   FaceNormalMap f_nm;
@@ -504,27 +490,28 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   VertexUVMap v_uvm;
   HalfedgeUVMap h_uvm;
 
-  VertexTangentMap vt_m;
+  VertexTangentMap vt_m; // RM
+
   FaceMaterialMap f_mm;
   MeshMaterialsMap m_mm;
   MeshGuipropertiesMap m_gpm;
 
-  _vt_nm = nullptr;
-  _f_nm = nullptr;
-  _vt_cm = nullptr;
-  _f_cm = nullptr;
-  _vt_uv_m = nullptr;
-  _het_uv_m = nullptr;
+  VertexNormalMap *_vt_nm = nullptr;
+  FaceNormalMap *_f_nm = nullptr;
+  VertexColorMap *_vt_cm = nullptr;
+  FaceColorMap *_f_cm = nullptr;
+  VertexUVMap *_vt_uv_m = nullptr;
+  HalfedgeUVMap *_het_uv_m = nullptr;
 
-  VertexTangentMap *v_tan_m = nullptr;
+  VertexTangentMap *v_tan_m = nullptr; // RM
+
   FaceMaterialMap *_f_mm = nullptr;
   MeshMaterialsMap *_m_mm = nullptr;
   MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
 
   // textures stuff
-  _texture_type = NO_TEXCOORDS;
-  _texture_file = "";
+  int _texture_type = NO_TEXCOORDS;
   // TODO-elo  remove the '_texture_type' variable ;
   //          the texture type can be deduced of the property maps
   //          that are read from the file ;
@@ -757,7 +744,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       // textures stuff
       _texture_type = NO_TEXCOORDS;
-      //_texture_file = "";
 
       _f_mm = nullptr;
       _m_mm = nullptr;
@@ -1457,26 +1443,12 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
 // osgManipulator
 
 template< typename HalfedgeGraph >
-template< typename PointMap,
-          typename VertexNormalMap,
-          typename FaceNormalMap,
-          typename VertexColorMap,
-          typename FaceColorMap,
-          typename VertexUVMap,
-          typename HalfedgeUVMap >
+template< typename PointMap >
 osg::ref_ptr< osg::Group >
 FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
     PointMap *_pm,
-    VertexNormalMap *_vt_nm,
-    FaceNormalMap *_f_nm,
-    VertexColorMap *_vt_cm,
-    FaceColorMap *_f_cm,
-    VertexUVMap *_vt_uv_m,
-    HalfedgeUVMap *_het_uv_m,
-    int _texture_type,
-    std::string _texture_file,
     std::string _mesh_file,
     osg::ref_ptr< osg::Group > _group)
 {
@@ -1488,14 +1460,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
                                           //mapVertex,
                                           //mapFace,
                                           _pm,
-                                          _vt_nm,
-                                          _f_nm,
-                                          _vt_cm,
-                                          _f_cm,
-                                          _vt_uv_m,
-                                          _het_uv_m,
-                                          _texture_type,
-                                          _texture_file,
                                           _mesh_file);
 
 #ifdef MANIPULATOR
@@ -1531,25 +1495,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
 }
 
 template< typename HalfedgeGraph >
-template< typename PointMap,
-          typename VertexNormalMap,
-          typename FaceNormalMap,
-          typename VertexColorMap,
-          typename FaceColorMap,
-          typename VertexUVMap,
-          typename HalfedgeUVMap >
+template< typename PointMap >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
                                               PMapsContainer *_pmaps,
                                               PointMap *_pm,
-                                              VertexNormalMap *_vt_nm,
-                                              FaceNormalMap *_f_nm,
-                                              VertexColorMap *_vt_cm,
-                                              FaceColorMap *_f_cm,
-                                              VertexUVMap *_vt_uv_m,
-                                              HalfedgeUVMap *_het_uv_m,
-                                              int _texture_type,
-                                              std::string _texture_file,
                                               std::string _mesh_file)
 {
   QApplication::setOverrideCursor(Qt::BusyCursor);
@@ -1568,14 +1518,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
   addGroup(createMesh(_g,
                       _pmaps,
                       _pm,
-                      _vt_nm,
-                      _f_nm,
-                      _vt_cm,
-                      _f_cm,
-                      _vt_uv_m,
-                      _het_uv_m,
-                      _texture_type,
-                      _texture_file,
                       _mesh_file));
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
@@ -1583,25 +1525,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
 }
 
 template< typename HalfedgeGraph >
-template< typename PointMap,
-          typename VertexNormalMap,
-          typename FaceNormalMap,
-          typename VertexColorMap,
-          typename FaceColorMap,
-          typename VertexUVMap,
-          typename HalfedgeUVMap >
+template< typename PointMap >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
                                                 PMapsContainer *_pmaps,
                                                 PointMap *_pm,
-                                                VertexNormalMap *_vt_nm,
-                                                FaceNormalMap *_f_nm,
-                                                VertexColorMap *_vt_cm,
-                                                FaceColorMap *_f_cm,
-                                                VertexUVMap *_vt_uv_m,
-                                                HalfedgeUVMap *_het_uv_m,
-                                                int _texture_type,
-                                                std::string _texture_file,
                                                 std::string _mesh_file)
 {
   QApplication::setOverrideCursor(Qt::BusyCursor);
@@ -1663,14 +1591,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
                         //v_mapVertex[position],
                         //v_mapFace[position],
                         _pm,
-                        _vt_nm,
-                        _f_nm,
-                        _vt_cm,
-                        _f_cm,
-                        _vt_uv_m,
-                        _het_uv_m,
-                        _texture_type,
-                        _texture_file,
                         v_meshes_names[position]);
   }
 
@@ -1796,35 +1716,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
 {
   // TODO-elo  fix drawMesh() constness to fix 'mesh' parameter constness
 
-  // property maps stuff
-  using VertexNormalMap =
-      typename FEVV::PMap_traits< FEVV::vertex_normal_t,
-                                  HalfedgeGraph >::pmap_type;
-  using FaceNormalMap = typename FEVV::PMap_traits< FEVV::face_normal_t,
-                                                    HalfedgeGraph >::pmap_type;
-  using VertexColorMap = typename FEVV::PMap_traits< FEVV::vertex_color_t,
-                                                     HalfedgeGraph >::pmap_type;
-  using FaceColorMap = typename FEVV::PMap_traits< FEVV::face_color_t,
-                                                   HalfedgeGraph >::pmap_type;
-  using VertexUVMap = typename FEVV::PMap_traits< FEVV::vertex_texcoord_t,
-                                                  HalfedgeGraph >::pmap_type;
-  using HalfedgeUVMap = typename FEVV::PMap_traits< FEVV::halfedge_texcoord_t,
-                                                    HalfedgeGraph >::pmap_type;
-
-  VertexNormalMap *v_nm_ptr = nullptr;
-  FaceNormalMap *f_nm_ptr = nullptr;
-  VertexColorMap *v_cm_ptr = nullptr;
-  FaceColorMap *f_cm_ptr = nullptr;
-  VertexUVMap *v_uvm_ptr = nullptr;
-  HalfedgeUVMap *h_uvm_ptr = nullptr;
-
-  // textures stuff
-  int tex_type = NO_TEXCOORDS;
-  std::string texture_filename = "";
-  // TODO-elo  remove the 'tex_type' variable ;
-  //          the texture type can be deduced of the property maps
-  //          that are read from the file ;
-
   auto pm = get(boost::vertex_point, *_g);
 
   if(!_redraw)
@@ -1835,14 +1726,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
     drawMesh(_g,
              _pmaps,
              &pm,                           /*point map*/
-             v_nm_ptr,                      /*vertex-normal map*/
-             f_nm_ptr,                      /*face-normal map*/
-             v_cm_ptr,                      /*vertex-color map*/
-             f_cm_ptr,                      /*face-color map*/
-             v_uvm_ptr,                     /*vertex-uv map*/
-             h_uvm_ptr,                     /*halfedge-uv map*/
-             /* remove */ tex_type,         /*texture type*/
-             /* remove */ texture_filename, /*texture filename*/
              _mesh_filename                 /*mesh filename*/
     );
 
@@ -1856,14 +1739,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
     redrawMesh(_g,
                _pmaps,
                &pm,                           /*point map*/
-               v_nm_ptr,                      /*vertex-normal map*/
-               f_nm_ptr,                      /*face-normal map*/
-               v_cm_ptr,                      /*vertex-color map*/
-               f_cm_ptr,                      /*face-color map*/
-               v_uvm_ptr,                     /*vertex-uv map*/
-               h_uvm_ptr,                     /*halfedge-uv map*/
-               /* remove */ tex_type,         /*texture type*/
-               /* remove */ texture_filename, /*texture filename*/
                _mesh_filename                 /*mesh filename*/
     );
   }

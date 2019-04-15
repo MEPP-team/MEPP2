@@ -310,66 +310,24 @@ public:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap,
-            typename VertexNormalMap = DefaultVertexNormalMap,
-            typename FaceNormalMap = DefaultFaceNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap >
+  template< typename PointMap >
   osg::ref_ptr< osg::Group >
   createMesh(HalfedgeGraph *_g,
              PMapsContainer *_pmaps,
              PointMap *_pm,
-             VertexNormalMap *_vt_nm = nullptr,
-             FaceNormalMap *_f_nm = nullptr,
-             VertexColorMap *_vt_cm = nullptr,
-             FaceColorMap *_f_cm = nullptr,
-             VertexUVMap *_vt_uv_m = nullptr,
-             HalfedgeUVMap *_het_uv_m = nullptr,
-             int _texture_type = NO_TEXCOORDS,
-             std::string _texture_file = std::string(""),
              std::string _mesh_file = std::string(""),
              osg::ref_ptr< osg::Group > _group = new osg::Group);
 
-  template< typename PointMap,
-            typename VertexNormalMap = DefaultVertexNormalMap,
-            typename FaceNormalMap = DefaultFaceNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap >
+  template< typename PointMap >
   void drawMesh(HalfedgeGraph *_g,
                 PMapsContainer *_pmaps,
                 PointMap *_pm,
-                VertexNormalMap *_vt_nm = nullptr,
-                FaceNormalMap *_f_nm = nullptr,
-                VertexColorMap *_vt_cm = nullptr,
-                FaceColorMap *_f_cm = nullptr,
-                VertexUVMap *_vt_uv_m = nullptr,
-                HalfedgeUVMap *_het_uv_m = nullptr,
-                int _texture_type = NO_TEXCOORDS,
-                std::string _texture_file = std::string(""),
                 std::string _mesh_file = std::string(""));
 
-  template< typename PointMap,
-            typename VertexNormalMap = DefaultVertexNormalMap,
-            typename FaceNormalMap = DefaultFaceNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap >
+  template< typename PointMap >
   void redrawMesh(HalfedgeGraph *_g,
                   PMapsContainer *_pmaps,
                   PointMap *_pm = nullptr,
-                  VertexNormalMap *_vt_nm = nullptr,
-                  FaceNormalMap *_f_nm = nullptr,
-                  VertexColorMap *_vt_cm = nullptr,
-                  FaceColorMap *_f_cm = nullptr,
-                  VertexUVMap *_vt_uv_m = nullptr,
-                  HalfedgeUVMap *_het_uv_m = nullptr,
-                  int _texture_type = NO_TEXCOORDS,
-                  std::string _texture_file = std::string(""),
                   std::string _mesh_file = std::string(""));
 
   void centerMesh(HalfedgeGraph *_g);
@@ -407,13 +365,7 @@ protected:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap,
-            typename VertexNormalMap = DefaultVertexNormalMap,
-            typename FaceNormalMap = DefaultFaceNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap >
+  template< typename PointMap >
   void
   internal_createMesh(osg::Geode *&geode,
                       HalfedgeGraph *_g,
@@ -421,14 +373,6 @@ protected:
                       //std::map< vertex_descriptor, unsigned int > &_mapVertex,
                       //std::map< face_descriptor, unsigned int > &_mapFace,
                       PointMap *_pm,
-                      VertexNormalMap *_vt_nm = nullptr,
-                      FaceNormalMap *_f_nm = nullptr,
-                      VertexColorMap *_vt_cm = nullptr,
-                      FaceColorMap *_f_cm = nullptr,
-                      VertexUVMap *_vt_uv_m = nullptr,
-                      HalfedgeUVMap *_het_uv_m = nullptr,
-                      int _texture_type = NO_TEXCOORDS,
-                      std::string _texture_file = std::string(""),
                       std::string _mesh_file = std::string(""));
   /**
    * Draw mesh into the scene.
@@ -442,27 +386,13 @@ protected:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap,
-            typename VertexNormalMap = DefaultVertexNormalMap,
-            typename FaceNormalMap = DefaultFaceNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap >
+  template< typename PointMap >
   osg::Geode *
   internal_createMesh(HalfedgeGraph *_g,
                       PMapsContainer *_pmaps,
                       //std::map< vertex_descriptor, unsigned int > &_mapVertex,
                       //std::map< face_descriptor, unsigned int > &_mapFace,
                       PointMap *_pm,
-                      VertexNormalMap *_vt_nm = nullptr,
-                      FaceNormalMap *_f_nm = nullptr,
-                      VertexColorMap *_vt_cm = nullptr,
-                      FaceColorMap *_f_cm = nullptr,
-                      VertexUVMap *_vt_uv_m = nullptr,
-                      HalfedgeUVMap *_het_uv_m = nullptr,
-                      int _texture_type = NO_TEXCOORDS,
-                      std::string _texture_file = std::string(""),
                       std::string _mesh_file = std::string(""));
 
 private:
