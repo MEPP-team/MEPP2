@@ -77,6 +77,7 @@ public:
 
     m_redraw = false;
     m_recomputeNT_if_redraw = false;
+    m_recreateOSGobj_if_redraw = false;
     m_step = 0.;
 
     //
@@ -177,6 +178,7 @@ public:
 
   bool m_redraw;
   bool m_recomputeNT_if_redraw;
+  bool m_recreateOSGobj_if_redraw;
   float m_step;
 
   //
