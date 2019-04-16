@@ -433,14 +433,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     //std::map< vertex_descriptor, unsigned int > &_mapVertex,
     //std::map< face_descriptor, unsigned int > &_mapFace,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
 {
@@ -452,9 +458,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                       _pmaps,
                       //_mapVertex,
                       //_mapFace,
-                      geometries, geometries_edges, geometries_vertices,
+                      geometries, geometriesL, geometriesP, geometries_edges, geometries_vertices,
                       vertexArrays, vertexArrays_edges, vertexArrays_vertices,
+                      normalsArrays, normalsArraysF, tangentsArrays,
                       colorsArrays, colorsArrays_edges, colorsArrays_vertices,
+                      texcoordsArrays,
                       _pm,
                       _mesh_file);
   return geode;
@@ -470,14 +478,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     //std::map< vertex_descriptor, unsigned int > &_mapVertex,
     //std::map< face_descriptor, unsigned int > &_mapFace,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
 {
@@ -903,42 +917,48 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       geometries_vertices_old;*/
   /*std::vector< osg::ref_ptr< osg::Vec3Array > > vertexArrays_old,
       vertexArrays_edges_old, vertexArrays_vertices_old;*/
-  std::vector< osg::ref_ptr< osg::Vec3Array > > normalsArrays;
-  std::vector< osg::ref_ptr< osg::Vec3Array > > tangentsArrays;
+  //std::vector< osg::ref_ptr< osg::Vec3Array > > normalsArrays_old;
+  //std::vector< osg::ref_ptr< osg::Vec3Array > > tangentsArrays_old;
   /*std::vector< osg::ref_ptr< osg::Vec4Array > > colorsArrays_old,
       colorsArrays_edges_old, colorsArrays_vertices_old;*/
-  std::vector< osg::ref_ptr< osg::Vec2Array > > texcoordsArrays;
+  //std::vector< osg::ref_ptr< osg::Vec2Array > > texcoordsArrays_old;
 
-  geometries.push_back(new osg::Geometry()); geometries[0]->setSupportsDisplayList(true); geometries[0]->setUseDisplayList(true); geometries[0]->setUseVertexBufferObjects(false); /*geometries[0]->setUseVertexArrayObject(false);*/
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries.push_back(new osg::Geometry()); geometries[0]->setSupportsDisplayList(true); geometries[0]->setUseDisplayList(true); geometries[0]->setUseVertexBufferObjects(false); /*geometries[0]->setUseVertexArrayObject(false);*/ }
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesL.push_back(new osg::Geometry()); geometriesL[0]->setSupportsDisplayList(true); geometriesL[0]->setUseDisplayList(true); geometriesL[0]->setUseVertexBufferObjects(false); /*geometriesL[0]->setUseVertexArrayObject(false);*/ }
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesP.push_back(new osg::Geometry()); geometriesP[0]->setSupportsDisplayList(true); geometriesP[0]->setUseDisplayList(true); geometriesP[0]->setUseVertexBufferObjects(false); /*geometriesP[0]->setUseVertexArrayObject(false);*/ }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries_edges.push_back(new osg::Geometry()); geometries_edges[0]->setSupportsDisplayList(true); geometries_edges[0]->setUseDisplayList(true); geometries_edges[0]->setUseVertexBufferObjects(false); /*geometries_edges[0]->setUseVertexArrayObject(false);*/ }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries_vertices.push_back(new osg::Geometry()); geometries_vertices[0]->setSupportsDisplayList(true); geometries_vertices[0]->setUseDisplayList(true); geometries_vertices[0]->setUseVertexBufferObjects(false); /*geometries_vertices[0]->setUseVertexArrayObject(false);*/ }
-  vertexArrays.push_back(new osg::Vec3Array);
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays.push_back(new osg::Vec3Array); }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays_edges.push_back(new osg::Vec3Array); }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays_vertices.push_back(new osg::Vec3Array); }
-  normalsArrays.push_back(new osg::Vec3Array);
-  tangentsArrays.push_back(new osg::Vec3Array);
-  colorsArrays.push_back(new osg::Vec4Array);
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { normalsArrays.push_back(new osg::Vec3Array); }
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { normalsArraysF.push_back(new osg::Vec3Array); }
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { tangentsArrays.push_back(new osg::Vec3Array); }
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays.push_back(new osg::Vec4Array); }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays_edges.push_back(new osg::Vec4Array); }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays_vertices.push_back(new osg::Vec4Array); }
-  texcoordsArrays.push_back(new osg::Vec2Array);
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { texcoordsArrays.push_back(new osg::Vec2Array); }
   // std::cout << "---------> geometries.push_back" << std::endl;
   size_t mtl_id = 0;
 
   // add ONLY if multi-textures
   for(size_t mi = 1; mi < _m_mm_size; mi++)
   {
-    geometries.push_back(new osg::Geometry()); geometries[mi]->setSupportsDisplayList(true); geometries[mi]->setUseDisplayList(true); geometries[mi]->setUseVertexBufferObjects(false); /*geometries[mi]->setUseVertexArrayObject(false);*/
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries.push_back(new osg::Geometry()); geometries[mi]->setSupportsDisplayList(true); geometries[mi]->setUseDisplayList(true); geometries[mi]->setUseVertexBufferObjects(false); /*geometries[mi]->setUseVertexArrayObject(false);*/ }
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesL.push_back(new osg::Geometry()); geometriesL[mi]->setSupportsDisplayList(true); geometriesL[mi]->setUseDisplayList(true); geometriesL[mi]->setUseVertexBufferObjects(false); /*geometriesL[mi]->setUseVertexArrayObject(false);*/ }
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesP.push_back(new osg::Geometry()); geometriesP[mi]->setSupportsDisplayList(true); geometriesP[mi]->setUseDisplayList(true); geometriesP[mi]->setUseVertexBufferObjects(false); /*geometriesP[mi]->setUseVertexArrayObject(false);*/ }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries_edges.push_back(new osg::Geometry()); geometries_edges[mi]->setSupportsDisplayList(true); geometries_edges[mi]->setUseDisplayList(true); geometries_edges[mi]->setUseVertexBufferObjects(false); /*geometries_edges[mi]->setUseVertexArrayObject(false);*/ }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries_vertices.push_back(new osg::Geometry()); geometries_vertices[mi]->setSupportsDisplayList(true); geometries_vertices[mi]->setUseDisplayList(true); geometries_vertices[mi]->setUseVertexBufferObjects(false); /*geometries_vertices[mi]->setUseVertexArrayObject(false);*/ }
-    vertexArrays.push_back(new osg::Vec3Array);
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays.push_back(new osg::Vec3Array); }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays_edges.push_back(new osg::Vec3Array); }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { vertexArrays_vertices.push_back(new osg::Vec3Array); }
-    normalsArrays.push_back(new osg::Vec3Array);
-    tangentsArrays.push_back(new osg::Vec3Array);
-    colorsArrays.push_back(new osg::Vec4Array);
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { normalsArrays.push_back(new osg::Vec3Array); }
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { normalsArraysF.push_back(new osg::Vec3Array); }
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { tangentsArrays.push_back(new osg::Vec3Array); }
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays.push_back(new osg::Vec4Array); }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays_edges.push_back(new osg::Vec4Array); }
     if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { colorsArrays_vertices.push_back(new osg::Vec4Array); }
-    texcoordsArrays.push_back(new osg::Vec2Array);
+    if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { texcoordsArrays.push_back(new osg::Vec2Array); }
     // std::cout << "---------> geometries.push_back" << std::endl;
   }
 
@@ -962,9 +982,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   /// Adding edges - superimpose only
   //if(m_RenderSuperimposedEdges)
-  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) )
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) // NEW
   {
-    std::cout << "---------> Adding edges - superimpose only" << std::endl;
+    //std::cout << "---------> Adding edges (for superimpose)" << std::endl;
 
     using EdgeColorMap = typename FEVV::PMap_traits< FEVV::edge_color_t,
                                                      HalfedgeGraph >::pmap_type;
@@ -1041,9 +1061,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   /// Adding vertices - superimpose and 'only_pts' mode only
   size_t nb_faces = size_of_faces(*_g);
   //if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
-  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) )
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) // NEW
   {
-    std::cout << "---------> Adding vertices - superimpose and 'only_pts' mode only" << std::endl;
+    //std::cout << "---------> Adding vertices (for superimpose and 'only_pts' mode)" << std::endl;
 
     VertexColorMap *SAVE_vt_cm = _vt_cm;
 
@@ -1081,6 +1101,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
 
+    // NEW_HERE-01 (DEL)
     /*if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
     {
       // set point size
@@ -1102,7 +1123,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     _vt_cm = SAVE_vt_cm;
   }
-  // ADD
+  // NEW_HERE-01 (ADD)
   {
     // set point size
     osg::ref_ptr< osg::Point > pt = new osg::Point();
@@ -1117,6 +1138,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   }
 
   /// Adding faces
+  if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) // NEW
+  {
+  //std::cout << "---------> Adding faces" << std::endl;
+
   for(boost::tie(fb, fe) = faces(*_g); fb != fe; ++fb)
   {
     // retrieve the material/texture ID of the current face (ONLY in
@@ -1162,18 +1187,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       }
 
       if(_vt_nm != nullptr) // normal per vertex -> already calculated
-      {
-        if(m_SmoothFlat_Shading)
+      {        
+        //if(m_SmoothFlat_Shading) // NEW_HERE-02 (DEL)
         {
           normal = (*_vt_nm)[vd.back()];
           normalsArrays[mtl_id]->push_back(
               Helpers::VectorConverter< HalfedgeGraph >(
                   normal)); // smooth mode
         }
-        else
+        //else // NEW_HERE-02 (DEL)
         {
           normal = (*_f_nm)[*fb];
-          normalsArrays[mtl_id]->push_back(
+          normalsArraysF[mtl_id]->push_back(
               Helpers::VectorConverter< HalfedgeGraph >(
                   normal)); // flat mode (caution, here, instead we take n x
                             // the normal per face)
@@ -1218,20 +1243,29 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     }
 
     geometries[mtl_id]->addPrimitiveSet(new osg::DrawArrays(drawing_method, vertexArrays[mtl_id]->size() - num_vertices_in_face, num_vertices_in_face));
+    // NEW_HERE-03 (ADD)
+    geometriesL[mtl_id]->addPrimitiveSet(new osg::DrawArrays(RenderMethod::RENDER_LINES, vertexArrays[mtl_id]->size() - num_vertices_in_face, num_vertices_in_face));
+    geometriesP[mtl_id]->addPrimitiveSet(new osg::DrawArrays(RenderMethod::RENDER_POINTS, vertexArrays[mtl_id]->size() - num_vertices_in_face, num_vertices_in_face));
 
     // populate face normal array
     if(_vt_nm != nullptr) // normal per vertex (see above) -> already calculated
     {
       // do nothing
+      //std::cout << "---> normal per vertex - normal per vertex - normal per vertex" << std::endl;
     }
     else if(_f_nm != nullptr) // normal per face -> already calculated
     {
+      std::cout << "---> normal per face - normal per face - normal per face" << std::endl; // TEMP
+
       normal = (*_f_nm)[*fb];
       normalsArrays[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(normal));
     }
     else // if none - BUT NEVER HAPPENS - re-compute normal for current face
     {
+      std::cout << "---> NEVER HAPPENS - NEVER HAPPENS - NEVER HAPPENS" << std::endl; // TEMP
+
+#if 0
       if(num_vertices_in_face == 3) // TRIANGLE
       {
         normal = gt.unit_normal(p[1], p[2], p[0]);
@@ -1254,6 +1288,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                      "for other polygons are not yet implemented."
                   << std::endl;
       }
+#endif
     }
 
     // populate face color array
@@ -1264,6 +1299,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     }
 
     ++sizeFace;
+  }
+
   }
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
@@ -1282,18 +1319,34 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   QApplication::setOverrideCursor(Qt::BusyCursor);
   sw->statusBar()->showMessage(QObject::tr("Render mesh...") /*, 2000*/);
 
+    // NEW_HERE-02 (ADD)
+    std::vector< osg::ref_ptr< osg::Vec3Array > > *_normalsArrays = nullptr;
+    if(m_SmoothFlat_Shading)
+      _normalsArrays = &normalsArrays;
+    else
+      _normalsArrays = &normalsArraysF;
+
+    // NEW_HERE-03 (ADD)
+    std::vector< osg::ref_ptr< osg::Geometry > > *_geometries = nullptr;
+    if(m_RenderMethod == RenderMethod::RENDER_FILL)
+      _geometries = &geometries;
+    else if(m_RenderMethod == RenderMethod::RENDER_LINES)
+      _geometries = &geometriesL;
+    else
+      _geometries = &geometriesP; // RenderMethod::RENDER_POINTS
+
   if(m_RenderMode == RenderMode::RENDER_SHADERS_DIRECT_LIGHTING ||
      m_RenderMode == RenderMode::RENDER_SHADERS_INDIRECT_LIGHTING)
   {
     internal_loadShadedMesh(geode,
                             _g,
-                            geometries,
+                            *_geometries,
                             geometries_edges,
                             geometries_vertices,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
-                            normalsArrays,
+                            *_normalsArrays,
                             tangentsArrays,
                             texcoordsArrays,
                             colorsArrays,
@@ -1323,13 +1376,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   {
     internal_loadLegacyMesh(geode,
                             _g,
-                            geometries,
+                            *_geometries,
                             geometries_edges,
                             geometries_vertices,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
-                            normalsArrays,
+                            *_normalsArrays,
                             texcoordsArrays,
                             colorsArrays,
                             colorsArrays_edges,
@@ -1509,17 +1562,21 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
   //std::map< vertex_descriptor, unsigned int > mapVertex;
   //std::map< face_descriptor, unsigned int > mapFace;
 
-  std::vector< osg::ref_ptr< osg::Geometry > > l_geometries, l_geometries_edges, l_geometries_vertices;
+  std::vector< osg::ref_ptr< osg::Geometry > > l_geometries, l_geometriesL, l_geometriesP, l_geometries_edges, l_geometries_vertices;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_vertexArrays, l_vertexArrays_edges, l_vertexArrays_vertices;
+  std::vector< osg::ref_ptr< osg::Vec3Array > > l_normalsArrays, l_normalsArraysF, l_tangentsArrays;
   std::vector< osg::ref_ptr< osg::Vec4Array > > l_colorsArrays, l_colorsArrays_edges, l_colorsArrays_vertices;
+  std::vector< osg::ref_ptr< osg::Vec2Array > > l_texcoordsArrays;
 
   osg::Geode *geode = internal_createMesh(_g,
                                           _pmaps,
                                           //mapVertex,
                                           //mapFace,
-                                          l_geometries, l_geometries_edges, l_geometries_vertices,
+                                          l_geometries, l_geometriesL, l_geometriesP, l_geometries_edges, l_geometries_vertices,
                                           l_vertexArrays, l_vertexArrays_edges, l_vertexArrays_vertices,
+                                          l_normalsArrays, l_normalsArraysF, l_tangentsArrays,
                                           l_colorsArrays, l_colorsArrays_edges, l_colorsArrays_vertices,
+                                          l_texcoordsArrays,
                                           _pm,
                                           _mesh_file);
 
@@ -1533,9 +1590,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
   //v_mapVertex.push_back(mapVertex);
   //v_mapFace.push_back(mapFace);
 
-  v_geometries.push_back(l_geometries); v_geometries_edges.push_back(l_geometries_edges); v_geometries_vertices.push_back(l_geometries_vertices);
+  v_geometries.push_back(l_geometries); v_geometriesL.push_back(l_geometriesL); v_geometriesP.push_back(l_geometriesP); v_geometries_edges.push_back(l_geometries_edges); v_geometries_vertices.push_back(l_geometries_vertices);
   v_vertexArrays.push_back(l_vertexArrays); v_vertexArrays_edges.push_back(l_vertexArrays_edges); v_vertexArrays_vertices.push_back(l_vertexArrays_vertices);
+  v_normalsArrays.push_back(l_normalsArrays); v_normalsArraysF.push_back(l_normalsArraysF); v_tangentsArrays.push_back(l_tangentsArrays);
   v_colorsArrays.push_back(l_colorsArrays); v_colorsArrays_edges.push_back(l_colorsArrays_edges); v_colorsArrays_vertices.push_back(l_colorsArrays_vertices);
+  v_texcoordsArrays.push_back(l_texcoordsArrays);
 
   v_meshes.push_back(_g);
   v_meshes_names.push_back(_mesh_file);
@@ -1651,13 +1710,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
     //v_mapVertex[position].clear();
     //v_mapFace[position].clear();
 
-    //if (m_recreateOSGobj_if_redraw) // TEMP
+    if (m_recreateOSGobj_if_redraw) // mesh
     {
-      v_geometries[position].clear();
+      v_geometries[position].clear(); v_geometriesL[position].clear(); v_geometriesP[position].clear();
       v_vertexArrays[position].clear();
       v_colorsArrays[position].clear();
+
+      v_normalsArrays[position].clear(); v_normalsArraysF[position].clear();
+      v_tangentsArrays[position].clear();
+
+      v_texcoordsArrays[position].clear();
     }
-    if (m_recreateOSGobj_if_redraw)
+    if (m_recreateOSGobj_if_redraw) // superimpose and 'only_pts' mode only
     {
       v_geometries_edges[position].clear(); v_geometries_vertices[position].clear();
       v_vertexArrays_edges[position].clear(); v_vertexArrays_vertices[position].clear();
@@ -1669,9 +1733,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
                         _pmaps,
                         //v_mapVertex[position],
                         //v_mapFace[position],
-                        v_geometries[position], v_geometries_edges[position], v_geometries_vertices[position],
+                        v_geometries[position], v_geometriesL[position], v_geometriesP[position], v_geometries_edges[position], v_geometries_vertices[position],
                         v_vertexArrays[position], v_vertexArrays_edges[position], v_vertexArrays_vertices[position],
+                        v_normalsArrays[position], v_normalsArraysF[position], v_tangentsArrays[position],
                         v_colorsArrays[position], v_colorsArrays_edges[position], v_colorsArrays_vertices[position],
+                        v_texcoordsArrays[position],
                         _pm,
                         v_meshes_names[position]);
   }

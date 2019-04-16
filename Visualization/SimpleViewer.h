@@ -373,14 +373,20 @@ protected:
                       //std::map< vertex_descriptor, unsigned int > &_mapVertex,
                       //std::map< face_descriptor, unsigned int > &_mapFace,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+                      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
                       PointMap *_pm,
                       std::string _mesh_file = std::string(""));
   /**
@@ -402,14 +408,20 @@ protected:
                       //std::map< vertex_descriptor, unsigned int > &_mapVertex,
                       //std::map< face_descriptor, unsigned int > &_mapFace,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
                       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+                      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
                       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+                      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
                       PointMap *_pm,
                       std::string _mesh_file = std::string(""));
 
@@ -597,9 +609,12 @@ protected:
   //std::vector< std::map< vertex_descriptor, unsigned int > > v_mapVertex;
   //std::vector< std::map< face_descriptor, unsigned int > > v_mapFace;
 
-  std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries, v_geometries_edges, v_geometries_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries, v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays, v_vertexArrays_edges, v_vertexArrays_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_normalsArrays, v_normalsArraysF;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_tangentsArrays;
   std::vector< std::vector< osg::ref_ptr< osg::Vec4Array > > > v_colorsArrays, v_colorsArrays_edges, v_colorsArrays_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec2Array > > > v_texcoordsArrays;
 
 public:
   osg::ref_ptr< osg::Group > gizmo;
