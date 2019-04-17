@@ -451,6 +451,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
 
   const auto &shadersDirectory = recoverBaseDirectory() + "/Shaders/";
 
+  std::vector< osg::ref_ptr< osg::Vec4Array > > colorsArrays2;
+
   size_t unit_ii = 0;
   do
   {
@@ -486,27 +488,36 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     }
     else
     {
-      VertexColorMap vt_cm;
+      colorsArrays2.push_back(new osg::Vec4Array);
+      
+      const std::vector< osg::ref_ptr< osg::Vec4Array > > *colorsArrays_tmp;
 
-      if(_colorsArrays[unit_ii].get()->empty())
+      VertexColorMap vt_cm2;
+      VertexColorMap *vt_cm_tmp;
+
+      if (_vt_cm != nullptr || _f_cm != nullptr)
       {
-        if(_vt_cm == nullptr)
-        {
-          vt_cm = make_property_map(FEVV::vertex_color, *_g);
-          _vt_cm = &vt_cm;
-        }
-
-        _colorsArrays[unit_ii].get()->resize(
+        colorsArrays_tmp = &_colorsArrays;
+        vt_cm_tmp = _vt_cm;
+      }
+      else
+      {
+        colorsArrays2[unit_ii].get()->resize(
             _vertexArrays[unit_ii].get()->size(),
             Helpers::ColorConverter(Color::Wisteria()));
+
+        colorsArrays_tmp = &colorsArrays2;
+
+        vt_cm2 = make_property_map(FEVV::vertex_color, *_g);
+        vt_cm_tmp = &vt_cm2;
       }
 
       program = loadColoredMesh(_geometries,
                                 _vertexArrays,
                                 _normalsArrays,
-                                _colorsArrays,
+                                *colorsArrays_tmp/*_colorsArrays*/,
                                 _vt_nm,
-                                _vt_cm,
+                                vt_cm_tmp/*_vt_cm*/,
                                 unit_ii);
     }
 
