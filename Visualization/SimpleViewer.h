@@ -480,6 +480,9 @@ private:
   template< typename VertexNormalMap = DefaultVertexNormalMap,
             typename VertexTangentMap = DefaultVertexTangentMap,
             typename VertexColorMap = DefaultVertexColorMap,
+            typename FaceColorMap = DefaultFaceColorMap,
+            typename VertexUVMap = DefaultVertexUVMap,
+            typename HalfedgeUVMap = DefaultHalfedgeUVMap,
             typename FaceMaterialMap = typename FEVV::
                 PMap_traits< FEVV::face_material_t, HalfedgeGraph >::pmap_type >
   void internal_loadShadedMesh(
@@ -503,6 +506,9 @@ private:
       VertexNormalMap *_vt_nm,
       VertexTangentMap *_vt_tm,
       VertexColorMap *_vt_cm,
+      FaceColorMap *_f_cm,
+      VertexUVMap *_vt_uv_m,
+      HalfedgeUVMap *_het_uv_m,
       FaceMaterialMap *_m_mm);
 
   /**

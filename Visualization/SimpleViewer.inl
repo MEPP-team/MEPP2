@@ -101,7 +101,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
 
   // NOTE : idem pour geometries_edges, geometries_vertices,
   //        vertexArrays, vertexArrays_edges, vertexArrays_vertices,
-  //        colorsArrays, colorsArrays_edges, colorsArrays_vertices...
+  //        colorsArrays, colorsArrays_edges, colorsArrays_vertices,
+  //        etc...
 }
 
 template< typename HalfedgeGraph >
@@ -796,7 +797,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
       _f_mm = nullptr;
       _m_mm = nullptr;
-      _m_mm_size = 0;
+      //_m_mm_size = 0; // NEW
       // textures stuff
 
       if(m_UseVertexColor)
@@ -1044,6 +1045,25 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
     geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, vertexArrays_edges[mtl_id]->size()));
 
+    // NEW_HERE-01 (DEL)
+#if 0
+    // set line width
+    osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+    linewidth->setWidth(3.0f);
+    geometries_edges[mtl_id]
+      ->getOrCreateStateSet()
+      ->setAttribute /*setAttributeAndModes*/ (linewidth,
+                                               osg::StateAttribute::ON);
+
+    // light
+    geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
+      GL_LIGHTING,
+      osg::StateAttribute::OFF); // light always OFF for superimpose edges
+#endif
+  }
+  // NEW_HERE-01 (ADD)
+  geometries_edges[mtl_id]->setStateSet(NULL);
+  {
     // set line width
     osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
     linewidth->setWidth(3.0f);
@@ -1102,7 +1122,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
 
     // NEW_HERE-01 (DEL)
-    /*if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+#if 0
+    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
     {
       // set point size
       osg::ref_ptr< osg::Point > pt = new osg::Point();
@@ -1112,18 +1133,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
         pt->setSize(3.0f);
       geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
           pt, osg::StateAttribute::ON);
-    }*/
+    }
 
     // light
     geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
       GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
                                               // superimpose vertices
+#endif
 
     // ---
 
     _vt_cm = SAVE_vt_cm;
   }
   // NEW_HERE-01 (ADD)
+  geometries_vertices[mtl_id]->setStateSet(NULL);
   {
     // set point size
     osg::ref_ptr< osg::Point > pt = new osg::Point();
@@ -1135,6 +1158,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
       pt->setSize(1.0f);
     geometries_vertices[mtl_id]->getOrCreateStateSet()->setAttribute(
         pt, osg::StateAttribute::ON);
+
+    // light
+    geometries_vertices[mtl_id]->getOrCreateStateSet()->setMode(
+      GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
+                                              // superimpose vertices
   }
 
   /// Adding faces
@@ -1356,6 +1384,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
                             _vt_nm,
                             v_tan_m,
                             _vt_cm,
+                            _f_cm,
+                            _vt_uv_m,
+                            _het_uv_m,
                             _m_mm);
 
     if(m_RenderMode == RenderMode::RENDER_SHADERS_INDIRECT_LIGHTING)

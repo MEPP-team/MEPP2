@@ -418,6 +418,9 @@ template< typename HalfedgeGraph >
 template< typename VertexNormalMap,
           typename VertexTangentMap,
           typename VertexColorMap,
+          typename FaceColorMap,
+          typename VertexUVMap,
+          typename HalfedgeUVMap,
           typename FaceMaterialMap >
 void
 FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
@@ -439,6 +442,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     VertexNormalMap *_vt_nm,
     VertexTangentMap *_vt_tm,
     VertexColorMap *_vt_cm,
+    FaceColorMap *_f_cm,
+    VertexUVMap *_vt_uv_m,
+    HalfedgeUVMap *_het_uv_m,
     FaceMaterialMap *_m_mm)
 {
   std::cout << "[MeshLoading] Loading using shaders." << std::endl;
@@ -448,6 +454,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
   size_t unit_ii = 0;
   do
   {
+    _geometries[unit_ii]->setStateSet(NULL); // NEW
+
     osg::ref_ptr< osg::Program > program;
 
     // Sending positions to shader
@@ -461,7 +469,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         (_vt_nm != nullptr ? osg::Array::BIND_PER_VERTEX
                            : osg::Array::BIND_PER_PRIMITIVE_SET));
 
-    if(_colorsArrays[unit_ii].get()->empty() &&
+    //if(_colorsArrays[unit_ii].get()->empty() &&
+    if((_vt_uv_m != nullptr || _het_uv_m != nullptr) &&
        !_texcoordsArrays[unit_ii].get()->empty())
     {
       program = loadTexturedMesh(_geometries,
@@ -734,6 +743,8 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
   size_t unit_ii = 0;
   do
   {
+    _geometries[unit_ii]->setStateSet(NULL); // NEW
+
     _geometries[unit_ii]->setVertexArray(_vertexArrays[unit_ii]);
     if(_vt_nm != nullptr)
     {

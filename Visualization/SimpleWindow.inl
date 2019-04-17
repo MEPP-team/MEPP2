@@ -3057,9 +3057,9 @@ FEVV::SimpleWindow::on_actionRender_Mode_triggered()
     bavQt->getViewer()->m_RenderMode = static_cast< RenderMode >(
         (static_cast< size_t >(bavQt->getViewer()->m_RenderMode) + 1) % 3);
     bavQt->getViewer()->m_space_time_changeColorMode = false;
-    bool SAVE_m_recreateOSGobj_if_redraw = bavQt->getViewer()->m_recreateOSGobj_if_redraw; bavQt->getViewer()->m_recreateOSGobj_if_redraw = true; // NEW
+    //bool SAVE_m_recreateOSGobj_if_redraw = bavQt->getViewer()->m_recreateOSGobj_if_redraw; bavQt->getViewer()->m_recreateOSGobj_if_redraw = true; // NEW
     pre_actionHG(bavQt->getViewer());
-    bavQt->getViewer()->m_recreateOSGobj_if_redraw = SAVE_m_recreateOSGobj_if_redraw; // NEW
+    //bavQt->getViewer()->m_recreateOSGobj_if_redraw = SAVE_m_recreateOSGobj_if_redraw; // NEW
     bavQt->getViewer()->m_space_time_changeColorMode = true;
 
     updateActiveChildTitle();
