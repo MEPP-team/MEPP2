@@ -457,6 +457,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
   do
   {
     _geometries[unit_ii]->setStateSet(NULL); // NEW
+    _geometries[unit_ii]->setColorArray(NULL); // NEW
 
     osg::ref_ptr< osg::Program > program;
 
@@ -755,6 +756,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
   do
   {
     _geometries[unit_ii]->setStateSet(NULL); // NEW
+    _geometries[unit_ii]->setColorArray(NULL); // NEW
 
     _geometries[unit_ii]->setVertexArray(_vertexArrays[unit_ii]);
     if(_vt_nm != nullptr)
