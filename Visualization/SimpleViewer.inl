@@ -99,7 +99,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
     }
   }*/
 
-  // NOTE : idem pour geometries_edges, geometries_vertices,
+  // NOTE : same for geometries_edges, geometries_vertices,
   //        vertexArrays, vertexArrays_edges, vertexArrays_vertices,
   //        colorsArrays, colorsArrays_edges, colorsArrays_vertices,
   //        etc...
@@ -115,7 +115,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::init()
     return;
   }
 
-  // disable the default setting of viewer.done() by pressing Escape.
+  // disable the default setting of viewer.done() by pressing Escape
   setKeyEventSetsDone(0);
 
   changeBackgroundColor(Color::WetAsphalt());
@@ -431,8 +431,6 @@ inline osg::Geode *
 FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
-    //std::map< vertex_descriptor, unsigned int > &_mapVertex,
-    //std::map< face_descriptor, unsigned int > &_mapFace,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
@@ -457,8 +455,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   internal_createMesh(geode,
                       _g,
                       _pmaps,
-                      //_mapVertex,
-                      //_mapFace,
                       geometries, geometriesL, geometriesP, geometries_edges, geometries_vertices,
                       vertexArrays, vertexArrays_edges, vertexArrays_vertices,
                       normalsArrays, normalsArraysF, tangentsArrays,
@@ -476,8 +472,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     osg::Geode *&geode,
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
-    //std::map< vertex_descriptor, unsigned int > &_mapVertex,
-    //std::map< face_descriptor, unsigned int > &_mapFace,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
@@ -562,9 +556,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   // textures stuff
   int _texture_type = NO_TEXCOORDS;
-  // TODO-elo  remove the '_texture_type' variable ;
-  //          the texture type can be deduced of the property maps
-  //          that are read from the file ;
 
   FEVV::Filters::translate(
       *_g, *_pm, m_step, 0., 0.); // TEMP for test
@@ -780,10 +771,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   FEVV::Tools::compute_bounding_box(*_g, *_pm, minAABB, maxAABB, gt);*/
   // TEMP - not used
 
-  if(m_redraw) // ONLY IF REDRAW via GUI or CODE
+  if(m_redraw) // IMPORTANT -> ONLY IF REDRAW via GUI or CODE
   {
-   if( (m_UseVertexColor) || (m_UseFaceColor) || (m_UseTexture) ) // else automatic detection, as for a first DRAW
-    if((!m_space_time) || (m_space_time && m_space_time_changeColorMode))
+   if( m_UseVertexColor || m_UseFaceColor || m_UseTexture ) // else automatic detection, as for a first DRAW
+    if( (!m_space_time) || (m_space_time && m_space_time_changeColorMode) )
     {
       //_vt_nm = nullptr;
       //_f_nm = nullptr;
@@ -900,9 +891,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
 
   GeometryTraits gt(*_g);
 
-  //_mapVertex.clear();
-  //_mapFace.clear();
-
   if(geode == nullptr)
   {
     geode = new osg::Geode; // MT OSG_GEODE : bug from JL ? Ici geode devrait
@@ -914,16 +902,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   }
 
   // we must handle one geometry per texture/material
-  /*std::vector< osg::ref_ptr< osg::Geometry > > geometries_old, geometries_edges_old,
-      geometries_vertices_old;*/
-  /*std::vector< osg::ref_ptr< osg::Vec3Array > > vertexArrays_old,
-      vertexArrays_edges_old, vertexArrays_vertices_old;*/
-  //std::vector< osg::ref_ptr< osg::Vec3Array > > normalsArrays_old;
-  //std::vector< osg::ref_ptr< osg::Vec3Array > > tangentsArrays_old;
-  /*std::vector< osg::ref_ptr< osg::Vec4Array > > colorsArrays_old,
-      colorsArrays_edges_old, colorsArrays_vertices_old;*/
-  //std::vector< osg::ref_ptr< osg::Vec2Array > > texcoordsArrays_old;
-
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometries.push_back(new osg::Geometry()); geometries[0]->setSupportsDisplayList(true); geometries[0]->setUseDisplayList(true); geometries[0]->setUseVertexBufferObjects(false); /*geometries[0]->setUseVertexArrayObject(false);*/ }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesL.push_back(new osg::Geometry()); geometriesL[0]->setSupportsDisplayList(true); geometriesL[0]->setUseDisplayList(true); geometriesL[0]->setUseVertexBufferObjects(false); /*geometriesL[0]->setUseVertexArrayObject(false);*/ }
   if ( (!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw) ) { geometriesP.push_back(new osg::Geometry()); geometriesP[0]->setSupportsDisplayList(true); geometriesP[0]->setUseDisplayList(true); geometriesP[0]->setUseVertexBufferObjects(false); /*geometriesP[0]->setUseVertexArrayObject(false);*/ }
@@ -1590,9 +1568,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
     std::string _mesh_file,
     osg::ref_ptr< osg::Group > _group)
 {
-  //std::map< vertex_descriptor, unsigned int > mapVertex;
-  //std::map< face_descriptor, unsigned int > mapFace;
-
   std::vector< osg::ref_ptr< osg::Geometry > > l_geometries, l_geometriesL, l_geometriesP, l_geometries_edges, l_geometries_vertices;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_vertexArrays, l_vertexArrays_edges, l_vertexArrays_vertices;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_normalsArrays, l_normalsArraysF, l_tangentsArrays;
@@ -1601,8 +1576,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
 
   osg::Geode *geode = internal_createMesh(_g,
                                           _pmaps,
-                                          //mapVertex,
-                                          //mapFace,
                                           l_geometries, l_geometriesL, l_geometriesP, l_geometries_edges, l_geometries_vertices,
                                           l_vertexArrays, l_vertexArrays_edges, l_vertexArrays_vertices,
                                           l_normalsArrays, l_normalsArraysF, l_tangentsArrays,
@@ -1617,9 +1590,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
 #else
   _group->addChild(geode); //_group->setName("_group");
 #endif
-
-  //v_mapVertex.push_back(mapVertex);
-  //v_mapFace.push_back(mapFace);
 
   v_geometries.push_back(l_geometries); v_geometriesL.push_back(l_geometriesL); v_geometriesP.push_back(l_geometriesP); v_geometries_edges.push_back(l_geometries_edges); v_geometries_vertices.push_back(l_geometries_vertices);
   v_vertexArrays.push_back(l_vertexArrays); v_vertexArrays_edges.push_back(l_vertexArrays_edges); v_vertexArrays_vertices.push_back(l_vertexArrays_vertices);
@@ -1669,6 +1639,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
   // ---
   m_redraw = false;
   m_recomputeNT_if_redraw = false;
+  m_recreateOSGobj_if_redraw = true;
   // ---
 
   addGroup(createMesh(_g,
@@ -1730,16 +1701,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
   if(_mesh_file != std::string(""))
     v_meshes_names[position] = _mesh_file;
 
-  //if(_flushMesh) // NOW always ON so delete this param in the future
-  {
     // MT - IMPORTANT : remove previous MATERIAL
     // v_geodes[position]->getOrCreateStateSet()->removeAttribute(osg::StateAttribute::MATERIAL);
 
     // MT - IMPORTANT and BETTER : reset StateSet
     v_geodes[position]->setStateSet(NULL);
-
-    //v_mapVertex[position].clear();
-    //v_mapFace[position].clear();
 
     if (m_recreateOSGobj_if_redraw) // mesh
     {
@@ -1762,8 +1728,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
     internal_createMesh(v_geodes[position],
                         _g,
                         _pmaps,
-                        //v_mapVertex[position],
-                        //v_mapFace[position],
                         v_geometries[position], v_geometriesL[position], v_geometriesP[position], v_geometries_edges[position], v_geometries_vertices[position],
                         v_vertexArrays[position], v_vertexArrays_edges[position], v_vertexArrays_vertices[position],
                         v_normalsArrays[position], v_normalsArraysF[position], v_tangentsArrays[position],
@@ -1771,7 +1735,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
                         v_texcoordsArrays[position],
                         _pm,
                         v_meshes_names[position]);
-  }
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
@@ -1863,7 +1826,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixEigen(unsigned int positi
                osg_mat(0, 2), osg_mat(1, 2), osg_mat(2, 2),    osg_mat(3, 2),
                osg_mat(0, 3), osg_mat(1, 3), osg_mat(2, 3),    osg_mat(3, 3);
   
-  //DBG std::cout << "eigen_mat = \n" << eigen_mat << std::endl;
+  //std::cout << "eigen_mat = \n" << eigen_mat << std::endl;
 
   return eigen_mat; // 4x4 homogeneous matrix
 }
@@ -1891,10 +1854,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
     bool _redraw,
     bool _recomputeNT_if_redraw,
     std::string _mesh_filename,
+    bool _recreateOSGobj_if_redraw,
     float _step)
 {
-  // TODO-elo  fix drawMesh() constness to fix 'mesh' parameter constness
-
   auto pm = get(boost::vertex_point, *_g);
 
   if(!_redraw)
@@ -1913,6 +1875,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
   else
   {
     m_recomputeNT_if_redraw = _recomputeNT_if_redraw;
+    m_recreateOSGobj_if_redraw = _recreateOSGobj_if_redraw;
 
     // redraw mesh
     redrawMesh(_g,
@@ -2001,10 +1964,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::setNodeSelected(osg::Node *_geode,
       }
       ++position;
     }
-
-    // Assert::check( position != v_meshIsSelected.size(), "can't found this
-    // geode", "SimpleViewer::setNodeSelected" ); // @FIXME @jlevallois :
-    // disabled since PCL and HEG are in the same file.
   }
 
 #if 0
@@ -2059,10 +2018,6 @@ FEVV::SimpleViewer< HalfedgeGraph >::isNodeSelected(osg::Node *_geode)
       }
       ++position;
     }
-
-    // Assert::check( position != v_meshIsSelected.size(), "can't found this
-    // geode", "SimpleViewer::isNodeSelected" ); // @FIXME @jlevallois :
-    // disabled since PCL and HEG are in the same file.
   }
 
   return false;

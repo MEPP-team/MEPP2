@@ -146,7 +146,7 @@ createTexture(const std::string &filename)
   const osg::ref_ptr< osg::Image > image = osgDB::readImageFile(filename);
   if(image)
   {
-    // std::cout << "[SimpleViewer] Texture file '" << _texture_file << "'
+    // std::cout << "[MeshLoading] Texture file '" << _texture_file << "'
     // loaded." << std::endl;
 
     texture = new osg::Texture2D;
@@ -802,7 +802,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
             osgDB::readImageFile(material.diffuse_texture_filename);
         if(image)
         {
-          // std::cout << "[SimpleViewer] Texture file '" << _texture_file << "'
+          // std::cout << "[MeshLoading] Texture file '" << _texture_file << "'
           // loaded." << std::endl;
 
           osg::ref_ptr< osg::Texture2D > texture = new osg::Texture2D;

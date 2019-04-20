@@ -11,16 +11,11 @@
 #pragma once
 
 #include <osgViewer/ViewerEventHandlers>
-// #include <osgUtil/Optimizer>
 
 #include "Base/Color.hpp"
 #include "Visualization/BaseViewerOSG.h"
 
 #include "Base/Texture.h"
-
-/*#define	RENDER_FILL		1
-#define	RENDER_LINE		2
-#define	RENDER_POINT	3*/
 
 #include "Visualization/Helpers/OSGHelpers.h"
 #include "Visualization/OSG/Visitor/DataVisitor.h"
@@ -35,7 +30,7 @@
 #include <boost/graph/properties.hpp>
 #include "FEVV/Wrappings/Graph_traits_extension.h"
 #include "FEVV/Wrappings/Geometry_traits.h"
-#include <CGAL/boost/graph/properties.h> /// included in External folder.
+#include <CGAL/boost/graph/properties.h> // included in External folder
 
 #include <iostream>
 #include <map>
@@ -64,8 +59,6 @@ namespace FEVV {
  * \brief SimpleViewer is a specialization of osgViewer::CompositeViewer.
  * This class is a widget where we are able to draw objects using
  * OpenSceneGraph.
- *
- * @see testViewer.cpp
  */
 template< typename HalfedgeGraph >
 class SimpleViewer : public BaseViewerOSG
@@ -82,9 +75,6 @@ public:
   using vertex_descriptor = typename GraphTraits::vertex_descriptor;
   using halfedge_point = typename GeometryTraits::Point;
   using halfedge_vector = typename GeometryTraits::Vector;
-
-  // using OSGPointMap       = std::map< VertexDescriptor,
-  // osg::Vec3f::value_type* >;
 
   // TODO-elo  There is no default property map valid for all datastructures ;
   //          so all the DefaultXXXMap defined below should be removed, and the
@@ -337,6 +327,7 @@ public:
                            bool _redraw = false,
                            bool _recomputeNT_if_redraw = false,
                            std::string _mesh_filename = std::string(""),
+                           bool _recreateOSGobj_if_redraw = true,
                            float _step = 0.);
 
   void activate_time_mode();
@@ -370,8 +361,6 @@ protected:
   internal_createMesh(osg::Geode *&geode,
                       HalfedgeGraph *_g,
                       PMapsContainer *_pmaps,
-                      //std::map< vertex_descriptor, unsigned int > &_mapVertex,
-                      //std::map< face_descriptor, unsigned int > &_mapFace,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
@@ -405,8 +394,6 @@ protected:
   osg::Geode *
   internal_createMesh(HalfedgeGraph *_g,
                       PMapsContainer *_pmaps,
-                      //std::map< vertex_descriptor, unsigned int > &_mapVertex,
-                      //std::map< face_descriptor, unsigned int > &_mapFace,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
                       std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
@@ -612,8 +599,6 @@ protected:
   std::vector< osg::Group * > v_draggers2;
   std::vector< bool > v_meshIsSelected;
   std::vector< osg::Geode * > v_geodes;
-  //std::vector< std::map< vertex_descriptor, unsigned int > > v_mapVertex;
-  //std::vector< std::map< face_descriptor, unsigned int > > v_mapFace;
 
   std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries, v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays, v_vertexArrays_edges, v_vertexArrays_vertices;
@@ -631,12 +616,6 @@ public:
 
   int i_time;
   int current_i_time;
-
-  /*std::map< vertex_descriptor, unsigned int > myMap;
-
-  osg::ref_ptr<osg::Vec3Array> vertexArray  = new osg::Vec3Array;
-  osg::ref_ptr<osg::Geode>     geode        = new osg::Geode;
-  HalfedgeGraph mesh;*/
 };
 
 } // namespace FEVV

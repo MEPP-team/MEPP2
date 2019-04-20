@@ -686,10 +686,11 @@ FEVV::SimpleWindow::draw_or_redraw_mesh(
     bool _redraw,
     bool _recomputeNT_if_redraw,
     std::string _mesh_filename,
+    bool _recreateOSGobj_if_redraw,
     float _step)
 {
   // QApplication::setOverrideCursor(Qt::BusyCursor);
-  viewer->draw_or_redraw_mesh(mesh, pmaps_bag, _redraw, _recomputeNT_if_redraw, _mesh_filename, _step);
+  viewer->draw_or_redraw_mesh(mesh, pmaps_bag, _redraw, _recomputeNT_if_redraw, _mesh_filename, _recreateOSGobj_if_redraw, _step);
   // QApplication::restoreOverrideCursor();
 }
 
@@ -2834,7 +2835,7 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
                                                               : 0x0);
     }
   }
-  else if(t == 'D') // 'D'raw
+  else if(t == 'D') // re-'D'raw
   {
     std::vector< HalfedgeGraph * > meshes = viewer->getMeshes();
     std::vector< std::string > meshes_names = viewer->getMeshesNames();
@@ -2843,7 +2844,7 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
 
     for(unsigned i = 0; i < meshes.size(); i++)
       draw_or_redraw_mesh(
-          meshes[i], properties_maps[i], viewer, true, false, meshes_names[i]);
+          meshes[i], properties_maps[i], viewer, true, false, meshes_names[i], false);
   }
 }
 

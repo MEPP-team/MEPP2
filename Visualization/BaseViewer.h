@@ -77,7 +77,7 @@ public:
 
     m_redraw = false;
     m_recomputeNT_if_redraw = false;
-    m_recreateOSGobj_if_redraw = false;
+    m_recreateOSGobj_if_redraw = true;
     m_step = 0.;
 
     //

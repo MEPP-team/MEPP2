@@ -178,6 +178,7 @@ public:
                            bool _redraw = false,
                            bool _recomputeNT_if_redraw = false,
                            std::string _mesh_filename = std::string(""),
+                           bool _recreateOSGobj_if_redraw = true,
                            float _step = 0.);
 
   void activate_time_mode();
