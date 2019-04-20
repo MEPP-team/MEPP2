@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -395,11 +395,14 @@ FEVV::SimpleWindow::onApplyButton()
 {
   if(!isValid())
   {
-    QMessageBox::information(this, "",
-		QObject::tr("Please, first <b>open a mesh</b><br>"
-					"<br>"
-					"or if necessary with some plugins <b>use an empty child window</b><br>"
-					"(see 'Open -> EMPTY mode' <b>key</b> in 'About MEPP2 / Help' menu)."));
+    QMessageBox::information(this,
+                             "",
+                             QObject::tr("Please, first <b>open a mesh</b><br>"
+                                         "<br>"
+                                         "or if necessary with some plugins "
+                                         "<b>use an empty child window</b><br>"
+                                         "(see 'Open -> EMPTY mode' <b>key</b> "
+                                         "in 'About MEPP2 / Help' menu)."));
 
     return;
   }
@@ -690,7 +693,13 @@ FEVV::SimpleWindow::draw_or_redraw_mesh(
     float _step)
 {
   // QApplication::setOverrideCursor(Qt::BusyCursor);
-  viewer->draw_or_redraw_mesh(mesh, pmaps_bag, _redraw, _recomputeNT_if_redraw, _mesh_filename, _recreateOSGobj_if_redraw, _step);
+  viewer->draw_or_redraw_mesh(mesh,
+                              pmaps_bag,
+                              _redraw,
+                              _recomputeNT_if_redraw,
+                              _mesh_filename,
+                              _recreateOSGobj_if_redraw,
+                              _step);
   // QApplication::restoreOverrideCursor();
 }
 
@@ -982,7 +991,8 @@ FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_triggered()
 {
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+  if(QApplication::keyboardModifiers().testFlag(
+         Qt::AltModifier)) // for 'only_pts' mode
     open_only_pts_mode = true;
   else
     open_only_pts_mode = false;
@@ -1284,8 +1294,12 @@ FEVV::SimpleWindow::on_actionOpen_Surface_mesh_NORMAL(bool empty)
     }
     QApplication::restoreOverrideCursor();
 
-    draw_or_redraw_mesh(
-        mSurface, p_surfacemesh_pmaps_bag, viewerSurface, false, false, mesh_filename);
+    draw_or_redraw_mesh(mSurface,
+                        p_surfacemesh_pmaps_bag,
+                        viewerSurface,
+                        false,
+                        false,
+                        mesh_filename);
 
     adapterSurface->show();
     updateActiveChildTitle();
@@ -1308,7 +1322,8 @@ FEVV::SimpleWindow::on_actionOpen_Surface_mesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Surface_mesh_triggered()
 {
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+  if(QApplication::keyboardModifiers().testFlag(
+         Qt::AltModifier)) // for 'only_pts' mode
     open_only_pts_mode = true;
   else
     open_only_pts_mode = false;
@@ -1609,7 +1624,8 @@ FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_NORMAL(bool empty)
     }
     QApplication::restoreOverrideCursor();
 
-    draw_or_redraw_mesh(mLCC, p_lcc_pmaps_bag, viewerLCC, false, false, mesh_filename);
+    draw_or_redraw_mesh(
+        mLCC, p_lcc_pmaps_bag, viewerLCC, false, false, mesh_filename);
 
     adapterLCC->show();
     updateActiveChildTitle();
@@ -1632,7 +1648,8 @@ FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_triggered()
 {
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+  if(QApplication::keyboardModifiers().testFlag(
+         Qt::AltModifier)) // for 'only_pts' mode
     open_only_pts_mode = true;
   else
     open_only_pts_mode = false;
@@ -1933,8 +1950,12 @@ FEVV::SimpleWindow::on_actionOpen_OpenMesh_NORMAL(bool empty)
     }
     QApplication::restoreOverrideCursor();
 
-    draw_or_redraw_mesh(
-        mOpenMesh, p_openmesh_pmaps_bag, viewerOpenMesh, false, false, mesh_filename);
+    draw_or_redraw_mesh(mOpenMesh,
+                        p_openmesh_pmaps_bag,
+                        viewerOpenMesh,
+                        false,
+                        false,
+                        mesh_filename);
 
     adapterOpenMesh->show();
     updateActiveChildTitle();
@@ -1957,7 +1978,8 @@ FEVV::SimpleWindow::on_actionOpen_OpenMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_OpenMesh_triggered()
 {
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+  if(QApplication::keyboardModifiers().testFlag(
+         Qt::AltModifier)) // for 'only_pts' mode
     open_only_pts_mode = true;
   else
     open_only_pts_mode = false;
@@ -2251,7 +2273,8 @@ FEVV::SimpleWindow::on_actionOpen_AIFMesh_NORMAL(bool empty)
     }
     QApplication::restoreOverrideCursor();
 
-    draw_or_redraw_mesh(mAIF, p_aif_pmaps_bag, viewerAIF, false, false, mesh_filename);
+    draw_or_redraw_mesh(
+        mAIF, p_aif_pmaps_bag, viewerAIF, false, false, mesh_filename);
 
     adapterAIF->show();
     updateActiveChildTitle();
@@ -2272,7 +2295,8 @@ FEVV::SimpleWindow::on_actionOpen_AIFMesh_NORMAL(bool empty)
 inline void
 FEVV::SimpleWindow::on_actionOpen_AIFMesh_triggered()
 {
-  if(QApplication::keyboardModifiers().testFlag(Qt::AltModifier)) // for 'only_pts' mode
+  if(QApplication::keyboardModifiers().testFlag(
+         Qt::AltModifier)) // for 'only_pts' mode
     open_only_pts_mode = true;
   else
     open_only_pts_mode = false;
@@ -2639,8 +2663,10 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
          "Open   -> <b>ADD SPACE/TIME</b> mode : <b>shift+ctrl</b> *<br>"
          "<br>"
          "Viewer -> <b>SELECT</b>         mesh : <b>shift</b><br>"
-         "Viewer -> <b>TRANSLATE</b>      mesh : <b>T</b> (Translation draggers must be shown, see toolbar)<br>"
-         "Viewer -> <b>ROTATE</b>         mesh : <b>R</b> (Rotation draggers must be shown, see toolbar)<br>"
+         "Viewer -> <b>TRANSLATE</b>      mesh : <b>T</b> (Translation "
+         "draggers must be shown, see toolbar)<br>"
+         "Viewer -> <b>ROTATE</b>         mesh : <b>R</b> (Rotation draggers "
+         "must be shown, see toolbar)<br>"
          "<br>"
          "Viewer -> <b>OSG</b>            instrumentation : <b>S</b><br>"
          "<br>"
@@ -2791,7 +2817,8 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
           draggers2[i]->setNodeMask(viewer->m_ShowRotateDragger ? 0xffffffff
                                                                 : 0x0);
 
-        //actionHG(viewer, 'D', '_'); // 19/03/19 - test for calling a re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
+        // actionHG(viewer, 'D', '_'); // 19/03/19 - test for calling a
+        // re-'D'raw (because of 'hide/not hide' meshes in SPACE mode)
       }
     }
   }
@@ -2843,8 +2870,13 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
         viewer->get_properties_maps();
 
     for(unsigned i = 0; i < meshes.size(); i++)
-      draw_or_redraw_mesh(
-          meshes[i], properties_maps[i], viewer, true, false, meshes_names[i], false);
+      draw_or_redraw_mesh(meshes[i],
+                          properties_maps[i],
+                          viewer,
+                          true,
+                          false,
+                          meshes_names[i],
+                          false);
   }
 }
 
@@ -3058,9 +3090,12 @@ FEVV::SimpleWindow::on_actionRender_Mode_triggered()
     bavQt->getViewer()->m_RenderMode = static_cast< RenderMode >(
         (static_cast< size_t >(bavQt->getViewer()->m_RenderMode) + 1) % 3);
     bavQt->getViewer()->m_space_time_changeColorMode = false;
-    //bool SAVE_m_recreateOSGobj_if_redraw = bavQt->getViewer()->m_recreateOSGobj_if_redraw; bavQt->getViewer()->m_recreateOSGobj_if_redraw = true; // NEW
+    // bool SAVE_m_recreateOSGobj_if_redraw =
+    // bavQt->getViewer()->m_recreateOSGobj_if_redraw;
+    // bavQt->getViewer()->m_recreateOSGobj_if_redraw = true; // NEW
     pre_actionHG(bavQt->getViewer());
-    //bavQt->getViewer()->m_recreateOSGobj_if_redraw = SAVE_m_recreateOSGobj_if_redraw; // NEW
+    // bavQt->getViewer()->m_recreateOSGobj_if_redraw =
+    // SAVE_m_recreateOSGobj_if_redraw; // NEW
     bavQt->getViewer()->m_space_time_changeColorMode = true;
 
     updateActiveChildTitle();

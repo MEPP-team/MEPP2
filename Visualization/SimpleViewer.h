@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -265,7 +265,7 @@ public:
 
   DataModelVector *getDataModel() override;
 
-  
+
   /**
    * Returns the transformation matrix of the mesh at a given position.
    *
@@ -357,27 +357,27 @@ protected:
    * @param[in]   _pm         a point map.
    **/
   template< typename PointMap >
-  void
-  internal_createMesh(osg::Geode *&geode,
-                      HalfedgeGraph *_g,
-                      PMapsContainer *_pmaps,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
-                      PointMap *_pm,
-                      std::string _mesh_file = std::string(""));
+  void internal_createMesh(
+      osg::Geode *&geode,
+      HalfedgeGraph *_g,
+      PMapsContainer *_pmaps,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
+      PointMap *_pm,
+      std::string _mesh_file = std::string(""));
   /**
    * Draw mesh into the scene.
    *
@@ -391,26 +391,26 @@ protected:
    * @param[in]   _pm         a point map.
    **/
   template< typename PointMap >
-  osg::Geode *
-  internal_createMesh(HalfedgeGraph *_g,
-                      PMapsContainer *_pmaps,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
-                      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
-                      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
-                      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
-                      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
-                      PointMap *_pm,
-                      std::string _mesh_file = std::string(""));
+  osg::Geode *internal_createMesh(
+      HalfedgeGraph *_g,
+      PMapsContainer *_pmaps,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
+      PointMap *_pm,
+      std::string _mesh_file = std::string(""));
 
 private:
   /**
@@ -600,12 +600,17 @@ protected:
   std::vector< bool > v_meshIsSelected;
   std::vector< osg::Geode * > v_geodes;
 
-  std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries, v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices;
-  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays, v_vertexArrays_edges, v_vertexArrays_vertices;
-  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_normalsArrays, v_normalsArraysF;
+  std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries,
+      v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays,
+      v_vertexArrays_edges, v_vertexArrays_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_normalsArrays,
+      v_normalsArraysF;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_tangentsArrays;
-  std::vector< std::vector< osg::ref_ptr< osg::Vec4Array > > > v_colorsArrays, v_colorsArrays_edges, v_colorsArrays_vertices;
-  std::vector< std::vector< osg::ref_ptr< osg::Vec2Array > > > v_texcoordsArrays;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec4Array > > > v_colorsArrays,
+      v_colorsArrays_edges, v_colorsArrays_vertices;
+  std::vector< std::vector< osg::ref_ptr< osg::Vec2Array > > >
+      v_texcoordsArrays;
 
 public:
   osg::ref_ptr< osg::Group > gizmo;

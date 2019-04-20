@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -456,7 +456,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
   size_t unit_ii = 0;
   do
   {
-    _geometries[unit_ii]->setStateSet(NULL); // NEW
+    _geometries[unit_ii]->setStateSet(NULL);   // NEW
     _geometries[unit_ii]->setColorArray(NULL); // NEW
 
     osg::ref_ptr< osg::Program > program;
@@ -472,7 +472,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
         (_vt_nm != nullptr ? osg::Array::BIND_PER_VERTEX
                            : osg::Array::BIND_PER_PRIMITIVE_SET));
 
-    //if(_colorsArrays[unit_ii].get()->empty() &&
+    // if(_colorsArrays[unit_ii].get()->empty() &&
     if((_vt_uv_m != nullptr || _het_uv_m != nullptr) &&
        !_texcoordsArrays[unit_ii].get()->empty())
     {
@@ -490,13 +490,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     else
     {
       colorsArrays2.push_back(new osg::Vec4Array);
-      
+
       const std::vector< osg::ref_ptr< osg::Vec4Array > > *colorsArrays_tmp;
 
       VertexColorMap vt_cm2;
       VertexColorMap *vt_cm_tmp;
 
-      if (_vt_cm != nullptr || _f_cm != nullptr)
+      if(_vt_cm != nullptr || _f_cm != nullptr)
       {
         colorsArrays_tmp = &_colorsArrays;
         vt_cm_tmp = _vt_cm;
@@ -516,9 +516,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
       program = loadColoredMesh(_geometries,
                                 _vertexArrays,
                                 _normalsArrays,
-                                *colorsArrays_tmp/*_colorsArrays*/,
+                                *colorsArrays_tmp /*_colorsArrays*/,
                                 _vt_nm,
-                                vt_cm_tmp/*_vt_cm*/,
+                                vt_cm_tmp /*_vt_cm*/,
                                 unit_ii);
     }
 
@@ -528,87 +528,88 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
     size_t nb_faces = size_of_faces(*_g);
 
     // attach geometry to geode
-    if (nb_faces!=0) // not to be done for 'only_pts' mode
+    if(nb_faces != 0) // not to be done for 'only_pts' mode
       _geode->addDrawable(_geometries[unit_ii]);
 
-  if (unit_ii==0) // MUST be done only one time
-    if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-       m_RenderSuperimposedVertices_Big ||
-       (nb_faces==0)) // last test for 'only_pts' mode
-    {
-      // RM: adding predefined basic shaders to display superimposed features
-      osg::ref_ptr< osg::Program > superimpProgram = new osg::Program;
-
-      osg::ref_ptr< osg::Shader > superimpVertShader =
-          new osg::Shader(osg::Shader::VERTEX);
-      if(!superimpVertShader->loadShaderSourceFromFile(shadersDirectory +
-                                                       "superimposeVert.glsl"))
-        std::cerr << "[MeshLoading] Could not read VERTEX shader from file"
-                  << std::endl;
-      superimpProgram->addShader(superimpVertShader);
-
-      osg::ref_ptr< osg::Shader > superimpFragShader =
-          new osg::Shader(osg::Shader::FRAGMENT);
-      if(!superimpFragShader->loadShaderSourceFromFile(shadersDirectory +
-                                                       "superimposeFrag.glsl"))
-        std::cerr << "Could not read FRAGMENT shader from file" << std::endl;
-      superimpProgram->addShader(superimpFragShader);
-
-      // RM: loading superimposed features
-      // edges - superimpose only
-      if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
+    if(unit_ii == 0) // MUST be done only one time
+      if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
+         m_RenderSuperimposedVertices_Big ||
+         (nb_faces == 0)) // last test for 'only_pts' mode
       {
-        std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl;
+        // RM: adding predefined basic shaders to display superimposed features
+        osg::ref_ptr< osg::Program > superimpProgram = new osg::Program;
 
-        // RM: disabled these calls, fixing loading time & FPS problems
-        //_geometries_edges[unit_ii]->setUseVertexBufferObjects(true);
+        osg::ref_ptr< osg::Shader > superimpVertShader =
+            new osg::Shader(osg::Shader::VERTEX);
+        if(!superimpVertShader->loadShaderSourceFromFile(
+               shadersDirectory + "superimposeVert.glsl"))
+          std::cerr << "[MeshLoading] Could not read VERTEX shader from file"
+                    << std::endl;
+        superimpProgram->addShader(superimpVertShader);
 
-        _geometries_edges[unit_ii]->setVertexAttribArray(
-            0, _vertexArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
-        _geometries_edges[unit_ii]->setVertexAttribArray(
-            1,
-            _colorsArrays_edges[unit_ii],
-            osg::Array::BIND_PER_VERTEX);
-        _geometries_edges[unit_ii]->getOrCreateStateSet()->setAttributeAndModes(
-            superimpProgram.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+        osg::ref_ptr< osg::Shader > superimpFragShader =
+            new osg::Shader(osg::Shader::FRAGMENT);
+        if(!superimpFragShader->loadShaderSourceFromFile(
+               shadersDirectory + "superimposeFrag.glsl"))
+          std::cerr << "Could not read FRAGMENT shader from file" << std::endl;
+        superimpProgram->addShader(superimpFragShader);
 
-        _geode->addDrawable(_geometries_edges[unit_ii]);
-      }
-
-      // vertices - superimpose and 'only_pts' mode only
-      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
-      {
-        std::cout << "[MeshLoading] Drawing superimposed vertices" << std::endl;
-
-        // RM: disabled these calls, fixing loading time & FPS problems
-        //_geometries_vertices[unit_ii]->setUseVertexBufferObjects(true);
-
-        _geometries_vertices[unit_ii]->setVertexAttribArray(
-            0, _vertexArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
-        _geometries_vertices[unit_ii]->setVertexAttribArray(
-            1,
-            _colorsArrays_vertices[unit_ii],
-            osg::Array::BIND_PER_VERTEX);
-        _geometries_vertices[unit_ii]
-            ->getOrCreateStateSet()
-            ->setAttributeAndModes(superimpProgram.get(),
-                                   osg::StateAttribute::ON |
-                                       osg::StateAttribute::OVERRIDE);
-
-        // RM: if bigger vertices are needed, send a default size of 5 to the
-        // shader, which will display them accordingly
-        /*if (m_RenderSuperimposedVertices_Big)
+        // RM: loading superimposed features
+        // edges - superimpose only
+        if(m_RenderSuperimposedEdges &&
+           (nb_faces != 0)) // not to be done for 'only_pts' mode
         {
-          _geometries_vertices[unit_ii]->getOrCreateStateSet()->setMode(GL_PROGRAM_POINT_SIZE,
-        osg::StateAttribute::ON);
-          _geometries_vertices[unit_ii]->getOrCreateStateSet()->addUniform(new
-        osg::Uniform("uniPointSize", 5u));
-        }*/
+          std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl;
 
-        _geode->addDrawable(_geometries_vertices[unit_ii]);
+          // RM: disabled these calls, fixing loading time & FPS problems
+          //_geometries_edges[unit_ii]->setUseVertexBufferObjects(true);
+
+          _geometries_edges[unit_ii]->setVertexAttribArray(
+              0, _vertexArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_edges[unit_ii]->setVertexAttribArray(
+              1, _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_edges[unit_ii]
+              ->getOrCreateStateSet()
+              ->setAttributeAndModes(superimpProgram.get(),
+                                     osg::StateAttribute::ON |
+                                         osg::StateAttribute::OVERRIDE);
+
+          _geode->addDrawable(_geometries_edges[unit_ii]);
+        }
+
+        // vertices - superimpose and 'only_pts' mode only
+        if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big ||
+           (nb_faces == 0)) // last test for 'only_pts' mode
+        {
+          std::cout << "[MeshLoading] Drawing superimposed vertices"
+                    << std::endl;
+
+          // RM: disabled these calls, fixing loading time & FPS problems
+          //_geometries_vertices[unit_ii]->setUseVertexBufferObjects(true);
+
+          _geometries_vertices[unit_ii]->setVertexAttribArray(
+              0, _vertexArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_vertices[unit_ii]->setVertexAttribArray(
+              1, _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_vertices[unit_ii]
+              ->getOrCreateStateSet()
+              ->setAttributeAndModes(superimpProgram.get(),
+                                     osg::StateAttribute::ON |
+                                         osg::StateAttribute::OVERRIDE);
+
+          // RM: if bigger vertices are needed, send a default size of 5 to the
+          // shader, which will display them accordingly
+          /*if (m_RenderSuperimposedVertices_Big)
+          {
+            _geometries_vertices[unit_ii]->getOrCreateStateSet()->setMode(GL_PROGRAM_POINT_SIZE,
+          osg::StateAttribute::ON);
+            _geometries_vertices[unit_ii]->getOrCreateStateSet()->addUniform(new
+          osg::Uniform("uniPointSize", 5u));
+          }*/
+
+          _geode->addDrawable(_geometries_vertices[unit_ii]);
+        }
       }
-    }
 
     ++unit_ii;
   } while(unit_ii < _m_mm_size);
@@ -755,7 +756,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
   size_t unit_ii = 0;
   do
   {
-    _geometries[unit_ii]->setStateSet(NULL); // NEW
+    _geometries[unit_ii]->setStateSet(NULL);   // NEW
     _geometries[unit_ii]->setColorArray(NULL); // NEW
 
     _geometries[unit_ii]->setVertexArray(_vertexArrays[unit_ii]);
@@ -897,29 +898,32 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
     size_t nb_faces = size_of_faces(*_g);
 
     // attach geometry to geode
-    if (nb_faces!=0) // not to be done for 'only_pts' mode
+    if(nb_faces != 0) // not to be done for 'only_pts' mode
       _geode->addDrawable(_geometries[unit_ii]);
 
     // edges - superimpose only
-  if (unit_ii==0) // MUST be done only one time
-    if(m_RenderSuperimposedEdges && (nb_faces!=0)) // not to be done for 'only_pts' mode
-    {
-      _geometries_edges[unit_ii]->setVertexArray(_vertexArrays_edges[unit_ii]);
-      _geometries_edges[unit_ii]->setColorArray(
-          _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
-      _geode->addDrawable(_geometries_edges[unit_ii]);
-    }
+    if(unit_ii == 0) // MUST be done only one time
+      if(m_RenderSuperimposedEdges &&
+         (nb_faces != 0)) // not to be done for 'only_pts' mode
+      {
+        _geometries_edges[unit_ii]->setVertexArray(
+            _vertexArrays_edges[unit_ii]);
+        _geometries_edges[unit_ii]->setColorArray(_colorsArrays_edges[unit_ii],
+                                                  osg::Array::BIND_PER_VERTEX);
+        _geode->addDrawable(_geometries_edges[unit_ii]);
+      }
 
     // vertices - superimpose and 'only_pts' mode only
-  if (unit_ii==0) // MUST be done only one time
-    if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big || (nb_faces==0)) // last test for 'only_pts' mode
-    {
-      _geometries_vertices[unit_ii]->setVertexArray(
-          _vertexArrays_vertices[unit_ii]);
-      _geometries_vertices[unit_ii]->setColorArray(
-          _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
-      _geode->addDrawable(_geometries_vertices[unit_ii]);
-    }
+    if(unit_ii == 0) // MUST be done only one time
+      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big ||
+         (nb_faces == 0)) // last test for 'only_pts' mode
+      {
+        _geometries_vertices[unit_ii]->setVertexArray(
+            _vertexArrays_vertices[unit_ii]);
+        _geometries_vertices[unit_ii]->setColorArray(
+            _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
+        _geode->addDrawable(_geometries_vertices[unit_ii]);
+      }
 
     unit_ii++;
   } while(unit_ii < _m_mm_size);
