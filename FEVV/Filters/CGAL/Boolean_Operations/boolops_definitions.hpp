@@ -20,6 +20,9 @@
 #include <CGAL/Gmpq.h>
 #include <CGAL/Lazy_exact_nt.h>
 
+#include <chrono> // for time measurement
+
+
 #include "boolops_enriched_polyhedron.hpp"
 
 
@@ -29,9 +32,21 @@ typedef typename EnrichedPolyhedron::Point_3         Point3d;
 
 /*!
  * \def BOOLEAN_OPERATIONS_DEBUG
+ * \brief Enable debug info
+ */
+//#define BOOLEAN_OPERATIONS_DEBUG
+
+/*!
+ * \def BOOLEAN_OPERATIONS_DEBUG_VERBOSE
+ * \brief Enable more debug info to compare with Mepp1
+ */
+//#define BOOLEAN_OPERATIONS_DEBUG_VERBOSE
+
+/*!
+ * \def BOOLEAN_OPERATIONS_TIME
  * \brief Enables computation time measuring
  */
-#define BOOLEAN_OPERATIONS_DEBUG
+#define BOOLEAN_OPERATIONS_TIME
 
 /*!
  * \enum Bool_Op
@@ -102,7 +117,6 @@ inline Vector_exact Compute_Normal_direction(Halfedge_handle he)   // MT: suppre
           point_to_exact(he->vertex()->point()));
 }
 
-#ifdef BOOLEAN_OPERATIONS_DEBUG
 /**
  * \fn inline double tr(double &n)
  * \brief Truncate a number to 1/1000
@@ -114,4 +128,21 @@ inline double tr(double &n)
 {
   return floor(n*1000)/1000;
 }
-#endif // BOOLEAN_OPERATIONS_DEBUG
+
+/**
+ *
+ * \brief  Measure time since starting time and reset starting time.
+ *
+ * \param  Starting time
+ * \return Elapsed time since starting time.
+ */
+inline double
+get_time_and_reset(
+    std::chrono::time_point< std::chrono::steady_clock > &time_start)
+{
+    auto time_now = std::chrono::steady_clock::now();
+    std::chrono::duration< double > duration = time_now - time_start;
+    time_start = time_now;
+
+    return duration.count();
+}

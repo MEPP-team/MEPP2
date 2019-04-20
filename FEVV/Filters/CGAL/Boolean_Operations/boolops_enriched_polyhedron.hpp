@@ -14,6 +14,7 @@
 #include <CGAL/Cartesian.h>
 #include <CGAL/Polyhedron_3.h>
 #include <CGAL/Polyhedron_items_3.h>
+#include <CGAL/HalfedgeDS_halfedge_max_base_with_id.h>
 
 #include "boolops_properties.h"
 
@@ -36,14 +37,13 @@ public:
 };
 
 
-template< class Refs, class Tprev, class Tvertex, class Tface >
+// EnrichedHalfedge derives from HalfedgeDS_halfedge_max_base_with_id
+// rather than HalfedgeDS_halfedge_base to speed up CGAL::copy_face_graph()
+template< class Refs, class ID >
 class EnrichedHalfedge
-    : public CGAL::HalfedgeDS_halfedge_base< Refs, Tprev, Tvertex, Tface >
+    : public CGAL::HalfedgeDS_halfedge_max_base_with_id< Refs, ID >
 {
 public:
-  // life cycle
-  EnrichedHalfedge() {}
-
   // halfedge properties
   HalfedgeId Label;
 };
@@ -82,8 +82,7 @@ struct EnrichedItems : public CGAL::Polyhedron_items_3
   struct Halfedge_wrapper
   {
     typedef typename Traits::Vector_3 Normal;
-    typedef EnrichedHalfedge< Refs, CGAL::Tag_true, CGAL::Tag_true, CGAL::Tag_true >
-        Halfedge;
+    typedef EnrichedHalfedge< Refs, std::size_t > Halfedge;
   };
 
   // wrap face

@@ -65,6 +65,7 @@ decompression_valence(
     std::vector< HalfedgeGraph * > *intermediate_meshes, /* nullptr allowed */
     std::vector< VertexColorMap * >
         *intermediate_vertex_color_maps, /* nullptr allowed */
+    int stop_level, /* decompression level to stop at */
     bool do_write_intermediate_meshes,
     const GeometryTraits &gt)
 {
@@ -83,6 +84,7 @@ decompression_valence(
       do_write_info,
       intermediate_meshes,
       intermediate_vertex_color_maps,
+      stop_level,
       do_write_intermediate_meshes);
 
   return result;
@@ -137,6 +139,7 @@ decompression_valence(
         nullptr, /* optional */
     std::vector< VertexColorMap * > *intermediate_vertex_color_maps =
         nullptr, /* optional */
+    int stop_level = -1, /* decompression level to stop at */
     bool do_write_intermediate_meshes = false)
 {
   GeometryTraits gt(g);
@@ -150,6 +153,7 @@ decompression_valence(
                                                  do_write_info,
                                                  intermediate_meshes,
                                                  intermediate_vertex_color_maps,
+                                                 stop_level,
                                                  do_write_intermediate_meshes,
                                                  gt);
 }

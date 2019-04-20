@@ -710,8 +710,8 @@ public:
 
 
   /**
-   \brief	Decompression of all LoDs from file.
-   The finest LoD is visualized without creating mesh sequence.
+   \brief	Decompression of all LoDs from file, or until a specified level.
+          The finest LoD is visualized without creating mesh sequence.
 
    \param [in,out]	pMesh	The mesh.
    */
@@ -723,6 +723,7 @@ public:
       std::vector< HalfedgeGraph * > *intermediate_meshes /* nullptr allowed */,
       std::vector< VertexColorMap * >
           *intermediate_vertexColorMaps /* nullptr allowed */,
+      int stop_level = -1 /* decompression level to stop at */,
       bool do_write_intermediate_meshes = false);
 
 
