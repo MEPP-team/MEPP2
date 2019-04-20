@@ -1,3 +1,6 @@
+v0.8.1 - 20/04/2019 :
+ - improve redraw performance in viewer
+
 v0.8.0 - 23/03/2019 :
  - improve viewer (drastic FPS performance update)
  - improve superimpose edges & vertices in viewer
