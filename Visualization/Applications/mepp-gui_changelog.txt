@@ -1,4 +1,4 @@
-v0.8.1 - 20/04/2019 :
+v0.8.1 (TAGGED) - 20/04/2019 :
  - improve redraw performance in viewer
 
 v0.8.0 - 23/03/2019 :
