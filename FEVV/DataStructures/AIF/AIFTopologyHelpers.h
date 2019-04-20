@@ -897,6 +897,7 @@ public:
 		if (is_dangling_edge(*iterE))
 		{
 		  de = *iterE;
+		  break;
 		}
 	  }
 	  return de;

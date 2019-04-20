@@ -14,6 +14,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <set>
 #include <boost/shared_ptr.hpp>
 
 #include "FEVV/DataStructures/AIF/AIFMesh.hpp"

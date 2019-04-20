@@ -114,11 +114,10 @@ public:
    */
   AIFMesh(const Self &);
 
-private:
   /*!
    * 			= operator (deep copy)
    */
-  Self &operator=(const Self &); // not implemented yet, so forbid its use
+  Self &operator=(const Self &); 
 public:
   /*!
    * 			Static constructor method

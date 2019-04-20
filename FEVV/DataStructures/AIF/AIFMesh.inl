@@ -26,6 +26,18 @@ AIFMesh::AIFMesh(void)
 inline
 AIFMesh::AIFMesh(const Self &other)
 {
+	this->operator=(other);
+}
+
+inline
+AIFMesh::Self &
+AIFMesh::operator=(const Self &other)
+{
+  if(this==&other)
+    return *this;
+  ///////////////////////////////////////////////////////////////////////////
+  this->clear();
+  ///////////////////////////////////////////////////////////////////////////
   typedef AIFTopologyHelpers helpers;
   typedef AIFPropertiesHelpers PropHelpers;
   typedef helpers::vertex_container::const_iterator vertex_iterator;
@@ -410,6 +422,8 @@ AIFMesh::AIFMesh(const Self &other)
       }
     }
   }
+  
+  
   /////////////////////////////// VERTICES ADDITION
   //////////////////////////////////////
   std::vector< helpers::vertex_type::ptr > vertices;
@@ -526,7 +540,6 @@ AIFMesh::AIFMesh(const Self &other)
 
   /////////////////////////////// FACES ADDITION
   //////////////////////////////////////
-
   typedef std::vector< std::vector< index_type > >::const_iterator face_it;
   typedef std::vector< index_type >::const_iterator index_it;
   size_t faceId = 0;
@@ -678,6 +691,8 @@ AIFMesh::AIFMesh(const Self &other)
       }
     }
   }
+  ///////////////////////////////////////////////////////////////////////////
+  return *this;
 }
 
 inline

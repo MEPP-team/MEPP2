@@ -219,6 +219,7 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
   }
 
   // FACES IN CONTAINER
+  std::set< AIFVertex::ptr > already_processed; // use to export dangling polylines only once
   face_range fRange = helpers::faces(inputMesh);
 
   for(face_iterator itF = fRange.begin(); itF != fRange.end(); ++itF)
@@ -237,8 +238,9 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
         auto nb_incident_dangling_edges = helpers::num_incident_dangling_edge(*itVF);
         if(nb_incident_dangling_edges>1)
           throw std::runtime_error("Writer::write -> multiple dangling edge integration into face indices is not available for .off");
-        else if (nb_incident_dangling_edges == 1)
+        else if ( (nb_incident_dangling_edges == 1) && (already_processed.find(*itVF)==already_processed.end()))
         {
+          already_processed.insert(*itVF);
           //throw std::runtime_error("Writer::write -> dangling edge integration into face indices for .off has not been implemented yet");
           // 1) insert the dangling polyline
           AIFVertex::ptr current_v = *itVF;
