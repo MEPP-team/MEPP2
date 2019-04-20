@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -178,6 +178,7 @@ public:
                            bool _redraw = false,
                            bool _recomputeNT_if_redraw = false,
                            std::string _mesh_filename = std::string(""),
+                           bool _recreateOSGobj_if_redraw = true,
                            float _step = 0.);
 
   void activate_time_mode();
