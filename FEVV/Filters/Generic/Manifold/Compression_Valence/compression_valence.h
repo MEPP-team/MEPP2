@@ -155,4 +155,3 @@ compression_valence(HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-

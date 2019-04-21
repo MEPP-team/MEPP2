@@ -67,4 +67,3 @@ protected:
   /// initialise the weibul distribution with beta = 3.5;
   virtual void default_params() { m_param = ParameterType(3.5); }
 };
-

@@ -87,4 +87,3 @@ protected:
 protected:
   ParameterType m_param;
 };
-

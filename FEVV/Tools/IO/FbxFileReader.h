@@ -274,8 +274,8 @@ read_fbx_file(const std::string &filePath,
       {
         const auto &texcoords = meshTexcoords->GetDirectArray()[texIndex];
 
-        texture_coords[currentTexIndex][0] = texcoords[0]; // U
-        texture_coords[currentTexIndex][1] = texcoords[1]; // V
+        texture_coords[currentTexIndex][0] =  static_cast<coordT_type>(texcoords[0]); // U
+        texture_coords[currentTexIndex][1] = static_cast<coordT_type>(texcoords[1]); // V
       }
     }
 

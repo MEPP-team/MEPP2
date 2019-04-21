@@ -92,4 +92,3 @@ translate(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-

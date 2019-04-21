@@ -550,4 +550,3 @@ calculate_curvature(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-

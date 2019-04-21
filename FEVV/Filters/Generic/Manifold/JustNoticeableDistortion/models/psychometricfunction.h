@@ -57,4 +57,3 @@ protected:
   /// initialise beta to 3.5
   virtual void default_params() { m_param = 3.5; }
 };
-

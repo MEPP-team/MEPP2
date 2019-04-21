@@ -586,4 +586,3 @@ just_noticeable_distortion_filter(const HalfedgeGraph &g,
 }
 } // namespace Filters
 } // namespace FEVV
-

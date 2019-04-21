@@ -161,4 +161,3 @@ decompression_valence(
 
 } // namespace Filters
 } // namespace FEVV
-

@@ -23,7 +23,7 @@ main(int narg, char **argv)
   Mesh mesh;
   Geometry g(mesh);
   FEVV::GeometryTraits::verify_assumption(g);
-  // FEVV::GeometryTraits::verify_operator_results( g );
+  FEVV::GeometryTraits::verify_operator_results( g );
 
   return 0;
 }

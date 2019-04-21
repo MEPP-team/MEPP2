@@ -66,4 +66,3 @@ protected:
     m_param = ParameterType(0.0078, 88.29, 1.0, 4.207);
   }
 };
-

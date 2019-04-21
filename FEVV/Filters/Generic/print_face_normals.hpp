@@ -43,4 +43,3 @@ print_face_normals(const HalfedgeGraph &g, NormalMap nm)
 
 } // namespace Filters
 } // namespace FEVV
-

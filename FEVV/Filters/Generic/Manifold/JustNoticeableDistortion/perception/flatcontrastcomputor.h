@@ -61,4 +61,3 @@ compute_flat_contrast(const GeometryTraits &geom,
   auto normal_f2 = get(f_nm, f2);
   return compute_flat_contrast(geom, normal_f1, normal_f2, ldir);
 }
-

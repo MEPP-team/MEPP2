@@ -775,4 +775,3 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
 
 } // namespace Filters
 } // namespace FEVV
-

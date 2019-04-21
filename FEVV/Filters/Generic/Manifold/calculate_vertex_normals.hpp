@@ -100,4 +100,3 @@ calculate_vertex_normals(const HalfedgeGraph &g,
 
 } // namespace Filters
 } // namespace FEVV
-

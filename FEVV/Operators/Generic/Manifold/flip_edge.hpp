@@ -33,7 +33,7 @@ namespace Operators {
  *          MutableFaceGraph Concept through a boost::graph_traits<>
  *          specialization.
  * \param g The MutableFaceGraph instance out of which the h edge will be
- *          deleted.
+ *          flipped.
  * \param h The edge to be flipped designated through one of its
  *          halfedges.
  */

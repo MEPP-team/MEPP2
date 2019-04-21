@@ -41,4 +41,3 @@ print_points(const HalfedgeGraph &g, PointMap pm)
 
 } // namespace Filters
 } // namespace FEVV
-

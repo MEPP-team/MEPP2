@@ -137,4 +137,3 @@ compute_min_max_halfedges(const HalfedgeGraph &g,
 }
 } // namespace Filters
 } // namespace FEVV
-

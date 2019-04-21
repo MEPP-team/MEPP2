@@ -323,4 +323,3 @@ color_halfedge_from_bool_map(const HalfedgeGraph &g,
 }
 } // namespace Filters
 } // namespace FEVV
-

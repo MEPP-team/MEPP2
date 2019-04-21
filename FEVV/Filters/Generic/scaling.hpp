@@ -97,4 +97,3 @@ calculate_scaling(const Graph &g,
 
 } // namespace Filters
 } // namespace FEVV
-

@@ -47,7 +47,7 @@
 #pragma once
 
 
-#include <stdio.h>
+#include <cstdio>
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,4 +211,3 @@ private: //  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "arithmetic_codec.inl"
-

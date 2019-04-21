@@ -822,4 +822,3 @@ read_mesh(const std::string &filename, HalfedgeGraph &g, PMapsContainer &pmaps, 
 
 } // namespace Filters
 } // namespace FEVV
-

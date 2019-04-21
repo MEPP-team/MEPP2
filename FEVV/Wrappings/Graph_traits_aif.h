@@ -801,7 +801,8 @@ set_next(typename boost::graph_traits<
 {
   AIFHelpers::set_next(h1, h2, sm);
 }
-
+//#define USE_ADD_EDGE_AIF 
+#ifdef USE_ADD_EDGE_AIF // conflict with function in Euler_operations.h (CGAL)
 /// BGL MutableEdgeGraph Concept
 /// Inserts the edge (u,v) into the graph, and returns an edge descriptor
 /// pointing to the new edge. If the graph disallows parallel edges, and the
@@ -820,6 +821,7 @@ add_edge(typename boost::graph_traits<
 {
   return AIFHelpers::add_edge(u, v, sm);
 }
+#endif
 
 // CGAL MutableHalfedgeGraph Concept
 //!
@@ -1073,7 +1075,37 @@ add_face(FEVV::DataStructures::AIF::AIFMesh &sm)
 // be sure that it will be found when Euler::add_face(vr, g) is used with AIF
 namespace CGAL {
 namespace Euler {
-
+#ifndef USE_ADD_EDGE_AIF 
+/**
+* adds and returns the edge `e` connecting `s` and `t`
+* halfedge(e, g) has s as source and t as target
+*/
+typename boost::graph_traits<
+    FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor
+inline add_edge(typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor s,
+         typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor t,
+         FEVV::DataStructures::AIF::AIFMesh & g)
+{
+  typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e = add_edge(g);
+  
+  // link the edge and the vertices
+  AIFHelpers::link_vertex_and_edge(
+  	s, e, AIFHelpers::vertex_pos::FIRST);
+  AIFHelpers::link_vertex_and_edge(
+  	t, e, AIFHelpers::vertex_pos::SECOND);  
+  return e;
+}
+#endif
+/**
+* adds a new face defined by a range of vertices (identified by their descriptors,
+* `boost::graph_traits<Graph>::%vertex_descriptor`).
+* For each pair of consecutive vertices, the corresponding halfedge
+* is added in `g` if new, and its connectivity is updated otherwise.
+* The face can be added only at the boundary of `g`, or as a new connected component.
+*
+* @pre `vr` contains at least 3 vertices
+* @returns the added face descriptor, or `boost::graph_traits<Graph>::%null_face()` if the face could not be added.
+*/
 template< typename VertexRange >
 typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::face_descriptor
@@ -1154,8 +1186,9 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
             vtarget, edge, AIFHelpers::vertex_pos::SECOND);
       }
 
-      // link the edge and the face
-      AIFHelpers::link_edge_and_face(edge, face);
+      // link the edge and the face (when needed -> else dangling edge)
+	  if(! AIFHelpers::are_incident(edge, face) ||  ! AIFHelpers::are_incident(face, edge) )
+        AIFHelpers::link_edge_and_face(edge, face);
 
       // the target of the current edge is the source of the next edge
       vsource = vtarget;

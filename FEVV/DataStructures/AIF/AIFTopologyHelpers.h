@@ -897,6 +897,7 @@ public:
 		if (is_dangling_edge(*iterE))
 		{
 		  de = *iterE;
+		  break;
 		}
 	  }
 	  return de;
@@ -1132,7 +1133,7 @@ public:
     }
     else
       throw std::invalid_argument(
-          "AIFTopologyHelpers::link_edge_and_face -> incident relation already "
+          "AIFTopologyHelpers::link_edge_and_face_around_face_after_edge -> incident relation already "
           "exists between the two elements.");
   }
 
@@ -3804,10 +3805,13 @@ private:
     auto vRange = incident_vertices(edge);
     for(auto vIt = vRange.begin(); vIt != vRange.end(); ++vIt)
     {
-      (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
-      (*vIt)->m_One_Ring_Vertices.clear(); // free memory
-      (*vIt)->m_Incident_PtrFaces_Computed = false;
-      (*vIt)->m_Incident_PtrFaces.clear(); // free memory
+      if (*vIt != null_vertex())
+      {
+        (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
+        (*vIt)->m_One_Ring_Vertices.clear(); // free memory
+        (*vIt)->m_Incident_PtrFaces_Computed = false;
+        (*vIt)->m_Incident_PtrFaces.clear(); // free memory
+      }
     }
 
     FEVV::Container::erase(edge->m_incident_PtrFaces, face);
