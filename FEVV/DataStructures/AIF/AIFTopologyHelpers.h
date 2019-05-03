@@ -2331,7 +2331,7 @@ public:
    * \param  mesh   The involving mesh.
    */
   template< typename InputIt, typename MeshType >
-  static void remove_vertices(InputIt first, InputIt last, MeshType mesh)
+  static void remove_vertices(InputIt first, InputIt last, MeshType& mesh)
   {
     for(; first != last; ++first)
       remove_vertex(*first, mesh);
@@ -2398,7 +2398,7 @@ public:
    * \param  mesh   The involving mesh.
    */
   template< typename InputIt, typename MeshType >
-  static void remove_edges(InputIt first, InputIt last, MeshType mesh)
+  static void remove_edges(InputIt first, InputIt last, MeshType& mesh)
   {
     for(; first != last; ++first)
       remove_edge(*first, mesh);
