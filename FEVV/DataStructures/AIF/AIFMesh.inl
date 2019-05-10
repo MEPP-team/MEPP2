@@ -29,7 +29,12 @@ AIFMesh::AIFMesh(const Self &other)
 	this->operator=(other);
 }
 
-inline
+inline 
+AIFMesh::~AIFMesh()
+{
+  this->clear();
+}
+
 AIFMesh::Self &
 AIFMesh::operator=(const Self &other)
 {
