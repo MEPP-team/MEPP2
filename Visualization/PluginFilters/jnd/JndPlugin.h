@@ -29,7 +29,7 @@
 #include <time.h>
 #include <cmath>
 
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -55,7 +55,7 @@ namespace FEVV {
 
 class JndPlugin : public QObject,
                   public Generic_PluginInterface,
-                  public BasePlugin
+                  public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -318,16 +318,6 @@ public:
     applyHG< MeshAIF >(_adapter, _mesh, pmaps_bag);
   }
 #endif
-
-
-  // case where the plugin is applied when no mesh is opened
-  void apply(BaseAdapterVisu *_adapter,
-             void *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
-  {
-    QMessageBox::warning(
-        0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));
-  }
 
 
   QStringList Generic_plugins() const override

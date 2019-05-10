@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -49,7 +49,7 @@ namespace FEVV {
 
 class CompressionValencePlugin : public QObject,
                                  public Generic_PluginInterface,
-                                 public BasePlugin
+                                 public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -284,32 +284,16 @@ public:
 #endif
 
 #ifdef FEVV_USE_AIF
+#if 0 //TODO-elo  restore when Compression Valence compiles with AIF
   void apply(BaseAdapterVisu *_adapter,
              MeshAIF *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-#if 0
-		//TODO-elo  restore when Compression Valence compiles with AIF
+		
 		applyHG<MeshAIF>(_adapter, _mesh, pmaps_bag);
-#else
-    QMessageBox::information(
-        0,
-        "",
-        QObject::tr(
-            "Compression Valence filter is not yet compatible with AIF!"));
-#endif
   }
 #endif
-
-
-  // case where the plugin is applied when no mesh is opened
-  void apply(BaseAdapterVisu *_adapter,
-             void *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
-  {
-    QMessageBox::warning(
-        0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));
-  }
+#endif
 
 
   QStringList Generic_plugins() const override

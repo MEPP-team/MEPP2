@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -49,7 +49,7 @@ namespace FEVV {
 
 class DecompressionValencePlugin : public QObject,
                                    public Generic_PluginInterface,
-                                   public BasePlugin
+                                   public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -341,54 +341,6 @@ public:
               "Decompression Valence filter is not yet compatible with AIF!"));
     }
 #endif
-  }
-
-  // function duplicated here from SimpleWindow to get around link error
-  //   Unresolved external symbol "public: static struct QMetaObject
-  //     const FEVV::SimpleWindow::staticMetaObject"
-  // on Visual C++ 2015
-  std::string chooseDatastructureMsgBox(void)
-  {
-    QMessageBox msgbox;
-    msgbox.setWindowTitle(tr("Datastructure"));
-    msgbox.setText(tr("Choose a datastructure to store the mesh(es):"));
-    msgbox.setIcon(QMessageBox::Question);
-
-    // here the Role is used to order the buttons
-    QPushButton *polyhedron_button = msgbox.addButton(tr("Polyhedron_3"), QMessageBox::ResetRole);
-    QPushButton *surfacemesh_button = msgbox.addButton(tr("Surface_mesh"), QMessageBox::ResetRole);
-    QPushButton *lcc_button = msgbox.addButton(tr("LCC"), QMessageBox::ResetRole);
-    QPushButton *openmesh_button = msgbox.addButton(tr("OpenMesh"), QMessageBox::ResetRole);
-    QPushButton *aif_button = msgbox.addButton(tr("AIF"), QMessageBox::ResetRole);
-
-    //QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
-
-    msgbox.exec();
-
-    if(msgbox.clickedButton() == polyhedron_button)
-    {
-      return "POLYHEDRON";
-    }
-    else if(msgbox.clickedButton() == surfacemesh_button)
-    {
-      return "SURFACEMESH";
-    }
-    else if(msgbox.clickedButton() == lcc_button)
-    {
-      return "LCC";
-    }
-    else if(msgbox.clickedButton() == openmesh_button)
-    {
-      return "OPENMESH";
-    }
-    else if(msgbox.clickedButton() == aif_button)
-    {
-      return "AIF";
-    }
-    else
-    {
-      return "NONE";
-    }
   }
 
 
