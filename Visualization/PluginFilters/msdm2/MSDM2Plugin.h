@@ -988,44 +988,65 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    // retrieve the two input meshes in current viewer window,
+    // then apply the filter
+
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
     if(!computed)
     {
-      auto viewer = dynamic_cast< SimpleViewer< HalfedgeGraph > * >(
-          _adapter->getViewer());
-      std::vector< HalfedgeGraph * > meshes = viewer->getMeshes();
+      MixedMeshesVector mixed_meshes = viewer->getMeshes();
       std::vector< FEVV::PMapsContainer * > properties_maps =
           viewer->get_properties_maps();
-      if(meshes.size() == 2)
-      {
-        auto m1 = meshes[0];
-        auto pm1 = properties_maps[0];
-        auto m2 = meshes[1];
-        auto pm2 = properties_maps[1];
 
-        double MSDM2, MSDM2_1_2, MSDM2_2_1;
-        if(*one_two)
+      if(mixed_meshes.size() == 2)
+      {
+        // check that the two input meshes have the same type
+        if( mixed_meshes[0].second ==  mixed_meshes[1].second )
         {
-          process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);
-          MSDM2 = MSDM2_1_2;
+          // get filter parameters from dialog window
+          DialogMSDM21 dial1;
+          if(dial1.exec() == QDialog::Accepted)
+            dial1.getProcess(*one_two, *two_one, *scales, *color);
+          else
+            return; // abort applying filter
+
+          auto m1 = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
+          auto pm1 = properties_maps[0];
+          auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
+          auto pm2 = properties_maps[1];
+
+          double MSDM2, MSDM2_1_2, MSDM2_2_1;
+          if(*one_two)
+          {
+            process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);
+            MSDM2 = MSDM2_1_2;
+          }
+          if(*two_one)
+          {
+            process(*m1, *pm1, *m2, *pm2, MSDM2_2_1);
+            MSDM2 = MSDM2_2_1;
+          }
+          if(*one_two && *two_one)
+          {
+            MSDM2 = (MSDM2_1_2 + MSDM2_2_1) / 2.;
+          }
+          std::cout << "MSDM2 :" << MSDM2 << std::endl;
+          computed = true;
         }
-        if(*two_one)
+        else
         {
-          process(*m1, *pm1, *m2, *pm2, MSDM2_2_1);
-          MSDM2 = MSDM2_2_1;
+          QMessageBox::information(0,
+              "",
+              QObject::tr("MSDM2 filter can not be applied on meshes "
+                          "with different datastructures."));
         }
-        if(*one_two && *two_one)
-        {
-          MSDM2 = (MSDM2_1_2 + MSDM2_2_1) / 2.;
-        }
-        std::cout << "MSDM2 :" << MSDM2 << std::endl;
-        computed = true;
       }
       else
       {
-        std::cout << "MSDM2 needs 2 meshes opened in Space or Time."
+        std::cout << "MSDM2 needs 2 meshes opened "
+                  << "with the same datastructure."
                   << std::endl;
       }
     }
@@ -1082,6 +1103,17 @@ public:
   }
 #endif
 
+
+  // case where the plugin is applied when no mesh is opened
+  void apply(BaseAdapterVisu *_adapter,
+             void *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));
+  }
+
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "MSDM2Plugin";
@@ -1089,21 +1121,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogMSDM21 dial1;
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getProcess(*one_two, *two_one, *scales, *color);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("msdm2_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("msdm2_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

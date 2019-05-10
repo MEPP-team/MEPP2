@@ -160,41 +160,61 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    SimpleViewer< HalfedgeGraph > *viewer =
-      dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
-
     // retrieve the two input meshes in current viewer window,
     // then apply the filter
 
-    std::vector< HalfedgeGraph * > meshes = viewer->getMeshes();
+    SimpleViewer *viewer =
+      dynamic_cast< SimpleViewer * >(_adapter->getViewer());
+
+    MixedMeshesVector mixed_meshes = viewer->getMeshes();
     std::vector< FEVV::PMapsContainer * > pmaps_bags =
         viewer->get_properties_maps();
-    if(meshes.size() >= 2)
+    if(mixed_meshes.size() >= 2)
     {
-      // retrieve the two input meshes
-      auto mA = meshes[0];
-      auto pmaps_bagA = pmaps_bags[0];
-      auto matrix44_A = viewer->getTransformMatrixEigen(0);
+      // check that the two input meshes have the same type
+      if( mixed_meshes[0].second ==  mixed_meshes[1].second )
+      {
+        // get filter parameters from dialog window
+        DialogBooleanOperations1 dial1;
+        dial1.setParameters(m_operation);
+        if(dial1.exec() == QDialog::Accepted)
+          dial1.getParameters(m_operation);
+        else
+          return; // abort applying filter
 
-      auto mB = meshes[1];
-      auto pmaps_bagB = pmaps_bags[1];
-      auto matrix44_B = viewer->getTransformMatrixEigen(1);
+        // retrieve the two input meshes
+        auto mA = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
+        auto pmaps_bagA = pmaps_bags[0];
+        auto matrix44_A = viewer->getTransformMatrixEigen(0);
 
-      // apply filter
-      process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+        auto mB = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
+        auto pmaps_bagB = pmaps_bags[1];
+        auto matrix44_B = viewer->getTransformMatrixEigen(1);
 
-      // reset transform matrix of A and B because transformation
-      // is now applied to mesh coordinates
-      viewer->resetTransformMatrix(0);
-      viewer->resetTransformMatrix(1);
+        // apply filter
+        process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+
+        // reset transform matrix of A and B because transformation
+        // is now applied to mesh coordinates
+        viewer->resetTransformMatrix(0);
+        viewer->resetTransformMatrix(1);
+      }
+      else
+      {
+        QMessageBox::information(0,
+            "",
+            QObject::tr("Boolean Operations filter "
+                        "can not be applied on meshes "
+                        "with different datastructures."));
+      }
     }
     else
     {
       QMessageBox::information(0,
           "",
-          QObject::tr("Boolean Operations filter "
-            "needs two meshes "
-            "opened in Space or Time."));
+          QObject::tr("Boolean Operations filter needs "
+                      "two meshes opened "
+                      "with the same datastructure."));
     }
 
     // draw output mesh
@@ -285,6 +305,17 @@ public:
   }
 #endif
 
+
+  // case where the plugin is applied when no mesh is opened
+  void apply(BaseAdapterVisu *_adapter,
+             void *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));
+  }
+
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "BooleanOperationsPlugin";
@@ -292,22 +323,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogBooleanOperations1 dial1;
-    dial1.setParameters(m_operation);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getParameters(m_operation);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("booleanoperations_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(window);
-          // dynamic_cast fails under OS X
-
-      sw->onModificationParam("booleanoperations_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

@@ -160,16 +160,16 @@ main(int argc, char **argv)
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef FEVV_USE_AIF
   ///// AIF
-  FEVV::SimpleAdapterVisu< FEVV::MeshAIF > *adapter_aif = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshAIF > *viewer_aif;
+  FEVV::SimpleAdapterVisu *adapter_aif = nullptr;
+  FEVV::SimpleViewer *viewer_aif;
   if(open_with == OPEN_WITH_AIF || open_with == OPEN_WITH_ALL)
   {
-    adapter_aif = new FEVV::SimpleAdapterVisu< FEVV::MeshAIF >();
+    adapter_aif = new FEVV::SimpleAdapterVisu();
     // adapter_aif->setWindowTitle(QObject::tr("AIFMesh"));
     adapter_aif->setWindowTitle(
         QObject::tr("<AIFMesh - aid: %1>").arg((qlonglong)adapter_aif, 0, 16));
     adapter_aif->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_aif = new FEVV::SimpleViewer< FEVV::MeshAIF >();
+    viewer_aif = new FEVV::SimpleViewer();
     adapter_aif->attach(viewer_aif);
     adapter_aif->init();
     viewer_aif->init();
@@ -179,17 +179,17 @@ main(int argc, char **argv)
 
 #ifdef FEVV_USE_OPENMESH
   ///// OpenMesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh > *adapter_openmesh = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshOpenMesh > *viewer_openmesh;
+  FEVV::SimpleAdapterVisu *adapter_openmesh = nullptr;
+  FEVV::SimpleViewer *viewer_openmesh;
   if(open_with == OPEN_WITH_OPENMESH || open_with == OPEN_WITH_ALL)
   {
-    adapter_openmesh = new FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >();
+    adapter_openmesh = new FEVV::SimpleAdapterVisu();
     // adapter_openmesh->setWindowTitle(QObject::tr("OpenMesh"));
     adapter_openmesh->setWindowTitle(
         QObject::tr("<OpenMesh - aid: %1>")
             .arg((qlonglong)adapter_openmesh, 0, 16));
     adapter_openmesh->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_openmesh = new FEVV::SimpleViewer< FEVV::MeshOpenMesh >();
+    viewer_openmesh = new FEVV::SimpleViewer();
     adapter_openmesh->attach(viewer_openmesh);
     adapter_openmesh->init();
     viewer_openmesh->init();
@@ -199,16 +199,16 @@ main(int argc, char **argv)
 
 #ifdef FEVV_USE_CGAL
   ///// Linear_cell_complex
-  FEVV::SimpleAdapterVisu< FEVV::MeshLCC > *adapter_lcc = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshLCC > *viewer_lcc;
+  FEVV::SimpleAdapterVisu *adapter_lcc = nullptr;
+  FEVV::SimpleViewer *viewer_lcc;
   if(open_with == OPEN_WITH_LCC || open_with == OPEN_WITH_ALL)
   {
-    adapter_lcc = new FEVV::SimpleAdapterVisu< FEVV::MeshLCC >();
+    adapter_lcc = new FEVV::SimpleAdapterVisu();
     // adapter_lcc->setWindowTitle(QObject::tr("Linear_cell_complex"));
     adapter_lcc->setWindowTitle(QObject::tr("<Linear_cell_complex - aid: %1>")
                                     .arg((qlonglong)adapter_lcc, 0, 16));
     adapter_lcc->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_lcc = new FEVV::SimpleViewer< FEVV::MeshLCC >();
+    viewer_lcc = new FEVV::SimpleViewer();
     adapter_lcc->attach(viewer_lcc);
     adapter_lcc->init();
     viewer_lcc->init();
@@ -216,17 +216,17 @@ main(int argc, char **argv)
   }
 
   ///// Surface_mesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshSurface > *adapter_surface = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshSurface > *viewer_surface;
+  FEVV::SimpleAdapterVisu *adapter_surface = nullptr;
+  FEVV::SimpleViewer *viewer_surface;
   if(open_with == OPEN_WITH_SURFACEMESH || open_with == OPEN_WITH_ALL)
   {
-    adapter_surface = new FEVV::SimpleAdapterVisu< FEVV::MeshSurface >();
+    adapter_surface = new FEVV::SimpleAdapterVisu();
     // adapter_surface->setWindowTitle(QObject::tr("Surface_mesh"));
     adapter_surface->setWindowTitle(
         QObject::tr("<Surface_mesh - aid: %1>")
             .arg((qlonglong)adapter_surface, 0, 16));
     adapter_surface->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_surface = new FEVV::SimpleViewer< FEVV::MeshSurface >();
+    viewer_surface = new FEVV::SimpleViewer();
     adapter_surface->attach(viewer_surface);
     adapter_surface->init();
     viewer_surface->init();
@@ -234,17 +234,17 @@ main(int argc, char **argv)
   }
 
   ///// Polyhedron
-  FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron > *adapter_polyhedron = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshPolyhedron > *viewer_polyhedron;
+  FEVV::SimpleAdapterVisu *adapter_polyhedron = nullptr;
+  FEVV::SimpleViewer *viewer_polyhedron;
   if(open_with == OPEN_WITH_POLYHEDRON || open_with == OPEN_WITH_ALL)
   {
-    adapter_polyhedron = new FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >();
+    adapter_polyhedron = new FEVV::SimpleAdapterVisu();
     // adapter_polyhedron->setWindowTitle(QObject::tr("Polyhedron_3"));
     adapter_polyhedron->setWindowTitle(
         QObject::tr("<Polyhedron_3 - aid: %1>")
             .arg((qlonglong)adapter_polyhedron, 0, 16));
     adapter_polyhedron->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_polyhedron = new FEVV::SimpleViewer< FEVV::MeshPolyhedron >();
+    viewer_polyhedron = new FEVV::SimpleViewer();
     adapter_polyhedron->attach(viewer_polyhedron);
     adapter_polyhedron->init();
     viewer_polyhedron->init();

@@ -18,11 +18,10 @@
 namespace FEVV {
 
 // class to handle events with a pick
-template< typename HalfedgeGraph >
 class PickHandler : public osgGA::GUIEventHandler
 {
 public:
-  PickHandler(FEVV::SimpleViewer< HalfedgeGraph > *smpViewer,
+  PickHandler(FEVV::SimpleViewer *smpViewer,
               osgText::Text *updateText)
       : _smpViewer(smpViewer), _updateText(updateText)
   {
@@ -42,12 +41,13 @@ public:
 
 protected:
   osg::ref_ptr< osgText::Text > _updateText;
-  FEVV::SimpleViewer< HalfedgeGraph > *_smpViewer = nullptr;
+  FEVV::SimpleViewer *_smpViewer = nullptr;
 };
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-PickHandler< HalfedgeGraph >::handle(const osgGA::GUIEventAdapter &ea,
+PickHandler::handle(const osgGA::GUIEventAdapter &ea,
                                      osgGA::GUIActionAdapter &aa)
 {
   if(ea.getModKeyMask() == osgGA::GUIEventAdapter::MODKEY_SHIFT)
@@ -81,9 +81,10 @@ PickHandler< HalfedgeGraph >::handle(const osgGA::GUIEventAdapter &ea,
   return false;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-PickHandler< HalfedgeGraph >::pick(osgViewer::View *view,
+PickHandler::pick(osgViewer::View *view,
                                    const osgGA::GUIEventAdapter &ea)
 {
   osgUtil::LineSegmentIntersector::Intersections intersections;

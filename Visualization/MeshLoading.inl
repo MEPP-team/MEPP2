@@ -414,8 +414,8 @@ loadColoredMesh(
   return program;
 }
 
-template< typename HalfedgeGraph >
-template< typename VertexNormalMap,
+template< typename HalfedgeGraph,
+          typename VertexNormalMap,
           typename VertexTangentMap,
           typename VertexColorMap,
           typename FaceColorMap,
@@ -423,7 +423,7 @@ template< typename VertexNormalMap,
           typename HalfedgeUVMap,
           typename FaceMaterialMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
+FEVV::SimpleViewer::internal_loadShadedMesh(
     osg::Geode *_geode,
     HalfedgeGraph *_g,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
@@ -720,15 +720,15 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_loadShadedMesh(
   }
 }
 
-template< typename HalfedgeGraph >
-template< typename VertexNormalMap,
+template< typename HalfedgeGraph,
+          typename VertexNormalMap,
           typename VertexColorMap,
           typename FaceColorMap,
           typename VertexUVMap,
           typename HalfedgeUVMap,
           typename FaceMaterialMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::internal_loadLegacyMesh(
+FEVV::SimpleViewer::internal_loadLegacyMesh(
     osg::Geode *_geode,
     HalfedgeGraph *_g,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,

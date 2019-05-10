@@ -120,11 +120,20 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    if(*value_forceCompute)
-      scale(_mesh);
+    // get filter parameters from dialog window
+    DialogScaling1 dial1;
+    dial1.setScale(*value_x, *value_y, *value_z);
+    if(dial1.exec() == QDialog::Accepted)
+      dial1.getScale(*value_x, *value_y, *value_z);
+    else
+      return; // abort applying filter
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    // apply filter
+    scale(_mesh);
+
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
@@ -174,6 +183,17 @@ public:
   }
 #endif
 
+
+  // case where the plugin is applied when no mesh is opened
+  void apply(BaseAdapterVisu *_adapter,
+             void *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));
+  }
+
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "ScalingPlugin";
@@ -181,22 +201,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogScaling1 dial1;
-    dial1.setScale(*value_x, *value_y, *value_z);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getScale(*value_x, *value_y, *value_z);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("scaling_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("scaling_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

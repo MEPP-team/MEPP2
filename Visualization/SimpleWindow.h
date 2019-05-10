@@ -53,7 +53,6 @@
 
 namespace FEVV {
 
-template< typename HalfedgeGraph >
 class SimpleViewer; // NEW 21/07
 
 /**
@@ -170,11 +169,9 @@ public:
                  MeshT *&mesh,
                  FEVV::PMapsContainer &pmaps_bag);
   template< typename MeshT >
-  void empty_mesh(MeshT *&mesh, FEVV::PMapsContainer &pmaps_bag);
-  template< typename MeshT >
   void draw_or_redraw_mesh(/*const */ MeshT *mesh,
                            /*const */ FEVV::PMapsContainer *pmaps_bag,
-                           FEVV::SimpleViewer< MeshT > *viewer,
+                           FEVV::SimpleViewer *viewer,
                            bool _redraw = false,
                            bool _recomputeNT_if_redraw = false,
                            std::string _mesh_filename = std::string(""),
@@ -184,17 +181,19 @@ public:
   void activate_time_mode();
   void activate_space_mode();
 
-  template< typename HalfedgeGraph >
-  void writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer);
+  void writeHG(FEVV::SimpleViewer *viewer);
 
-  template< typename HalfedgeGraph >
-  void actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer, char t, char t2);
+  void actionHG(FEVV::SimpleViewer *viewer, char t, char t2);
 
+  void centerHG(FEVV::SimpleViewer *viewer);
+
+  static std::string chooseDatastructureMsgBox(void);
+
+#if 0 //TODO-elo-rm-?-ask_MTO
   template< typename HalfedgeGraph >
-  void centerHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer);
-  template< typename HalfedgeGraph >
-  void showSelectedHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer);
+  void showSelectedHG(FEVV::SimpleViewer *viewer);
   // NEW 21/07
+#endif
 
 protected:
   void updateModelList(bool pick);
@@ -233,48 +232,14 @@ protected:
 
   void closeEvent(QCloseEvent *event) override;
 
-  void on_actionOpen_Polyhedron_3_NORMAL(bool empty = false);
-  void on_actionOpen_Polyhedron_3_SPACE_TIME();
-#ifdef FEVV_USE_CGAL
-  void on_actionOpen_Polyhedron_3_ADD_SPACE_TIME(
-      FEVV::SimpleViewer< FEVV::MeshPolyhedron > *viewerPolyhedron);
-#endif
+  template< typename HalfedgeGraph >
+  void on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer);
 
-  void on_actionOpen_Surface_mesh_NORMAL(bool empty = false);
-  void on_actionOpen_Surface_mesh_SPACE_TIME();
-#ifdef FEVV_USE_CGAL
-  void on_actionOpen_Surface_mesh_ADD_SPACE_TIME(
-      FEVV::SimpleViewer< FEVV::MeshSurface > *viewerSurface);
-#endif
-
-  void on_actionOpen_Linear_cell_complex_NORMAL(bool empty = false);
-  void on_actionOpen_Linear_cell_complex_SPACE_TIME();
-#ifdef FEVV_USE_CGAL
-  void on_actionOpen_Linear_cell_complex_ADD_SPACE_TIME(
-      FEVV::SimpleViewer< FEVV::MeshLCC > *viewerLCC);
-#endif
-
-  void on_actionOpen_OpenMesh_NORMAL(bool empty = false);
-  void on_actionOpen_OpenMesh_SPACE_TIME();
-#ifdef FEVV_USE_OPENMESH
-  void on_actionOpen_OpenMesh_ADD_SPACE_TIME(
-      FEVV::SimpleViewer< FEVV::MeshOpenMesh > *viewerOpenMesh);
-#endif
-
-  void on_actionOpen_AIFMesh_NORMAL(bool empty = false);
-  void on_actionOpen_AIFMesh_SPACE_TIME();
-#ifdef FEVV_USE_AIF
-  void on_actionOpen_AIFMesh_ADD_SPACE_TIME(
-      FEVV::SimpleViewer< FEVV::MeshAIF > *viewerAIF);
-#endif
+  FEVV::SimpleViewer* createNewViewer(void);
 
 protected slots:
   void on_actionNew_triggered();
-  void on_actionOpen_Polyhedron_3_triggered();
-  void on_actionOpen_Surface_mesh_triggered();
-  void on_actionOpen_Linear_cell_complex_triggered();
-  void on_actionOpen_OpenMesh_triggered();
-  void on_actionOpen_AIFMesh_triggered();
+  void on_actionOpen_triggered();
   void on_actionSaveAs_triggered();
   void on_actionClose_triggered();
   void on_actionQuit_triggered();
@@ -306,7 +271,9 @@ protected slots:
 
   void on_actionShow_Axis_triggered();
   void on_actionShow_Grid_triggered();
+#if 0 //TODO-elo-rm-?-ask_MTO
   void on_actionShow_Selected_triggered();
+#endif
   void on_actionShow_Translation_Draggers_triggered();
   void on_actionShow_Rotation_Draggers_triggered();
 
