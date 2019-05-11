@@ -62,7 +62,7 @@ FEVV::SimpleViewer::~SimpleViewer()
       // std::cout << "--> myAdapter erase in ~SimpleViewer - TAB SIZE: " <<
       // (*adapters).size() << std::endl;
 
-      SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+      SimpleWindow *sw = static_cast< SimpleWindow * >(getWindow());
       sw->update();
     }
   }

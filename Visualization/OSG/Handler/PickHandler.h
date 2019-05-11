@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -12,6 +12,8 @@
 
 #include <osg/io_utils>
 //#include <osgText/Text>
+#include "Visualization/SimpleViewer.h"
+#include "Visualization/SimpleWindow.h"
 
 //#include <sstream>
 
@@ -134,7 +136,7 @@ PickHandler::pick(osgViewer::View *view,
             // std::endl;
 
             FEVV::SimpleWindow *sw =
-                dynamic_cast< FEVV::SimpleWindow * >(_smpViewer->getWindow());
+                static_cast< FEVV::SimpleWindow * >(_smpViewer->getWindow());
             sw->update(true);
           }
 
