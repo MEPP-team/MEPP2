@@ -115,6 +115,11 @@ public:
   AIFMesh(const Self &);
 
   /*!
+  * 			Destructor
+  */
+  ~AIFMesh();
+
+  /*!
    * 			= operator (deep copy)
    */
   Self &operator=(const Self &); 
@@ -257,8 +262,22 @@ public:
     if (idx != -1)
     {
       // remove element from container
-      std::size_t cLastId = container.remove(idx);
-
+      std::size_t cLastId;
+      if (container[idx]->GetIndex() == idx)
+        cLastId = container.remove(idx);
+      else
+      {
+        std::cerr << "EraseIsolatedCell: Warning: cell index does not match container index. A linear search is thus done." << std::endl;
+        auto it = container.begin(), it_e = container.end();
+        for (std::size_t cpt=0; it != it_e; ++it,++cpt)
+        {
+          if ((*it)->GetIndex() == idx)
+          {
+            cLastId = container.remove(cpt);
+            break;
+          }
+        }
+      }
       // remove entry from property maps
       PropertyMapContainer *pmc = GetPropertyMapContainer<T>();
 

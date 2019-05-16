@@ -365,6 +365,7 @@ public:
 class BasePropertyMap
 {
 public:
+  virtual ~BasePropertyMap() {}
   virtual void forcePolymorphic(void) {}
   virtual void remove(std::size_t idx, std::size_t cLastIdx) {}
 };
@@ -584,6 +585,13 @@ public:
   * Remove all property maps.
   */
   void clear() {
+    // delete property maps
+    for (auto &m : m_PropertyMaps)
+      if (m.second != NULL)
+      {
+        delete m.second;
+        m.second = NULL; // in case of cross-reference
+      }
     m_PropertyMaps.clear();
   }
 

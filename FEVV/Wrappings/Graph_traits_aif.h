@@ -1086,13 +1086,11 @@ inline add_edge(typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh 
          typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor t,
          FEVV::DataStructures::AIF::AIFMesh & g)
 {
-  typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e = add_edge(g);
+  typename boost::graph_traits<FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e = AIFHelpers::add_edge(s, t, g).first;
   
-  // link the edge and the vertices
-  AIFHelpers::link_vertex_and_edge(
-  	s, e, AIFHelpers::vertex_pos::FIRST);
-  AIFHelpers::link_vertex_and_edge(
-  	t, e, AIFHelpers::vertex_pos::SECOND);  
+  if (source(e, g) != s)
+    AIFHelpers::swap_vertices(e);
+
   return e;
 }
 #endif
