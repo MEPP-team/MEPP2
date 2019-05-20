@@ -184,7 +184,7 @@ public:
   }
 
   static const Vector NULL_VECTOR;
-  static const Point NULL_POINT;  
+  static const Point ORIGIN;  
 
 protected:
   Mesh &m_mesh;
@@ -196,10 +196,10 @@ const typename Geometry_traits< MeshT, AIF_mesh_kernel_generator >::Vector
     Geometry_traits< MeshT, AIF_mesh_kernel_generator >::NULL_VECTOR =
         typename Geometry_traits< MeshT >::Vector(0.0, 0.0, 0.0);
 
-// Initialisation of static member NULL_POINT of above AIFMesh specialization
+// Initialisation of static member ORIGIN of above AIFMesh specialization
 template< typename MeshT >
 const typename Geometry_traits< MeshT, AIF_mesh_kernel_generator >::Point
-    Geometry_traits< MeshT, AIF_mesh_kernel_generator >::NULL_POINT =
+    Geometry_traits< MeshT, AIF_mesh_kernel_generator >::ORIGIN =
         typename Geometry_traits< MeshT >::Point(0.0, 0.0, 0.0);
 
 } // namespace FEVV

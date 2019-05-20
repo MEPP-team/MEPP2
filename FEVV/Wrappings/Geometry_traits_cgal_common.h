@@ -195,7 +195,7 @@ public:
   }
 
   static const Vector NULL_VECTOR;
-  static const Point NULL_POINT;
+  static const Point ORIGIN;
   
 protected:
   MeshT &m_mesh;
@@ -212,13 +212,12 @@ const typename Geometry_traits_for_cgal< MeshT, KernelT >::Vector
 
 /**
  * \ingroup Geometry_traits_group
- * \brief Initialisation of static member NULL_POINT of
+ * \brief Initialisation of static member ORIGIN of
  *        \ref Geometry_traits_for_cgal class.
  */
 template< typename MeshT, typename KernelT >
 const typename Geometry_traits_for_cgal< MeshT, KernelT >::Point
-    Geometry_traits_for_cgal< MeshT, KernelT >::NULL_POINT = 
-	typename Geometry_traits_for_cgal< MeshT, KernelT >::Point(0.0, 0.0, 0.0);
+    Geometry_traits_for_cgal< MeshT, KernelT >::ORIGIN = CGAL::ORIGIN;
 
 } // namespace FEVV
 
