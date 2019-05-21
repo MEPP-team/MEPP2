@@ -193,8 +193,11 @@ FEVV::SimpleViewer::init()
   // LIGHT (test)
 
   gizmo = Debug::createGizmo();
+  gizmo->setNodeMask(m_ShowAxis ? 0xffffffff : 0x0);
   addGroup(gizmo);
+
   grid = Debug::createUnitGrid();
+  grid->setNodeMask(m_ShowGrid ? 0xffffffff : 0x0);
   addGroup(grid);
 
   // hud = Debug::createHud(hudText);
