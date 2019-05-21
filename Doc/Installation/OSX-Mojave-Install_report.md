@@ -34,6 +34,6 @@ $ ctest
 ````
 $ brew install doxygen            # 1.8.15
 $ brew install graphviz           # 2.40.1
-$ ccmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release BUILD_USE_QT5 -DQT5_DIR=/usr/local/Cellar/qt/5.12.3 -DBUILD_USE_QT5=ON ..
+$ ccmake -DBUILD_USE_GUI=OFF -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release ..
 $ make
 ````
