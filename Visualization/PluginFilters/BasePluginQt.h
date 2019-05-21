@@ -112,8 +112,7 @@ public:
     QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
     QPushButton *openmesh_button = msgbox.addButton("OpenMesh", QMessageBox::ResetRole);
     QPushButton *aif_button = msgbox.addButton("AIF", QMessageBox::ResetRole);
-
-    //QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
+    QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
 
     msgbox.exec();
 

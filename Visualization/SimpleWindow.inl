@@ -806,6 +806,8 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
 
   // ask the user for the datastructure
   std::string mesh_type = chooseDatastructureMsgBox();
+  if(mesh_type == "NONE")
+    return; // cancel pressed, aborting
 
   // open mesh(es)
 #ifdef FEVV_USE_CGAL
@@ -1990,8 +1992,7 @@ FEVV::SimpleWindow::chooseDatastructureMsgBox(void)
   QPushButton *lcc_button = msgbox.addButton(tr("LCC"), QMessageBox::ResetRole);
   QPushButton *openmesh_button = msgbox.addButton(tr("OpenMesh"), QMessageBox::ResetRole);
   QPushButton *aif_button = msgbox.addButton(tr("AIF"), QMessageBox::ResetRole);
-
-  //QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
+  QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
 
   msgbox.exec();
 

@@ -307,6 +307,8 @@ public:
   {
     // ask the user for the datastructure
     std::string mesh_type = chooseDatastructureMsgBox();
+    if(mesh_type == "NONE")
+      return; // cancel pressed, aborting
 
     // apply plugin
 #ifdef FEVV_USE_CGAL
