@@ -10,8 +10,8 @@ CMake compilation flags short list:
  - `BUILD_DOCUMENTATION`: build the documentation (ON or OFF)
  
  Platform specifics:
-   - [Ubuntu](#linux-installation)
-   - [OSX](#macos-installation)
+   - [Linux Ubuntu](#linux-ubuntu-installation)
+   - [MacOS](#macos-installation)
    - [Windows](#windows-installation)
 
 ## Dependencies
@@ -34,7 +34,7 @@ Other optional dependencies are:
  - FBX
  - Draco
 
-## Linux installation
+## Linux Ubuntu installation
 
 ### Install dependencies
 
@@ -156,9 +156,8 @@ Scripting commands for compiling Mepp2:
 ````
 
 ## MacOS installation
-Various succeful installations that we reported:
- - [Mojave (10.4.4)](Doc/Installation/OSX-Mojave-Install_report.md)
-
+Various successful installations that we reported:
+ - [Mojave (10.14.4)](Doc/Installation/OSX-Mojave-Install_report.md)
 
 ### Install dependencies
 Mandatory dependencies:
