@@ -1867,6 +1867,9 @@ FEVV::SimpleViewer::createMesh(
   v_geodes.push_back(geode);
   v_meshIsSelected.push_back(false);
 
+  // select newly created mesh
+  setNodeSelected(geode, true);
+
   // time
   i_time++;
 
@@ -2263,6 +2266,14 @@ FEVV::SimpleViewer::setNodeSelected(osg::Node *_geode,
         }
     }
     return;
+#endif
+
+#if 0
+  //TODO-elo-DEBUG
+  std::cout << "viewer " << this << "  v_meshIsSelected =";
+  for(bool b: v_meshIsSelected)
+    std::cout << " " << b;
+  std::cout << std::endl;
 #endif
 }
 

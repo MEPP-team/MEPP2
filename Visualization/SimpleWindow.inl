@@ -563,6 +563,9 @@ FEVV::SimpleWindow::enableSpaceTimeMenus()
 inline void
 FEVV::SimpleWindow::updateModelList(bool pick)
 {
+  pick = true;
+  //ELO-note: forcing the pick flag to true make mesh selection work as
+  //          expected in SPACE/TIME mode. Don't know why.
   using Viewer = BaseViewerOSG;
 
   ui.listModels->clear(); //<! All items will be permanently deleted.
