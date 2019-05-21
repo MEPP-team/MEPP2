@@ -8,6 +8,11 @@ CMake compilation flags short list:
  - `BUILD_USE_OPENMESH `: use OpenMesh library (ON or OFF)
  - `BUILD_USE_GUI      `: use GUI (ON or OFF)
  - `BUILD_DOCUMENTATION`: build the documentation (ON or OFF)
+ 
+ Platform specifics:
+   - [Ubuntu](#linux-installation)
+   - [OSX](#macos-installation)
+   - [Windows](#windows-installation)
 
 ## Dependencies
 Mandatory dependencies:
@@ -151,6 +156,9 @@ Scripting commands for compiling Mepp2:
 ````
 
 ## MacOS installation
+Various succeful installations that we reported:
+ - [Mojave (10.4.4)](Doc/Installation/OSX-Mojave-Install_report.md)
+
 
 ### Install dependencies
 Mandatory dependencies:
