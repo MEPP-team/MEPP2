@@ -110,7 +110,7 @@ PickHandler::pick(osgViewer::View *view,
         os << "Object \"" << hitr->nodePath.back()->getName() << "\""
            << std::endl;
 
-        if(hitr->nodePath.back()->getName().compare(0, 4, "Mesh") == 0)
+        if(hitr->nodePath.back()->getDescription(0) == "MESH")
         {
           std::cout << "Object \"" << hitr->nodePath.back()->getName() << "\""
                     << std::endl;

@@ -1659,9 +1659,9 @@ FEVV::SimpleViewer::internal_createMesh(
   // bavQt->windowTitle().toStdString() + std::string("]") );
 
   std::string ds_name = FEVV::getDatastructureName(_g);
-  geode->setName(std::string("") + _mesh_file +
-                 std::string(" [") + ds_name + ", " +
+  geode->setName(_mesh_file + std::string(" [") + ds_name + " " +
                  bavQt->windowTitle().toStdString() + std::string("]"));
+  geode->addDescription("MESH");
 }
 
 
