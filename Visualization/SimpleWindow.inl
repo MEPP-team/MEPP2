@@ -726,7 +726,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
   options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
 #endif
 
-  QStringList files =
+  QStringList files_qt =
       QFileDialog::getOpenFileNames(this,
                                     "Open (SPACE/TIME)",
                                     /*openLocation*/ QDir::currentPath(),
@@ -734,22 +734,36 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
                                     &suffix,
                                     options);
 
+  // convert QStringList to standard type
+  std::vector< std::string > files;
+  for(auto qstr: files_qt)
+    files.push_back(qstr.toStdString());
+
+  // open files
+  open_SPACE_TIME< HalfedgeGraph >(viewer, files);
+}
+
+
+template< typename HalfedgeGraph >
+inline void
+FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
+                                    const std::vector< std::string >& files)
+{
   // open a new viewer if needed
   if(files.size() > 0 && viewer == nullptr)
     viewer = createNewViewer();
 
   // load and draw meshes
-  QStringList::Iterator it = files.begin();
   int m = 0;
-  while(it != files.end())
+  for(auto filename: files)
   {
     HalfedgeGraph *mesh = nullptr; 
-      // already destroy by the viewer destructor
+      // destroyed by the viewer destructor
     FEVV::PMapsContainer *p_pmaps_bag = new FEVV::PMapsContainer;
-      // already destroy by the viewer destructor
+      // destroyed by the viewer destructor
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mesh, *p_pmaps_bag);
+    load_mesh(filename, mesh, *p_pmaps_bag);
     QApplication::restoreOverrideCursor();
 
     draw_or_redraw_mesh(
@@ -758,10 +772,9 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
         viewer,
         false,
         false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
+        FEVV::FileUtils::get_file_full_name(filename),
         m * STEP_SPACE);
 
-    ++it;
     ++m;
   }
 

@@ -232,10 +232,29 @@ protected:
 
   void closeEvent(QCloseEvent *event) override;
 
+  /**
+   * \brief  Open button/menu callback function.
+   */
   template< typename HalfedgeGraph >
   void on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer);
 
+  /**
+   * \brief  Create a new empty viewer.
+   */
   FEVV::SimpleViewer* createNewViewer(void);
+
+public:
+  /**
+   * \brief  Open meshes in a viewer with datastructure HalfedgeGraph.
+   *
+   * \param  viewer  viewer to open the meshes into ; if nullptr is passed,
+   *                 a new viewer is opened
+   * \param  filenames  list of mesh file names to open
+   */
+  template< typename HalfedgeGraph >
+  void open_SPACE_TIME(FEVV::SimpleViewer *viewer,
+                       const std::vector< std::string >& filenames);
+
 
 protected slots:
   void on_actionNew_triggered();
