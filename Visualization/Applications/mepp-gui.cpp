@@ -150,7 +150,12 @@ main(int argc, char **argv)
 
   // gui->resize(QDesktopWidget().availableGeometry().size() * 0.7);
   QRect screen_size = QDesktopWidget().availableGeometry();
-  gui.resize(screen_size.width() * 0.9, screen_size.height() * 0.8);
+  int win_w = screen_size.width() * 0.9;
+  int win_h = screen_size.height() * 0.8;
+  int pos_x = (screen_size.width() - win_w) / 2;
+  int pos_y = (screen_size.height() - win_h) / 2;
+  gui.move(pos_x, pos_y);
+  gui.resize(win_w, win_h);
 
   gui.loadQtPlugins();
 
