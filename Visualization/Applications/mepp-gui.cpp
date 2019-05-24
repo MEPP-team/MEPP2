@@ -129,10 +129,9 @@ main(int argc, char **argv)
 
   FEVV::Block::begin("init", "Init Visualization.");
   FEVV::SimpleApplication app(argc, argv);
-  FEVV::SimpleWindow *gui;
+  FEVV::SimpleWindow gui;
 
-  gui = new FEVV::SimpleWindow();
-  gui->setWindowTitle(
+  gui.setWindowTitle(
       QObject::tr("%1 - %2 - %3 - %4 - Qt (compiled) %5 - Qt (run-time) %6 - "
                   "OSG %7 - CGAL %8 (%9.%10.%11)")
           .arg(MAINWINDOW_TITLE)
@@ -147,15 +146,13 @@ main(int argc, char **argv)
           .arg(CGAL_VERSION_MINOR)
           .arg(CGAL_VERSION_PATCH));
 
-  gui->init(test);
+  gui.init(test);
 
   // gui->resize(QDesktopWidget().availableGeometry().size() * 0.7);
   QRect screen_size = QDesktopWidget().availableGeometry();
-  gui->resize(screen_size.width() * 0.9, screen_size.height() * 0.8);
+  gui.resize(screen_size.width() * 0.9, screen_size.height() * 0.8);
 
-  gui->show();
-
-  gui->loadQtPlugins();
+  gui.loadQtPlugins();
 
   FEVV::Block::end("init");
 
@@ -171,7 +168,7 @@ main(int argc, char **argv)
   {
     FEVV::Block::begin("loading-polyhedron", "Loading Polyhedron mesh.");
     {
-      gui->open_SPACE_TIME< FEVV::MeshPolyhedron >(nullptr, mesh_filenames);
+      gui.open_SPACE_TIME< FEVV::MeshPolyhedron >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-polyhedron");
   }
@@ -181,7 +178,7 @@ main(int argc, char **argv)
   {
     FEVV::Block::begin("loading-surface", "Loading SurfaceMesh mesh.");
     {
-      gui->open_SPACE_TIME< FEVV::MeshSurface >(nullptr, mesh_filenames);
+      gui.open_SPACE_TIME< FEVV::MeshSurface >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-surface");
     /// [Snippet Displaying Surface SurfaceMesh]
@@ -192,7 +189,7 @@ main(int argc, char **argv)
   {
     FEVV::Block::begin("loading-lcc", "Loading LCC mesh.");
     {
-      gui->open_SPACE_TIME< FEVV::MeshLCC >(nullptr, mesh_filenames);
+      gui.open_SPACE_TIME< FEVV::MeshLCC >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-lcc");
   }
@@ -204,7 +201,7 @@ main(int argc, char **argv)
   {
     FEVV::Block::begin("loading-openmesh", "Loading OpenMesh mesh.");
     {
-      gui->open_SPACE_TIME< FEVV::MeshOpenMesh >(nullptr, mesh_filenames);
+      gui.open_SPACE_TIME< FEVV::MeshOpenMesh >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-openmesh");
   }
@@ -216,18 +213,14 @@ main(int argc, char **argv)
   {
     FEVV::Block::begin("loading-aif", "Loading AIF mesh.");
     {
-      gui->open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);
+      gui.open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-aif");
   }
 #endif // FEVV_USE_AIF
 
-
+  gui.show();
   int ret = app.exec();
-
-  /////// Cleaning stuff
-  delete gui;
-  /////// Cleaning stuff
 
   return ret;
 }
