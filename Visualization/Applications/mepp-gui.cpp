@@ -117,6 +117,8 @@ main(int argc, char **argv)
     }
   }
 
+// init GUI
+
 #ifdef Q_WS_X11
 #if QT_VERSION >= 0x040800
   // Required for multithreaded QGLWidget on Linux/X11,
@@ -161,11 +163,11 @@ main(int argc, char **argv)
 
   FEVV::Block::end("init");
 
+  // open mesh file provided on command line
+
   std::vector< std::string > mesh_filenames;
   if(open_with != OPEN_WITH_NONE)
     mesh_filenames.push_back(std::string(argv[1]));
-
-  // open mesh file provided on command line
 
 #ifdef FEVV_USE_CGAL
   ///// Polyhedron
@@ -223,6 +225,8 @@ main(int argc, char **argv)
     FEVV::Block::end("loading-aif");
   }
 #endif // FEVV_USE_AIF
+
+  // run GUI
 
   gui.show();
   int ret = app.exec();
