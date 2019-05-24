@@ -214,8 +214,6 @@ main(int argc, char **argv)
   ///// AIF
   if(open_with == OPEN_WITH_AIF || open_with == OPEN_WITH_ALL)
   {
-    FEVV::PMapsContainer *p_aif_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
     FEVV::Block::begin("loading-aif", "Loading AIF mesh.");
     {
       gui->open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);

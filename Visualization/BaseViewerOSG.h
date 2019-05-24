@@ -84,7 +84,10 @@ public:
   {
     delete visitor;
     root_node->removeChildren(0, root_node->getNumChildren());
-    // delete root_node;
+    //delete root_node;
+    //ELO-note: osg::Group destructor is protected ;
+    //          can not be called directly!
+    //          error: calling a protected destructor of class 'osg::Group'
   }
 
   /**
