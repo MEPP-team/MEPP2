@@ -1995,44 +1995,63 @@ std::string
 FEVV::SimpleWindow::chooseDatastructureMsgBox(void)
 {
   QMessageBox msgbox;
-  msgbox.setWindowTitle(tr("Datastructure"));
-  msgbox.setText(tr("Choose a datastructure to store the mesh(es):"));
+  msgbox.setWindowTitle("Datastructure");
+  msgbox.setText("Choose a datastructure to store the mesh(es):");
   msgbox.setIcon(QMessageBox::Question);
 
   // here the Role is used to order the buttons
-  QPushButton *polyhedron_button = msgbox.addButton(tr("Polyhedron_3"), QMessageBox::ResetRole);
-  QPushButton *surfacemesh_button = msgbox.addButton(tr("Surface_mesh"), QMessageBox::ResetRole);
-  QPushButton *lcc_button = msgbox.addButton(tr("LCC"), QMessageBox::ResetRole);
-  QPushButton *openmesh_button = msgbox.addButton(tr("OpenMesh"), QMessageBox::ResetRole);
-  QPushButton *aif_button = msgbox.addButton(tr("AIF"), QMessageBox::ResetRole);
+#ifdef FEVV_USE_CGAL
+  QPushButton *polyhedron_button =
+      msgbox.addButton("Polyhedron_3", QMessageBox::ResetRole);
+  QPushButton *surfacemesh_button =
+      msgbox.addButton("Surface_mesh", QMessageBox::ResetRole);
+  QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+  QPushButton *openmesh_button =
+      msgbox.addButton("OpenMesh", QMessageBox::ResetRole);
+#endif
+
+#ifdef FEVV_USE_AIF
+  QPushButton *aif_button = msgbox.addButton("AIF", QMessageBox::ResetRole);
+#endif
+
   QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
 
   msgbox.exec();
+  std::string choice("NONE");
 
+#ifdef FEVV_USE_CGAL
   if(msgbox.clickedButton() == polyhedron_button)
   {
-    return "POLYHEDRON";
+    choice = "POLYHEDRON";
   }
   else if(msgbox.clickedButton() == surfacemesh_button)
   {
-    return "SURFACEMESH";
+    choice = "SURFACEMESH";
   }
   else if(msgbox.clickedButton() == lcc_button)
   {
-    return "LCC";
+    choice = "LCC";
   }
-  else if(msgbox.clickedButton() == openmesh_button)
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+  if(msgbox.clickedButton() == openmesh_button)
   {
-    return "OPENMESH";
+    choice = "OPENMESH";
   }
-  else if(msgbox.clickedButton() == aif_button)
+#endif
+
+#ifdef FEVV_USE_AIF
+  if(msgbox.clickedButton() == aif_button)
   {
-    return "AIF";
+    choice = "AIF";
   }
-  else
-  {
-    return "NONE";
-  }
+#endif
+
+  return choice;
 }
 
 
