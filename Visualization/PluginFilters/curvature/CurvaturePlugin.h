@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -51,7 +51,7 @@ namespace FEVV {
 
 class CurvaturePlugin : public QObject,
                         public Generic_PluginInterface,
-                        public BasePlugin
+                        public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -978,6 +978,14 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
+    // get filter parameters from dialog window
+    DialogCurvature1 dial1;
+    dial1.setCurvature(*value_isGeod, *value_radius);
+    if(dial1.exec() == QDialog::Accepted)
+      dial1.getCurvature(*value_isGeod, *value_radius);
+    else
+      return; // abort applying filter
+
     using VertexCurvatureMapHG =
         FEVV::Vertex_pmap< HalfedgeGraph, Filters::v_Curv< HalfedgeGraph > >;
 
@@ -1064,8 +1072,7 @@ public:
                       (*value_colorField)); // 1 : min, 2 : max
     // ---
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    auto viewer = dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
@@ -1115,6 +1122,7 @@ public:
   }
 #endif
 
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "CurvaturePlugin";
@@ -1122,22 +1130,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogCurvature1 dial1;
-    dial1.setCurvature(*value_isGeod, *value_radius);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getCurvature(*value_isGeod, *value_radius);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("curvature_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("curvature_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

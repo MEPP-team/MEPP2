@@ -37,13 +37,15 @@
 #include "FEVV/Filters/Generic/Manifold/calculate_halfedges_tangent.hpp"
 #include "FEVV/Filters/Generic/translation.hpp"
 
-template< typename HalfedgeGraph >
-FEVV::SimpleViewer< HalfedgeGraph >::SimpleViewer() : BaseViewerOSG()
+
+inline
+FEVV::SimpleViewer::SimpleViewer() : BaseViewerOSG()
 {
 }
 
-template< typename HalfedgeGraph >
-FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
+
+inline
+FEVV::SimpleViewer::~SimpleViewer()
 {
   // std::cout << "--> ~SimpleViewer" << std::endl;
 
@@ -60,7 +62,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
       // std::cout << "--> myAdapter erase in ~SimpleViewer - TAB SIZE: " <<
       // (*adapters).size() << std::endl;
 
-      SimpleWindow *sw = dynamic_cast< SimpleWindow * >(getWindow());
+      SimpleWindow *sw = static_cast< SimpleWindow * >(getWindow());
       sw->update();
     }
   }
@@ -73,16 +75,52 @@ FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
   for (unsigned int ii = 0; ii < v_draggers2.size(); ++ii)
           delete v_draggers2[ii];	// -> impossible, car "smart pointer"*/
 
-  for(unsigned int ii = 0; ii < v_meshes.size(); ++ii)
+  for(unsigned int ii = 0; ii < v_mixed_meshes.size(); ++ii)
   {
     {
-      delete v_meshes[ii];
-      // std::cout << "--> delete v_meshes[ii] (" <<
-      // bavQt->windowTitle().toStdString() << ") in ~SimpleViewer" <<
-      // std::endl;
+      auto mesh_type_pair = v_mixed_meshes[ii];
+
+#ifdef FEVV_USE_CGAL
+      if(mesh_type_pair.second == "POLYHEDRON")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshPolyhedron* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure POLYHEDRON" << std::endl;
+        delete mesh_ptr;
+      }
+      if(mesh_type_pair.second == "SURFACEMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshSurface* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure SURFACEMESH" << std::endl;
+        delete mesh_ptr;
+      }
+      if(mesh_type_pair.second == "LCC")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshLCC* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure LCC" << std::endl;
+        delete mesh_ptr;
+      }
+#endif //FEVV_USE_CGAL
+
+#ifdef FEVV_USE_OPENMESH
+      if(mesh_type_pair.second == "OPENMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshOpenMesh* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure OPENMESH" << std::endl;
+        delete mesh_ptr;
+      }
+#endif //FEVV_USE_OPENMESH
+
+#ifdef FEVV_USE_AIF
+      if(mesh_type_pair.second == "AIF")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshAIF* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure AIF" << std::endl;
+        delete mesh_ptr;
+      }
+#endif //FEVV_USE_AIF
     }
   }
-
+  
   for(unsigned int ii = 0; ii < v_properties_maps.size(); ++ii)
   {
     delete v_properties_maps[ii];
@@ -107,9 +145,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::~SimpleViewer()
   //        etc...
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::init()
+FEVV::SimpleViewer::init()
 {
   if(!Assert::check(
          !bIsInit, "is already init. Leaving...", "SimpleViewer::init"))
@@ -154,8 +193,11 @@ FEVV::SimpleViewer< HalfedgeGraph >::init()
   // LIGHT (test)
 
   gizmo = Debug::createGizmo();
+  gizmo->setNodeMask(m_ShowAxis ? 0xffffffff : 0x0);
   addGroup(gizmo);
+
   grid = Debug::createUnitGrid();
+  grid->setNodeMask(m_ShowGrid ? 0xffffffff : 0x0);
   addGroup(grid);
 
   // hud = Debug::createHud(hudText);
@@ -170,16 +212,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::init()
   bIsInit = true;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleViewer< HalfedgeGraph >::isInit() const
+FEVV::SimpleViewer::isInit() const
 {
   return bIsInit;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleViewer< HalfedgeGraph >::isValid() const
+FEVV::SimpleViewer::isValid() const
 {
   return bIsInit;
 }
@@ -198,9 +242,10 @@ FEVV::SimpleViewer<HalfedgeGraph>::isSelected() const
     return false;
 }*/
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleViewer< HalfedgeGraph >::changeBackgroundColor(
+FEVV::SimpleViewer::changeBackgroundColor(
     const FEVV::Color &_color)
 {
   // osgViewer::View* _osgView = getView(0); // for osgViewer::CompositeViewer
@@ -211,9 +256,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::changeBackgroundColor(
   return true;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleViewer< HalfedgeGraph >::saveScreenshot(const std::string &_name)
+FEVV::SimpleViewer::saveScreenshot(const std::string &_name)
 {
   std::unique_ptr< osgViewer::ScreenCaptureHandler > scrn(
       new osgViewer::ScreenCaptureHandler());
@@ -227,9 +273,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::saveScreenshot(const std::string &_name)
   return true;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::addModel(Model *_geode)
+FEVV::SimpleViewer::addModel(Model *_geode)
 {
   root_node->addChild(_geode);
   if(myWindow != nullptr)
@@ -241,9 +288,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::addModel(Model *_geode)
   // optimizer.optimize( root_node );
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::addGroup(Group *_group)
+FEVV::SimpleViewer::addGroup(Group *_group)
 {
   root_node->addChild(_group);
   if(myWindow != nullptr)
@@ -255,9 +303,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::addGroup(Group *_group)
   // optimizer.optimize( root_node );
 }
 
-template< typename HalfedgeGraph >
-typename FEVV::SimpleViewer< HalfedgeGraph >::DataModelVector *
-FEVV::SimpleViewer< HalfedgeGraph >::getDataModel()
+
+inline
+typename FEVV::SimpleViewer::DataModelVector *
+FEVV::SimpleViewer::getDataModel()
 {
   visitor->reset();
 
@@ -266,9 +315,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::getDataModel()
   return visitor->exportResults();
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Geode * >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelectedGeodes()
+FEVV::SimpleViewer::getSelectedGeodes()
 {
   std::vector< osg::Geode * > result;
   unsigned int i_pos = 0;
@@ -284,24 +334,26 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelectedGeodes()
   return result;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Geode * >
-FEVV::SimpleViewer< HalfedgeGraph >::getGeodes()
+FEVV::SimpleViewer::getGeodes()
 {
   return v_geodes;
 }
 
-template< typename HalfedgeGraph >
-std::vector< HalfedgeGraph * >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelectedMeshes()
+
+inline
+FEVV::MixedMeshesVector
+FEVV::SimpleViewer::getSelectedMeshes()
 {
-  std::vector< HalfedgeGraph * > result;
+  FEVV::MixedMeshesVector result;
   unsigned int i_pos = 0;
   for(bool b : v_meshIsSelected)
   {
     if(b)
     {
-      result.push_back(v_meshes[i_pos]);
+      result.push_back(v_mixed_meshes[i_pos]);
     }
     ++i_pos;
   }
@@ -309,16 +361,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelectedMeshes()
   return result;
 }
 
-template< typename HalfedgeGraph >
-std::vector< HalfedgeGraph * >
-FEVV::SimpleViewer< HalfedgeGraph >::getMeshes()
+
+inline
+FEVV::MixedMeshesVector
+FEVV::SimpleViewer::getMeshes()
 {
-  return v_meshes;
+  return v_mixed_meshes;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< std::string >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelectedMeshesNames()
+FEVV::SimpleViewer::getSelectedMeshesNames()
 {
   std::vector< std::string > result;
   unsigned int i_pos = 0;
@@ -334,16 +388,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelectedMeshesNames()
   return result;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< std::string >
-FEVV::SimpleViewer< HalfedgeGraph >::getMeshesNames()
+FEVV::SimpleViewer::getMeshesNames()
 {
   return v_meshes_names;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< FEVV::PMapsContainer * >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelected_properties_maps()
+FEVV::SimpleViewer::getSelected_properties_maps()
 {
   std::vector< FEVV::PMapsContainer * > result;
   unsigned int i_pos = 0;
@@ -359,16 +415,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelected_properties_maps()
   return result;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< FEVV::PMapsContainer * >
-FEVV::SimpleViewer< HalfedgeGraph >::get_properties_maps()
+FEVV::SimpleViewer::get_properties_maps()
 {
   return v_properties_maps;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Group * >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelectedDraggers1()
+FEVV::SimpleViewer::getSelectedDraggers1()
 {
   std::vector< osg::Group * > result;
   unsigned int i_pos = 0;
@@ -384,16 +442,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelectedDraggers1()
   return result;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Group * >
-FEVV::SimpleViewer< HalfedgeGraph >::getDraggers1()
+FEVV::SimpleViewer::getDraggers1()
 {
   return v_draggers1;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Group * >
-FEVV::SimpleViewer< HalfedgeGraph >::getSelectedDraggers2()
+FEVV::SimpleViewer::getSelectedDraggers2()
 {
   std::vector< osg::Group * > result;
   unsigned int i_pos = 0;
@@ -409,13 +469,15 @@ FEVV::SimpleViewer< HalfedgeGraph >::getSelectedDraggers2()
   return result;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 std::vector< osg::Group * >
-FEVV::SimpleViewer< HalfedgeGraph >::getDraggers2()
+FEVV::SimpleViewer::getDraggers2()
 {
   return v_draggers2;
 }
 
+#if 0 //TODO-elo-rm-?-ask_MTO
 template< typename HalfedgeGraph >
 HalfedgeGraph *
 FEVV::SimpleViewer< HalfedgeGraph >::getMesh(unsigned int _position)
@@ -426,11 +488,12 @@ FEVV::SimpleViewer< HalfedgeGraph >::getMesh(unsigned int _position)
 
   return v_meshes[_position];
 }
+#endif
 
-template< typename HalfedgeGraph >
-template< typename PointMap >
-inline osg::Geode *
-FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
+
+template< typename HalfedgeGraph, typename PointMap >
+osg::Geode *
+FEVV::SimpleViewer::internal_createMesh(
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
@@ -477,10 +540,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   return geode;
 }
 
-template< typename HalfedgeGraph >
-template< typename PointMap >
+
+template< typename HalfedgeGraph, typename PointMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
+FEVV::SimpleViewer::internal_createMesh(
     osg::Geode *&geode,
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
@@ -502,6 +565,18 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
     PointMap *_pm,
     std::string _mesh_file)
 {
+  using GraphTraits = boost::graph_traits< HalfedgeGraph >;
+  using GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph >;
+  using face_iterator = typename GraphTraits::face_iterator;
+  //using face_descriptor = typename GraphTraits::face_descriptor;
+  using edge_iterator = typename GraphTraits::edge_iterator;
+  //using edge_descriptor = typename GraphTraits::edge_descriptor;
+  using halfedge_descriptor = typename GraphTraits::halfedge_descriptor;
+  using vertex_iterator = typename GraphTraits::vertex_iterator;
+  using vertex_descriptor = typename GraphTraits::vertex_descriptor;
+  using halfedge_point = typename GeometryTraits::Point;
+  using halfedge_vector = typename GeometryTraits::Vector;
+
   // property maps stuff
   using VertexNormalMap =
       typename FEVV::PMap_traits< FEVV::vertex_normal_t,
@@ -1582,9 +1657,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::internal_createMesh(
   // geode->setName( std::string("Mesh ") +
   // std::to_string(Helpers::nbMeshDrawed++) + std::string(" [") +
   // bavQt->windowTitle().toStdString() + std::string("]") );
-  geode->setName(std::string("Mesh '") + _mesh_file + std::string("' [") +
+
+  std::string ds_name = FEVV::getDatastructureName(_g);
+  geode->setName(_mesh_file + std::string(" [") + ds_name + " " +
                  bavQt->windowTitle().toStdString() + std::string("]"));
+  geode->addDescription("MESH");
 }
+
 
 // osgManipulator
 class ScaleConstraint : public osgManipulator::Constraint
@@ -1608,7 +1687,9 @@ public:
   }
 };
 
-inline osgManipulator::Dragger *
+
+inline
+osgManipulator::Dragger *
 createDragger(const std::string &name)
 {
   osgManipulator::Dragger *dragger = 0;
@@ -1639,9 +1720,10 @@ createDragger(const std::string &name)
   return dragger;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 osg::Node *
-FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
+FEVV::SimpleViewer::addDraggersToScene(
     osg::Node *scene,
     const std::string &nameDrag1,
     float fScaleDrag1,
@@ -1716,10 +1798,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::addDraggersToScene(
 }
 // osgManipulator
 
-template< typename HalfedgeGraph >
-template< typename PointMap >
+
+template< typename HalfedgeGraph, typename PointMap >
 osg::ref_ptr< osg::Group >
-FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
+FEVV::SimpleViewer::createMesh(
     HalfedgeGraph *_g,
     PMapsContainer *_pmaps,
     PointMap *_pm,
@@ -1779,11 +1861,14 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
   v_colorsArrays_vertices.push_back(l_colorsArrays_vertices);
   v_texcoordsArrays.push_back(l_texcoordsArrays);
 
-  v_meshes.push_back(_g);
+  v_mixed_meshes.push_back(_g);
   v_meshes_names.push_back(_mesh_file);
   v_properties_maps.push_back(_pmaps);
   v_geodes.push_back(geode);
   v_meshIsSelected.push_back(false);
+
+  // select newly created mesh
+  setNodeSelected(geode, true);
 
   // time
   i_time++;
@@ -1802,10 +1887,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::createMesh(
   return _group;
 }
 
-template< typename HalfedgeGraph >
-template< typename PointMap >
+template< typename HalfedgeGraph, typename PointMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
+FEVV::SimpleViewer::drawMesh(HalfedgeGraph *_g,
                                               PMapsContainer *_pmaps,
                                               PointMap *_pm,
                                               std::string _mesh_file)
@@ -1830,10 +1914,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::drawMesh(HalfedgeGraph *_g,
   QApplication::restoreOverrideCursor();
 }
 
-template< typename HalfedgeGraph >
-template< typename PointMap >
+template< typename HalfedgeGraph, typename PointMap >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
+FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                                                 PMapsContainer *_pmaps,
                                                 PointMap *_pm,
                                                 std::string _mesh_file)
@@ -1857,23 +1940,13 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
   // ---
 
   unsigned int position;
+  position = getMeshId(static_cast< void * >(_g));
+
+  if(! Assert::check(position != -1,
+        "mesh was not found. Leaving...",
+        "SimpleViewer::redrawMesh"))
   {
-    unsigned int i_pos = 0;
-    for(HalfedgeGraph *m : v_meshes)
-    {
-      if(m == _g)
-      {
-        position = i_pos;
-        break;
-      }
-      ++i_pos;
-    }
-    if(!Assert::check(i_pos != v_meshes.size(),
-                      "mesh was not found. Leaving...",
-                      "SimpleViewer::redrawMesh"))
-    {
-      return;
-    }
+    return;
   }
 
   // update mesh name during redraw if != ""
@@ -1937,26 +2010,16 @@ FEVV::SimpleViewer< HalfedgeGraph >::redrawMesh(HalfedgeGraph *_g,
 
 template< typename HalfedgeGraph >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
+FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
 {
   unsigned int position;
+  position = getMeshId(static_cast< void * >(_g));
+
+  if(! Assert::check(position != -1,
+        "mesh was not found. Leaving...",
+        "SimpleViewer::centerMesh"))
   {
-    unsigned int i_pos = 0;
-    for(HalfedgeGraph *m : v_meshes)
-    {
-      if(m == _g)
-      {
-        position = i_pos;
-        break;
-      }
-      ++i_pos;
-    }
-    if(!Assert::check(i_pos != v_meshes.size(),
-                      "mesh was not found. Leaving...",
-                      "SimpleViewer::centerMesh"))
-    {
-      return;
-    }
+    return;
   }
 
   // ---
@@ -1995,9 +2058,9 @@ FEVV::SimpleViewer< HalfedgeGraph >::centerMesh(HalfedgeGraph *_g)
 }
 
 
-template< typename HalfedgeGraph >
+inline
 osg::Matrix
-FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixOsg(
+FEVV::SimpleViewer::getTransformMatrixOsg(
     unsigned int position)
 {
   assert(position < v_geodes.size());
@@ -2009,9 +2072,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixOsg(
   return matrix; // 4x4 homogeneous matrix
 }
 
-template< typename HalfedgeGraph >
+
+inline
 Eigen::Matrix4d
-FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixEigen(
+FEVV::SimpleViewer::getTransformMatrixEigen(
     unsigned int position)
 {
   osg::Matrix osg_mat = getTransformMatrixOsg(position);
@@ -2029,9 +2093,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::getTransformMatrixEigen(
   return eigen_mat; // 4x4 homogeneous matrix
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::resetTransformMatrix(unsigned int position)
+FEVV::SimpleViewer::resetTransformMatrix(unsigned int position)
 {
   assert(position < v_geodes.size());
   osg::MatrixTransform *grp_MatrixTransform =
@@ -2046,7 +2111,7 @@ FEVV::SimpleViewer< HalfedgeGraph >::resetTransformMatrix(unsigned int position)
 
 template< typename HalfedgeGraph >
 void
-FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
+FEVV::SimpleViewer::draw_or_redraw_mesh(
     /*const */ HalfedgeGraph *_g,
     /*const */ PMapsContainer *_pmaps,
     bool _redraw,
@@ -2084,9 +2149,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::draw_or_redraw_mesh(
   }
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::activate_time_mode()
+FEVV::SimpleViewer::activate_time_mode()
 {
   SimpleWindow *sw = static_cast< SimpleWindow * >(
       getWindow()); // here static_cast instead of dynamic_cast only for OSX and
@@ -2095,9 +2161,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::activate_time_mode()
   sw->activate_time_mode();
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
+FEVV::SimpleViewer::activate_space_mode()
 {
   SimpleWindow *sw = static_cast< SimpleWindow * >(
       getWindow()); // here static_cast instead of dynamic_cast only for OSX and
@@ -2106,9 +2173,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::activate_space_mode()
   sw->activate_space_mode();
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::updateSWModelList()
+FEVV::SimpleViewer::updateSWModelList()
 {
   SimpleWindow *sw = static_cast< SimpleWindow * >(
       getWindow()); // here static_cast instead of dynamic_cast only for OSX and
@@ -2117,9 +2185,10 @@ FEVV::SimpleViewer< HalfedgeGraph >::updateSWModelList()
   sw->update();
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleViewer< HalfedgeGraph >::setNodeSelected(osg::Node *_geode,
+FEVV::SimpleViewer::setNodeSelected(osg::Node *_geode,
                                                      bool _isSelected)
 {
   osg::Geode *geode = dynamic_cast< osg::Geode * >(_geode);
@@ -2198,11 +2267,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::setNodeSelected(osg::Node *_geode,
     }
     return;
 #endif
+
+#if 0
+  //TODO-elo-DEBUG
+  std::cout << "viewer " << this << "  v_meshIsSelected =";
+  for(bool b: v_meshIsSelected)
+    std::cout << " " << b;
+  std::cout << std::endl;
+#endif
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleViewer< HalfedgeGraph >::isNodeSelected(osg::Node *_geode)
+FEVV::SimpleViewer::isNodeSelected(osg::Node *_geode)
 {
   osg::Geode *geode = dynamic_cast< osg::Geode * >(_geode);
   if(geode != nullptr)
@@ -2219,4 +2297,20 @@ FEVV::SimpleViewer< HalfedgeGraph >::isNodeSelected(osg::Node *_geode)
   }
 
   return false;
+}
+
+
+inline
+size_t
+FEVV::SimpleViewer::getMeshId(const void *mesh_ptr)
+{
+  {
+    for(size_t i_pos = 0; i_pos < v_mixed_meshes.size(); i_pos++)
+    {
+      if(v_mixed_meshes[i_pos].first == mesh_ptr)
+        return i_pos;
+    }
+
+    return -1; // not found
+  }
 }

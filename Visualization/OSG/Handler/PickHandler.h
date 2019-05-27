@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -12,17 +12,18 @@
 
 #include <osg/io_utils>
 //#include <osgText/Text>
+#include "Visualization/SimpleViewer.h"
+#include "Visualization/SimpleWindow.h"
 
 //#include <sstream>
 
 namespace FEVV {
 
 // class to handle events with a pick
-template< typename HalfedgeGraph >
 class PickHandler : public osgGA::GUIEventHandler
 {
 public:
-  PickHandler(FEVV::SimpleViewer< HalfedgeGraph > *smpViewer,
+  PickHandler(FEVV::SimpleViewer *smpViewer,
               osgText::Text *updateText)
       : _smpViewer(smpViewer), _updateText(updateText)
   {
@@ -42,12 +43,13 @@ public:
 
 protected:
   osg::ref_ptr< osgText::Text > _updateText;
-  FEVV::SimpleViewer< HalfedgeGraph > *_smpViewer = nullptr;
+  FEVV::SimpleViewer *_smpViewer = nullptr;
 };
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-PickHandler< HalfedgeGraph >::handle(const osgGA::GUIEventAdapter &ea,
+PickHandler::handle(const osgGA::GUIEventAdapter &ea,
                                      osgGA::GUIActionAdapter &aa)
 {
   if(ea.getModKeyMask() == osgGA::GUIEventAdapter::MODKEY_SHIFT)
@@ -81,9 +83,10 @@ PickHandler< HalfedgeGraph >::handle(const osgGA::GUIEventAdapter &ea,
   return false;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-PickHandler< HalfedgeGraph >::pick(osgViewer::View *view,
+PickHandler::pick(osgViewer::View *view,
                                    const osgGA::GUIEventAdapter &ea)
 {
   osgUtil::LineSegmentIntersector::Intersections intersections;
@@ -107,7 +110,7 @@ PickHandler< HalfedgeGraph >::pick(osgViewer::View *view,
         os << "Object \"" << hitr->nodePath.back()->getName() << "\""
            << std::endl;
 
-        if(hitr->nodePath.back()->getName().compare(0, 4, "Mesh") == 0)
+        if(hitr->nodePath.back()->getDescription(0) == "MESH")
         {
           std::cout << "Object \"" << hitr->nodePath.back()->getName() << "\""
                     << std::endl;
@@ -133,7 +136,7 @@ PickHandler< HalfedgeGraph >::pick(osgViewer::View *view,
             // std::endl;
 
             FEVV::SimpleWindow *sw =
-                dynamic_cast< FEVV::SimpleWindow * >(_smpViewer->getWindow());
+                static_cast< FEVV::SimpleWindow * >(_smpViewer->getWindow());
             sw->update(true);
           }
 

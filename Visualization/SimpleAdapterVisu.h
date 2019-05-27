@@ -32,7 +32,6 @@ namespace FEVV {
  *
  * @see testViewer.cpp
  */
-template< typename HalfedgeGraph >
 class SimpleAdapterVisu : public BaseAdapterVisuQt
 {
   // Q_OBJECT

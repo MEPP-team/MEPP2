@@ -29,7 +29,7 @@
 #include <time.h>
 #include <cmath>
 
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -55,7 +55,7 @@ namespace FEVV {
 
 class JndPlugin : public QObject,
                   public Generic_PluginInterface,
-                  public BasePlugin
+                  public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -241,10 +241,32 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
+    // get filter parameters from dialog window
+    DialogJnd1 dial1;
+    if(dial1.exec() == QDialog::Accepted)
+    {
+      dial1.getProcess(*screen_width,
+                       *screen_height,
+                       *screen_size,
+                       *scene_height,
+                       *scene_fov,
+                       *user_dist,
+                       *number_of_lights,
+                       *log_disp,
+                       *use_log,
+                       *force_jnd);
+
+      *scene_fov = M_PI * *scene_fov;
+    }
+    else
+      return; // abort applying filter
+
+    // apply filter
     process(_mesh, pmaps_bag);
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
     if(viewer)
     {
@@ -297,6 +319,7 @@ public:
   }
 #endif
 
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "JndPlugin";
@@ -304,31 +327,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogJnd1 dial1;
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getProcess(*screen_width,
-                       *screen_height,
-                       *screen_size,
-                       *scene_height,
-                       *scene_fov,
-                       *user_dist,
-                       *number_of_lights,
-                       *log_disp,
-                       *use_log,
-                       *force_jnd);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("jnd_qt_p", this);
+    sw->onApplyButton();
 
-      *scene_fov = M_PI * *scene_fov;
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("jnd_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

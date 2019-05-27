@@ -216,10 +216,18 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
               ${DATA_TEST}
               ${VTEST} )
   else()
+    # LINUX
     add_test( ${FILE}
               ${FILE}
               ${DATA_TEST}
               test )
+    # display backtrace in case of SEGFAULT ; GDB required
+    # uncomment to activate
+    #add_test( ${FILE}
+    #          "${PROJECT_SOURCE_DIR}/Tools/segfault_debugger.sh"
+    #          "./${FILE}"
+    #          ${DATA_TEST}
+    #          test )
   endif()
 
 endforeach()

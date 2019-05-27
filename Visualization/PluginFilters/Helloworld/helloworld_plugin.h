@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -50,7 +50,7 @@ namespace FEVV {
 
 class HelloworldPlugin : public QObject,
                          public Generic_PluginInterface,
-                         public BasePlugin
+                         public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -143,17 +143,26 @@ public:
               << value_z << "." << std::endl;
   }
 
+
   template< typename HalfedgeGraph >
   void applyHG(BaseAdapterVisu *_adapter,
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cout << "here applyHG ! " << std::endl;
+    // get filter parameters from dialog window
+    HelloworldDialog dialog;
+    dialog.setParameters(value_x, value_y, value_z);
+    if(dialog.exec() == QDialog::Accepted)
+      dialog.getParameters(value_x, value_y, value_z);
+    else
+      return; // abort applying filter
 
+    // apply filter
     process(_mesh, pmaps_bag);
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
@@ -162,6 +171,7 @@ public:
 
     viewer->frame();
   }
+
 
 #ifdef FEVV_USE_OPENMESH
   void apply(BaseAdapterVisu *_adapter,
@@ -204,32 +214,27 @@ public:
   }
 #endif
 
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "HelloworldPlugin";
   }
 
+
   bool Generic_plugin(const QString &plugin) override
   {
-    // setup and display filter parameters dialog window
-    HelloworldDialog dialog;
-    dialog.setParameters(value_x, value_y, value_z);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("helloworld_qt_p", this);
+      //TODO-elo-refactor-plugins
+      // 1) the name of the function onModificationParam()
+      //    is unrelated to its content!!!
+      // 2) Generic_plugin() is called by SimpleWindow
+      //    and calls back SimpleWindow functions here ;
+      //    looks like a bad architecture
+    sw->onApplyButton();
 
-    // get filter parameters from dialog window
-    if(dialog.exec() == QDialog::Accepted)
-    {
-      dialog.getParameters(value_x, value_y, value_z);
-
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("helloworld_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

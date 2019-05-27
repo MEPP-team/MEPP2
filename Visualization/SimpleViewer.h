@@ -54,65 +54,95 @@
 
 namespace FEVV {
 
+
+/**
+ * \brief  Functions to retrieve the name of the datastructure
+ *         according to the mesh type.
+ */ 
+#ifdef FEVV_USE_CGAL
+  inline
+  std::string getDatastructureName(FEVV::MeshPolyhedron* m)
+  {
+    return "POLYHEDRON";
+  }
+
+  inline
+  std::string getDatastructureName(FEVV::MeshSurface* m)
+  {
+    return "SURFACEMESH";
+  }
+
+  inline
+  std::string getDatastructureName(FEVV::MeshLCC* m)
+  {
+    return "LCC";
+  }
+#endif //FEVV_USE_CGAL
+
+#ifdef FEVV_USE_OPENMESH
+  inline
+  std::string getDatastructureName(FEVV::MeshOpenMesh* m)
+  {
+    return "OPENMESH";
+  }
+#endif //FEVV_USE_OPENMESH
+
+#ifdef FEVV_USE_AIF
+  inline
+  std::string getDatastructureName(FEVV::MeshAIF* m)
+  {
+    return "AIF";
+  }
+#endif //FEVV_USE_AIF
+
+
+/**
+ * \brief  A container to store pointers over meshes of mixed types.
+ */ 
+class MixedMeshesVector
+{
+public:
+  typedef  std::pair<void*, std::string>  VoidMeshPtr;
+
+  void push_back(VoidMeshPtr &ptr)
+  {
+    storage.push_back(ptr);
+  }
+
+  template< typename MeshT >
+  void push_back(MeshT *m)
+  {
+    auto pair = std::make_pair(static_cast< void* >(m),
+                               getDatastructureName(m));
+    storage.push_back(pair);
+    std::cout << "[SimpleViewer] mesh " << pair.first
+              << " stored with datastructure " << pair.second
+              << std::endl;
+  }
+
+  std::size_t size(void)
+  {
+    return storage.size();
+  }
+
+  VoidMeshPtr&  operator[](std::size_t pos)
+  {
+    return storage[pos];
+  }
+
+protected:
+  std::vector< VoidMeshPtr > storage;
+};
+
+
 /**
  * \class SimpleViewer
  * \brief SimpleViewer is a specialization of osgViewer::CompositeViewer.
  * This class is a widget where we are able to draw objects using
  * OpenSceneGraph.
  */
-template< typename HalfedgeGraph >
 class SimpleViewer : public BaseViewerOSG
 {
-public:
-  using GraphTraits = boost::graph_traits< HalfedgeGraph >;
-  using GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph >;
-  using face_iterator = typename GraphTraits::face_iterator;
-  using face_descriptor = typename GraphTraits::face_descriptor;
-  using edge_iterator = typename GraphTraits::edge_iterator;
-  using edge_descriptor = typename GraphTraits::edge_descriptor;
-  using halfedge_descriptor = typename GraphTraits::halfedge_descriptor;
-  using vertex_iterator = typename GraphTraits::vertex_iterator;
-  using vertex_descriptor = typename GraphTraits::vertex_descriptor;
-  using halfedge_point = typename GeometryTraits::Point;
-  using halfedge_vector = typename GeometryTraits::Vector;
-
-  // TODO-elo  There is no default property map valid for all datastructures ;
-  //          so all the DefaultXXXMap defined below should be removed, and the
-  //          the code that depends on it should be fixed ;
-  //          this could be done when the generic reader is widely used
-  //          OR
-  //          the  DefaultXXXMap types could be defined using FEVV::PMap_traits,
-  //          see drawMesh() call in mepp-gui.cpp for an example
-
-  using DefaultVertexNormalMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::vertex_index_t >::const_type >;
-  using DefaultVertexTangentMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::vertex_index_t >::const_type >;
-  using DefaultFaceNormalMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::face_index_t >::const_type >;
-  using DefaultVertexColorMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::vertex_index_t >::const_type >;
-  using DefaultFaceColorMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::face_index_t >::const_type >;
-  using DefaultVertexUVMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::vertex_index_t >::const_type >;
-  using DefaultHalfedgeUVMap = boost::vector_property_map<
-      typename GeometryTraits::Vector,
-      typename boost::property_map< HalfedgeGraph,
-                                    boost::halfedge_index_t >::const_type >;
-
 public:
   /**
    * Constructor.
@@ -197,7 +227,7 @@ public:
    *
    * @return a std::vector of pointers of all selected meshes.
    */
-  std::vector< HalfedgeGraph * > getSelectedMeshes();
+  MixedMeshesVector getSelectedMeshes();
 
   /**
    * Returns all meshes.
@@ -206,7 +236,15 @@ public:
    *
    * @return a std::vector of pointers of all meshes.
    */
-  std::vector< HalfedgeGraph * > getMeshes();
+  MixedMeshesVector getMeshes();
+
+  /**
+   * Returns the id of the mesh in v_mixed_meshes array.
+   * Returns -1 if the mesh is not in v_mixed_meshes array.
+   *
+   * @return  index of the mesh in v_mixed_meshes array.
+   */
+  size_t getMeshId(const void *mesh_ptr);
 
   /**
    * Returns all selected meshes names.
@@ -252,6 +290,7 @@ public:
   std::vector< osg::Group * > getDraggers2();
 
 
+#if 0 //TODO-elo-rm-?-ask_MTO
   /**
    * Returns the mesh at a given position.
    *
@@ -262,6 +301,7 @@ public:
    * @return a pointer of the mesh at a given position.
    */
   HalfedgeGraph *getMesh(unsigned int _position);
+#endif
 
   DataModelVector *getDataModel() override;
 
@@ -300,7 +340,7 @@ public:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap >
+  template< typename HalfedgeGraph, typename PointMap >
   osg::ref_ptr< osg::Group >
   createMesh(HalfedgeGraph *_g,
              PMapsContainer *_pmaps,
@@ -308,20 +348,22 @@ public:
              std::string _mesh_file = std::string(""),
              osg::ref_ptr< osg::Group > _group = new osg::Group);
 
-  template< typename PointMap >
+  template< typename HalfedgeGraph, typename PointMap >
   void drawMesh(HalfedgeGraph *_g,
                 PMapsContainer *_pmaps,
                 PointMap *_pm,
                 std::string _mesh_file = std::string(""));
 
-  template< typename PointMap >
+  template< typename HalfedgeGraph, typename PointMap >
   void redrawMesh(HalfedgeGraph *_g,
                   PMapsContainer *_pmaps,
                   PointMap *_pm = nullptr,
                   std::string _mesh_file = std::string(""));
 
+  template< typename HalfedgeGraph >
   void centerMesh(HalfedgeGraph *_g);
 
+  template< typename HalfedgeGraph >
   void draw_or_redraw_mesh(/*const */ HalfedgeGraph *_g,
                            /*const */ PMapsContainer *_pmaps,
                            bool _redraw = false,
@@ -356,7 +398,7 @@ protected:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap >
+  template< typename HalfedgeGraph, typename PointMap >
   void internal_createMesh(
       osg::Geode *&geode,
       HalfedgeGraph *_g,
@@ -390,7 +432,7 @@ protected:
    * @param[in]   _g          a mesh (model of HalfedgeGraph concept).
    * @param[in]   _pm         a point map.
    **/
-  template< typename PointMap >
+  template< typename HalfedgeGraph, typename PointMap >
   osg::Geode *internal_createMesh(
       HalfedgeGraph *_g,
       PMapsContainer *_pmaps,
@@ -464,14 +506,14 @@ private:
    * @param[in]   _vt_cm                 the vertex colors property map.
    * @param[in]   _m_mm                  the face materials property map.
    **/
-  template< typename VertexNormalMap = DefaultVertexNormalMap,
-            typename VertexTangentMap = DefaultVertexTangentMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap,
-            typename FaceMaterialMap = typename FEVV::
-                PMap_traits< FEVV::face_material_t, HalfedgeGraph >::pmap_type >
+  template< typename HalfedgeGraph,
+            typename VertexNormalMap,
+            typename VertexTangentMap,
+            typename VertexColorMap,
+            typename FaceColorMap,
+            typename VertexUVMap,
+            typename HalfedgeUVMap,
+            typename FaceMaterialMap >
   void internal_loadShadedMesh(
       osg::Geode *_geode,
       HalfedgeGraph *_g,
@@ -556,13 +598,13 @@ private:
    *property map.
    * @param[in]   _m_mm                  the face materials property map.
    **/
-  template< typename VertexNormalMap = DefaultVertexNormalMap,
-            typename VertexColorMap = DefaultVertexColorMap,
-            typename FaceColorMap = DefaultFaceColorMap,
-            typename VertexUVMap = DefaultVertexUVMap,
-            typename HalfedgeUVMap = DefaultHalfedgeUVMap,
-            typename FaceMaterialMap = typename FEVV::
-                PMap_traits< FEVV::face_material_t, HalfedgeGraph >::pmap_type >
+  template< typename HalfedgeGraph,
+            typename VertexNormalMap,
+            typename VertexColorMap,
+            typename FaceColorMap,
+            typename VertexUVMap,
+            typename HalfedgeUVMap,
+            typename FaceMaterialMap >
   void internal_loadLegacyMesh(
       osg::Geode *_geode,
       HalfedgeGraph *_g,
@@ -592,7 +634,8 @@ private:
   std::vector< osg::ref_ptr< osg::Light > > lights;
 
 protected:
-  std::vector< HalfedgeGraph * > v_meshes;
+  MixedMeshesVector v_mixed_meshes;
+
   std::vector< std::string > v_meshes_names;
   std::vector< PMapsContainer * > v_properties_maps;
   std::vector< osg::Group * > v_draggers1;

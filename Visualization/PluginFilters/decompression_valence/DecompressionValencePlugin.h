@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -49,7 +49,7 @@ namespace FEVV {
 
 class DecompressionValencePlugin : public QObject,
                                    public Generic_PluginInterface,
-                                   public BasePlugin
+                                   public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -101,7 +101,7 @@ public:
   }
 
   template< typename HalfedgeGraph >
-  void process(HalfedgeGraph *_mesh, FEVV::PMapsContainer *pmaps_bag)
+  void process(HalfedgeGraph *&_mesh, FEVV::PMapsContainer *&pmaps_bag)
   {
     std::cout << "Asking to apply DecompressionValence filter on file '"
               << p3dFilePath << "'!" << std::endl;
@@ -168,16 +168,36 @@ public:
     QMessageBox::information(0, "", QString::fromStdString(message));
   }
 
-  template< typename HalfedgeGraph >
-  void applyHG(BaseAdapterVisu *_adapter,
-               HalfedgeGraph *_mesh,
-               FEVV::PMapsContainer *pmaps_bag)
-  {
-    if(*value_forceCompute)
-      process(_mesh, pmaps_bag);
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+  template< typename HalfedgeGraph >
+  void applyHG(BaseAdapterVisu *_adapter)
+  {
+    // get filter parameters from dialog window
+    DialogDecompressionValence1 dial1;
+    dial1.setDecompressionValenceParams(p3dFilePath,
+                                        stop_level,
+                                        write_info,
+                                        write_intermediate_meshes,
+                                        keep_intermediate_meshes);
+    if(dial1.exec() == QDialog::Accepted)
+      dial1.getDecompressionValenceParams(p3dFilePath,
+                                          stop_level,
+                                          write_info,
+                                          write_intermediate_meshes,
+                                          keep_intermediate_meshes);
+    else
+      return; // abort applying filter
+
+    // create a new mesh and its property-maps bag for the filter
+    auto mesh = new HalfedgeGraph;
+    auto pmaps_bag = new FEVV::PMapsContainer;
+
+    // apply filter
+    process(mesh, pmaps_bag);
+
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
     if(viewer)
     {
@@ -186,8 +206,8 @@ public:
                                       HalfedgeGraph >::pmap_type;
 
       // redraw main mesh -> which is NOW the uncompressed one
-      viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, true, "uncompressed");
-      viewer->centerMesh(_mesh);
+      viewer->draw_or_redraw_mesh(mesh, pmaps_bag, false, false, "uncompressed");
+      viewer->centerMesh(mesh);
       viewer->updateSWModelList();
 
       // space_time mode ON
@@ -235,55 +255,96 @@ public:
     viewer->frame();
   }
 
-#ifdef FEVV_USE_OPENMESH
-  void apply(BaseAdapterVisu *_adapter,
-             MeshOpenMesh *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
-  {
-    applyHG< MeshOpenMesh >(_adapter, _mesh, pmaps_bag);
-  }
-#endif
 
 #ifdef FEVV_USE_CGAL
   void apply(BaseAdapterVisu *_adapter,
              MeshLCC *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-    applyHG< MeshLCC >(_adapter, _mesh, pmaps_bag);
+    apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 
   void apply(BaseAdapterVisu *_adapter,
              MeshSurface *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-    applyHG< MeshSurface >(_adapter, _mesh, pmaps_bag);
+    apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 
   void apply(BaseAdapterVisu *_adapter,
              MeshPolyhedron *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-    applyHG< MeshPolyhedron >(_adapter, _mesh, pmaps_bag);
+    apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 #endif
+
+
+#ifdef FEVV_USE_OPENMESH
+  void apply(BaseAdapterVisu *_adapter,
+             MeshOpenMesh *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    apply(_adapter, static_cast< void * >(nullptr), nullptr);
+  }
+#endif
+
 
 #ifdef FEVV_USE_AIF
   void apply(BaseAdapterVisu *_adapter,
              MeshAIF *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-#if 0
-		//TODO-elo  restore when Compression Valence compiles with AIF
-		applyHG<MeshAIF>(_adapter, _mesh, pmaps_bag);
-#else
-    QMessageBox::information(
-        0,
-        "",
-        QObject::tr(
-            "Decompression Valence filter is not yet compatible with AIF!"));
-#endif
+    apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 #endif
+
+
+  // case where the plugin is applied when no mesh is opened
+  void apply(BaseAdapterVisu *_adapter,
+             void *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    // ask the user for the datastructure
+    std::string mesh_type = chooseDatastructureMsgBox();
+    if(mesh_type == "NONE")
+      return; // cancel pressed, aborting
+
+    // apply plugin
+#ifdef FEVV_USE_CGAL
+    if(mesh_type == "POLYHEDRON")
+    {
+      applyHG< MeshPolyhedron >(_adapter);
+    }
+    else if(mesh_type == "SURFACEMESH")
+    {
+      applyHG< MeshSurface >(_adapter);
+    }
+    else if(mesh_type == "LCC")
+    {
+      applyHG< MeshLCC >(_adapter);
+    }
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+    if(mesh_type == "OPENMESH")
+    {
+      applyHG< MeshOpenMesh >(_adapter);
+    }
+#endif
+
+#ifdef FEVV_USE_AIF
+    if(mesh_type == "AIF")
+    {
+      QMessageBox::information(
+          0,
+          "",
+          QObject::tr(
+              "Decompression Valence filter is not yet compatible with AIF!"));
+    }
+#endif
+  }
+
 
   QStringList Generic_plugins() const override
   {
@@ -292,30 +353,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogDecompressionValence1 dial1;
-    dial1.setDecompressionValenceParams(p3dFilePath,
-                                        stop_level,
-                                        write_info,
-                                        write_intermediate_meshes,
-                                        keep_intermediate_meshes);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getDecompressionValenceParams(p3dFilePath,
-                                          stop_level,
-                                          write_info,
-                                          write_intermediate_meshes,
-                                          keep_intermediate_meshes);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("decompressionvalence_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("decompressionvalence_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:
