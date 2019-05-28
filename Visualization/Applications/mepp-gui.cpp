@@ -163,11 +163,19 @@ main(int argc, char **argv)
 
   FEVV::Block::end("init");
 
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
   // open mesh file provided on command line
 
   std::vector< std::string > mesh_filenames;
   if(open_with != OPEN_WITH_NONE)
     mesh_filenames.push_back(std::string(argv[1]));
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
 
 #ifdef FEVV_USE_CGAL
   ///// Polyhedron
@@ -202,6 +210,10 @@ main(int argc, char **argv)
   }
 #endif // FEVV_USE_CGAL
 
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
 #ifdef FEVV_USE_OPENMESH
   ///// OpenMesh
   if(open_with == OPEN_WITH_OPENMESH || open_with == OPEN_WITH_ALL)
@@ -213,6 +225,10 @@ main(int argc, char **argv)
     FEVV::Block::end("loading-openmesh");
   }
 #endif // FEVV_USE_OPENMESH
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
 
 #ifdef FEVV_USE_AIF
   ///// AIF
@@ -226,10 +242,23 @@ main(int argc, char **argv)
   }
 #endif // FEVV_USE_AIF
 
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
   // run GUI
 
   gui.show();
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
   int ret = app.exec();
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
 
   return ret;
 }
