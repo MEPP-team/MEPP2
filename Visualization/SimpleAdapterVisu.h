@@ -50,10 +50,18 @@ public:
 
   ~SimpleAdapterVisu()
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
     // std::cout << "-> ~SimpleAdapterVisu BEGIN" << std::endl;
     delete myViewer;
 
     // std::cout << "-> ~SimpleAdapterVisu END" << std::endl << std::endl;
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
   void init() override;

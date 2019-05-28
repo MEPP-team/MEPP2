@@ -40,11 +40,30 @@ public:
   BaseAdapterVisuQt(QWidget *_parent = 0, Qt::WindowFlags _f = 0)
       : BaseAdapterVisu(), QWidget(_parent, _f)
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
     layout = new QGridLayout(this);
     layout->setObjectName(QString::fromUtf8("WidgetLayout"));
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
-  virtual ~BaseAdapterVisuQt() { delete layout; }
+  virtual ~BaseAdapterVisuQt()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+    delete layout;
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
   void attach(Viewer *_viewer) override
   {

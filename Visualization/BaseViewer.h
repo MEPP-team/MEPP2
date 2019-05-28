@@ -51,6 +51,10 @@ public:
    */
   BaseViewer()
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
     m_RenderMethod = RenderMethod::RENDER_FILL;
     m_RenderSuperimposedVertices = false;
     m_RenderSuperimposedVertices_Big = false;
@@ -86,9 +90,22 @@ public:
     m_space_time_changeColorMode = true;
 
     m_time = false;
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
-  virtual ~BaseViewer() = default;
+  virtual ~BaseViewer()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
   virtual void init() = 0;
 

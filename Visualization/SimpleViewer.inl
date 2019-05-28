@@ -41,12 +41,23 @@
 inline
 FEVV::SimpleViewer::SimpleViewer() : BaseViewerOSG()
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 
 inline
 FEVV::SimpleViewer::~SimpleViewer()
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
   // std::cout << "--> ~SimpleViewer" << std::endl;
 
   // BaseViewer *bv = dynamic_cast< BaseViewer* >(this);
@@ -143,6 +154,10 @@ FEVV::SimpleViewer::~SimpleViewer()
   //        vertexArrays, vertexArrays_edges, vertexArrays_vertices,
   //        colorsArrays, colorsArrays_edges, colorsArrays_vertices,
   //        etc...
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 

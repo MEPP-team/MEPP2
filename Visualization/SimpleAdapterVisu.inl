@@ -34,6 +34,13 @@ FEVV::SimpleAdapterVisu::SimpleAdapterVisu(QWidget *_parent,
                                                             Qt::WindowFlags _f)
     : BaseAdapterVisuQt(_parent, _f)
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 

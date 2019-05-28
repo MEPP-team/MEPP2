@@ -35,12 +35,30 @@ public:
    * by Qt) (Default value = 0).
    * @param[in]   _flags    Windows flags (used by Qt) (Default value = 0).
    */
-  BaseWindow() = default;
+  BaseWindow()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
   /**
    * Destructor.
    */
-  virtual ~BaseWindow() = default;
+  virtual ~BaseWindow()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
   /**
    * Attach a Visualization Adapter to the current Window.

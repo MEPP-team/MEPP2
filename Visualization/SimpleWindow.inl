@@ -55,15 +55,31 @@ inline FEVV::SimpleWindow::SimpleWindow(QWidget *_parent,
                                         Qt::WindowFlags _flags)
     : BaseWindowQt(_parent, _flags)
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
   ui.setupUi(this);
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 inline FEVV::SimpleWindow::~SimpleWindow()
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
   if(mdiArea != nullptr)
   {
     delete mdiArea;
   }
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 inline void
