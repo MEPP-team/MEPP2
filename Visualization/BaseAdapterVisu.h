@@ -36,9 +36,27 @@ public:
    * @note The OpenSceneGraph viewer will be created and initialized if not set
    * (see other constructors).
    */
-  BaseAdapterVisu() = default;
+  BaseAdapterVisu()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
 
-  virtual ~BaseAdapterVisu() = default;
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
+
+  virtual ~BaseAdapterVisu()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
   /**
    * attach a Viewer to the current Widget.

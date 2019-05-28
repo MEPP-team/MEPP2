@@ -49,6 +49,10 @@ public:
       : root_node(new osg::Group),
         visitor(new DataVisitor(this)), osgViewer::Viewer(), BaseViewer()
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
 #if(FEVV_USE_QT5)
     // Qt5 is currently crashing and reporting "Cannot make QOpenGLContext
     // current in a different thread" when the viewer is run multi-threaded,
@@ -78,16 +82,28 @@ public:
 #endif
 
     root_node->setName("Root");
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
   virtual ~BaseViewerOSG()
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
     delete visitor;
     root_node->removeChildren(0, root_node->getNumChildren());
     //delete root_node;
     //ELO-note: osg::Group destructor is protected ;
     //          can not be called directly!
     //          error: calling a protected destructor of class 'osg::Group'
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
   /**
