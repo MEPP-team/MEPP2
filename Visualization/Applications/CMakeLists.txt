@@ -177,10 +177,11 @@ if(APPLE)
     "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp-gui.icns" )
 endif()
 
-# to debug visualization
-if( (DEFINED ENV{GITLAB_CI}) OR (DEFINED ENV{TRAVIS}) OR (DEFINED ENV{APPVEYOR}) )
-  add_definitions( -DDEBUG_VISU2 )
-endif()
+# debug visualization in CI
+# uncomment to enable
+#if( (DEFINED ENV{GITLAB_CI}) OR (DEFINED ENV{TRAVIS}) OR (DEFINED ENV{APPVEYOR}) )
+#  add_definitions( -DDEBUG_VISU2 )
+#endif()
 
 foreach(FILE ${UI_TESTS_SRC_DEMO})
 
