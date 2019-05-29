@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -49,7 +49,7 @@ namespace FEVV {
 
 class ScalingPlugin : public QObject,
                       public Generic_PluginInterface,
-                      public BasePlugin
+                      public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -120,11 +120,20 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    if(*value_forceCompute)
-      scale(_mesh);
+    // get filter parameters from dialog window
+    DialogScaling1 dial1;
+    dial1.setScale(*value_x, *value_y, *value_z);
+    if(dial1.exec() == QDialog::Accepted)
+      dial1.getScale(*value_x, *value_y, *value_z);
+    else
+      return; // abort applying filter
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+    // apply filter
+    scale(_mesh);
+
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
@@ -174,6 +183,7 @@ public:
   }
 #endif
 
+
   QStringList Generic_plugins() const override
   {
     return QStringList() << "ScalingPlugin";
@@ -181,22 +191,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogScaling1 dial1;
-    dial1.setScale(*value_x, *value_y, *value_z);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getScale(*value_x, *value_y, *value_z);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("scaling_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("scaling_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

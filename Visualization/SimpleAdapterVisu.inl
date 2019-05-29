@@ -28,23 +28,33 @@
 
 #include "Visualization/OSG/Handler/PickHandler.h"
 
-template< typename HalfedgeGraph >
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::SimpleAdapterVisu(QWidget *_parent,
+
+inline
+FEVV::SimpleAdapterVisu::SimpleAdapterVisu(QWidget *_parent,
                                                             Qt::WindowFlags _f)
     : BaseAdapterVisuQt(_parent, _f)
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::init()
+FEVV::SimpleAdapterVisu::init()
 {
   init(false);
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::init(const bool _useMdiWindows)
+FEVV::SimpleAdapterVisu::init(const bool _useMdiWindows)
 {
   if(!Assert::check(
          !bIsInit, "is already init. Leaving...", "SimpleAdapterVisu::init"))
@@ -82,23 +92,26 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::init(const bool _useMdiWindows)
   bIsInit = true;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::isInit() const
+FEVV::SimpleAdapterVisu::isInit() const
 {
   return bIsInit;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::isValid() const
+FEVV::SimpleAdapterVisu::isValid() const
 {
   return bIsInit && (myViewer != nullptr);
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::addViewWidget(
+FEVV::SimpleAdapterVisu::addViewWidget(
     osg::ref_ptr< osgQt::GraphicsWindowQt > _gw,
     osg::ref_ptr< osg::Node > _scene)
 {
@@ -135,11 +148,11 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::addViewWidget(
       10000.0f);
 
   // picking
-  SimpleViewer< HalfedgeGraph > *viewer =
-      dynamic_cast< SimpleViewer< HalfedgeGraph > * >(myViewer);
+  SimpleViewer *viewer =
+      dynamic_cast< SimpleViewer* >(myViewer);
   viewer->hudText = new osgText::Text;
   view->addEventHandler(
-      new PickHandler< HalfedgeGraph >(viewer, viewer->hudText.get()));
+      new PickHandler(viewer, viewer->hudText.get()));
   // picking
 
   view->setSceneData(_scene);
@@ -157,9 +170,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::addViewWidget(
   layout->addWidget(osgWidget);
 }
 
-template< typename HalfedgeGraph >
+
+inline
 osg::ref_ptr< osgQt::GraphicsWindowQt >
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::createGraphicsWindow(
+FEVV::SimpleAdapterVisu::createGraphicsWindow(
     int _x,
     int _y,
     int _w,
@@ -225,9 +239,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::createGraphicsWindow(
 //// Event handlers ////
 ////////////////////////
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::keyPressEvent(QKeyEvent *event)
+FEVV::SimpleAdapterVisu::keyPressEvent(QKeyEvent *event)
 {
   QString keyString = event->text();
   const char *keyData = keyString.toLocal8Bit().data();
@@ -243,9 +258,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::keyPressEvent(QKeyEvent *event)
   this->getEventQueue()->keyPress(osgGA::GUIEventAdapter::KeySymbol(*keyData));
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::keyReleaseEvent(QKeyEvent *event)
+FEVV::SimpleAdapterVisu::keyReleaseEvent(QKeyEvent *event)
 {
   QString keyString = event->text();
   const char *keyData = keyString.toLocal8Bit().data();
@@ -254,9 +270,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::keyReleaseEvent(QKeyEvent *event)
       osgGA::GUIEventAdapter::KeySymbol(*keyData));
 }
 
-template< typename HalfedgeGraph >
+
+inline
 osgGA::EventQueue *
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::getEventQueue() const
+FEVV::SimpleAdapterVisu::getEventQueue() const
 {
   Assert::check(myGraphicsWindow != nullptr,
                 "myGraphicsWindow is not initialized.",
@@ -274,9 +291,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::getEventQueue() const
   }
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::event(QEvent *_event)
+FEVV::SimpleAdapterVisu::event(QEvent *_event)
 {
   bool handled = QWidget::event(_event);
 
@@ -307,9 +325,10 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::event(QEvent *_event)
   return handled;
 }
 
-template< typename HalfedgeGraph >
+
+inline
 bool
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::eventFilter(QObject *_obj,
+FEVV::SimpleAdapterVisu::eventFilter(QObject *_obj,
                                                       QEvent *_event)
 {
   switch(_event->type())
@@ -360,29 +379,71 @@ FEVV::SimpleAdapterVisu< HalfedgeGraph >::eventFilter(QObject *_obj,
 //     return myViewer->getSelectedMeshes();
 // }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleAdapterVisu< HalfedgeGraph >::apply(Plugin *myPlugin)
+FEVV::SimpleAdapterVisu::apply(Plugin *myPlugin)
 {
-  SimpleViewer< HalfedgeGraph > *viewer =
-      dynamic_cast< SimpleViewer< HalfedgeGraph > * >(myViewer);
+  FEVV::MixedMeshesVector meshes;
+  std::vector< FEVV::PMapsContainer * > properties_maps;
+
+  auto viewer = dynamic_cast< SimpleViewer * >(myViewer);
+
   if(viewer)
   {
-    std::vector< HalfedgeGraph * > meshes = viewer->getSelectedMeshes();
-    std::vector< FEVV::PMapsContainer * > properties_maps =
-        viewer->getSelected_properties_maps();
+    meshes = viewer->getSelectedMeshes();
+    properties_maps = viewer->getSelected_properties_maps();
+  }
+
+  if(meshes.size() > 0)
+  {
+    // case where a mesh is already loaded and selected
+    // apply the plugin to the selected mesh
 
     for(unsigned i = 0; i < meshes.size(); i++)
     {
       std::cout << "Applying filter" << std::endl;
-      myPlugin->apply(this, meshes[i], properties_maps[i]);
+
+#ifdef FEVV_USE_CGAL
+      if(meshes[i].second == "POLYHEDRON")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshPolyhedron* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+      if(meshes[i].second == "SURFACEMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshSurface* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+      if(meshes[i].second == "LCC")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshLCC* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+#endif //FEVV_USE_CGAL
+
+#ifdef FEVV_USE_OPENMESH
+      if(meshes[i].second == "OPENMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshOpenMesh* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+#endif //FEVV_USE_OPENMESH
+
+#ifdef FEVV_USE_AIF
+      if(meshes[i].second == "AIF")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshAIF* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+#endif //FEVV_USE_AIF
     }
   }
   else
   {
-    Assert::check(false,
-                  "Can't call getSelectedMeshes() on non SimpleViewer",
-                  "SimpleAdapterVisu::apply");
+    // case where no viewer is opened or no mesh is loaded
+    // apply the plugin to a null mesh
+    myPlugin->apply(this, static_cast< void * >(nullptr), nullptr);
   }
 }
 

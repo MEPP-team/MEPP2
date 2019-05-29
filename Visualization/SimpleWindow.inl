@@ -55,15 +55,31 @@ inline FEVV::SimpleWindow::SimpleWindow(QWidget *_parent,
                                         Qt::WindowFlags _flags)
     : BaseWindowQt(_parent, _flags)
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
   ui.setupUi(this);
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 inline FEVV::SimpleWindow::~SimpleWindow()
 {
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
   if(mdiArea != nullptr)
   {
     delete mdiArea;
   }
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
 }
 
 inline void
@@ -233,6 +249,9 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   ui.actionChange_viewer_mode->setEnabled(false);*/
   // time
 
+  // create default empty viewer
+  //createNewViewer();
+
   bIsInit = true;
 }
 
@@ -393,28 +412,18 @@ FEVV::SimpleWindow::onModificationParam(std::string _pluginName,
 inline void
 FEVV::SimpleWindow::onApplyButton()
 {
+  // if no viewer is opened, open one
   if(!isValid())
-  {
-    QMessageBox::information(this,
-                             "",
-                             QObject::tr("Please, first <b>open a mesh</b><br>"
-                                         "<br>"
-                                         "or if necessary with some plugins "
-                                         "<b>use an empty child window</b><br>"
-                                         "(see 'Open -> EMPTY mode' <b>key</b> "
-                                         "in 'About MEPP2 / Help' menu)."));
+    auto viewer = createNewViewer();
 
-    return;
-  }
-
+  // apply plugin in current viewer
   for(auto funct : stackPlugins)
   {
-    for_each(adapters.begin(), adapters.end(), [&funct](Adapter *w) {
+    for(auto w: adapters)
+    {
       if(w->isSelected())
-      {
         w->apply(funct.second);
-      }
-    });
+    }
   }
 
   stackPlugins.clear();
@@ -570,6 +579,9 @@ FEVV::SimpleWindow::enableSpaceTimeMenus()
 inline void
 FEVV::SimpleWindow::updateModelList(bool pick)
 {
+  pick = true;
+  //ELO-note: forcing the pick flag to true make mesh selection work as
+  //          expected in SPACE/TIME mode. Don't know why.
   using Viewer = BaseViewerOSG;
 
   ui.listModels->clear(); //<! All items will be permanently deleted.
@@ -673,19 +685,13 @@ FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
   statusBar()->showMessage(QObject::tr("") /*, 2000*/);
 }
 
-template< typename MeshT >
-void
-FEVV::SimpleWindow::empty_mesh(MeshT *&mesh, FEVV::PMapsContainer &pmaps_bag)
-{
-  mesh = new MeshT;
-}
 
 template< typename MeshT >
 void
 FEVV::SimpleWindow::draw_or_redraw_mesh(
     /*const */ MeshT *mesh,
     /*const */ FEVV::PMapsContainer *pmaps_bag,
-    FEVV::SimpleViewer< MeshT > *viewer,
+    FEVV::SimpleViewer *viewer,
     bool _redraw,
     bool _recomputeNT_if_redraw,
     std::string _mesh_filename,
@@ -709,1644 +715,154 @@ FEVV::SimpleWindow::on_actionNew_triggered()
   QMessageBox::information(this, "", QObject::tr("New - Not yet implemented."));
 }
 
-inline void
-FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_SPACE_TIME()
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Polyhedron_3 (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  ///// Polyhedron
-  FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >
-      *adapterPolyhedron; // if (!USE_MDI) delete
-  FEVV::SimpleViewer< FEVV::MeshPolyhedron >
-      *viewerPolyhedron; // already destroy by the adapter destructor
-
-  if(files.size() > 0)
-  {
-    adapterPolyhedron = new FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >();
-    // adapterPolyhedron->setWindowTitle(QObject::tr("Polyhedron_3"));
-    adapterPolyhedron->setWindowTitle(
-        QObject::tr("<Polyhedron_3 - aid: %1>")
-            .arg((qlonglong)adapterPolyhedron, 0, 16));
-    adapterPolyhedron->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerPolyhedron = new FEVV::SimpleViewer< FEVV::MeshPolyhedron >();
-    adapterPolyhedron->attach(viewerPolyhedron);
-    adapterPolyhedron->init();
-    viewerPolyhedron->init();
-    viewerPolyhedron->m_space_time = true;
-    enableSpaceTimeMenus();
-    this->attach(adapterPolyhedron, USE_MDI);
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshPolyhedron *mPolyhedron =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_polyhedron_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mPolyhedron, *p_polyhedron_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mPolyhedron,
-        p_polyhedron_pmaps_bag,
-        viewerPolyhedron,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-
-  if(files.size() > 0)
-  {
-    adapterPolyhedron->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Polyhedron_3 : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-#ifdef FEVV_USE_CGAL
-inline void
-FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_ADD_SPACE_TIME(
-    FEVV::SimpleViewer< FEVV::MeshPolyhedron > *viewerPolyhedron)
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Polyhedron_3 (ADD SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  if(files.size() > 0)
-  {
-    viewerPolyhedron->m_space_time = true;
-    enableSpaceTimeMenus();
-    updateActiveChildTitle();
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshPolyhedron *mPolyhedron =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_polyhedron_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mPolyhedron, *p_polyhedron_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mPolyhedron,
-        p_polyhedron_pmaps_bag,
-        viewerPolyhedron,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Polyhedron_3 : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-#endif
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_NORMAL(bool empty)
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files;
-
-  if(!empty)
-  {
-    files = QFileDialog::getOpenFileNames(this,
-                                          "Open Polyhedron_3",
-                                          /*openLocation*/ QDir::currentPath(),
-                                          allExtensions,
-                                          &suffix,
-                                          options);
-  }
-
-  QStringList::Iterator it = files.begin();
-  while(empty || it != files.end())
-  {
-    ///// Polyhedron
-    FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >
-        *adapterPolyhedron; // if (!USE_MDI) delete
-    FEVV::SimpleViewer< FEVV::MeshPolyhedron >
-        *viewerPolyhedron; // already destroy by the adapter destructor
-
-    FEVV::MeshPolyhedron *mPolyhedron =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_polyhedron_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    adapterPolyhedron = new FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >();
-    // adapterPolyhedron->setWindowTitle(QObject::tr("Polyhedron_3"));
-    adapterPolyhedron->setWindowTitle(
-        QObject::tr("<Polyhedron_3 - aid: %1>")
-            .arg((qlonglong)adapterPolyhedron, 0, 16));
-    adapterPolyhedron->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerPolyhedron = new FEVV::SimpleViewer< FEVV::MeshPolyhedron >();
-    adapterPolyhedron->attach(viewerPolyhedron);
-    adapterPolyhedron->init();
-    viewerPolyhedron->init();
-    this->attach(adapterPolyhedron, USE_MDI);
-
-    std::string mesh_filename = "";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(empty)
-    {
-      empty_mesh(mPolyhedron, *p_polyhedron_pmaps_bag);
-      mesh_filename = "empty";
-    }
-    else
-    {
-      load_mesh((*it).toStdString(), mPolyhedron, *p_polyhedron_pmaps_bag);
-      mesh_filename = FEVV::FileUtils::get_file_full_name((*it).toStdString());
-    }
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(mPolyhedron,
-                        p_polyhedron_pmaps_bag,
-                        viewerPolyhedron,
-                        false,
-                        false,
-                        mesh_filename);
-
-    adapterPolyhedron->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-
-    if(empty)
-      empty = false;
-    else
-      ++it;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Polyhedron_3 : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Polyhedron_3_triggered()
-{
-  if(QApplication::keyboardModifiers().testFlag(
-         Qt::AltModifier)) // for 'only_pts' mode
-    open_only_pts_mode = true;
-  else
-    open_only_pts_mode = false;
-
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(
-         /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-  {
-    if(activeMdiChild())
-    {
-      BaseAdapterVisuQt *bavQt =
-          dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
-      Adapter::Viewer *viewer = bavQt->getViewer();
-
-#ifdef FEVV_USE_CGAL
-      if(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(viewer))
-        on_actionOpen_Polyhedron_3_ADD_SPACE_TIME(
-            dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(viewer));
-#else
-      QMessageBox::information(
-          this,
-          "",
-          QObject::tr("actionOpen_Polyhedron_3 : FEVV_USE_CGAL is OFF !"));
-#endif
-    }
-  }
-  else if(QApplication::keyboardModifiers().testFlag(
-              Qt::ShiftModifier)) // QApplication::queryKeyboardModifiers()
-    on_actionOpen_Polyhedron_3_SPACE_TIME();
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  else if(QApplication::keyboardModifiers().testFlag(
-              /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  else if(QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-    on_actionOpen_Polyhedron_3_NORMAL(true); // empty mesh
-  else
-    on_actionOpen_Polyhedron_3_NORMAL();
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Surface_mesh_SPACE_TIME()
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Surface_mesh (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  ///// Surface_mesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshSurface >
-      *adapterSurface; // if (!USE_MDI) delete
-  FEVV::SimpleViewer< FEVV::MeshSurface >
-      *viewerSurface; // already destroy by the adapter destructor
-
-  if(files.size() > 0)
-  {
-    adapterSurface = new FEVV::SimpleAdapterVisu< FEVV::MeshSurface >();
-    // adapterSurface->setWindowTitle(QObject::tr("Surface_mesh"));
-    adapterSurface->setWindowTitle(QObject::tr("<Surface_mesh - aid: %1>")
-                                       .arg((qlonglong)adapterSurface, 0, 16));
-    adapterSurface->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerSurface = new FEVV::SimpleViewer< FEVV::MeshSurface >();
-    adapterSurface->attach(viewerSurface);
-    adapterSurface->init();
-    viewerSurface->init();
-    viewerSurface->m_space_time = true;
-    enableSpaceTimeMenus();
-    this->attach(adapterSurface, USE_MDI);
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshSurface *mSurface =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_surfacemesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mSurface, *p_surfacemesh_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mSurface,
-        p_surfacemesh_pmaps_bag,
-        viewerSurface,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-
-  if(files.size() > 0)
-  {
-    adapterSurface->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Surface_mesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-#ifdef FEVV_USE_CGAL
-inline void
-FEVV::SimpleWindow::on_actionOpen_Surface_mesh_ADD_SPACE_TIME(
-    FEVV::SimpleViewer< FEVV::MeshSurface > *viewerSurface)
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Surface_mesh (ADD SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  if(files.size() > 0)
-  {
-    viewerSurface->m_space_time = true;
-    enableSpaceTimeMenus();
-    updateActiveChildTitle();
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshSurface *mSurface =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_surfacemesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mSurface, *p_surfacemesh_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mSurface,
-        p_surfacemesh_pmaps_bag,
-        viewerSurface,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Surface_mesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-#endif
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Surface_mesh_NORMAL(bool empty)
-{
-#ifdef FEVV_USE_CGAL
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files;
-
-  if(!empty)
-  {
-    files = QFileDialog::getOpenFileNames(this,
-                                          "Open Surface_mesh",
-                                          /*openLocation*/ QDir::currentPath(),
-                                          allExtensions,
-                                          &suffix,
-                                          options);
-  }
-
-  QStringList::Iterator it = files.begin();
-  while(empty || it != files.end())
-  {
-    ///// Surface_mesh
-    FEVV::SimpleAdapterVisu< FEVV::MeshSurface >
-        *adapterSurface; // if (!USE_MDI) delete
-    FEVV::SimpleViewer< FEVV::MeshSurface >
-        *viewerSurface; // already destroy by the adapter destructor
-
-    FEVV::MeshSurface *mSurface =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_surfacemesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    adapterSurface = new FEVV::SimpleAdapterVisu< FEVV::MeshSurface >();
-    // adapterSurface->setWindowTitle(QObject::tr("Surface_mesh"));
-    adapterSurface->setWindowTitle(QObject::tr("<Surface_mesh - aid: %1>")
-                                       .arg((qlonglong)adapterSurface, 0, 16));
-    adapterSurface->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerSurface = new FEVV::SimpleViewer< FEVV::MeshSurface >();
-    adapterSurface->attach(viewerSurface);
-    adapterSurface->init();
-    viewerSurface->init();
-    this->attach(adapterSurface, USE_MDI);
-
-    std::string mesh_filename = "";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(empty)
-    {
-      empty_mesh(mSurface, *p_surfacemesh_pmaps_bag);
-      mesh_filename = "empty";
-    }
-    else
-    {
-      load_mesh((*it).toStdString(), mSurface, *p_surfacemesh_pmaps_bag);
-      mesh_filename = FEVV::FileUtils::get_file_full_name((*it).toStdString());
-    }
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(mSurface,
-                        p_surfacemesh_pmaps_bag,
-                        viewerSurface,
-                        false,
-                        false,
-                        mesh_filename);
-
-    adapterSurface->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-
-    if(empty)
-      empty = false;
-    else
-      ++it;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Surface_mesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Surface_mesh_triggered()
-{
-  if(QApplication::keyboardModifiers().testFlag(
-         Qt::AltModifier)) // for 'only_pts' mode
-    open_only_pts_mode = true;
-  else
-    open_only_pts_mode = false;
-
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(
-         /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-  {
-    if(activeMdiChild())
-    {
-      BaseAdapterVisuQt *bavQt =
-          dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
-      Adapter::Viewer *viewer = bavQt->getViewer();
-
-#ifdef FEVV_USE_CGAL
-      if(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(viewer))
-        on_actionOpen_Surface_mesh_ADD_SPACE_TIME(
-            dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(viewer));
-#else
-      QMessageBox::information(
-          this,
-          "",
-          QObject::tr("actionOpen_Surface_mesh : FEVV_USE_CGAL is OFF !"));
-#endif
-    }
-  }
-  else if(QApplication::keyboardModifiers().testFlag(
-              Qt::ShiftModifier)) // QApplication::queryKeyboardModifiers()
-    on_actionOpen_Surface_mesh_SPACE_TIME();
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  else if(QApplication::keyboardModifiers().testFlag(
-              /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  else if(QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-    on_actionOpen_Surface_mesh_NORMAL(true); // empty mesh
-  else
-    on_actionOpen_Surface_mesh_NORMAL();
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_SPACE_TIME()
-{
-#ifdef FEVV_USE_CGAL
-
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Linear_cell_complex (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  ///// Linear_cell_complex
-  FEVV::SimpleAdapterVisu< FEVV::MeshLCC > *adapterLCC; // if (!USE_MDI) delete
-  FEVV::SimpleViewer< FEVV::MeshLCC >
-      *viewerLCC; // already destroy by the adapter destructor
-
-  if(files.size() > 0)
-  {
-    adapterLCC = new FEVV::SimpleAdapterVisu< FEVV::MeshLCC >();
-    // adapterLCC->setWindowTitle(QObject::tr("Linear_cell_complex"));
-    adapterLCC->setWindowTitle(QObject::tr("<Linear_cell_complex - aid: %1>")
-                                   .arg((qlonglong)adapterLCC, 0, 16));
-    adapterLCC->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerLCC = new FEVV::SimpleViewer< FEVV::MeshLCC >();
-    adapterLCC->attach(viewerLCC);
-    adapterLCC->init();
-    viewerLCC->init();
-    viewerLCC->m_space_time = true;
-    enableSpaceTimeMenus();
-    this->attach(adapterLCC, USE_MDI);
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshLCC *mLCC = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_lcc_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mLCC, *p_lcc_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mLCC,
-        p_lcc_pmaps_bag,
-        viewerLCC,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-
-  if(files.size() > 0)
-  {
-    adapterLCC->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Linear_cell_complex : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-#ifdef FEVV_USE_CGAL
-inline void
-FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_ADD_SPACE_TIME(
-    FEVV::SimpleViewer< FEVV::MeshLCC > *viewerLCC)
-{
-#ifdef FEVV_USE_CGAL
-
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open Linear_cell_complex (ADD SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  if(files.size() > 0)
-  {
-    viewerLCC->m_space_time = true;
-    enableSpaceTimeMenus();
-    updateActiveChildTitle();
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshLCC *mLCC = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_lcc_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mLCC, *p_lcc_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mLCC,
-        p_lcc_pmaps_bag,
-        viewerLCC,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Linear_cell_complex : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-#endif
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_NORMAL(bool empty)
-{
-#ifdef FEVV_USE_CGAL
-
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files;
-
-  if(!empty)
-  {
-    files = QFileDialog::getOpenFileNames(this,
-                                          "Open Linear_cell_complex",
-                                          /*openLocation*/ QDir::currentPath(),
-                                          allExtensions,
-                                          &suffix,
-                                          options);
-  }
-
-  QStringList::Iterator it = files.begin();
-  while(empty || it != files.end())
-  {
-    ///// Linear_cell_complex
-    FEVV::SimpleAdapterVisu< FEVV::MeshLCC >
-        *adapterLCC; // if (!USE_MDI) delete
-    FEVV::SimpleViewer< FEVV::MeshLCC >
-        *viewerLCC; // already destroy by the adapter destructor
-
-    FEVV::MeshLCC *mLCC = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_lcc_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    adapterLCC = new FEVV::SimpleAdapterVisu< FEVV::MeshLCC >();
-    // adapterLCC->setWindowTitle(QObject::tr("Linear_cell_complex"));
-    adapterLCC->setWindowTitle(QObject::tr("<Linear_cell_complex - aid: %1>")
-                                   .arg((qlonglong)adapterLCC, 0, 16));
-    adapterLCC->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerLCC = new FEVV::SimpleViewer< FEVV::MeshLCC >();
-    adapterLCC->attach(viewerLCC);
-    adapterLCC->init();
-    viewerLCC->init();
-    this->attach(adapterLCC, USE_MDI);
-
-    std::string mesh_filename = "";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(empty)
-    {
-      empty_mesh(mLCC, *p_lcc_pmaps_bag);
-      mesh_filename = "empty";
-    }
-    else
-    {
-      load_mesh((*it).toStdString(), mLCC, *p_lcc_pmaps_bag);
-      mesh_filename = FEVV::FileUtils::get_file_full_name((*it).toStdString());
-    }
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mLCC, p_lcc_pmaps_bag, viewerLCC, false, false, mesh_filename);
-
-    adapterLCC->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-
-    if(empty)
-      empty = false;
-    else
-      ++it;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_Linear_cell_complex : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_Linear_cell_complex_triggered()
-{
-  if(QApplication::keyboardModifiers().testFlag(
-         Qt::AltModifier)) // for 'only_pts' mode
-    open_only_pts_mode = true;
-  else
-    open_only_pts_mode = false;
-
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(
-         /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-  {
-    if(activeMdiChild())
-    {
-      BaseAdapterVisuQt *bavQt =
-          dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
-      Adapter::Viewer *viewer = bavQt->getViewer();
-
-#ifdef FEVV_USE_CGAL
-      if(dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(viewer))
-        on_actionOpen_Linear_cell_complex_ADD_SPACE_TIME(
-            dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(viewer));
-#else
-      QMessageBox::information(
-          this,
-          "",
-          QObject::tr(
-              "actionOpen_Linear_cell_complex : FEVV_USE_CGAL is OFF !"));
-#endif
-    }
-  }
-  else if(QApplication::keyboardModifiers().testFlag(
-              Qt::ShiftModifier)) // QApplication::queryKeyboardModifiers()
-    on_actionOpen_Linear_cell_complex_SPACE_TIME();
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  else if(QApplication::keyboardModifiers().testFlag(
-              /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  else if(QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-    on_actionOpen_Linear_cell_complex_NORMAL(true); // empty mesh
-  else
-    on_actionOpen_Linear_cell_complex_NORMAL();
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_OpenMesh_SPACE_TIME()
-{
-#ifdef FEVV_USE_OPENMESH
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open OpenMesh (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  ///// OpenMesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >
-      *adapterOpenMesh; // if (!USE_MDI) delete
-  FEVV::SimpleViewer< FEVV::MeshOpenMesh >
-      *viewerOpenMesh; // already destroy by the adapter destructor
-
-  if(files.size() > 0)
-  {
-    adapterOpenMesh = new FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >();
-    // adapterOpenMesh->setWindowTitle(QObject::tr("OpenMesh"));
-    adapterOpenMesh->setWindowTitle(
-        QObject::tr("<OpenMesh - aid: %1>")
-            .arg((qlonglong)adapterOpenMesh, 0, 16));
-    adapterOpenMesh->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerOpenMesh = new FEVV::SimpleViewer< FEVV::MeshOpenMesh >();
-    adapterOpenMesh->attach(viewerOpenMesh);
-    adapterOpenMesh->init();
-    viewerOpenMesh->init();
-    viewerOpenMesh->m_space_time = true;
-    enableSpaceTimeMenus();
-    this->attach(adapterOpenMesh, USE_MDI);
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshOpenMesh *mOpenMesh =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_openmesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mOpenMesh, *p_openmesh_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mOpenMesh,
-        p_openmesh_pmaps_bag,
-        viewerOpenMesh,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-
-  if(files.size() > 0)
-  {
-    adapterOpenMesh->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-  }
-#else
-  QMessageBox::information(
-      this, "", QObject::tr("actionOpen_OpenMesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-#ifdef FEVV_USE_OPENMESH
-inline void
-FEVV::SimpleWindow::on_actionOpen_OpenMesh_ADD_SPACE_TIME(
-    FEVV::SimpleViewer< FEVV::MeshOpenMesh > *viewerOpenMesh)
-{
-#ifdef FEVV_USE_OPENMESH
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open OpenMesh (ADD SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  if(files.size() > 0)
-  {
-    viewerOpenMesh->m_space_time = true;
-    enableSpaceTimeMenus();
-    updateActiveChildTitle();
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshOpenMesh *mOpenMesh =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_openmesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mOpenMesh, *p_openmesh_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mOpenMesh,
-        p_openmesh_pmaps_bag,
-        viewerOpenMesh,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-#else
-  QMessageBox::information(
-      this, "", QObject::tr("actionOpen_OpenMesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-#endif
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_OpenMesh_NORMAL(bool empty)
-{
-#ifdef FEVV_USE_OPENMESH
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files;
-
-  if(!empty)
-  {
-    files = QFileDialog::getOpenFileNames(this,
-                                          "Open OpenMesh",
-                                          /*openLocation*/ QDir::currentPath(),
-                                          allExtensions,
-                                          &suffix,
-                                          options);
-  }
-
-  QStringList::Iterator it = files.begin();
-  while(empty || it != files.end())
-  {
-    ///// OpenMesh
-    FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >
-        *adapterOpenMesh; // if (!USE_MDI) delete
-    FEVV::SimpleViewer< FEVV::MeshOpenMesh >
-        *viewerOpenMesh; // already destroy by the adapter destructor
-
-    FEVV::MeshOpenMesh *mOpenMesh =
-        nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_openmesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    adapterOpenMesh = new FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >();
-    // adapterOpenMesh->setWindowTitle(QObject::tr("OpenMesh"));
-    adapterOpenMesh->setWindowTitle(
-        QObject::tr("<OpenMesh - aid: %1>")
-            .arg((qlonglong)adapterOpenMesh, 0, 16));
-    adapterOpenMesh->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerOpenMesh = new FEVV::SimpleViewer< FEVV::MeshOpenMesh >();
-    adapterOpenMesh->attach(viewerOpenMesh);
-    adapterOpenMesh->init();
-    viewerOpenMesh->init();
-    this->attach(adapterOpenMesh, USE_MDI);
-
-    std::string mesh_filename = "";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(empty)
-    {
-      empty_mesh(mOpenMesh, *p_openmesh_pmaps_bag);
-      mesh_filename = "empty";
-    }
-    else
-    {
-      load_mesh((*it).toStdString(), mOpenMesh, *p_openmesh_pmaps_bag);
-      mesh_filename = FEVV::FileUtils::get_file_full_name((*it).toStdString());
-    }
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(mOpenMesh,
-                        p_openmesh_pmaps_bag,
-                        viewerOpenMesh,
-                        false,
-                        false,
-                        mesh_filename);
-
-    adapterOpenMesh->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-
-    if(empty)
-      empty = false;
-    else
-      ++it;
-  }
-#else
-  QMessageBox::information(
-      this,
-      "",
-      QObject::tr("actionOpen_OpenMesh : FEVV_USE_OPENMESH is OFF !"));
-#endif
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_OpenMesh_triggered()
-{
-  if(QApplication::keyboardModifiers().testFlag(
-         Qt::AltModifier)) // for 'only_pts' mode
-    open_only_pts_mode = true;
-  else
-    open_only_pts_mode = false;
-
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(
-         /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-  {
-    if(activeMdiChild())
-    {
-      BaseAdapterVisuQt *bavQt =
-          dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
-      Adapter::Viewer *viewer = bavQt->getViewer();
-
-#ifdef FEVV_USE_OPENMESH
-      if(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(viewer))
-        on_actionOpen_OpenMesh_ADD_SPACE_TIME(
-            dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(viewer));
-#else
-      QMessageBox::information(
-          this,
-          "",
-          QObject::tr("actionOpen_OpenMesh : FEVV_USE_OPENMESH is OFF !"));
-#endif
-    }
-  }
-  else if(QApplication::keyboardModifiers().testFlag(
-              Qt::ShiftModifier)) // QApplication::queryKeyboardModifiers()
-    on_actionOpen_OpenMesh_SPACE_TIME();
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  else if(QApplication::keyboardModifiers().testFlag(
-              /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  else if(QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-    on_actionOpen_OpenMesh_NORMAL(true); // empty mesh
-  else
-    on_actionOpen_OpenMesh_NORMAL();
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_AIFMesh_SPACE_TIME()
-{
-#ifdef FEVV_USE_AIF
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open AIFMesh (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  ///// AIFMesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshAIF > *adapterAIF; // if (!USE_MDI) delete
-  FEVV::SimpleViewer< FEVV::MeshAIF >
-      *viewerAIF; // already destroy by the adapter destructor
-
-  if(files.size() > 0)
-  {
-    adapterAIF = new FEVV::SimpleAdapterVisu< FEVV::MeshAIF >();
-    // adapterAIF->setWindowTitle(QObject::tr("AIFMesh"));
-    adapterAIF->setWindowTitle(
-        QObject::tr("<AIFMesh - aid: %1>").arg((qlonglong)adapterAIF, 0, 16));
-    adapterAIF->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerAIF = new FEVV::SimpleViewer< FEVV::MeshAIF >();
-    adapterAIF->attach(viewerAIF);
-    adapterAIF->init();
-    viewerAIF->init();
-    viewerAIF->m_space_time = true;
-    enableSpaceTimeMenus();
-    this->attach(adapterAIF, USE_MDI);
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshAIF *mAIF = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_aif_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mAIF, *p_aif_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mAIF,
-        p_aif_pmaps_bag,
-        viewerAIF,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-
-  if(files.size() > 0)
-  {
-    adapterAIF->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-  }
-#else
-  QMessageBox::information(
-      this, "", QObject::tr("actionOpen_AIFMesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-
-#ifdef FEVV_USE_AIF
-inline void
-FEVV::SimpleWindow::on_actionOpen_AIFMesh_ADD_SPACE_TIME(
-    FEVV::SimpleViewer< FEVV::MeshAIF > *viewerAIF)
-{
-#ifdef FEVV_USE_AIF
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open AIFMesh (ADD SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  if(files.size() > 0)
-  {
-    viewerAIF->m_space_time = true;
-    enableSpaceTimeMenus();
-    updateActiveChildTitle();
-  }
-
-  QStringList::Iterator it = files.begin();
-  int m = 0;
-  while(it != files.end())
-  {
-    FEVV::MeshAIF *mAIF = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_aif_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh((*it).toStdString(), mAIF, *p_aif_pmaps_bag);
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mAIF,
-        p_aif_pmaps_bag,
-        viewerAIF,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name((*it).toStdString()),
-        m * STEP_SPACE);
-
-    ++it;
-    ++m;
-  }
-#else
-  QMessageBox::information(
-      this, "", QObject::tr("actionOpen_AIFMesh : FEVV_USE_CGAL is OFF !"));
-#endif
-}
-#endif
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_AIFMesh_NORMAL(bool empty)
-{
-#ifdef FEVV_USE_AIF
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
-
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
-#endif
-#ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
-#endif
-                          + "";
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files;
-
-  if(!empty)
-  {
-    files = QFileDialog::getOpenFileNames(this,
-                                          "Open AIFMesh",
-                                          /*openLocation*/ QDir::currentPath(),
-                                          allExtensions,
-                                          &suffix,
-                                          options);
-  }
-
-  QStringList::Iterator it = files.begin();
-  while(empty || it != files.end())
-  {
-    ///// AIFMesh
-    FEVV::SimpleAdapterVisu< FEVV::MeshAIF >
-        *adapterAIF; // if (!USE_MDI) delete
-    FEVV::SimpleViewer< FEVV::MeshAIF >
-        *viewerAIF; // already destroy by the adapter destructor
-
-    FEVV::MeshAIF *mAIF = nullptr; // already destroy by the viewer destructor
-    FEVV::PMapsContainer *p_aif_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
-
-    adapterAIF = new FEVV::SimpleAdapterVisu< FEVV::MeshAIF >();
-    // adapterAIF->setWindowTitle(QObject::tr("AIFMesh"));
-    adapterAIF->setWindowTitle(
-        QObject::tr("<AIFMesh - aid: %1>").arg((qlonglong)adapterAIF, 0, 16));
-    adapterAIF->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewerAIF = new FEVV::SimpleViewer< FEVV::MeshAIF >();
-    adapterAIF->attach(viewerAIF);
-    adapterAIF->init();
-    viewerAIF->init();
-    this->attach(adapterAIF, USE_MDI);
-
-    std::string mesh_filename = "";
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    if(empty)
-    {
-      empty_mesh(mAIF, *p_aif_pmaps_bag);
-      mesh_filename = "empty";
-    }
-    else
-    {
-      load_mesh((*it).toStdString(), mAIF, *p_aif_pmaps_bag);
-      mesh_filename = FEVV::FileUtils::get_file_full_name((*it).toStdString());
-    }
-    QApplication::restoreOverrideCursor();
-
-    draw_or_redraw_mesh(
-        mAIF, p_aif_pmaps_bag, viewerAIF, false, false, mesh_filename);
-
-    adapterAIF->show();
-    updateActiveChildTitle();
-    if(this->getMdiArea())
-      this->getMdiArea()->tileSubWindows();
-
-    if(empty)
-      empty = false;
-    else
-      ++it;
-  }
-#else
-  QMessageBox::information(
-      this, "", QObject::tr("actionOpen_AIFMesh : FEVV_USE_AIF is OFF !"));
-#endif
-}
-
-inline void
-FEVV::SimpleWindow::on_actionOpen_AIFMesh_triggered()
-{
-  if(QApplication::keyboardModifiers().testFlag(
-         Qt::AltModifier)) // for 'only_pts' mode
-    open_only_pts_mode = true;
-  else
-    open_only_pts_mode = false;
-
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(
-         /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  if(QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier) &&
-     QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-  {
-    if(activeMdiChild())
-    {
-      BaseAdapterVisuQt *bavQt =
-          dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
-      Adapter::Viewer *viewer = bavQt->getViewer();
-
-#ifdef FEVV_USE_AIF
-      if(dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(viewer))
-        on_actionOpen_AIFMesh_ADD_SPACE_TIME(
-            dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(viewer));
-#else
-      QMessageBox::information(
-          this, "", QObject::tr("actionOpen_AIFMesh : FEVV_USE_AIF is OFF !"));
-#endif
-    }
-  }
-  else if(QApplication::keyboardModifiers().testFlag(
-              Qt::ShiftModifier)) // QApplication::queryKeyboardModifiers()
-    on_actionOpen_AIFMesh_SPACE_TIME();
-#ifdef __APPLE__
-  // on macOS, the ControlModifier value corresponds to the Command keys on the
-  // keyboard, and the MetaModifier value corresponds to the Control keys
-  else if(QApplication::keyboardModifiers().testFlag(
-              /*Qt::MetaModifier*/ Qt::ControlModifier))
-#else
-  else if(QApplication::keyboardModifiers().testFlag(Qt::ControlModifier))
-#endif
-    on_actionOpen_AIFMesh_NORMAL(true); // empty mesh
-  else
-    on_actionOpen_AIFMesh_NORMAL();
-}
 
 template< typename HalfedgeGraph >
+inline void
+FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
+{
+  QString validExtensions =
+      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
+      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
+  QString validVtkExtensions =
+      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
+
+  QString allExtensions = validExtensions
+#ifdef FEVV_USE_VTK
+                          + ";;" + validVtkExtensions
+#endif
+#ifdef FEVV_USE_FBX
+                          + ";;FBX files (*.fbx)"
+#endif
+                          + "";
+
+  QString suffix;
+  QFileDialog::Option options = (QFileDialog::Option)0;
+
+#if defined(__linux__) || defined(__APPLE__)
+  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
+#endif
+
+  QStringList files_qt =
+      QFileDialog::getOpenFileNames(this,
+                                    "Open (SPACE/TIME)",
+                                    /*openLocation*/ QDir::currentPath(),
+                                    allExtensions,
+                                    &suffix,
+                                    options);
+
+  // convert QStringList to standard type
+  std::vector< std::string > files;
+  for(auto qstr: files_qt)
+    files.push_back(qstr.toStdString());
+
+  // open files
+  open_SPACE_TIME< HalfedgeGraph >(viewer, files);
+}
+
+
+template< typename HalfedgeGraph >
+inline void
+FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
+                                    const std::vector< std::string >& files)
+{
+  // open a new viewer if needed
+  if(files.size() > 0 && viewer == nullptr)
+    viewer = createNewViewer();
+
+  // load and draw meshes
+  int m = 0;
+  for(auto filename: files)
+  {
+    HalfedgeGraph *mesh = nullptr; 
+      // destroyed by the viewer destructor
+    FEVV::PMapsContainer *p_pmaps_bag = new FEVV::PMapsContainer;
+      // destroyed by the viewer destructor
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    load_mesh(filename, mesh, *p_pmaps_bag);
+    QApplication::restoreOverrideCursor();
+
+    draw_or_redraw_mesh(
+        mesh,
+        p_pmaps_bag,
+        viewer,
+        false,
+        false,
+        FEVV::FileUtils::get_file_full_name(filename),
+        m * STEP_SPACE);
+
+    ++m;
+  }
+
+  updateActiveChildTitle();
+}
+
+
+inline void
+FEVV::SimpleWindow::on_actionOpen_triggered()
+{
+  // capture keyboard state
+  bool shift_pressed =
+      QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
+  bool alt_pressed =
+      QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
+  bool ctrl_pressed =
+      QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
+
+  // for 'only_pts' mode
+  if(alt_pressed)
+    open_only_pts_mode = true;
+  else
+    open_only_pts_mode = false;
+
+  // logic: default-mode is "add in SPACE/TIME" mode in current viewer ;
+  //        if no viewer is opened, then open one in SPACE mode
+
+  // use existing viewer unless shift is pressed
+  // note: the call to activeMdiChild() to retrieve the current viewer 
+  //       must come before the call to chooseDatastructureMsgBox()
+  //       because the latter resets the active window
+  SimpleViewer *viewer = nullptr;
+  if(activeMdiChild()  &&  (! shift_pressed))
+  {
+    // open mesh in current viewer
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+    Adapter::Viewer *base_viewer = bavQt->getViewer();
+    viewer = dynamic_cast< SimpleViewer * >(base_viewer);
+    assert(viewer != nullptr);
+  }
+
+  // ask the user for the datastructure
+  std::string mesh_type = chooseDatastructureMsgBox();
+  if(mesh_type == "NONE")
+    return; // cancel pressed, aborting
+
+  // open mesh(es)
+#ifdef FEVV_USE_CGAL
+  if(mesh_type == "POLYHEDRON")
+    on_actionOpen_SPACE_TIME< FEVV::MeshPolyhedron >(viewer);
+  else if(mesh_type == "SURFACEMESH")
+    on_actionOpen_SPACE_TIME< FEVV::MeshSurface >(viewer);
+  else if(mesh_type == "LCC")
+    on_actionOpen_SPACE_TIME< FEVV::MeshLCC >(viewer);
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+  if(mesh_type == "OPENMESH")
+    on_actionOpen_SPACE_TIME< FEVV::MeshOpenMesh >(viewer);
+#endif
+
+#ifdef FEVV_USE_AIF
+  if(mesh_type == "AIF")
+    on_actionOpen_SPACE_TIME< FEVV::MeshAIF >(viewer);
+#endif
+}
+
+
+inline
 void
-FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer)
+FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
 {
   if(!viewer)
     return;
@@ -2362,7 +878,7 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer)
 #endif
                           + "";
 
-  std::vector< HalfedgeGraph * > meshes = viewer->getSelectedMeshes();
+  FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
   std::vector< std::string > meshes_names = viewer->getSelectedMeshesNames();
   std::vector< FEVV::PMapsContainer * > properties_maps =
       viewer->getSelected_properties_maps();
@@ -2406,10 +922,54 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer)
 #endif
 
     if(!fileName.isEmpty())
-      FEVV::Filters::write_mesh(
-          fileName.toStdString(), *(meshes[i]), *(properties_maps[i]));
+    {
+#ifdef FEVV_USE_CGAL
+      if(meshes[i].second == "POLYHEDRON")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshPolyhedron* >(meshes[i].first);
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+      }
+      if(meshes[i].second == "SURFACEMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshSurface* >(meshes[i].first);
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+      }
+      if(meshes[i].second == "LCC")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshLCC* >(meshes[i].first);
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+      }
+#endif //FEVV_USE_CGAL
+
+#ifdef FEVV_USE_OPENMESH
+      if(meshes[i].second == "OPENMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshOpenMesh* >(meshes[i].first);
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+      }
+#endif //FEVV_USE_OPENMESH
+
+#ifdef FEVV_USE_AIF
+      if(meshes[i].second == "AIF")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshAIF* >(meshes[i].first);
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+      }
+#endif //FEVV_USE_AIF
+    }
   }
 }
+
 
 inline void
 FEVV::SimpleWindow::on_actionSaveAs_triggered()
@@ -2419,33 +979,12 @@ FEVV::SimpleWindow::on_actionSaveAs_triggered()
     if(adapters[i]->isSelected())
     {
       BaseAdapterVisu *bav = adapters[i];
-
-#ifdef FEVV_USE_CGAL
-      if(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(
-             bav->getViewer()))
-        writeHG(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(
-            bav->getViewer()));
-      else if(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(
-                  bav->getViewer()))
-        writeHG(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(
-            bav->getViewer()));
-      else if(dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(bav->getViewer()))
-        writeHG(
-            dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(bav->getViewer()));
-#endif
-#ifdef FEVV_USE_OPENMESH
-      if(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(bav->getViewer()))
-        writeHG(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(
-            bav->getViewer()));
-#endif
-#ifdef FEVV_USE_AIF
-      if(dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(bav->getViewer()))
-        writeHG(
-            dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(bav->getViewer()));
-#endif
+      auto viewer = dynamic_cast< SimpleViewer * >(bav->getViewer());
+      writeHG(viewer);
     }
   }
 }
+
 
 inline void
 FEVV::SimpleWindow::on_actionClose_triggered()
@@ -2657,10 +1196,7 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
          "<br>"
          "<b>Keys: </b><br>"
          "<br>"
-         "Open   -> <b>NORMAL</b>         mode : <b>no key</b><br>"
-         "Open   -> <b>SPACE/TIME</b>     mode : <b>shift</b><br>"
-         "Open   -> <b>EMPTY</b>          mode : <b>ctrl</b> *<br>"
-         "Open   -> <b>ADD SPACE/TIME</b> mode : <b>shift+ctrl</b> *<br>"
+         "Open in a new viewer -> <b>shift + OPEN</b><br>"
          "<br>"
          "Viewer -> <b>SELECT</b>         mesh : <b>shift</b><br>"
          "Viewer -> <b>TRANSLATE</b>      mesh : <b>T</b> (Translation "
@@ -2684,9 +1220,10 @@ FEVV::SimpleWindow::onGrab()
 #endif
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
+FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer *viewer,
                              char t,
                              char t2)
 {
@@ -2864,45 +1401,88 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer,
   }
   else if(t == 'D') // re-'D'raw
   {
-    std::vector< HalfedgeGraph * > meshes = viewer->getMeshes();
+    FEVV::MixedMeshesVector meshes = viewer->getMeshes();
     std::vector< std::string > meshes_names = viewer->getMeshesNames();
     std::vector< FEVV::PMapsContainer * > properties_maps =
         viewer->get_properties_maps();
 
     for(unsigned i = 0; i < meshes.size(); i++)
-      draw_or_redraw_mesh(meshes[i],
-                          properties_maps[i],
-                          viewer,
-                          true,
-                          false,
-                          meshes_names[i],
-                          false);
+    {
+#ifdef FEVV_USE_CGAL
+      if(meshes[i].second == "POLYHEDRON")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshPolyhedron* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+      if(meshes[i].second == "SURFACEMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshSurface* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+      if(meshes[i].second == "LCC")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshLCC* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+#endif //FEVV_USE_CGAL
+
+#ifdef FEVV_USE_OPENMESH
+      if(meshes[i].second == "OPENMESH")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshOpenMesh* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+#endif //FEVV_USE_OPENMESH
+
+#ifdef FEVV_USE_AIF
+      if(meshes[i].second == "AIF")
+      {
+        auto mesh_ptr = static_cast< FEVV::MeshAIF* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+#endif //FEVV_USE_AIF
+    }
   }
 }
 
+
 inline void
-FEVV::SimpleWindow::pre_actionHG(Adapter::Viewer *viewer, char t, char t2)
+FEVV::SimpleWindow::pre_actionHG(Adapter::Viewer *base_viewer, char t, char t2)
 {
-#ifdef FEVV_USE_CGAL
-  if(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(viewer))
-    actionHG(
-        dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(viewer), t, t2);
-  else if(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(viewer))
-    actionHG(
-        dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(viewer), t, t2);
-  else if(dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(viewer))
-    actionHG(dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(viewer), t, t2);
-#endif
-#ifdef FEVV_USE_OPENMESH
-  if(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(viewer))
-    actionHG(
-        dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(viewer), t, t2);
-#endif
-#ifdef FEVV_USE_AIF
-  if(dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(viewer))
-    actionHG(dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(viewer), t, t2);
-#endif
+  auto viewer = dynamic_cast< SimpleViewer * >(base_viewer);
+  actionHG(viewer, t, t2);
 }
+
 
 inline void
 FEVV::SimpleWindow::on_actionRender_Point_triggered()
@@ -3103,20 +1683,22 @@ FEVV::SimpleWindow::on_actionRender_Mode_triggered()
   }
 }
 
-template< typename HalfedgeGraph >
+
+inline
 void
-FEVV::SimpleWindow::centerHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer)
+FEVV::SimpleWindow::centerHG(FEVV::SimpleViewer *viewer)
 {
   if(!viewer)
     return;
 
-  std::vector< HalfedgeGraph * > meshes = viewer->getSelectedMeshes();
+  FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
 
   for(unsigned i = 0; i < meshes.size(); i++)
   {
-    viewer->centerMesh(meshes[i]);
+    viewer->centerMesh(meshes[i].first);
   }
 }
+
 
 inline void
 FEVV::SimpleWindow::on_actionShow_Entire_Mesh_triggered()
@@ -3126,33 +1708,13 @@ FEVV::SimpleWindow::on_actionShow_Entire_Mesh_triggered()
     if(adapters[i]->isSelected())
     {
       BaseAdapterVisu *bav = adapters[i];
+      auto viewer = dynamic_cast< SimpleViewer * >(bav->getViewer());
+      centerHG(viewer);
 
-#ifdef FEVV_USE_CGAL
-      if(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(
-             bav->getViewer()))
-        centerHG(dynamic_cast< SimpleViewer< FEVV::MeshPolyhedron > * >(
-            bav->getViewer()));
-      else if(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(
-                  bav->getViewer()))
-        centerHG(dynamic_cast< SimpleViewer< FEVV::MeshSurface > * >(
-            bav->getViewer()));
-      else if(dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(bav->getViewer()))
-        centerHG(
-            dynamic_cast< SimpleViewer< FEVV::MeshLCC > * >(bav->getViewer()));
-#endif
-#ifdef FEVV_USE_OPENMESH
-      if(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(bav->getViewer()))
-        centerHG(dynamic_cast< SimpleViewer< FEVV::MeshOpenMesh > * >(
-            bav->getViewer()));
-#endif
-#ifdef FEVV_USE_AIF
-      if(dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(bav->getViewer()))
-        centerHG(
-            dynamic_cast< SimpleViewer< FEVV::MeshAIF > * >(bav->getViewer()));
-#endif
     }
   }
 }
+
 
 inline void
 FEVV::SimpleWindow::on_actionShow_Axis_triggered()
@@ -3180,14 +1742,19 @@ FEVV::SimpleWindow::on_actionShow_Grid_triggered()
   }
 }
 
+
+#if 0 //TODO-elo-rm-?-ask_MTO
 template< typename HalfedgeGraph >
 void
-FEVV::SimpleWindow::showSelectedHG(FEVV::SimpleViewer< HalfedgeGraph > *viewer)
+FEVV::SimpleWindow::showSelectedHG(FEVV::SimpleViewer *viewer)
 {
   if(!viewer)
     return;
 }
+#endif
 
+
+#if 0 //TODO-elo-rm-?-ask_MTO
 inline void
 FEVV::SimpleWindow::on_actionShow_Selected_triggered()
 {
@@ -3224,6 +1791,8 @@ FEVV::SimpleWindow::on_actionShow_Selected_triggered()
     }
   }
 }
+#endif
+
 
 inline void
 FEVV::SimpleWindow::on_actionShow_Translation_Draggers_triggered()
@@ -3435,4 +2004,93 @@ FEVV::SimpleWindow::getSelectedViewers()
   });
 
   return result;
+}
+
+inline
+std::string
+FEVV::SimpleWindow::chooseDatastructureMsgBox(void)
+{
+  QMessageBox msgbox;
+  msgbox.setWindowTitle("Datastructure");
+  msgbox.setText("Choose a datastructure to store the mesh(es):");
+  msgbox.setIcon(QMessageBox::Question);
+
+  // here the Role is used to order the buttons
+#ifdef FEVV_USE_CGAL
+  QPushButton *polyhedron_button =
+      msgbox.addButton("Polyhedron_3", QMessageBox::ResetRole);
+  QPushButton *surfacemesh_button =
+      msgbox.addButton("Surface_mesh", QMessageBox::ResetRole);
+  QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+  QPushButton *openmesh_button =
+      msgbox.addButton("OpenMesh", QMessageBox::ResetRole);
+#endif
+
+#ifdef FEVV_USE_AIF
+  QPushButton *aif_button = msgbox.addButton("AIF", QMessageBox::ResetRole);
+#endif
+
+  QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
+
+  msgbox.exec();
+  std::string choice("NONE");
+
+#ifdef FEVV_USE_CGAL
+  if(msgbox.clickedButton() == polyhedron_button)
+  {
+    choice = "POLYHEDRON";
+  }
+  else if(msgbox.clickedButton() == surfacemesh_button)
+  {
+    choice = "SURFACEMESH";
+  }
+  else if(msgbox.clickedButton() == lcc_button)
+  {
+    choice = "LCC";
+  }
+#endif
+
+#ifdef FEVV_USE_OPENMESH
+  if(msgbox.clickedButton() == openmesh_button)
+  {
+    choice = "OPENMESH";
+  }
+#endif
+
+#ifdef FEVV_USE_AIF
+  if(msgbox.clickedButton() == aif_button)
+  {
+    choice = "AIF";
+  }
+#endif
+
+  return choice;
+}
+
+
+inline
+FEVV::SimpleViewer *
+FEVV::SimpleWindow::createNewViewer(void)
+{
+  FEVV::SimpleAdapterVisu *adapter;
+  adapter= new FEVV::SimpleAdapterVisu();
+  adapter->setWindowTitle(QObject::tr("<aid: %1>")
+                          .arg((qlonglong)adapter, 0, 16));
+  adapter->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
+  FEVV::SimpleViewer *viewer = new FEVV::SimpleViewer();
+  adapter->attach(viewer);
+  adapter->init();
+  viewer->init();
+  viewer->setSelected(true);
+  viewer->m_space_time = true;
+  enableSpaceTimeMenus();
+  this->attach(adapter, USE_MDI);
+  adapter->show();
+  if(this->getMdiArea())
+    this->getMdiArea()->tileSubWindows();
+
+  return viewer;
 }

@@ -23,7 +23,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -49,7 +49,7 @@ namespace FEVV {
 
 class CompressionValencePlugin : public QObject,
                                  public Generic_PluginInterface,
-                                 public BasePlugin
+                                 public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -199,11 +199,33 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    if(*value_forceCompute)
-      process(_mesh, pmaps_bag);
+    // get filter parameters from dialog window
+    DialogCompressionValence1 dial1;
+    dial1.setCompressionValenceParams(p3dFilePath,
+                                      with_adaptative_quantization,
+                                      quantization_bits,
+                                      max_vertices);
+    if(dial1.exec() == QDialog::Accepted)
+    {
+      dial1.getCompressionValenceParams(p3dFilePath,
+                                        with_adaptative_quantization,
+                                        quantization_bits,
+                                        max_vertices);
 
-    SimpleViewer< HalfedgeGraph > *viewer =
-        dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
+      // if the P3D file name doesn't end with the right extension, fix it
+      if(p3dFilePath.size() < 4 ||
+         p3dFilePath.substr(p3dFilePath.size() - 4) != ".p3d")
+        p3dFilePath.append(".p3d");
+    }
+    else
+      return; // abort applying filter
+
+    // apply filter
+    process(_mesh, pmaps_bag);
+
+    // redraw mesh
+    SimpleViewer *viewer =
+        dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
     if(viewer)
     {
@@ -262,22 +284,17 @@ public:
 #endif
 
 #ifdef FEVV_USE_AIF
+#if 0 //TODO-elo  restore when Compression Valence compiles with AIF
   void apply(BaseAdapterVisu *_adapter,
              MeshAIF *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-#if 0
-		//TODO-elo  restore when Compression Valence compiles with AIF
+		
 		applyHG<MeshAIF>(_adapter, _mesh, pmaps_bag);
-#else
-    QMessageBox::information(
-        0,
-        "",
-        QObject::tr(
-            "Compression Valence filter is not yet compatible with AIF!"));
-#endif
   }
 #endif
+#endif
+
 
   QStringList Generic_plugins() const override
   {
@@ -286,33 +303,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogCompressionValence1 dial1;
-    dial1.setCompressionValenceParams(p3dFilePath,
-                                      with_adaptative_quantization,
-                                      quantization_bits,
-                                      max_vertices);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getCompressionValenceParams(p3dFilePath,
-                                        with_adaptative_quantization,
-                                        quantization_bits,
-                                        max_vertices);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("compressionvalence_qt_p", this);
+    sw->onApplyButton();
 
-      // if the P3D file name doesn't end with the right extension, fix it
-      if(p3dFilePath.size() < 4 ||
-         p3dFilePath.substr(p3dFilePath.size() - 4) != ".p3d")
-        p3dFilePath.append(".p3d");
-
-      SimpleWindow *sw = static_cast< SimpleWindow * >(
-          window); // dynamic_cast fails under OS X
-
-      sw->onModificationParam("compressionvalence_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

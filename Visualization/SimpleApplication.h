@@ -33,7 +33,27 @@ public:
   /**
    * Constructor.
    */
-  SimpleApplication(int &_argc, char **_argv) : QApplication(_argc, _argv) {}
+  SimpleApplication(int &_argc, char **_argv) : QApplication(_argc, _argv)
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
+
+  ~SimpleApplication()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 
 private:
   /**
@@ -42,6 +62,11 @@ private:
    */
   bool notify(QObject *_receiver, QEvent *_event)
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** SimpleApplication notify event type=" << _event->type()
+              << "  receiver=" << _receiver << std::endl;
+#endif
+
     try
     {
       return QApplication::notify(_receiver, _event);

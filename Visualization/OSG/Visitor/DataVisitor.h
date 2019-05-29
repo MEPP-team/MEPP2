@@ -62,7 +62,11 @@ public:
     // setTraversalMask(0xffffffff);
   }
 
-  virtual ~DataVisitor() {}
+  virtual ~DataVisitor()
+  {
+    exportVector->clear();
+    delete exportVector;
+  }
 
   virtual void apply(osg::Node &_node)
   {

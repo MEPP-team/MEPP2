@@ -24,7 +24,7 @@
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
-#include "Visualization/PluginFilters/BasePlugin.h"
+#include "Visualization/PluginFilters/BasePluginQt.h"
 #include "Visualization/SimpleViewer.h"
 
 #include "Visualization/SimpleWindow.h"
@@ -53,7 +53,7 @@ namespace FEVV {
 
 class BooleanOperationsPlugin : public QObject,
                          public Generic_PluginInterface,
-                         public BasePlugin
+                         public BasePluginQt
 {
   Q_OBJECT
   Q_INTERFACES(FEVV::Generic_PluginInterface)
@@ -160,41 +160,61 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    SimpleViewer< HalfedgeGraph > *viewer =
-      dynamic_cast< SimpleViewer< HalfedgeGraph > * >(_adapter->getViewer());
-
     // retrieve the two input meshes in current viewer window,
     // then apply the filter
 
-    std::vector< HalfedgeGraph * > meshes = viewer->getMeshes();
+    SimpleViewer *viewer =
+      dynamic_cast< SimpleViewer * >(_adapter->getViewer());
+
+    MixedMeshesVector mixed_meshes = viewer->getMeshes();
     std::vector< FEVV::PMapsContainer * > pmaps_bags =
         viewer->get_properties_maps();
-    if(meshes.size() >= 2)
+    if(mixed_meshes.size() >= 2)
     {
-      // retrieve the two input meshes
-      auto mA = meshes[0];
-      auto pmaps_bagA = pmaps_bags[0];
-      auto matrix44_A = viewer->getTransformMatrixEigen(0);
+      // check that the two input meshes have the same type
+      if( mixed_meshes[0].second ==  mixed_meshes[1].second )
+      {
+        // get filter parameters from dialog window
+        DialogBooleanOperations1 dial1;
+        dial1.setParameters(m_operation);
+        if(dial1.exec() == QDialog::Accepted)
+          dial1.getParameters(m_operation);
+        else
+          return; // abort applying filter
 
-      auto mB = meshes[1];
-      auto pmaps_bagB = pmaps_bags[1];
-      auto matrix44_B = viewer->getTransformMatrixEigen(1);
+        // retrieve the two input meshes
+        auto mA = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
+        auto pmaps_bagA = pmaps_bags[0];
+        auto matrix44_A = viewer->getTransformMatrixEigen(0);
 
-      // apply filter
-      process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+        auto mB = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
+        auto pmaps_bagB = pmaps_bags[1];
+        auto matrix44_B = viewer->getTransformMatrixEigen(1);
 
-      // reset transform matrix of A and B because transformation
-      // is now applied to mesh coordinates
-      viewer->resetTransformMatrix(0);
-      viewer->resetTransformMatrix(1);
+        // apply filter
+        process(mA, pmaps_bagA, matrix44_A, mB, pmaps_bagB, matrix44_B);
+
+        // reset transform matrix of A and B because transformation
+        // is now applied to mesh coordinates
+        viewer->resetTransformMatrix(0);
+        viewer->resetTransformMatrix(1);
+      }
+      else
+      {
+        QMessageBox::information(0,
+            "",
+            QObject::tr("Boolean Operations filter "
+                        "can not be applied on meshes "
+                        "with different datastructures."));
+      }
     }
     else
     {
       QMessageBox::information(0,
           "",
-          QObject::tr("Boolean Operations filter "
-            "needs two meshes "
-            "opened in Space or Time."));
+          QObject::tr("Boolean Operations filter needs "
+                      "two meshes opened "
+                      "with the same datastructure."));
     }
 
     // draw output mesh
@@ -226,21 +246,14 @@ public:
   }
 
 #ifdef FEVV_USE_OPENMESH
+#if 0 //TODO-elo-note  compiling error in Cartesian_converter.h with OM
   void apply(BaseAdapterVisu *_adapter,
              MeshOpenMesh *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-#if 0
-		//ELO-note: compiling error in Cartesian_converter.h with OM
     applyHG< MeshOpenMesh >(_adapter, _mesh, pmaps_bag);
-#else
-    QMessageBox::information(
-        0,
-        "",
-        QObject::tr(
-            "Boolean Operations filter is not yet compatible with OpenMesh!"));
-#endif
   }
+#endif
 #endif
 
 #ifdef FEVV_USE_CGAL
@@ -267,23 +280,18 @@ public:
 #endif
 
 #ifdef FEVV_USE_AIF
+#if 0
+	//TODO-elo-note: missing num_halfedges() used by CGAL::copy_face_graph()
+  //               and compiling error in Cartesian_converter.h with AIF
   void apply(BaseAdapterVisu *_adapter,
              MeshAIF *_mesh,
              FEVV::PMapsContainer *pmaps_bag) override
   {
-#if 0
-		//ELO-note: missing num_halfedges() used by CGAL::copy_face_graph()
-    //          and compiling error in Cartesian_converter.h with AIF
 		applyHG<MeshAIF>(_adapter, _mesh, pmaps_bag);
-#else
-    QMessageBox::information(
-        0,
-        "",
-        QObject::tr(
-            "Boolean Operations filter is not yet compatible with AIF!"));
-#endif
   }
 #endif
+#endif
+
 
   QStringList Generic_plugins() const override
   {
@@ -292,22 +300,12 @@ public:
 
   bool Generic_plugin(const QString &plugin) override
   {
-    DialogBooleanOperations1 dial1;
-    dial1.setParameters(m_operation);
-    if(dial1.exec() == QDialog::Accepted)
-    {
-      dial1.getParameters(m_operation);
+    SimpleWindow *sw = static_cast< SimpleWindow * >(window);
+      // dynamic_cast fails under OS X
+    sw->onModificationParam("booleanoperations_qt_p", this);
+    sw->onApplyButton();
 
-      SimpleWindow *sw = static_cast< SimpleWindow * >(window);
-          // dynamic_cast fails under OS X
-
-      sw->onModificationParam("booleanoperations_qt_p", this);
-      sw->onApplyButton();
-
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
 signals:

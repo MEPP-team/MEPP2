@@ -117,6 +117,8 @@ main(int argc, char **argv)
     }
   }
 
+// init GUI
+
 #ifdef Q_WS_X11
 #if QT_VERSION >= 0x040800
   // Required for multithreaded QGLWidget on Linux/X11,
@@ -127,12 +129,11 @@ main(int argc, char **argv)
 #endif
 #endif
 
-  FEVV::Block::begin("loading", "Loading Visualization.");
+  FEVV::Block::begin("init", "Init Visualization.");
   FEVV::SimpleApplication app(argc, argv);
-  FEVV::SimpleWindow *gui;
+  FEVV::SimpleWindow gui;
 
-  gui = new FEVV::SimpleWindow();
-  gui->setWindowTitle(
+  gui.setWindowTitle(
       QObject::tr("%1 - %2 - %3 - %4 - Qt (compiled) %5 - Qt (run-time) %6 - "
                   "OSG %7 - CGAL %8 (%9.%10.%11)")
           .arg(MAINWINDOW_TITLE)
@@ -147,308 +148,117 @@ main(int argc, char **argv)
           .arg(CGAL_VERSION_MINOR)
           .arg(CGAL_VERSION_PATCH));
 
-  gui->init(test);
+  gui.init(test);
 
   // gui->resize(QDesktopWidget().availableGeometry().size() * 0.7);
   QRect screen_size = QDesktopWidget().availableGeometry();
-  gui->resize(screen_size.width() * 0.9, screen_size.height() * 0.8);
+  int win_w = screen_size.width() * 0.9;
+  int win_h = screen_size.height() * 0.8;
+  int pos_x = (screen_size.width() - win_w) / 2;
+  int pos_y = (screen_size.height() - win_h) / 2;
+  gui.move(pos_x, pos_y);
+  gui.resize(win_w, win_h);
 
-  gui->show();
+  gui.loadQtPlugins();
 
-///////////////////////////////////////////////////////////////////////////////
-/// Creation of adapters (reverse order because of MDI view)
-///////////////////////////////////////////////////////////////////////////////
-#ifdef FEVV_USE_AIF
-  ///// AIF
-  FEVV::SimpleAdapterVisu< FEVV::MeshAIF > *adapter_aif = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshAIF > *viewer_aif;
-  if(open_with == OPEN_WITH_AIF || open_with == OPEN_WITH_ALL)
-  {
-    adapter_aif = new FEVV::SimpleAdapterVisu< FEVV::MeshAIF >();
-    // adapter_aif->setWindowTitle(QObject::tr("AIFMesh"));
-    adapter_aif->setWindowTitle(
-        QObject::tr("<AIFMesh - aid: %1>").arg((qlonglong)adapter_aif, 0, 16));
-    adapter_aif->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_aif = new FEVV::SimpleViewer< FEVV::MeshAIF >();
-    adapter_aif->attach(viewer_aif);
-    adapter_aif->init();
-    viewer_aif->init();
-    gui->attach(adapter_aif, USE_MDI);
-  }
+  FEVV::Block::end("init");
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
 
-#ifdef FEVV_USE_OPENMESH
-  ///// OpenMesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh > *adapter_openmesh = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshOpenMesh > *viewer_openmesh;
-  if(open_with == OPEN_WITH_OPENMESH || open_with == OPEN_WITH_ALL)
-  {
-    adapter_openmesh = new FEVV::SimpleAdapterVisu< FEVV::MeshOpenMesh >();
-    // adapter_openmesh->setWindowTitle(QObject::tr("OpenMesh"));
-    adapter_openmesh->setWindowTitle(
-        QObject::tr("<OpenMesh - aid: %1>")
-            .arg((qlonglong)adapter_openmesh, 0, 16));
-    adapter_openmesh->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_openmesh = new FEVV::SimpleViewer< FEVV::MeshOpenMesh >();
-    adapter_openmesh->attach(viewer_openmesh);
-    adapter_openmesh->init();
-    viewer_openmesh->init();
-    gui->attach(adapter_openmesh, USE_MDI);
-  }
-#endif
+  // open mesh file provided on command line
 
-#ifdef FEVV_USE_CGAL
-  ///// Linear_cell_complex
-  FEVV::SimpleAdapterVisu< FEVV::MeshLCC > *adapter_lcc = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshLCC > *viewer_lcc;
-  if(open_with == OPEN_WITH_LCC || open_with == OPEN_WITH_ALL)
-  {
-    adapter_lcc = new FEVV::SimpleAdapterVisu< FEVV::MeshLCC >();
-    // adapter_lcc->setWindowTitle(QObject::tr("Linear_cell_complex"));
-    adapter_lcc->setWindowTitle(QObject::tr("<Linear_cell_complex - aid: %1>")
-                                    .arg((qlonglong)adapter_lcc, 0, 16));
-    adapter_lcc->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_lcc = new FEVV::SimpleViewer< FEVV::MeshLCC >();
-    adapter_lcc->attach(viewer_lcc);
-    adapter_lcc->init();
-    viewer_lcc->init();
-    gui->attach(adapter_lcc, USE_MDI);
-  }
-
-  ///// Surface_mesh
-  FEVV::SimpleAdapterVisu< FEVV::MeshSurface > *adapter_surface = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshSurface > *viewer_surface;
-  if(open_with == OPEN_WITH_SURFACEMESH || open_with == OPEN_WITH_ALL)
-  {
-    adapter_surface = new FEVV::SimpleAdapterVisu< FEVV::MeshSurface >();
-    // adapter_surface->setWindowTitle(QObject::tr("Surface_mesh"));
-    adapter_surface->setWindowTitle(
-        QObject::tr("<Surface_mesh - aid: %1>")
-            .arg((qlonglong)adapter_surface, 0, 16));
-    adapter_surface->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_surface = new FEVV::SimpleViewer< FEVV::MeshSurface >();
-    adapter_surface->attach(viewer_surface);
-    adapter_surface->init();
-    viewer_surface->init();
-    gui->attach(adapter_surface, USE_MDI);
-  }
-
-  ///// Polyhedron
-  FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron > *adapter_polyhedron = nullptr;
-  FEVV::SimpleViewer< FEVV::MeshPolyhedron > *viewer_polyhedron;
-  if(open_with == OPEN_WITH_POLYHEDRON || open_with == OPEN_WITH_ALL)
-  {
-    adapter_polyhedron = new FEVV::SimpleAdapterVisu< FEVV::MeshPolyhedron >();
-    // adapter_polyhedron->setWindowTitle(QObject::tr("Polyhedron_3"));
-    adapter_polyhedron->setWindowTitle(
-        QObject::tr("<Polyhedron_3 - aid: %1>")
-            .arg((qlonglong)adapter_polyhedron, 0, 16));
-    adapter_polyhedron->setWindowIcon(QIcon(":/logo/resources/MEPP.png"));
-    viewer_polyhedron = new FEVV::SimpleViewer< FEVV::MeshPolyhedron >();
-    adapter_polyhedron->attach(viewer_polyhedron);
-    adapter_polyhedron->init();
-    viewer_polyhedron->init();
-    gui->attach(adapter_polyhedron, USE_MDI);
-  }
-#endif
-  ///////////////////////////////////////////////////////////////////////////////
-
-  if(USE_MDI)
-  {
-    if(gui->getMdiArea())
-    {
-      gui->getMdiArea()->setActivationOrder(QMdiArea::CreationOrder);
-      gui->getMdiArea()->tileSubWindows();
-    }
-  }
-
-  gui->loadQtPlugins();
-
-  // QCoreApplication::processEvents(); ///<! draw window before huge
-  // computation
-
-  FEVV::Block::end("loading");
-
-  std::string mesh_filename;
+  std::vector< std::string > mesh_filenames;
   if(open_with != OPEN_WITH_NONE)
-    mesh_filename = std::string(argv[1]);
+    mesh_filenames.push_back(std::string(argv[1]));
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
 
 #ifdef FEVV_USE_CGAL
   ///// Polyhedron
-  FEVV::MeshPolyhedron *m_polyhedron = nullptr;
   if(open_with == OPEN_WITH_POLYHEDRON || open_with == OPEN_WITH_ALL)
   {
-    FEVV::PMapsContainer *p_polyhedron_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
     FEVV::Block::begin("loading-polyhedron", "Loading Polyhedron mesh.");
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      gui->load_mesh(mesh_filename, m_polyhedron, *p_polyhedron_pmaps_bag);
-      QApplication::restoreOverrideCursor();
-
-      gui->draw_or_redraw_mesh(
-          m_polyhedron,
-          p_polyhedron_pmaps_bag,
-          viewer_polyhedron,
-          false,
-          false,
-          FEVV::FileUtils::get_file_full_name(mesh_filename));
+      gui.open_SPACE_TIME< FEVV::MeshPolyhedron >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-polyhedron");
   }
 
   ///// Surface_mesh
-  FEVV::MeshSurface *m_surface = nullptr;
   if(open_with == OPEN_WITH_SURFACEMESH || open_with == OPEN_WITH_ALL)
   {
-    // The following container is already deleted by the viewer destructor
-    /// [Snippet Displaying Surface SurfaceMesh]
-    FEVV::PMapsContainer *p_surfacemesh_pmaps_bag = new FEVV::PMapsContainer;
     FEVV::Block::begin("loading-surface", "Loading SurfaceMesh mesh.");
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      gui->load_mesh(mesh_filename, m_surface, *p_surfacemesh_pmaps_bag);
-      QApplication::restoreOverrideCursor();
-
-      gui->draw_or_redraw_mesh(
-          m_surface,
-          p_surfacemesh_pmaps_bag,
-          viewer_surface,
-          false,
-          false,
-          FEVV::FileUtils::get_file_full_name(mesh_filename));
+      gui.open_SPACE_TIME< FEVV::MeshSurface >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-surface");
     /// [Snippet Displaying Surface SurfaceMesh]
   }
 
   ///// Linear_cell_complex
-  FEVV::MeshLCC *m_lcc = nullptr;
   if(open_with == OPEN_WITH_LCC || open_with == OPEN_WITH_ALL)
   {
-    FEVV::PMapsContainer *p_lcc_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
     FEVV::Block::begin("loading-lcc", "Loading LCC mesh.");
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      gui->load_mesh(mesh_filename, m_lcc, *p_lcc_pmaps_bag);
-      QApplication::restoreOverrideCursor();
-
-      gui->draw_or_redraw_mesh(
-          m_lcc,
-          p_lcc_pmaps_bag,
-          viewer_lcc,
-          false,
-          false,
-          FEVV::FileUtils::get_file_full_name(mesh_filename));
+      gui.open_SPACE_TIME< FEVV::MeshLCC >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-lcc");
   }
 #endif // FEVV_USE_CGAL
 
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
 #ifdef FEVV_USE_OPENMESH
   ///// OpenMesh
-  FEVV::MeshOpenMesh *m_openmesh = nullptr;
   if(open_with == OPEN_WITH_OPENMESH || open_with == OPEN_WITH_ALL)
   {
-    FEVV::PMapsContainer *p_openmesh_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
     FEVV::Block::begin("loading-openmesh", "Loading OpenMesh mesh.");
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      gui->load_mesh(mesh_filename, m_openmesh, *p_openmesh_pmaps_bag);
-      QApplication::restoreOverrideCursor();
-
-      gui->draw_or_redraw_mesh(
-          m_openmesh,
-          p_openmesh_pmaps_bag,
-          viewer_openmesh,
-          false,
-          false,
-          FEVV::FileUtils::get_file_full_name(mesh_filename));
+      gui.open_SPACE_TIME< FEVV::MeshOpenMesh >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-openmesh");
   }
 #endif // FEVV_USE_OPENMESH
 
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
 #ifdef FEVV_USE_AIF
   ///// AIF
-  FEVV::MeshAIF *m_aif = nullptr;
   if(open_with == OPEN_WITH_AIF || open_with == OPEN_WITH_ALL)
   {
-#if 1 // AIF nor ready for generic reader
-    FEVV::PMapsContainer *p_aif_pmaps_bag =
-        new FEVV::PMapsContainer; // already destroy by the viewer destructor
     FEVV::Block::begin("loading-aif", "Loading AIF mesh.");
     {
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      gui->load_mesh(mesh_filename, m_aif, *p_aif_pmaps_bag);
-      QApplication::restoreOverrideCursor();
-
-      gui->draw_or_redraw_mesh(
-          m_aif,
-          p_aif_pmaps_bag,
-          viewer_aif,
-          false,
-          false,
-          FEVV::FileUtils::get_file_full_name(mesh_filename));
+      gui.open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);
     }
     FEVV::Block::end("loading-aif");
-#endif
   }
 #endif // FEVV_USE_AIF
-  /////// Loading stuff
 
-  // gui->sortModelList();
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
+
+  // run GUI
+
+  gui.show();
+
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+#endif
 
   int ret = app.exec();
 
-  /////// Cleaning stuff
-  if(open_with != OPEN_WITH_NONE)
-  {
-#ifdef FEVV_USE_CGAL
-    // delete viewer_polyhedron;	// already destroy by the adapter
-    // destructor delete viewer_surface;		// already destroy by the
-    // adapter destructor delete viewer_lcc;		// already destroy by
-    // the adapter destructor
-
-    if(!USE_MDI)
-      if(adapter_polyhedron != nullptr)
-        delete adapter_polyhedron;
-    if(!USE_MDI)
-      if(adapter_surface != nullptr)
-        delete adapter_surface;
-    if(!USE_MDI)
-      if(adapter_lcc != nullptr)
-        delete adapter_lcc;
-
-        // delete m_polyhedron;		// already destroy by the viewer
-        // destructor delete m_surface;		// already destroy by the viewer
-        // destructor
-        // delete m_lcc;			// already destroy by the viewer
-        // destructor
+#ifdef DEBUG_VISU2
+  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
-#ifdef FEVV_USE_OPENMESH
-    // delete viewer_openmesh;	// already destroy by the adapter destructor
-    if(!USE_MDI)
-      if(adapter_openmesh != nullptr)
-        delete adapter_openmesh;
-        // delete m_openmesh;		// already destroy by the viewer
-        // destructor
-#endif
-#ifdef FEVV_USE_AIF
-    // delete viewer_aif;		// already destroy by the adapter
-    // destructor
-    if(!USE_MDI)
-      if(adapter_aif != nullptr)
-        delete adapter_aif;
-        // delete m_aif;			// already destroy by the viewer
-        // destructor
-#endif
-  }
-
-  delete gui;
-  /////// Cleaning stuff
 
   return ret;
 }

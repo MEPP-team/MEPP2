@@ -47,16 +47,16 @@ public:
   void apply( BaseAdapterVisu* _adapter, HalfedgeGraph* _mesh,
   FEVV::PMapsContainer *pmaps_bag )
   {
-      std::cerr << "This function has not been overrided ! BasePlugin::apply(
+      std::cerr << "This function has not been overridden ! BasePlugin::apply(
   HalfedgeGraph )" << std::endl;
   }*/
 
   virtual void apply(BaseAdapterVisu *_adapter,
-                     boost::any _mesh_any,
+                     void *_mesh_void,
                      FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cerr << "This function has not been overrided ! BasePlugin::apply( "
-                 "boost::any )"
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
+                 "void )"
               << std::endl;
   }
 
@@ -65,7 +65,7 @@ public:
                      MeshOpenMesh *_mesh,
                      FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cerr << "This function has not been overrided ! BasePlugin::apply( "
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
                  "MeshOpenMesh )"
               << std::endl;
   }
@@ -77,7 +77,7 @@ public:
                      FEVV::PMapsContainer *pmaps_bag)
   {
     std::cerr
-        << "This function has not been overrided ! BasePlugin::apply( MeshLCC )"
+        << "This function has not been overridden ! BasePlugin::apply( MeshLCC )"
         << std::endl;
   }
 
@@ -85,7 +85,7 @@ public:
                      MeshSurface *_mesh,
                      FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cerr << "This function has not been overrided ! BasePlugin::apply( "
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
                  "MeshSurface )"
               << std::endl;
   }
@@ -94,7 +94,7 @@ public:
                      MeshPolyhedron *_mesh,
                      FEVV::PMapsContainer *pmaps_bag)
   {
-    std::cerr << "This function has not been overrided ! BasePlugin::apply( "
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
                  "MeshPolyhedron )"
               << std::endl;
   }
@@ -106,7 +106,7 @@ public:
                      FEVV::PMapsContainer *pmaps_bag)
   {
     std::cerr
-        << "This function has not been overrided ! BasePlugin::apply( MeshAIF )"
+        << "This function has not been overridden ! BasePlugin::apply( MeshAIF )"
         << std::endl;
   }
 #endif

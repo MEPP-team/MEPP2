@@ -177,6 +177,11 @@ if(APPLE)
     "${PROJECT_SOURCE_DIR}/Visualization/Applications/resources/mepp-gui.icns" )
 endif()
 
+# debug visualization in CI
+# uncomment to enable
+#if( (DEFINED ENV{GITLAB_CI}) OR (DEFINED ENV{TRAVIS}) OR (DEFINED ENV{APPVEYOR}) )
+#  add_definitions( -DDEBUG_VISU2 )
+#endif()
 
 foreach(FILE ${UI_TESTS_SRC_DEMO})
 
@@ -216,10 +221,18 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
               ${DATA_TEST}
               ${VTEST} )
   else()
+    # LINUX
     add_test( ${FILE}
               ${FILE}
               ${DATA_TEST}
               test )
+    # display backtrace in case of SEGFAULT ; GDB required
+    # uncomment to activate
+    #add_test( ${FILE}
+    #          "${PROJECT_SOURCE_DIR}/Tools/segfault_debugger.sh"
+    #          "./${FILE}"
+    #          ${DATA_TEST}
+    #          test )
   endif()
 
 endforeach()

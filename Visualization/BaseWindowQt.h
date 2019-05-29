@@ -39,12 +39,28 @@ public:
   BaseWindowQt(QWidget *_parent = 0, Qt::WindowFlags _flags = 0)
       : BaseWindow(), QMainWindow(_parent, _flags)
   {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
   }
 
   /**
    * Destructor.
    */
-  virtual ~BaseWindowQt() = default;
+  virtual ~BaseWindowQt()
+  {
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;
+#endif
+
+#ifdef DEBUG_VISU2
+    std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
+#endif
+  }
 };
 
 } // namespace FEVV

@@ -39,11 +39,7 @@
      <property name="title">
       <string>Open...</string>
      </property>
-     <addaction name="actionOpen_Polyhedron_3"/>
-     <addaction name="actionOpen_Surface_mesh"/>
-     <addaction name="actionOpen_Linear_cell_complex"/>
-     <addaction name="actionOpen_OpenMesh"/>
-     <addaction name="actionOpen_AIFMesh"/>
+     <addaction name="actionOpen"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="menuOpen"/>
@@ -157,11 +153,7 @@
    </attribute>
    <addaction name="actionNew"/>
    <addaction name="separator"/>
-   <addaction name="actionOpen_Polyhedron_3"/>
-   <addaction name="actionOpen_Surface_mesh"/>
-   <addaction name="actionOpen_Linear_cell_complex"/>
-   <addaction name="actionOpen_OpenMesh"/>
-   <addaction name="actionOpen_AIFMesh"/>
+   <addaction name="actionOpen"/>
    <addaction name="separator"/>
    <addaction name="actionSaveAs"/>
   </widget>
@@ -327,79 +319,19 @@
     <string>About MEPP2 / Help</string>
    </property>
   </action>
-  <action name="actionOpen_Polyhedron_3">
+  <action name="actionOpen">
    <property name="icon">
     <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
      <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
    </property>
    <property name="text">
-    <string>Open (Polyhedron_3)...</string>
+    <string>Open...</string>
    </property>
    <property name="iconText">
-    <string>Open (Polyhedron_3)...</string>
+    <string>Open...</string>
    </property>
    <property name="toolTip">
-    <string>Open (Polyhedron_3)...</string>
-   </property>
-  </action>
-  <action name="actionOpen_Surface_mesh">
-   <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
-     <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open (Surface_mesh)...</string>
-   </property>
-   <property name="iconText">
-    <string>Open (Surface_mesh)...</string>
-   </property>
-   <property name="toolTip">
-    <string>Open (Surface_mesh)...</string>
-   </property>
-  </action>
-  <action name="actionOpen_Linear_cell_complex">
-   <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
-     <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open (Linear_cell_complex)...</string>
-   </property>
-   <property name="iconText">
-    <string>Open (Linear_cell_complex)...</string>
-   </property>
-   <property name="toolTip">
-    <string>Open (Linear_cell_complex)...</string>
-   </property>
-  </action>
-  <action name="actionOpen_OpenMesh">
-   <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
-     <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open (OpenMesh)...</string>
-   </property>
-   <property name="iconText">
-    <string>Open (OpenMesh)...</string>
-   </property>
-   <property name="toolTip">
-    <string>Open (OpenMesh)...</string>
-   </property>
-  </action>
-  <action name="actionOpen_AIFMesh">
-   <property name="icon">
-    <iconset resource="../../Testing/Visualization/mepp-gui.qrc">
-     <normaloff>:/icons/resources/Icons/open.png</normaloff>:/icons/resources/Icons/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open (AIFMesh)...</string>
-   </property>
-   <property name="iconText">
-    <string>Open (AIFMesh)...</string>
-   </property>
-   <property name="toolTip">
-    <string>Open (AIFMesh)...</string>
+    <string>Open...</string>
    </property>
   </action>
   <action name="actionRender_Point">
