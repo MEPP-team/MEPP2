@@ -250,7 +250,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   // time
 
   // create default empty viewer
-  createNewViewer();
+  //createNewViewer();
 
   bIsInit = true;
 }
