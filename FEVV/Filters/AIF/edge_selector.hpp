@@ -30,6 +30,8 @@ namespace Filters {
  * \tparam  FaceGraph a Mesh type that provides a Model of the
  *          FaceGraph Concept through a boost::graph_traits<>
  *          specialization.
+ * \tparam GeometryTraits The geometric kernel when available. This is defaulted
+ *         to FEVV::Geometry_traits<FaceGraph>. 
  * \param[in] g The FaceGraph instance.
  * \param[in] forbid_non_satisfying_link_condition Boolean to avoid edge 
  *            non-satisfaying the link condition.
@@ -48,21 +50,24 @@ namespace Filters {
  * \param[in] forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices
               Boolean to avoid edge that is adjacent to edges onto the one-ring
  *            of selected edges' vertices.
+ * \param[in] gt The Geometry Traits object.
  * \return  an std::vector of edge_descriptor corresponding to edges
  *          selected from g.
  */
-  template<typename FaceGraph>
+  template<typename FaceGraph,
+           typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
   std::vector<typename boost::graph_traits<FaceGraph>::edge_descriptor>
     edge_selector_for_collapse(const FaceGraph& g,
-                               bool forbid_non_satisfying_link_condition = true, 
-                               bool forbid_non_manifold_edge = true, 
-                               bool forbid_edge_collapse_creating_non_manifold_split = true,
-                               bool forbid_border_edge = false, // border edge processing is usually different from inner edges
-                               bool forbid_inner_edge = false, // should be false, except when testing border edges
-                               bool forbid_non_triangular_incident_face_to_edge = true, // most of algorithms can only handle edge collapses if all incident faces are triangular
-                               bool forbid_edges_that_are_adjacent_to_collapsed_edges = true, // should be true most of the time, since local encoding will be tricky otherwise
-                               bool forbid_one_edges_that_are_one_ring_edges_of_collapsed_edge_vertices = true, // must be true for full independent edges collapses; you should set the same value for next parameter
-                               bool forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices = true // must be true for full independent edges collapses; you should set the same value for previous parameter
+                               bool forbid_non_satisfying_link_condition, 
+                               bool forbid_non_manifold_edge, 
+                               bool forbid_edge_collapse_creating_non_manifold_split,
+                               bool forbid_border_edge, // border edge processing is usually different from inner edges
+                               bool forbid_inner_edge, // should be false, except when testing border edges
+                               bool forbid_non_triangular_incident_face_to_edge, // most of algorithms can only handle edge collapses if all incident faces are triangular
+                               bool forbid_edges_that_are_adjacent_to_collapsed_edges, // should be true most of the time, since local encoding will be tricky otherwise
+                               bool forbid_one_edges_that_are_one_ring_edges_of_collapsed_edge_vertices, // must be true for full independent edges collapses; you should set the same value for next parameter
+                               bool forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices, // must be true for full independent edges collapses; you should set the same value for previous parameter
+                               const GeometryTraits &gt							   
       )
   {
     typedef FEVV::DataStructures::AIF::AIFTopologyHelpers Helpers;
@@ -131,8 +136,8 @@ namespace Filters {
         if (forbid_non_triangular_incident_face_to_edge && is_a_2_manifold_collapse && is_a_triangular_collapse && edge_ok_for_collapse)
         {		
           // local check to avoid face flipping 
-          if (!FEVV::Operators::no_normal_flip_for_collapse(g, pm, *edge_it, source(*edge_it, g), get(pm, target(*edge_it, g))) ||
-            !FEVV::Operators::no_normal_flip_for_collapse(g, pm, *edge_it, target(*edge_it, g), get(pm, source(*edge_it, g)))
+          if (!FEVV::Operators::no_normal_flip_for_collapse(g, pm, *edge_it, source(*edge_it, g), get(pm, target(*edge_it, g)), gt) ||
+            !FEVV::Operators::no_normal_flip_for_collapse(g, pm, *edge_it, target(*edge_it, g), get(pm, source(*edge_it, g)), gt)
             )
           {
             edge_ok_for_collapse = false;
