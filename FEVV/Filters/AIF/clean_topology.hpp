@@ -35,9 +35,9 @@ namespace Filters {
  *            edges if true. 
  * \param[in] remove_isolated_faces Boolean to remove isolated
  *            faces if true. 
- * \param[in] remove_similar_edges Boolean to remove similar/duplicated
+ * \param[in] remove_similar_edges Boolean to remove similar/parallel
  *            edges if true.  
- * \param[in] remove_similar_faces Boolean to remove similar/duplicated
+ * \param[in] remove_similar_faces Boolean to remove similar/parallel
  *            faces if true.   
  * \return  true if a topology change has been done, false othewise.
  */
@@ -106,7 +106,7 @@ namespace Filters {
       FEVV::DataStructures::AIF::AIFTopologyHelpers::remove_vertices(
         v_to_remove.begin(), v_to_remove.end(), g);
 	}
-    // remove duplicated faces and edges
+    // remove similar faces and edges
     size_t nb_e = size_of_edges(g), nb_f = size_of_faces(g);
     if(remove_similar_faces)
 	  FEVV::Filters::resolve_similar_faces(g, false); 
