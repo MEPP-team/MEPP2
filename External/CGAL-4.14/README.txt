@@ -122,9 +122,10 @@ B - Extract Euler operations and OpenMesh graph traits (and their
   #         (new in CGAL 4.14, Boost Software License, Version 1.0)
 
 
-  ## 4) add one missing file for Windows
+  ## 4) add  missing files for Windows
  
   $ cp  ~/CGAL-4.14/include/CGAL/sse2.h  External/CGAL-4.14/CGAL
+  $ cp  ~/CGAL-4.14/include/CGAL/MSVC_compiler_config.h  External/CGAL-4.14/CGAL
  
   $ find External/CGAL-4.14/CGAL -type f | wc -l
-  446
+  447
