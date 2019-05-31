@@ -31,6 +31,7 @@ else()
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
   add_definitions( -DCGAL_NDEBUG )
   add_definitions( -DCGAL_HEADER_ONLY )
+  add_definitions( -DCGAL_DISABLE_GMP )
   message ( STATUS "Use local LGPL CGAL")
 endif()
 
