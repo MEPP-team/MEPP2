@@ -18,24 +18,13 @@ if( BUILD_USE_CGAL )
   # Refer to https://cmake.org/cmake/help/v3.4/command/find_package.html
   # Hence the following manual check
   find_package( CGAL REQUIRED CONFIG )
-  if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "4.11" )
-    message (FATAL_ERROR "CGAL required minimum version is 4.11 - Found: ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION}" )
+  if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "4.14" )
+    message (FATAL_ERROR "CGAL required minimum version is 4.14 - Found: ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION}" )
     return()
   endif()
   add_definitions( -DFEVV_USE_CGAL )
   # FIXME: used in if and else (see below). Factorize this !
   add_definitions( -DBOOST_ALL_DYN_LINK )
-
-  # CGAL 4.11.0 requires to be patched (4.11.1 should fix this trouble)
-  if( NOT WIN32 )
-    if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION}.${CGAL_BUGFIX_VERSION}
-        VERSION_EQUAL "4.11.0" )
-      file(MD5 ${CGAL_INCLUDE_DIRS}/CGAL/boost/graph/io.h cgal_io_h_md5)
-      if( "${cgal_io_h_md5}" STREQUAL "58b04f1e2334d3136276469531372eed")
-        message(FATAL_ERROR "CGAL 4.11.0 must be patched: refer to Install.md.")
-      endif()
-    endif()
-  endif()
 else()
   add_definitions( -DBOOST_ALL_DYN_LINK )
   # Refer to Doc/Devel/CMakeFiles.md entry 003

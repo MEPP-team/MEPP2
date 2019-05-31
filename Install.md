@@ -22,7 +22,7 @@ Mandatory dependencies:
  - Eigen 3
 
 Optional dependencies:
- - CGAL >= 4.11: used for CGAL data structures
+ - CGAL >= 4.14: used for CGAL data structures
  - OpenMesh >= 6.2: used for OpenMesh data structures
  - Qt 4 or 5: mandatory for building the GUI
  - OpenSceneGraph: mandatory for building the GUI
@@ -49,18 +49,11 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   # Eigen 3
   $ sudo apt install libeigen3-dev
 
-  # CGAL 4.11
-  $ sudo apt install libgmp-dev libmpfr-dev
-  $ sudo apt install libcgal-dev
-
-  # --> ! apply patch for CGAL 4.11.0 ! <--
-  # ---------------------------------------
-  $ cd /usr/include/CGAL/boost/graph
-  $ sudo mv io.h io.h.old
-  $ sudo wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h
-  $ sudo mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old
-  $ sudo wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h
-  $ cd
+  # CGAL 4.14 (installation in user home directory)
+  $ sudo apt install libgmp-dev libmpfr-dev  #TODO-elo-required?
+  $ cd /tmp
+  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
+  $ cd  &&  unzip /tmp/CGAL-4.14.zip
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
@@ -127,7 +120,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ cmake -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
@@ -135,7 +128,7 @@ Scripting commands for compiling Mepp2:
   $ make
 
   # compile with CGAL, GUI and FBX
-  $ cmake -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
