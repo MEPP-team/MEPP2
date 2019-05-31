@@ -30,6 +30,7 @@ else()
   # Refer to Doc/Devel/CMakeFiles.md entry 003
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )
   add_definitions( -DCGAL_NDEBUG )
+  add_definitions( -DCGAL_HEADER_ONLY )
   message ( STATUS "Use local LGPL CGAL")
 endif()
 
