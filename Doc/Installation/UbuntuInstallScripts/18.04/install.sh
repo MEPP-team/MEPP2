@@ -15,8 +15,7 @@ sudo apt purge libcgal-dev
 cd /tmp
 wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
 cd && unzip /tmp/CGAL-4.14.zip
-sudo apt-get install libcgal-dev #TODO-elo-required?
-sudo apt install libgmp-dev libmpfr-dev #TODO-elo-required?
+sudo apt install libgmp-dev libmpfr-dev
 echo -e '\n--->OpenMesh library...\n'
 cd /tmp
 wget http://www.openmesh.org/media/Releases/7.0/OpenMesh-7.0.tar.gz

@@ -50,7 +50,7 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libeigen3-dev
 
   # CGAL 4.14 (installation in user home directory)
-  $ sudo apt install libgmp-dev libmpfr-dev  #TODO-elo-required?
+  $ sudo apt install libgmp-dev libmpfr-dev
   $ cd /tmp
   $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
   $ cd  &&  unzip /tmp/CGAL-4.14.zip
