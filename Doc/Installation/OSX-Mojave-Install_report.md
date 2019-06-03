@@ -19,7 +19,7 @@ $ make
 $ ctest
 ````
 
-### Bulding of the GUI
+### Building of the GUI
 ````
 $ brew install qt                 # 5.12.3
 $ brew install open-scene-graph   # 3.6.3
