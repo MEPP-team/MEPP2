@@ -4,7 +4,7 @@
 #
 linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
@@ -13,7 +13,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
 
 linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
@@ -22,7 +22,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VT
 
 linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -32,7 +32,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
 
 linux - Release - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -138,7 +138,7 @@ windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
 #
 linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
@@ -147,7 +147,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
@@ -156,7 +156,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DR
 
 linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -166,7 +166,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
 
 linux - Release - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -272,7 +272,7 @@ windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #
 linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
@@ -281,7 +281,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
 
 linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
   tags:
-    - MEPP2,linux,CGAL-4.14
+    - MEPP2,linux,CGAL-4.14-LTS
   script:
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
@@ -290,7 +290,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
 
 linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -300,7 +300,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
 
 linux - Release - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
   tags:
-    - MEPP2,linux,CGAL-4.14-LTS
+    - MEPP2,linux,CGAL-4.14
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
