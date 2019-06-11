@@ -174,16 +174,6 @@ Optional dependencies:
 ````
   # CGAL
   $ brew install cgal
-  $ brew info cgal
-
-  # -> ONLY if CGAL version above is 4.11 then you have to do that (NO MORE PROBLEM with version >= 4.11.1) <- :
-  # ------------------------------------------------------------------------------------------------------------
-  $ cd /usr/local/include/CGAL/boost/graph
-  $ mv io.h io.h.old
-  $ wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h
-  $ mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old
-  $ wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h
-  $ cd
 
   # OpenMesh
   $ brew install open-mesh
