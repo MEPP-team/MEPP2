@@ -2,7 +2,7 @@
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
 #
-linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Debug - GCC - CGAL-4.14 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -11,7 +11,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Release - GCC - CGAL-4.14 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -20,7 +20,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VT
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
@@ -30,7 +30,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.14 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
@@ -136,7 +136,7 @@ windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
 # CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###########################################################
 #
-linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Debug - GCC - CGAL-4.14 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -145,7 +145,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Release - GCC - CGAL-4.14 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -154,7 +154,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DR
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
@@ -164,7 +164,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.14 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
@@ -270,7 +270,7 @@ windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 # CONF3 (ALL) - 12 configs #
 ############################
 #
-linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
+linux - Debug - GCC - CGAL-4.14 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -279,7 +279,7 @@ linux - Debug - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
+linux - Release - GCC - CGAL-4.14 - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.14
   script:
@@ -288,7 +288,7 @@ linux - Release - GCC - CGAL-4.14-LTS - QT4 - CONF3 (ALL):
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
+linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
@@ -298,7 +298,7 @@ linux - Debug - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
     - make -j 3
     - xvfb-run ctest -j 3 --output-on-failure
 
-linux - Release - CLANG - CGAL-4.14 - QT5 - CONF3 (ALL):
+linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,linux,CGAL-4.14-LTS
   script:
