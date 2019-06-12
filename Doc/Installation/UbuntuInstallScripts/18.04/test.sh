@@ -4,7 +4,7 @@ echo -e '\n\n--Cloning MEPP-team/MEPP2 (you need to have access to this repo to 
 sudo rm -rf MEPP2
 git clone https://github.com/MEPP-team/MEPP2
 cd MEPP2 && mkdir build && cd build
-export CGAL_DIR="$HOME/CGAL-4.11/lib/CGAL"
+export CGAL_DIR="$HOME/CGAL-4.14/CGAL"
 export OPENMESH_DIR="$HOME/OpenMesh-7.0"
 cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DBUILD_USE_VTK=OFF -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GENERATE_TRIANGLE=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_GUI=OFF -DCMAKE_BUILD_TYPE=Debug ..
 core=`cat /proc/cpuinfo | grep processor | wc -l`
