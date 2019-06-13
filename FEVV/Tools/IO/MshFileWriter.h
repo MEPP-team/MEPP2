@@ -42,13 +42,13 @@ template< typename IndexType >
 	}
 
     /**
-    * Write mesh data to gmesh (.msh) file.
+    * Write mesh data to gmsh (.msh) file.
     */
 template< typename CoordType,
           typename CoordNType,
           typename CoordCType,
           typename IndexType >   	
-	bool write_gmesh_file(	const std::string &file_path,
+	bool write_gmsh_file(	const std::string &file_path,
 							const std::vector< std::vector<CoordType> >& points_coords,							
 							const std::vector< std::vector<CoordNType> >& normals_coords,
 							const std::vector< std::vector<CoordCType> >& vertex_color_coords,							

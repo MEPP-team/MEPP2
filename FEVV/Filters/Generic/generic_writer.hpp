@@ -355,7 +355,7 @@ write_mesh(const std::string &filename,
   }
   else if(FEVV::FileUtils::has_extension(filename, ".msh"))
   {
-    IO::write_gmesh_file(filename,
+    IO::write_gmsh_file(filename,
                          points_coords,
                          normals_coords,
                          points_colors,

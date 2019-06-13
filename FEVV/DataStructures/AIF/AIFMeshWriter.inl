@@ -359,7 +359,7 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
   }
   else if(has_extension(filePath, ".msh"))
   {
-    IO::write_gmesh_file(filePath,
+    IO::write_gmsh_file(filePath,
                          points_coords,
                          normals_coords,
                          vertex_color_coords,
