@@ -12,7 +12,7 @@ endif()
 if( BUILD_USE_CGAL )
   include(${CGAL_USE_FILE})
 else()
-  include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.11" )
+  include_directories( BEFORE "${PROJECT_SOURCE_DIR}/External/CGAL-4.14" )
 endif()
 
 # Refer to Doc/Devel/CMakeFiles.md entry 002

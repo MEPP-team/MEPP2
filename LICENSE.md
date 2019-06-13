@@ -81,9 +81,8 @@ The following third-party libraries (not part of FEVV and available under their 
   ```
   find . \( -name "*.h" -o -name "*.cpp" -o -name "*.inl" -o -name "*.hxx" \) | grep -v External | grep -v \.\/Bin | xargs grep -h "#include" | grep CGAL | sort | uniq
   ```
-* In order to assert that `FEVV/External` only holds LGPL code make sure that the following command results only differ by `2`
-    - `find External -type f -exec grep -l Lesser {} \;  | wc` (returns 365 for CGAL-Version 4.11)
-    - `find External -type f  | wc` (that returns 367 for CGAL-Version 4.11)
+* In order to assert that `FEVV/External` only holds LGPL code make sure that the following command results only differ by `3`
+    - `find External -type f -exec grep -l Lesser {} \;  | wc` (returns 444 for CGAL-Version 4.14)
+    - `find External -type f  | wc` (that returns 447 for CGAL-Version 4.14)
 
-  The difference comes from the files `CGAL/auto_link/auto_link.h` that is CGAL copy-and-adaptation of a Boost file, and `CGAL/compiler_config.h` that is a cmake generated file.
-`
+  The difference comes from the files `CGAL/auto_link/auto_link.h`, `CGAL/boost/graph/named_function_params.h`, `CGAL/boost/graph/named_params_helper.h` that have license `Boost Software License, Version 1.0`.

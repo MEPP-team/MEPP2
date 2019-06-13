@@ -11,16 +11,11 @@ sudo apt-get install libboost-program-options-dev libboost-dev libboost-thread-d
 echo -e '\n--->eigen library...\n'
 sudo apt-get install libeigen3-dev
 echo -e '\n--->CGAL library...\n'
-#sudo apt purge libcgal-dev
-sudo apt-get install libcgal-dev 
+sudo apt purge libcgal-dev
+cd /tmp
+wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
+cd && unzip /tmp/CGAL-4.14.zip
 sudo apt install libgmp-dev libmpfr-dev
-#cd /tmp
-#wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip
-#unzip cgal-releases-CGAL-4.11-src-bug-patched.zip
-#cd cgal-releases-CGAL-4.11 && mkdir build && cd build
-#cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/CGAL-4.11 ..
-#make
-#make install && cd
 echo -e '\n--->OpenMesh library...\n'
 cd /tmp
 wget http://www.openmesh.org/media/Releases/7.0/OpenMesh-7.0.tar.gz
