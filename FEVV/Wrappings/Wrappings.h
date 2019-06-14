@@ -16,6 +16,7 @@
 #include "FEVV/Wrappings/Wrappings_cgal_polyhedron_3.h"
 #include "FEVV/Wrappings/Wrappings_cgal_surface_mesh.h"
 #include "FEVV/Wrappings/Wrappings_cgal_linear_cell_complex.h"
+#include "FEVV/Wrappings/Wrappings_cgal_point_set.h"
 #endif
 
 #ifdef FEVV_USE_OPENMESH
