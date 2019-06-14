@@ -49,7 +49,10 @@
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
-#endif
+#ifdef FEVV_USE_CGAL
+#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
+#endif //FEVV_USE_CGAL
+#endif //Q_MOC_RUN
 
 inline FEVV::SimpleWindow::SimpleWindow(QWidget *_parent,
                                         Qt::WindowFlags _flags)
@@ -720,20 +723,39 @@ template< typename HalfedgeGraph >
 inline void
 FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
 {
-  QString validExtensions =
-      "OBJ/OFF Files (*.obj *.off);;OBJ Files (*.obj);;OFF files (*.off);;COFF "
-      "files (*.coff);;PLY files (*.ply);;MSH files (*.msh)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
+  std::string ds_name =
+      FEVV::getDatastructureName(static_cast< HalfedgeGraph * >(nullptr));
 
-  QString allExtensions = validExtensions
+  QString allExtensions;
+
+  if(ds_name == "CGALPOINTSET")
+  {
+    allExtensions = "OBJ/OFF files (*.xyz *.off *.ply);;"
+                    "XYZ files (*.xyz);;"
+                    "OFF files (*.off);;"
+                    "PLY files (*.ply)";
+  }
+  else
+  {
+    QString defaultExtensions = "OBJ/OFF files (*.obj *.off);;"
+                                "OBJ files (*.obj);;"
+                                "OFF files (*.off);;"
+                                "COFF files (*.coff);;"
+                                "PLY files (*.ply);;"
+                                "MSH files (*.msh)";
+
+    QString vtkExtensions = "VTK Files (*.vtk);;"
+                            "VTP files (*.vtp);;"
+                            "VTU files (*.vtu)";
+
+    allExtensions = defaultExtensions;
 #ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
+    allExtensions += ";;" + vtkExtensions;
 #endif
 #ifdef FEVV_USE_FBX
-                          + ";;FBX files (*.fbx)"
+    allExtensions += ";;FBX files (*.fbx)";
 #endif
-                          + "";
+  }
 
   QString suffix;
   QFileDialog::Option options = (QFileDialog::Option)0;
@@ -846,6 +868,8 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
     on_actionOpen_SPACE_TIME< FEVV::MeshSurface >(viewer);
   else if(mesh_type == "LCC")
     on_actionOpen_SPACE_TIME< FEVV::MeshLCC >(viewer);
+  else if(mesh_type == "CGALPOINTSET")
+    on_actionOpen_SPACE_TIME< FEVV::CGALPointSet >(viewer);
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -868,7 +892,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
     return;
 
   QString validExtensions = "OBJ Files (*.obj);;OFF files (*.off);;COFF files "
-                            "(*.coff);;PLY files (*.ply);;MSH files (*.msh)";
+                            "(*.coff);;PLY files (*.ply);;MSH files (*.msh);;"
+                            "XYZ files (*.xyz)";
   QString validVtkExtensions =
       "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
 
@@ -919,6 +944,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
       fileName += ".vtp";
     else if(suffix.indexOf(".vtu") >= 0)
       fileName += ".vtu";
+    else if(suffix.indexOf(".xyz") >= 0)
+      fileName += ".xyz";
 #endif
 
     if(!fileName.isEmpty())
@@ -944,6 +971,15 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
         FEVV::Filters::write_mesh(fileName.toStdString(),
                                   *mesh_ptr,
                                   *(properties_maps[i]));
+      }
+      if(meshes[i].second == "CGALPOINTSET")
+      {
+        auto mesh_ptr = static_cast< FEVV::CGALPointSet* >(meshes[i].first);
+#if 0 //TODO-elo-restore
+        FEVV::Filters::write_mesh(fileName.toStdString(),
+                                  *mesh_ptr,
+                                  *(properties_maps[i]));
+#endif
       }
 #endif //FEVV_USE_CGAL
 
@@ -1434,6 +1470,17 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer *viewer,
       if(meshes[i].second == "LCC")
       {
         auto mesh_ptr = static_cast< FEVV::MeshLCC* >(meshes[i].first);
+        draw_or_redraw_mesh(mesh_ptr,
+                            properties_maps[i],
+                            viewer,
+                            true,
+                            false,
+                            meshes_names[i],
+                            false);
+      }
+      if(meshes[i].second == "CGALPOINTSET")
+      {
+        auto mesh_ptr = static_cast< FEVV::CGALPointSet* >(meshes[i].first);
         draw_or_redraw_mesh(mesh_ptr,
                             properties_maps[i],
                             viewer,
@@ -2021,7 +2068,10 @@ FEVV::SimpleWindow::chooseDatastructureMsgBox(void)
       msgbox.addButton("Polyhedron_3", QMessageBox::ResetRole);
   QPushButton *surfacemesh_button =
       msgbox.addButton("Surface_mesh", QMessageBox::ResetRole);
-  QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
+  QPushButton *lcc_button =
+      msgbox.addButton("LCC", QMessageBox::ResetRole);
+  QPushButton *cgalpointset_button =
+      msgbox.addButton("CGALPointSet", QMessageBox::ResetRole);
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -2050,6 +2100,10 @@ FEVV::SimpleWindow::chooseDatastructureMsgBox(void)
   else if(msgbox.clickedButton() == lcc_button)
   {
     choice = "LCC";
+  }
+  else if(msgbox.clickedButton() == cgalpointset_button)
+  {
+    choice = "CGALPOINTSET";
   }
 #endif
 

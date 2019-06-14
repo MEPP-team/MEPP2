@@ -58,6 +58,15 @@ public:
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with LCC!"));
   }
+
+
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     CGALPointSet *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("This filter is not compatible with CGALPointSet!"));
+  }
 #endif
 
 
@@ -112,7 +121,10 @@ public:
         msgbox.addButton("Polyhedron_3", QMessageBox::ResetRole);
     QPushButton *surfacemesh_button =
         msgbox.addButton("Surface_mesh", QMessageBox::ResetRole);
-    QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
+    QPushButton *lcc_button =
+        msgbox.addButton("LCC", QMessageBox::ResetRole);
+    QPushButton *cgalpointset_button =
+        msgbox.addButton("CGALPointSet", QMessageBox::ResetRole);
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -141,6 +153,10 @@ public:
     else if(msgbox.clickedButton() == lcc_button)
     {
       choice = "LCC";
+    }
+    else if(msgbox.clickedButton() == cgalpointset_button)
+    {
+      choice = "CGALPOINTSET";
     }
 #endif
 

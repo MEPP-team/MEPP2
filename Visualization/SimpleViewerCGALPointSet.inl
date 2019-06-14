@@ -42,7 +42,7 @@ FEVV::SimpleViewer::internal_createMesh< FEVV::CGALPointSet, FEVV::CGALPointSet 
     std::string _mesh_file)
 {
   std::cout << "here FEVV::SimpleViewer< CGALPointSet >::internal_createMesh "
-            << std::endl;
+            << std::endl; //TODO-elo-rm
 
   using GraphTraits = boost::graph_traits< FEVV::CGALPointSet >;
   using GeometryTraits = FEVV::Geometry_traits< FEVV::CGALPointSet >;
@@ -358,9 +358,7 @@ FEVV::SimpleViewer::internal_createMesh< FEVV::CGALPointSet, FEVV::CGALPointSet 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
 
-  std::cout << "[SimpleViewer] I have drawn " << sizeVertex << " vertices." << std::endl;
-  std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints
-            << " (superimpose) points." << std::endl;
+  std::cout << "[SimpleViewer] I have drawn " << sizeSPoints << " points." << std::endl;
 
   const auto loadingStartTime = std::chrono::system_clock::now();
 

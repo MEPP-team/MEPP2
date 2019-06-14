@@ -420,6 +420,11 @@ FEVV::SimpleAdapterVisu::apply(Plugin *myPlugin)
         auto mesh_ptr = static_cast< FEVV::MeshLCC* >(meshes[i].first);
         myPlugin->apply(this, mesh_ptr, properties_maps[i]);
       }
+      if(meshes[i].second == "CGALPOINTSET")
+      {
+        auto mesh_ptr = static_cast< FEVV::CGALPointSet* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
 #endif //FEVV_USE_CGAL
 
 #ifdef FEVV_USE_OPENMESH

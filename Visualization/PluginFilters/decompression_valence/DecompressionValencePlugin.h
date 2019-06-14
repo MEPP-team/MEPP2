@@ -324,6 +324,14 @@ public:
     {
       applyHG< MeshLCC >(_adapter);
     }
+    else if(mesh_type == "CGALPOINTSET")
+    {
+      QMessageBox::information(
+          0,
+          "",
+          QObject::tr(
+              "Decompression Valence filter is not yet compatible with CGALPointSet!"));
+    }
 #endif
 
 #ifdef FEVV_USE_OPENMESH

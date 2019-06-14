@@ -110,6 +110,13 @@ FEVV::SimpleViewer::~SimpleViewer()
         std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr  << " with datastructure LCC" << std::endl;
         delete mesh_ptr;
       }
+      if(mesh_type_pair.second == "CGALPOINTSET")
+      {
+        auto mesh_ptr = static_cast< FEVV::CGALPointSet* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr
+                  << " with datastructure CGALPOINTSET" << std::endl;
+        delete mesh_ptr;
+      }
 #endif //FEVV_USE_CGAL
 
 #ifdef FEVV_USE_OPENMESH
