@@ -42,14 +42,21 @@
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 #include "FEVV/Wrappings/properties_linear_cell_complex.h"
+#include "FEVV/Wrappings/properties_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_polyhedron_3.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_linear_cell_complex.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_point_set.h"
 #endif
 
 #ifdef FEVV_USE_OPENMESH
 #include "FEVV/Wrappings/properties_openmesh.h"
+#include "FEVV/Wrappings/Graph_traits_extension_openmesh.h"
 #endif
 
 #ifdef FEVV_USE_AIF
 #include "FEVV/Wrappings/properties_aif.h"
+#include "FEVV/Wrappings/Graph_traits_extension_aif.h"
 #endif
 
 namespace FEVV {
@@ -58,7 +65,7 @@ namespace FEVV {
 /**
  * \brief  Functions to retrieve the name of the datastructure
  *         according to the mesh type.
- */ 
+ */
 #ifdef FEVV_USE_CGAL
   inline
   std::string getDatastructureName(FEVV::MeshPolyhedron* m)
@@ -76,6 +83,12 @@ namespace FEVV {
   std::string getDatastructureName(FEVV::MeshLCC* m)
   {
     return "LCC";
+  }
+
+  inline
+  std::string getDatastructureName(FEVV::CGALPointSet* m)
+  {
+    return "CGALPOINTSET";
   }
 #endif //FEVV_USE_CGAL
 
@@ -98,7 +111,7 @@ namespace FEVV {
 
 /**
  * \brief  A container to store pointers over meshes of mixed types.
- */ 
+ */
 class MixedMeshesVector
 {
 public:
@@ -670,3 +683,6 @@ public:
 
 #include "Visualization/MeshLoading.inl"
 #include "Visualization/SimpleViewer.inl"
+#ifdef FEVV_USE_CGAL
+#include "Visualization/SimpleViewerCGALPointSet.inl"
+#endif
