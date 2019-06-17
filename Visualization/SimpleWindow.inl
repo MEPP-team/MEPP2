@@ -51,8 +51,10 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 #ifdef FEVV_USE_CGAL
 #include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
+#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_writer.hpp"
 #endif //FEVV_USE_CGAL
 #endif //Q_MOC_RUN
+
 
 inline FEVV::SimpleWindow::SimpleWindow(QWidget *_parent,
                                         Qt::WindowFlags _flags)
@@ -891,25 +893,46 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
   if(!viewer)
     return;
 
-  QString validExtensions = "OBJ Files (*.obj);;OFF files (*.off);;COFF files "
-                            "(*.coff);;PLY files (*.ply);;MSH files (*.msh);;"
-                            "XYZ files (*.xyz)";
-  QString validVtkExtensions =
-      "VTK Files (*.vtk);;VTP files (*.vtp);;VTU files (*.vtu)";
+  QString defaultExtensions = "OBJ files (*.obj);;"
+                              "OFF files (*.off);;"
+                              "COFF files (*.coff);;"
+                              "PLY files (*.ply);;"
+                              "MSH files (*.msh)";
 
-  QString allExtensions = validExtensions
-#ifdef FEVV_USE_VTK
-                          + ";;" + validVtkExtensions
+  QString vtkExtensions = "VTK files (*.vtk);;"
+                          "VTP files (*.vtp);;"
+                          "VTU files (*.vtu)";
+
+  QString cgalpointsetExtensions = "XYZ files (*.xyz);;"
+                                   "OFF files (*.off);;";
+#if 0 //TODO-elo  restore when link error multiple definition with PLY writer
+      //          is fixed
+                                   "PLY files (*.ply)";
 #endif
-                          + "";
 
-  FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
+
+      FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
   std::vector< std::string > meshes_names = viewer->getSelectedMeshesNames();
   std::vector< FEVV::PMapsContainer * > properties_maps =
       viewer->getSelected_properties_maps();
 
   for(unsigned i = 0; i < meshes.size(); i++)
   {
+    QString allExtensions;
+
+    if(meshes[i].second == "CGALPOINTSET")
+    {
+      allExtensions = cgalpointsetExtensions;
+    }
+    else
+    {
+      allExtensions = defaultExtensions;
+#ifdef FEVV_USE_VTK
+      allExtensions += ";;" + vtkExtensions;
+#endif
+    }
+    
+
     QString suffix;
     QFileDialog::Option options = (QFileDialog::Option)0;
 
@@ -975,11 +998,9 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
       if(meshes[i].second == "CGALPOINTSET")
       {
         auto mesh_ptr = static_cast< FEVV::CGALPointSet* >(meshes[i].first);
-#if 0 //TODO-elo-restore
         FEVV::Filters::write_mesh(fileName.toStdString(),
                                   *mesh_ptr,
                                   *(properties_maps[i]));
-#endif
       }
 #endif //FEVV_USE_CGAL
 
