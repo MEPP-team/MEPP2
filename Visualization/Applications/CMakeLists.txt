@@ -91,6 +91,16 @@ if( BUILD_USE_OPENMESH )
 endif()
 ### OPENMESH ###
 
+### PCL ###
+if( BUILD_USE_PCL )
+  add_definitions( ${PCL_DEFINITIONS} )
+  link_directories(${PCL_LIBRARY_DIRS})
+  set( GUILIB_DEMO
+       ${GUILIB_DEMO}
+       ${PCL_LIBRARIES} )
+endif()
+### PCL ###
+
 ### VTK ###
 if ( BUILD_USE_VTK )
   set( GUILIB_DEMO

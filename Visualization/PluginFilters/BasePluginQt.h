@@ -92,6 +92,17 @@ public:
 #endif
 
 
+#ifdef FEVV_USE_PCL
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     PCLPointCloud *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("This filter is not compatible with PCLPointCloud!"));
+  }
+#endif
+
+
   // case where the plugin is applied when no mesh is opened
   virtual void apply(BaseAdapterVisu *_adapter,
                      void *_mesh_void,
@@ -136,6 +147,11 @@ public:
     QPushButton *aif_button = msgbox.addButton("AIF", QMessageBox::ResetRole);
 #endif
 
+#ifdef FEVV_USE_PCL
+    QPushButton *pcl_button =
+        msgbox.addButton("PCLPointCloud", QMessageBox::ResetRole);
+#endif
+
     QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
 
     msgbox.exec();
@@ -171,6 +187,13 @@ public:
     if(msgbox.clickedButton() == aif_button)
     {
       choice = "AIF";
+    }
+#endif
+
+#ifdef FEVV_USE_PCL
+    if(msgbox.clickedButton() == pcl_button)
+    {
+      choice = "PCLPOINTCLOUD";
     }
 #endif
 

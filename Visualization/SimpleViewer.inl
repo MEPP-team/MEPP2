@@ -136,6 +136,16 @@ FEVV::SimpleViewer::~SimpleViewer()
         delete mesh_ptr;
       }
 #endif //FEVV_USE_AIF
+
+#ifdef FEVV_USE_PCL
+      if(mesh_type_pair.second == "PCLPOINTCLOUD")
+      {
+        auto mesh_ptr = static_cast< FEVV::PCLPointCloud* >(mesh_type_pair.first);
+        std::cout << "[SimpleViewer] deleting mesh " << mesh_ptr
+                  << " with datastructure PCLPOINTCLOUD" << std::endl;
+        delete mesh_ptr;
+      }
+#endif //FEVV_USE_PCL
     }
   }
   
@@ -1719,6 +1729,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   using vertex_descriptor = typename GraphTraits::vertex_descriptor;
   using vertex_iterator = typename GraphTraits::vertex_iterator;
   using Point = typename GeometryTraits::Point;
+  using Vector = typename GeometryTraits::Vector;
 
   //TODO-elo-rm  using GraphTraits = boost::graph_traits< PointCloud >;
   //TODO-elo-rm  using GeometryTraits = FEVV::Geometry_traits< PointCloud >;
@@ -1985,7 +1996,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       // retrieve vertex-point
       p0 = (*_pm)[vd0];
       vertexArrays_vertices[mtl_id]->push_back(
-          Helpers::VectorConverter< PointCloud >(p0));
+          Helpers::VectorConverter< PointCloud >(
+              Vector(GeometryTraits::get_x(p0),
+                     GeometryTraits::get_y(p0),
+                     GeometryTraits::get_z(p0))));
 
       sizeSPoints++;
 

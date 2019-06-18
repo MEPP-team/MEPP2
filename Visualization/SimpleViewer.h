@@ -59,6 +59,11 @@
 #include "FEVV/Wrappings/Graph_traits_extension_aif.h"
 #endif
 
+#ifdef FEVV_USE_PCL
+#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
+#include "FEVV/Wrappings/Graph_traits_extension_pcl_point_cloud.h"
+#endif
+
 namespace FEVV {
 
 
@@ -107,6 +112,14 @@ namespace FEVV {
     return "AIF";
   }
 #endif //FEVV_USE_AIF
+
+#ifdef FEVV_USE_PCL
+  inline
+  std::string getDatastructureName(FEVV::PCLPointCloud* m)
+  {
+    return "PCLPOINTCLOUD";
+  }
+#endif //FEVV_USE_PCL
 
 
 /**
@@ -718,6 +731,11 @@ public:
 
 #include "Visualization/MeshLoading.inl"
 #include "Visualization/SimpleViewer.inl"
+
 #ifdef FEVV_USE_CGAL
 #include "Visualization/SimpleViewerCGALPointSet.inl"
+#endif
+
+#ifdef FEVV_USE_PCL
+#include "Visualization/SimpleViewerPCLPointCloud.inl"
 #endif

@@ -351,6 +351,17 @@ public:
               "Decompression Valence filter is not yet compatible with AIF!"));
     }
 #endif
+
+#ifdef FEVV_USE_PCL
+    if(mesh_type == "PCLPOINTCLOUD")
+    {
+      QMessageBox::information(
+          0,
+          "",
+          QObject::tr(
+              "Decompression Valence filter is not yet compatible with PCLPointCloud!"));
+    }
+#endif
   }
 
 

@@ -442,6 +442,14 @@ FEVV::SimpleAdapterVisu::apply(Plugin *myPlugin)
         myPlugin->apply(this, mesh_ptr, properties_maps[i]);
       }
 #endif //FEVV_USE_AIF
+
+#ifdef FEVV_USE_PCL
+      if(meshes[i].second == "PCLPOINTCLOUD")
+      {
+        auto mesh_ptr = static_cast< FEVV::PCLPointCloud* >(meshes[i].first);
+        myPlugin->apply(this, mesh_ptr, properties_maps[i]);
+      }
+#endif //FEVV_USE_PCL
     }
   }
   else

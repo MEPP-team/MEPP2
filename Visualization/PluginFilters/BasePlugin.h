@@ -121,6 +121,17 @@ public:
   }
 #endif
 
+#ifdef FEVV_USE_PCL
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     PCLPointCloud *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag)
+  {
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
+                 "PCLPointCloud )"
+              << std::endl;
+  }
+#endif
+
   virtual void reset() = 0;
 
 protected:
