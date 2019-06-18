@@ -25,3 +25,6 @@
 #include "FEVV/DataStructures/DataStructures_aif.h"
 #endif
 
+#ifdef FEVV_USE_PCL
+#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
+#endif

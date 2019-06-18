@@ -27,3 +27,7 @@
 #include "FEVV/Wrappings/Wrappings_aif.h"
 #endif
 
+#ifdef FEVV_USE_PCL
+#include "FEVV/Wrappings/Wrappings_pcl_point_cloud.h"
+#endif
+
