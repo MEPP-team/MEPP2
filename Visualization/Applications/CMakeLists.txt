@@ -13,6 +13,10 @@ if( BUILD_USE_OPENMESH )
   include_directories( ${OPENMESH_INCLUDE_DIR} )
 endif()
 
+if( BUILD_USE_PCL )
+  include_directories( ${PCL_INCLUDE_DIRS} )
+endif()
+
 if( MSVC )
   # /FORCE:MULTIPLE for osgDB ifstream / ofstream conflict
   # -> here, really no choice... (because of OSG and OpenMesh already compiled libraries)

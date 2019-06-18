@@ -467,6 +467,41 @@ protected:
       PointMap *_pm,
       std::string _mesh_file = std::string(""));
 
+  /**
+   * Draw point cloud into the scene.
+   *
+   * @note The point cloud must be a model of PointCloud concept.
+   *
+   * @tparam      PointMap    a class of points map.
+   *                          Associate a coordinate to an
+   *                          vertex_descriptor.
+   *
+   * @param[in]   _g          a point cloud (model of PointCloud concept).
+   * @param[in]   _pm         a point map.
+   **/
+  template< typename PointCloud, typename PointMap >
+  void internal_createMesh_pointcloud(
+      osg::Geode *&geode,
+      PointCloud *_g,
+      PMapsContainer *_pmaps,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
+      PointMap *_pm,
+      std::string _mesh_file = std::string(""));
+
 private:
   /**
    * Loads a mesh into the scene, using shaders.
