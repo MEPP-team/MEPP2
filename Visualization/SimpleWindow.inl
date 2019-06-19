@@ -57,6 +57,7 @@
 
 #ifdef FEVV_USE_PCL
 #include "FEVV/Filters/PCL/pcl_point_cloud_reader.hpp"
+#include "FEVV/Filters/PCL/pcl_point_cloud_writer.hpp"
 #endif //FEVV_USE_PCL
 #endif //Q_MOC_RUN
 
@@ -930,8 +931,7 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
   QString pclpointcloudExtensions = "PCD files (*.pcd);;"
                                     "PLY files (*.ply);;";
 
-
-      FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
+  FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
   std::vector< std::string > meshes_names = viewer->getSelectedMeshesNames();
   std::vector< FEVV::PMapsContainer * > properties_maps =
       viewer->getSelected_properties_maps();
@@ -993,6 +993,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
       fileName += ".vtu";
     else if(suffix.indexOf(".xyz") >= 0)
       fileName += ".xyz";
+    else if(suffix.indexOf(".pcd") >= 0)
+      fileName += ".pcd";
 #endif
 
     if(!fileName.isEmpty())
