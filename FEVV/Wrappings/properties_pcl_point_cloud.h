@@ -14,7 +14,7 @@
 #include "FEVV/Wrappings/Wrappings_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
 
-#if 0 //TODO-elo
+#if 0 //TODO-elo-fix
 
 namespace FEVV {
 

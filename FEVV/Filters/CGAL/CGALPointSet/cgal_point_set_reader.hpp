@@ -13,10 +13,6 @@
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 #include "FEVV/Wrappings/Wrappings_cgal_point_set.h"
 
-//TODO-elo-rm  #include <boost/graph/graph_traits.hpp>
-//TODO-elo-rm  #include <boost/graph/properties.hpp>
-//TODO-elo-rm  #include "FEVV/Wrappings/Graph_traits_extension.h"
-//TODO-elo-rm  #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Wrappings/properties.h"
 
 #include "FEVV/Filters/Generic/generic_reader.hpp" // specialization of
@@ -56,8 +52,6 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
     PMapsContainer &pmaps,
     bool only_pts)
 {
-  //TODO-elo-clean
-  std::cout << "here " << __func__ << std::endl; //TODO-elo-rm
 #if 1
   bool success = false;
 
@@ -102,7 +96,7 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
                                 filename);
   }
 #else
-  //TODO-elo-rm DBG
+  // DBG
   g.push_back(FEVV::CGALPoint(-1, -1, 2));
   g.push_back(FEVV::CGALPoint(-1,  1, 2));
   g.push_back(FEVV::CGALPoint( 1,  1, 2));

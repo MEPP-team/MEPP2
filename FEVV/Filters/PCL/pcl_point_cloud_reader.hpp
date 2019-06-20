@@ -21,7 +21,6 @@
 #include <pcl/io/ascii_io.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
-//TODO-elo-add-other-format: ply, obj...
 
 #include <stdexcept> // for std::invalid_argument
 
@@ -51,7 +50,6 @@ read_mesh< FEVV::PCLPointCloud, FEVV::Geometry_traits< FEVV::PCLPointCloud > >(
     PMapsContainer &pmaps,
     bool only_pts)
 {
-  //TODO-elo-clean
 #if 1
   bool success = false;
 
@@ -78,7 +76,7 @@ read_mesh< FEVV::PCLPointCloud, FEVV::Geometry_traits< FEVV::PCLPointCloud > >(
                                 filename);
   }
 #else
-  //TODO-elo-rm DBG
+  // DBG
   g.points.push_back(FEVV::PCLPoint(-1, -1, 2));
   g.points.push_back(FEVV::PCLPoint(-1,  1, 2));
   g.points.push_back(FEVV::PCLPoint( 1,  1, 2));

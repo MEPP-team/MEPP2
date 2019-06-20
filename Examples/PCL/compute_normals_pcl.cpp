@@ -66,7 +66,6 @@ template< typename CloudType >
 void
 print_cloud(const CloudType &cloud)
 {
-  //TODO-elo
   std::cout << "*** PointCloud = \n" << cloud << std::endl;
 
   std::cout << "*** points = " << std::endl;

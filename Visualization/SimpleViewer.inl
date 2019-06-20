@@ -1721,22 +1721,12 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     PointMap *_pm,
     std::string _mesh_file)
 {
-  std::cout << "here FEVV::SimpleViewer::internal_createMesh_pointcloud()"
-            << std::endl; //TODO-elo-rm
-
   using GraphTraits = boost::graph_traits< PointCloud >;
   using GeometryTraits = FEVV::Geometry_traits< PointCloud >;
   using vertex_descriptor = typename GraphTraits::vertex_descriptor;
   using vertex_iterator = typename GraphTraits::vertex_iterator;
   using Point = typename GeometryTraits::Point;
   using Vector = typename GeometryTraits::Vector;
-
-  //TODO-elo-rm  using GraphTraits = boost::graph_traits< PointCloud >;
-  //TODO-elo-rm  using GeometryTraits = FEVV::Geometry_traits< PointCloud >;
-  //TODO-elo-rm  using vertex_iterator = typename GraphTraits::vertex_iterator;
-  //TODO-elo-rm  using vertex_descriptor = typename GraphTraits::vertex_descriptor;
-  //TODO-elo-rm  using halfedge_point = typename GeometryTraits::Point;
-  //TODO-elo-rm  using halfedge_vector = typename GeometryTraits::Vector;
 
   // property maps stuff
   using VertexNormalMap =

@@ -13,10 +13,6 @@
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 #include "FEVV/Wrappings/Wrappings_cgal_point_set.h"
 
-//TODO-elo-rm  #include <boost/graph/graph_traits.hpp>
-//TODO-elo-rm  #include <boost/graph/properties.hpp>
-//TODO-elo-rm  #include "FEVV/Wrappings/Graph_traits_extension.h"
-//TODO-elo-rm  #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Wrappings/properties.h"
 
 #include "FEVV/Filters/Generic/generic_writer.hpp" // specialization of

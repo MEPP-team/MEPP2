@@ -26,14 +26,6 @@ get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
   // the point map of the Point Set is the Point Set itself
   return ps;
 }
-#if 0 //TODO-elo-rm
-inline
-CGAL::Identity_property_map< FEVV::CGALPoint >
-get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
-{
-  return CGAL::Identity_property_map< FEVV::CGALPoint >();;
-}
-#endif
 
 //! Specialization of get(point_map, key) for CGALPointSet
 inline
