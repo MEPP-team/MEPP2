@@ -57,7 +57,7 @@ calculate_scaling(const Graph &g,
   vertex_iterator vi_end = iterator_pair.second;
   for(; vi != vi_end; ++vi)
   {
-    Reference p = get(pm, *vi);
+    Point p = get(pm, *vi);
     put(pm,
         *vi,
         Point(gt.get_x(p) * scale_x,
