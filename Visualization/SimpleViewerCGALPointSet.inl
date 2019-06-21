@@ -10,6 +10,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_properties_cgal_point_set.h"
 
 
 namespace FEVV {
@@ -21,7 +22,7 @@ namespace FEVV {
 template<>
 inline void
 SimpleViewer::internal_createMesh< FEVV::CGALPointSet,
-                                   FEVV::CGALPointSet >(
+                                   FEVV::CGALPointSetPointMap >(
     osg::Geode *&geode,
     FEVV::CGALPointSet *_g,
     PMapsContainer *_pmaps,
@@ -40,7 +41,7 @@ SimpleViewer::internal_createMesh< FEVV::CGALPointSet,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
-    FEVV::CGALPointSet *_pm,
+    FEVV::CGALPointSetPointMap *_pm,
     std::string _mesh_file)
 {
   internal_createMesh_pointcloud(geode,
