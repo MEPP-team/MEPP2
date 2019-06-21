@@ -16,6 +16,12 @@
 
 namespace FEVV {
 
+//TODO-elo pb: get(boost::vertex_point_t,...) returns a copy to the point map
+//             and NOT a reference, so the original point map can not be modified
+//         soluce: create a real PCLPointCloudPointMap that store a pointer to a PCLPointCloud and
+//                 inplement operator[], see
+//          https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/BGL/include/CGAL/boost/graph/properties_OpenMesh.h#L185
+
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
