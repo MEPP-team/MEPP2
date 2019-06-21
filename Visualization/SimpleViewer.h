@@ -42,14 +42,26 @@
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 #include "FEVV/Wrappings/properties_linear_cell_complex.h"
+#include "FEVV/Wrappings/properties_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_polyhedron_3.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_linear_cell_complex.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_point_set.h"
 #endif
 
 #ifdef FEVV_USE_OPENMESH
 #include "FEVV/Wrappings/properties_openmesh.h"
+#include "FEVV/Wrappings/Graph_traits_extension_openmesh.h"
 #endif
 
 #ifdef FEVV_USE_AIF
 #include "FEVV/Wrappings/properties_aif.h"
+#include "FEVV/Wrappings/Graph_traits_extension_aif.h"
+#endif
+
+#ifdef FEVV_USE_PCL
+#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
+#include "FEVV/Wrappings/Graph_traits_extension_pcl_point_cloud.h"
 #endif
 
 namespace FEVV {
@@ -58,7 +70,7 @@ namespace FEVV {
 /**
  * \brief  Functions to retrieve the name of the datastructure
  *         according to the mesh type.
- */ 
+ */
 #ifdef FEVV_USE_CGAL
   inline
   std::string getDatastructureName(FEVV::MeshPolyhedron* m)
@@ -76,6 +88,12 @@ namespace FEVV {
   std::string getDatastructureName(FEVV::MeshLCC* m)
   {
     return "LCC";
+  }
+
+  inline
+  std::string getDatastructureName(FEVV::CGALPointSet* m)
+  {
+    return "CGALPOINTSET";
   }
 #endif //FEVV_USE_CGAL
 
@@ -95,10 +113,18 @@ namespace FEVV {
   }
 #endif //FEVV_USE_AIF
 
+#ifdef FEVV_USE_PCL
+  inline
+  std::string getDatastructureName(FEVV::PCLPointCloud* m)
+  {
+    return "PCLPOINTCLOUD";
+  }
+#endif //FEVV_USE_PCL
+
 
 /**
  * \brief  A container to store pointers over meshes of mixed types.
- */ 
+ */
 class MixedMeshesVector
 {
 public:
@@ -454,6 +480,41 @@ protected:
       PointMap *_pm,
       std::string _mesh_file = std::string(""));
 
+  /**
+   * Draw point cloud into the scene.
+   *
+   * @note The point cloud must be a model of PointCloud concept.
+   *
+   * @tparam      PointMap    a class of points map.
+   *                          Associate a coordinate to an
+   *                          vertex_descriptor.
+   *
+   * @param[in]   _g          a point cloud (model of PointCloud concept).
+   * @param[in]   _pm         a point map.
+   **/
+  template< typename PointCloud, typename PointMap >
+  void internal_createMesh_pointcloud(
+      osg::Geode *&geode,
+      PointCloud *_g,
+      PMapsContainer *_pmaps,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesL,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+      std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
+      PointMap *_pm,
+      std::string _mesh_file = std::string(""));
+
 private:
   /**
    * Loads a mesh into the scene, using shaders.
@@ -670,3 +731,11 @@ public:
 
 #include "Visualization/MeshLoading.inl"
 #include "Visualization/SimpleViewer.inl"
+
+#ifdef FEVV_USE_CGAL
+#include "Visualization/SimpleViewerCGALPointSet.inl"
+#endif
+
+#ifdef FEVV_USE_PCL
+#include "Visualization/SimpleViewerPCLPointCloud.inl"
+#endif

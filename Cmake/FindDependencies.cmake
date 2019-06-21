@@ -141,7 +141,7 @@ endif()
 
 ##### PCL package finding
 if( BUILD_USE_PCL )
-  find_package(PCL 1.3 REQUIRED COMPONENTS common io)
+  find_package(PCL 1.3 REQUIRED COMPONENTS common io search features)
   if ( PCL_FOUND )
     add_definitions( -DFEVV_USE_PCL )
   else()
