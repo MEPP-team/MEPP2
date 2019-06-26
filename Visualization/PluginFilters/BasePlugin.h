@@ -19,6 +19,7 @@
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 #include "FEVV/Wrappings/properties_linear_cell_complex.h"
+#include "FEVV/Wrappings/properties_cgal_point_set.h"
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -98,6 +99,15 @@ public:
                  "MeshPolyhedron )"
               << std::endl;
   }
+
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     CGALPointSet *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag)
+  {
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
+                 "CGALPointSet )"
+              << std::endl;
+  }
 #endif
 
 #ifdef FEVV_USE_AIF
@@ -108,6 +118,17 @@ public:
     std::cerr
         << "This function has not been overridden ! BasePlugin::apply( MeshAIF )"
         << std::endl;
+  }
+#endif
+
+#ifdef FEVV_USE_PCL
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     PCLPointCloud *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag)
+  {
+    std::cerr << "This function has not been overridden ! BasePlugin::apply( "
+                 "PCLPointCloud )"
+              << std::endl;
   }
 #endif
 

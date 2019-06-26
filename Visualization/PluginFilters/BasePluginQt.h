@@ -58,6 +58,15 @@ public:
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with LCC!"));
   }
+
+
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     CGALPointSet *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("This filter is not compatible with CGALPointSet!"));
+  }
 #endif
 
 
@@ -79,6 +88,17 @@ public:
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with AIF!"));
+  }
+#endif
+
+
+#ifdef FEVV_USE_PCL
+  virtual void apply(BaseAdapterVisu *_adapter,
+                     PCLPointCloud *_mesh,
+                     FEVV::PMapsContainer *pmaps_bag) override
+  {
+    QMessageBox::warning(
+        0, "", QObject::tr("This filter is not compatible with PCLPointCloud!"));
   }
 #endif
 
@@ -112,7 +132,10 @@ public:
         msgbox.addButton("Polyhedron_3", QMessageBox::ResetRole);
     QPushButton *surfacemesh_button =
         msgbox.addButton("Surface_mesh", QMessageBox::ResetRole);
-    QPushButton *lcc_button = msgbox.addButton("LCC", QMessageBox::ResetRole);
+    QPushButton *lcc_button =
+        msgbox.addButton("LCC", QMessageBox::ResetRole);
+    QPushButton *cgalpointset_button =
+        msgbox.addButton("CGALPointSet", QMessageBox::ResetRole);
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -122,6 +145,11 @@ public:
 
 #ifdef FEVV_USE_AIF
     QPushButton *aif_button = msgbox.addButton("AIF", QMessageBox::ResetRole);
+#endif
+
+#ifdef FEVV_USE_PCL
+    QPushButton *pcl_button =
+        msgbox.addButton("PCLPointCloud", QMessageBox::ResetRole);
 #endif
 
     QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
@@ -142,6 +170,10 @@ public:
     {
       choice = "LCC";
     }
+    else if(msgbox.clickedButton() == cgalpointset_button)
+    {
+      choice = "CGALPOINTSET";
+    }
 #endif
 
 #ifdef FEVV_USE_OPENMESH
@@ -155,6 +187,13 @@ public:
     if(msgbox.clickedButton() == aif_button)
     {
       choice = "AIF";
+    }
+#endif
+
+#ifdef FEVV_USE_PCL
+    if(msgbox.clickedButton() == pcl_button)
+    {
+      choice = "PCLPOINTCLOUD";
     }
 #endif
 
