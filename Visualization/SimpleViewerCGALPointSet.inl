@@ -12,14 +12,16 @@
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 
 
+namespace FEVV {
+
 //
 // SimpleViewer<>::internal_createMesh(...) specialization for FEVV::CGALPointSet
 // with  HalfedgeGraph = FEVV::CGALPointSet and PointMap = FEVV::CGALPointSet
 //
 template<>
 inline void
-FEVV::SimpleViewer::internal_createMesh< FEVV::CGALPointSet,
-                                         FEVV::CGALPointSet >(
+SimpleViewer::internal_createMesh< FEVV::CGALPointSet,
+                                   FEVV::CGALPointSet >(
     osg::Geode *&geode,
     FEVV::CGALPointSet *_g,
     PMapsContainer *_pmaps,
@@ -63,3 +65,4 @@ FEVV::SimpleViewer::internal_createMesh< FEVV::CGALPointSet,
                                  _mesh_file);
 }
 
+} // namespace FEVV
