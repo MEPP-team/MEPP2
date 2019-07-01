@@ -16,6 +16,7 @@
  */
 
 #include "Graph_traits_extension.h"
+#include "Graph_traits_cgal_point_set.h" // for num_vertices(CGALPointSet)
 
 namespace FEVV {
 

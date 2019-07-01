@@ -76,7 +76,13 @@ struct graph_traits< const FEVV::CGALPointSet >
 } // namespace boost
 
 
-namespace FEVV {
+namespace std {
+  // note:
+  //   FEVV::CGALPointSet is a typedef to std::vector<...> ;
+  //   vertices(FEVV::CGALPointSet) must be declared in the same
+  //   namespace as CGALPointSet real underlying class for the
+  //   name lookup mecanism to work properly ;
+  //   see https://en.cppreference.com/w/cpp/language/adl
 
 // Essential free functions specialization for CGALPointSet.
 
