@@ -38,7 +38,7 @@ public:
 
   CGALPointSetPointMap(/*const*/ FEVV::CGALPointSet &ps) : m_ps(&ps) {}
 
-  CGALPointSetPointMap(const FEVV::CGALPointSetPointMap &pm) : m_ps(pm.m_ps)
+  CGALPointSetPointMap(const CGALPointSetPointMap &pm) : m_ps(pm.m_ps)
   {
   }
 
@@ -56,17 +56,26 @@ private:
   /*const*/ FEVV::CGALPointSet *m_ps;
 };
 
+} // namespace FEVV
+
+
+namespace std {
 
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
 inline
-CGALPointSetPointMap
+FEVV::CGALPointSetPointMap
 get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
   FEVV::CGALPointSetPointMap pm(ps);
   return pm;
 }
+
+} // namespace std
+
+
+namespace FEVV {
 
 //! Specialization of get(point_map, key) for CGALPointSet
 inline
@@ -101,7 +110,7 @@ struct property_traits< FEVV::CGALPointSet >
 } // namespace boost
 
 
-namespace FEVV {
+namespace std {
 
 /**
  * \brief  Returns the vertex index property map of the mesh.
@@ -121,4 +130,5 @@ get(const boost::vertex_index_t &, const FEVV::CGALPointSet &)
   return boost::identity_property_map();
 }
 
-} // namespace FEVV
+} // namespace std
+
