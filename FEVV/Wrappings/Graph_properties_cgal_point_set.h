@@ -12,36 +12,77 @@
 
 #include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
 #include <CGAL/boost/graph/properties.h> // for boost::vertex_point_t
-#include <CGAL/property_map.h> // for CGAL::Identity_property_map
 
 namespace FEVV {
+
+//note: get(boost::vertex_point_t,...) must return a shallow copy of the point
+//      map and NOT a reference, so we must create a real CGALPointSetPointMap
+//      class that:
+//       - implement shallow copy
+//       - implement operator[]
+//      see
+//             https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/BGL/include/CGAL/boost/graph/properties_OpenMesh.h#L185
+//      and
+//        https://www.boost.org/doc/libs/1_57_0/libs/property_map/doc/property_map.html
+class CGALPointSetPointMap
+{
+public:
+  typedef boost::read_write_property_map_tag   category;
+  typedef FEVV::CGALPoint    value_type;
+  typedef FEVV::CGALPoint&   reference;
+  typedef typename boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor
+      key_type;
+
+  CGALPointSetPointMap() : m_ps(NULL) {}
+
+  CGALPointSetPointMap(/*const*/ FEVV::CGALPointSet &ps) : m_ps(&ps) {}
+
+  CGALPointSetPointMap(const FEVV::CGALPointSetPointMap &pm) : m_ps(pm.m_ps)
+  {
+  }
+
+  value_type operator[](key_type k) const
+  {
+    return (*m_ps)[k];
+  }
+
+  void set(key_type k, const value_type& v)
+  {
+    (*m_ps)[k] = v;
+  }
+
+private:
+  /*const*/ FEVV::CGALPointSet *m_ps;
+};
+
 
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
 inline
-FEVV::CGALPointSet &
+CGALPointSetPointMap
 get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
-  // the point map of the Point Set is the Point Set itself
-  return ps;
+  FEVV::CGALPointSetPointMap pm(ps);
+  return pm;
 }
 
 //! Specialization of get(point_map, key) for CGALPointSet
 inline
-const FEVV::CGALPointSet::value_type &
-get(const FEVV::CGALPointSet &pm, FEVV::CGALPointSet::size_type key)
+CGALPointSetPointMap::value_type
+get(const CGALPointSetPointMap &pm, CGALPointSetPointMap::key_type key)
 {
   return pm[key];
 }
 
 //! Specialization of put(point_map, key, value) for CGALPointSet
-inline void
-put(FEVV::CGALPointSet &pm,
-    const FEVV::CGALPointSet::size_type &key,
-    const FEVV::CGALPointSet::value_type &value)
+inline
+void
+put(CGALPointSetPointMap &pm,
+    CGALPointSetPointMap::key_type key,
+    const CGALPointSetPointMap::value_type &value)
 {
-  pm[key] = value;
+  pm.set(key, value);
 }
 
 } // namespace FEVV
@@ -52,8 +93,8 @@ namespace boost {
 template<>
 struct property_traits< FEVV::CGALPointSet >
 {
-  typedef FEVV::CGALPointSet::value_type    value_type;
-  typedef FEVV::CGALPointSet::reference      reference;
+  typedef FEVV::CGALPointSetPointMap::value_type    value_type;
+  typedef FEVV::CGALPointSetPointMap::reference     reference;
 };
 
 } // namespace boost

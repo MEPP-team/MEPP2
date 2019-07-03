@@ -172,6 +172,13 @@ public:
   {
     applyHG< MeshPolyhedron >(_adapter, _mesh, pmaps_bag);
   }
+
+  void apply(BaseAdapterVisu *_adapter,
+             CGALPointSet *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    applyHG< CGALPointSet >(_adapter, _mesh, pmaps_bag);
+  }
 #endif
 
 #ifdef FEVV_USE_AIF
@@ -180,6 +187,15 @@ public:
              FEVV::PMapsContainer *pmaps_bag) override
   {
     applyHG< MeshAIF >(_adapter, _mesh, pmaps_bag);
+  }
+#endif
+
+#ifdef FEVV_USE_PCL
+  void apply(BaseAdapterVisu *_adapter,
+             PCLPointCloud *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    applyHG< PCLPointCloud >(_adapter, _mesh, pmaps_bag);
   }
 #endif
 

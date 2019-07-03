@@ -12,36 +12,69 @@
 
 #include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
 #include <CGAL/boost/graph/properties.h> // for boost::vertex_point_t
-#include <CGAL/property_map.h> // for CGAL::Identity_property_map
+
 
 namespace FEVV {
 
-// see
-//   https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/point_cloud.h#L410
-// and  
-//   https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/point_cloud.h#L426
-typedef  FEVV::PCLPointCloud::VectorType  PCLPointCloudPointMap;
+//note: get(boost::vertex_point_t,...) must return a shallow copy of the point
+//      map and NOT a reference, so we must create a real PCLPointCloudPointMap
+//      class that:
+//       - implement shallow copy
+//       - implement operator[]
+//      see
+//             https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/BGL/include/CGAL/boost/graph/properties_OpenMesh.h#L185
+//      and
+//        https://www.boost.org/doc/libs/1_57_0/libs/property_map/doc/property_map.html
+class PCLPointCloudPointMap
+{
+public:
+  typedef boost::read_write_property_map_tag   category;
+  typedef FEVV::PCLPoint    value_type;
+  typedef FEVV::PCLPoint&   reference;
+  typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
+      key_type;
+
+  PCLPointCloudPointMap() : m_pc(NULL) {}
+
+  PCLPointCloudPointMap(/*const*/ FEVV::PCLPointCloud &pc) : m_pc(&pc) {}
+
+  PCLPointCloudPointMap(const FEVV::PCLPointCloudPointMap &pm) : m_pc(pm.m_pc)
+  {
+  }
+
+  value_type operator[](key_type k) const
+  {
+    // 'points' attribute of pcl::PointCloud<> is a std::vector<pcl::PointXYZ>
+    return m_pc->points[k];
+  }
+
+  void set(key_type k, const value_type& v)
+  {
+    // 'points' attribute of pcl::PointCloud<> is a std::vector<pcl::PointXYZ>
+    m_pc->points[k] = v;
+  }
+
+private:
+  /*const*/ FEVV::PCLPointCloud *m_pc;
+};
 
 
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
 inline
-PCLPointCloudPointMap &
+PCLPointCloudPointMap
 get(const boost::vertex_point_t, FEVV::PCLPointCloud &pc)
 {
-  // the point map of the PCL Point Cloud is its 'points' attribute,
-  // which is a std::vector<pcl::PointXYZ> ;
-  // vertex_descriptor is the index of the vertex in the std::vector,
-  // so pc.points[vertex_descriptor] is the point coordinates ;
-  return pc.points;
+  FEVV::PCLPointCloudPointMap pm(pc);
+  return pm;
 }
 
 //! Specialization of get(point_map, key) for PCLPointCloud
 inline
-const FEVV::PCLPoint &
+PCLPointCloudPointMap::value_type
 get(const PCLPointCloudPointMap &pm,
-    FEVV::PCLPointCloud::VectorType::size_type key)
+    PCLPointCloudPointMap::key_type key)
 {
   return pm[key];
 }
@@ -50,10 +83,10 @@ get(const PCLPointCloudPointMap &pm,
 inline
 void
 put(PCLPointCloudPointMap &pm,
-    const FEVV::PCLPointCloud::VectorType::size_type &key,
-    const FEVV::PCLPoint &value)
+    PCLPointCloudPointMap::key_type key,
+    const PCLPointCloudPointMap::value_type &value)
 {
-  pm[key] = value;
+  pm.set(key, value);
 }
 
 } // namespace FEVV
@@ -64,10 +97,8 @@ namespace boost {
 template<>
 struct property_traits< FEVV::PCLPointCloudPointMap >
 {
-  // see https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/point_cloud.h#L433
-  typedef FEVV::PCLPointCloud::VectorType::value_type    value_type;
-  // see https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/point_cloud.h#L434
-  typedef FEVV::PCLPointCloud::VectorType::reference     reference;
+  typedef FEVV::PCLPointCloudPointMap::value_type    value_type;
+  typedef FEVV::PCLPointCloudPointMap::reference     reference;
 };
 
 } // namespace boost

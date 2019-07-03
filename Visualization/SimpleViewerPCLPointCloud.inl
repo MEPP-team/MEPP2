@@ -13,6 +13,8 @@
 #include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
 
 
+namespace FEVV {
+
 //
 // SimpleViewer<>::internal_createMesh(...) specialization for FEVV::PCLPointCloud
 // with  HalfedgeGraph = FEVV::PCLPointCloud
@@ -20,8 +22,8 @@
 //
 template<>
 inline void
-FEVV::SimpleViewer::internal_createMesh< FEVV::PCLPointCloud,
-                                         FEVV::PCLPointCloudPointMap >(
+SimpleViewer::internal_createMesh< FEVV::PCLPointCloud,
+                                   FEVV::PCLPointCloudPointMap >(
     osg::Geode *&geode,
     FEVV::PCLPointCloud *_g,
     PMapsContainer *_pmaps,
@@ -65,3 +67,4 @@ FEVV::SimpleViewer::internal_createMesh< FEVV::PCLPointCloud,
                                  _mesh_file);
 }
 
+} // namespace FEVV
