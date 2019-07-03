@@ -82,11 +82,39 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
   // save point cloud
   if(FEVV::FileUtils::has_extension(filename, ".xyz"))
   {
-    success = CGAL::write_xyz_points(out, g);
+    // colors are not supported with this file format
+
+    if(has_normal)
+    {
+      // geometry + normal
+      success = CGAL::write_xyz_points(
+          out,
+          boost::irange< std::size_t >(0, g.size()),
+          CGAL::parameters::point_map(pm).normal_map(v_nm));
+    }
+    else
+    {
+      // geometry only
+      success = CGAL::write_xyz_points(out, g);
+    }
   }
   else if(FEVV::FileUtils::has_extension(filename, ".off"))
   {
-    success = CGAL::write_off_points(out, g);
+    // colors are not supported with this file format
+
+    if(has_normal)
+    {
+      // geometry + normal
+      success = CGAL::write_off_points(
+          out,
+          boost::irange< std::size_t >(0, g.size()),
+          CGAL::parameters::point_map(pm).normal_map(v_nm));
+    }
+    else
+    {
+      // geometry only
+      success = CGAL::write_off_points(out, g);
+    }
   }
   else if(FEVV::FileUtils::has_extension(filename, ".ply"))
   {
