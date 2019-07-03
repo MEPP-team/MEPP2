@@ -418,7 +418,7 @@ template< typename CoordType,
 	}
    
    /**
-   * Read gmesh (.msh) file and store mesh data in an intermediate vector representation.
+   * Read gmsh (.msh) file and store mesh data in an intermediate vector representation.
    */
 template< typename CoordType,
           typename CoordNType,

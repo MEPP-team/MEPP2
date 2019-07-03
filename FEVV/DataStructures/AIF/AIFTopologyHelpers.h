@@ -2970,7 +2970,8 @@ public:
   /*!
    *           Return the full one-ring of a vertex,
    *           not restricted to adjacent edges.
-   *           Always ordered in counter-clockwise order.
+   *           Always ordered in clockwise order when 
+   *           faces are oriented into counter-clockwise.
    */
   static edge_container_in_vertex
   get_ordered_one_ring_edges(vertex_descriptor v)
@@ -3181,6 +3182,7 @@ public:
             auto vRange =
                 incident_vertices(faces[k]); // vertices iterator range
             resV = vertex_container_in_vertex(vRange.begin(), vRange.end());
+			break;
           }
         }
         if(k == nbF)
@@ -3253,7 +3255,8 @@ public:
   /*!
    *           Return the full one-ring of a vertex,
    *           not restricted to adjacent vertices.
-   *           Always ordered in counter-clockwise order.
+   *           Always ordered in clockwise order when 
+   *           faces are oriented into counter-clockwise.
    */
   static vertex_container_in_vertex
   get_ordered_one_ring_vertices(vertex_descriptor v)
@@ -3445,7 +3448,8 @@ public:
 
   /*!
    * 			Return the one-ring of adjacent vertices.
-   *           Always ordered in counter-clockwise order.
+   *           Always ordered in clockwise order when 
+   *           faces are oriented into counter-clockwise.
    */
   static vertex_container_in_vertex
   get_ordered_one_ring_of_adjacent_vertices(vertex_descriptor v)

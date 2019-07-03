@@ -194,7 +194,8 @@ public:
   }
 
   static const Vector NULL_VECTOR;
-
+  static const Point ORIGIN;
+  
 protected:
   Mesh &m_mesh;
 };
@@ -206,6 +207,14 @@ const typename Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >,
     Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >, T >::NULL_VECTOR =
         typename Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >,
                                   T >::Vector(0, 0, 0);
+								  
+/// Initialisation of static member ORIGIN of above OpenMesh specialisation
+template< typename T >
+const typename Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >,
+                                T >::Point
+    Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >, T >::ORIGIN =
+        typename Geometry_traits< OpenMesh::PolyMesh_ArrayKernelT< T >,
+                                  T >::Point(0, 0, 0);								  
 
 } // namespace FEVV
 
