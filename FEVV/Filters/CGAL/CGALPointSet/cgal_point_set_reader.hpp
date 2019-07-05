@@ -21,12 +21,13 @@
 #if 0
 #include <CGAL/IO/read_xyz_points.h>
 #include <CGAL/IO/read_off_points.h>
+#include <CGAL/IO/read_ply_points.h>
 #else
 #include "read_xyz_points_patched.h"
 #include "read_off_points_patched.h"
+#include "read_ply_points_patched.h"
 #endif
 
-#include <CGAL/IO/read_ply_points.h>
 #if 0 //ELO-note: doesn't compile, extra dependency needed
 #include <CGAL/IO/read_las_points.h>
 #endif
@@ -113,9 +114,28 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
   }
   else if(FEVV::FileUtils::has_extension(filename, ".ply"))
   {
-     success = CGAL::read_ply_points(
-         in,
-         std::back_inserter(g));
+    bool normals_found, color_found;
+
+    success = CGAL::read_ply_points_with_properties(
+        in,
+        g,
+        normals_found,
+        color_found,
+        CGAL::make_ply_point_reader(pm),
+        CGAL::make_ply_normal_reader(v_nm),
+        std::make_tuple(v_cm,
+                        typename CGAL::Kernel_traits<
+                            typename VertexColorMap::value_type >::Kernel::
+                            Construct_vector_3(),
+                        CGAL::PLY_property< double >("red"),
+                        CGAL::PLY_property< double >("green"),
+                        CGAL::PLY_property< double >("blue")));
+
+    if(normals_found)
+      put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
+
+    if(color_found)
+      put_property_map(FEVV::vertex_color, g, pmaps, v_cm);
   }
 #if 0 //ELO-note: doesn't compile, extra dependency needed
   else if(FEVV::FileUtils::has_extension(filename, ".las") ||
