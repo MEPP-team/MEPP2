@@ -18,7 +18,12 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
+#if 0
 #include <CGAL/IO/read_xyz_points.h>
+#else
+#include "read_xyz_points_patched.h"
+#endif
+
 #include <CGAL/IO/read_off_points.h>
 #include <CGAL/IO/read_ply_points.h>
 #if 0 //ELO-note: doesn't compile, extra dependency needed
@@ -55,6 +60,7 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
 #if 1
   bool success = false;
 
+  // open input file
   std::ifstream in(filename);
   if(! in)
   {
@@ -62,11 +68,33 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
                                 filename);
   }
 
+  // create normal and color property maps
+  using VertexNormalMap =
+      typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+                                  FEVV::CGALPointSet >::pmap_type;
+  using VertexColorMap =
+      typename FEVV::PMap_traits< FEVV::vertex_color_t,
+                                  FEVV::CGALPointSet >::pmap_type;
+  VertexNormalMap v_nm;
+  VertexColorMap v_cm;
+
+  // retrieve point map
+  auto pm = get(boost::vertex_point, g);
+
+  // load point cloud
   if(FEVV::FileUtils::has_extension(filename, ".xyz"))
   {
-     success = CGAL::read_xyz_points(
-         in,
-         std::back_inserter(g));
+    bool normals_found;
+
+    // load geometry + normal
+    success = CGAL::read_xyz_points(
+        in,
+        std::back_inserter(g),
+        normals_found,
+        CGAL::parameters::point_map(pm).normal_map(v_nm));
+
+    if(normals_found)
+      put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
   }
   else if(FEVV::FileUtils::has_extension(filename, ".off"))
   {
