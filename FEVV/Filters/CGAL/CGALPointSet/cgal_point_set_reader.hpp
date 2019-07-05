@@ -20,11 +20,12 @@
 
 #if 0
 #include <CGAL/IO/read_xyz_points.h>
+#include <CGAL/IO/read_off_points.h>
 #else
 #include "read_xyz_points_patched.h"
+#include "read_off_points_patched.h"
 #endif
 
-#include <CGAL/IO/read_off_points.h>
 #include <CGAL/IO/read_ply_points.h>
 #if 0 //ELO-note: doesn't compile, extra dependency needed
 #include <CGAL/IO/read_las_points.h>
@@ -98,9 +99,17 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
   }
   else if(FEVV::FileUtils::has_extension(filename, ".off"))
   {
-     success = CGAL::read_off_points(
-         in,
-         std::back_inserter(g));
+    bool normals_found;
+
+    // load geometry + normal
+    success = CGAL::read_off_points(
+        in,
+        std::back_inserter(g),
+        normals_found,
+        CGAL::parameters::point_map(pm).normal_map(v_nm));
+
+    if(normals_found)
+      put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
   }
   else if(FEVV::FileUtils::has_extension(filename, ".ply"))
   {
