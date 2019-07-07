@@ -64,7 +64,7 @@ typedef typename Geometry::Vector  Vector;
 typedef typename Geometry::Scalar  Scalar;
 \endcode
 
-Having at hand an instance of the geometry prooves to produce more compact
+Having at hand an instance of the geometry proves to produce more compact
 and readeable code (as opposed to using global wrapping templated function
 instantiated with the Geometry type):
 \code{.cpp}
