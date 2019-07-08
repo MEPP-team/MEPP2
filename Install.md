@@ -1,5 +1,5 @@
 
-## MEPP2 installation guide (Linux, MacOS and Windows)
+## MEPP2 installation guide (Linux Ubuntu, MacOS and Windows)
 
 ## For the impatient
 CMake compilation flags short list:
@@ -8,11 +8,11 @@ CMake compilation flags short list:
  - `BUILD_USE_OPENMESH `: use OpenMesh library (ON or OFF)
  - `BUILD_USE_GUI      `: use GUI (ON or OFF)
  - `BUILD_DOCUMENTATION`: build the documentation (ON or OFF)
- 
- Platform specifics:
-   - [Linux Ubuntu](#linux-ubuntu-installation)
-   - [MacOS](#macos-installation)
-   - [Windows](#windows-installation)
+
+## Platform specifics:
+ - [Linux Ubuntu](#linux-ubuntu-installation)
+ - [MacOS](#macos-installation)
+ - [Windows](#windows-installation)
 
 ## Dependencies
 Mandatory dependencies:
