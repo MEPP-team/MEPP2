@@ -68,7 +68,7 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libqt4-dev (or qtdeclarative5-dev but today OpenSceneGraph is only SingleThread with Qt 5, so prefer Qt 4...)
 
   # OpenSceneGraph
-  $ sudo apt install libopenscenegraph-3.4-dev
+  $ sudo apt install libopenscenegraph-3.4-dev (or libopenscenegraph-dev)
 
   # Doxygen and Graphviz
   $ sudo apt install doxygen graphviz
@@ -80,12 +80,12 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libvtk7-dev (or libvtk6-dev)
 
   # PCL (installation in user home directory) - don't use libpcl-dev package !
-  $ sudo apt install libflann-dev
+  $ sudo apt install libflann-dev libproj-dev
   $ cd /tmp
-  $ wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz
-  $ tar -xzf pcl-1.8.1.tar.gz
-  $ cd pcl-pcl-1.8.1 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.8.1 ..
+  $ wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz
+  $ tar -xzf pcl-1.9.1.tar.gz
+  $ cd pcl-pcl-1.9.1 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 ..
   $ make
   $ make install && cd
 
@@ -101,10 +101,10 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
 
   # Draco (installation in user home directory)
   $ cd /tmp
-  $ wget https://github.com/google/draco/archive/1.3.4.tar.gz
-  $ tar -xzf 1.3.4.tar.gz
-  $ cd draco-1.3.4 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.4 ..
+  $ wget https://github.com/google/draco/archive/1.3.5.tar.gz
+  $ tar -xzf 1.3.5.tar.gz
+  $ cd draco-1.3.5 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.5 ..
   $ make
   $ make install && cd
 ````
@@ -127,12 +127,12 @@ Scripting commands for compiling Mepp2:
   $ cmake -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_GUI=OFF -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
-  # compile with CGAL, GUI and FBX
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  # compile with CGAL, OpenMesh, GUI and FBX
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
-  $ cmake -DBUILD_DOCUMENTATION=ON ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_DOCUMENTATION=ON ..
   $ make doc
 ````
 
@@ -235,7 +235,7 @@ Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this
 Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JPEG-patched above) can be done like this:
 ````
   $ export DYLD_LIBRARY_PATH="$HOME/osg-3.4.1/lib"
-  $ cmake -DBUILD_USE_GUI=ON -DOSG_DIR=$HOME/osg-3.4.1 -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DBUILD_USE_GUI=ON -DOSG_DIR="$HOME/osg-3.4.1" -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
 
