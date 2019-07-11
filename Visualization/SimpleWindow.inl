@@ -738,7 +738,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
 
   if(ds_name == "CGALPOINTSET")
   {
-    allExtensions = "OBJ/OFF files (*.xyz *.off *.ply);;"
+    allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
                     "XYZ files (*.xyz);;"
                     "OFF files (*.off);;"
                     "PLY files (*.ply)";
