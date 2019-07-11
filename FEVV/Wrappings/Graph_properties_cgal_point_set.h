@@ -16,50 +16,12 @@
 
 namespace FEVV {
 
-//note: get(boost::vertex_point_t,...) must return a shallow copy of the point
-//      map and NOT a reference, so we must create a real CGALPointSetPointMap
-//      class that:
-//       - implement shallow copy
-//       - implement operator[]
-//      see
-//             https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/BGL/include/CGAL/boost/graph/properties_OpenMesh.h#L185
-//      and
-//        https://www.boost.org/doc/libs/1_57_0/libs/property_map/doc/property_map.html
-class CGALPointSetPointMap
-{
-public:
-  typedef boost::read_write_property_map_tag   category;
-  typedef FEVV::CGALPoint    value_type;
-  typedef FEVV::CGALPoint&   reference;
-  typedef typename boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor
-      key_type;
-
-  CGALPointSetPointMap() : m_ps(NULL) {}
-
-  CGALPointSetPointMap(/*const*/ FEVV::CGALPointSet &ps) : m_ps(&ps) {}
-
-  CGALPointSetPointMap(const CGALPointSetPointMap &pm) : m_ps(pm.m_ps)
-  {
-  }
-
-  value_type operator[](key_type k) const
-  {
-    return (*m_ps)[k];
-  }
-
-  void set(key_type k, const value_type& v)
-  {
-    (*m_ps)[k] = v;
-  }
-
-private:
-  /*const*/ FEVV::CGALPointSet *m_ps;
-};
+using CGALPointSetPointMap = CGALPointSet::Point_map;
 
 } // namespace FEVV
 
 
-namespace std {
+namespace CGAL {
 
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
@@ -68,19 +30,14 @@ inline
 FEVV::CGALPointSetPointMap
 get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
-  FEVV::CGALPointSetPointMap pm(ps);
-  return pm;
+  return ps.point_map();
 }
 
-} // namespace std
-
-
-namespace FEVV {
-
+#if 0//TODO-elo-rm if already ok
 //! Specialization of get(point_map, key) for CGALPointSet
 inline
-CGALPointSetPointMap::value_type
-get(const CGALPointSetPointMap &pm, CGALPointSetPointMap::key_type key)
+FEVV::CGALPointSetPointMap::value_type&
+get(const FEVV::CGALPointSetPointMap &pm, FEVV::CGALPointSetPointMap::key_type key)
 {
   return pm[key];
 }
@@ -88,14 +45,15 @@ get(const CGALPointSetPointMap &pm, CGALPointSetPointMap::key_type key)
 //! Specialization of put(point_map, key, value) for CGALPointSet
 inline
 void
-put(CGALPointSetPointMap &pm,
-    CGALPointSetPointMap::key_type key,
-    const CGALPointSetPointMap::value_type &value)
+put(FEVV::CGALPointSetPointMap &pm,
+    FEVV::CGALPointSetPointMap::key_type key,
+    const FEVV::CGALPointSetPointMap::value_type &value)
 {
-  pm.set(key, value);
+  pm[key] =value;
 }
+#endif
 
-} // namespace FEVV
+} // namespace CGAL
 
 
 namespace boost {
@@ -109,7 +67,7 @@ struct property_traits< FEVV::CGALPointSet >
 
 } // namespace boost
 
-
+#if 0 //TODO-elo-probably not needed because we will use Point_set_3 internal prop maps
 namespace std {
 
 /**
@@ -131,4 +89,5 @@ get(const boost::vertex_index_t &, const FEVV::CGALPointSet &)
 }
 
 } // namespace std
+#endif
 

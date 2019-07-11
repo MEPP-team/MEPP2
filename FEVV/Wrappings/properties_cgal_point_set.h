@@ -14,31 +14,37 @@
 #include "FEVV/Wrappings/Wrappings_cgal_point_set.h"
 #include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h"
 
+#include <string>
+
 
 namespace FEVV {
 
 // _PMap_traits specialization for FEVV::CGALPointSet
-// use boost::vector_property_map
+// use CGAL::Point_set_3 internal property maps
+// (which are the same as CGAL::Surface_mesh internal
+// property maps)
 
 
 // define default property map type (associative property map,
 // vector property map...) for each cell type (vertex, face...) ;
 
-// default vertex property map is a vector property map
+// a counter used to generate a unique property map identifier
+static size_t cgal_point_set_prop_map_counter = 0;
+
+// default vertex property map
 template< typename ValueT >
 struct Vertex_pmap_traits< FEVV::CGALPointSet, ValueT >
 {
-  typedef typename boost::property_map< FEVV::CGALPointSet,
-                                        boost::vertex_index_t >::const_type
-      vertex_index_map_type;
-  typedef typename boost::vector_property_map< ValueT, vertex_index_map_type >
-      pmap_type;
+  // use CGAL::Point_set_3 internal property map
+  typedef typename FEVV::CGALPointSet::Property_map< ValueT > pmap_type;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    std::string name = std::to_string(cgal_point_set_prop_map_counter);
+    cgal_point_set_prop_map_counter++;
+    return const_cast< FEVV::CGALPointSet & >(m)
+        .add_property_map< ValueT >(name)
+        .first;
   }
 };
 
@@ -107,16 +113,11 @@ struct Halfedge_pmap_traits< FEVV::CGALPointSet, ValueT >
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_normal_t >
 {
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< FEVV::CGALPointSet,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return const_cast< FEVV::CGALPointSet& >(m).add_normal_map().first;
   }
 };
 
@@ -124,16 +125,12 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_normal_t >
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_tangent_t >
 {
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< FEVV::CGALPointSet,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
+  typedef FEVV::CGALPointSet::Vector_3     Vector_3;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_tangent").first;
   }
 };
 
@@ -141,16 +138,12 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_tangent_t >
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_texcoord_t >
 {
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< FEVV::CGALPointSet,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
+  typedef FEVV::CGALPointSet::Vector_3     Vector_3;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_texcoord").first;
   }
 };
 
@@ -158,16 +151,12 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_texcoord_t >
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_color_t >
 {
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< FEVV::CGALPointSet,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
+  typedef FEVV::CGALPointSet::Vector_3     Vector_3;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_color").first;
   }
 };
 

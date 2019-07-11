@@ -18,7 +18,7 @@
 #include "FEVV/Wrappings/Graph_properties_cgal_point_set.h"
   // for get(FEVV::CGALPointSetPointMap&, ...)
 #include "FEVV/Wrappings/properties_cgal_point_set.h"
-  // for FEVV::PMap_traits< FEVV::CGALPointSet > and vector-property-maps
+  // for FEVV::PMap_traits< FEVV::CGALPointSet > and CGAPPointSet-property-maps
 
 #include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
   // for FEVV::Filters::read_mesh< FEVV::CGALPointSet >
@@ -155,6 +155,41 @@ int main(int argc, char *argv[])
     Color newcolor(0.8, 0.2, 0.1);
     put(v_cm, *vi, newcolor);
   }
+
+  //----------------------------------
+
+  // create 2 non-standard prop maps
+  auto vertex_int_map = FEVV::make_vertex_property_map< PointCloudT, int >(pc);
+  auto vertex_color2_map = FEVV::make_vertex_property_map< PointCloudT, Color >(pc);
+
+  // list property maps
+  // (CGAL::Point_set_3 specific)
+  std::vector< std::string > properties = pc.properties();
+  std::cout << "properties:" << std::endl;
+  for(std::size_t i = 0; i < properties.size(); ++i)
+    std::cout << " * " << properties[i] << std::endl;
+
+  // populate non-standard prop maps
+  std::cout << "populate vertex_int_map and vertex_color2_map (non-standard prop maps)" << std::endl;
+  counter = 0;
+  iterator_pair = vertices(pc);
+  vi = iterator_pair.first;
+  vi_end = iterator_pair.second;
+  for(; vi != vi_end; ++vi)
+  {
+    counter++;
+    std::cout << "  processing vertex #" << counter << std::endl;
+
+    // write property map data
+    Color newcolor(counter*3, counter*3 + 1.0, counter*3 + 2.0);
+    put(vertex_color2_map, *vi, newcolor);
+
+    put(vertex_int_map, *vi, 10 + counter);
+  }
+
+  // print non-standard property map content
+  print_property_map(pc, vertex_int_map, "vertex_int_map");
+  print_property_map(pc, vertex_color2_map, "vertex_color2_map");
 
   //----------------------------------
 

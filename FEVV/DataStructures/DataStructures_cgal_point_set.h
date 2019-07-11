@@ -11,27 +11,19 @@
 #pragma once
 
 #include <CGAL/version_macros.h>
-
 #include <CGAL/Cartesian.h>
-#include <vector>
+#include <CGAL/Point_set_3.h>
+
 
 namespace FEVV {
 
-using CGALKernel = CGAL::Cartesian< double >;
-using CGALPoint = CGALKernel::Point_3;
 
-using CGALPointSet = std::vector< CGALPoint >;
-//Note: could be a std::list too
+using CGALPointSetKernel = CGAL::Cartesian< double >;
+using CGALPointSetPoint  = CGALPointSetKernel::Point_3;
+using CGALPointSetvector = CGALPointSetKernel::Vector_3;
 
-//TODO-elo: generalization
-//template< typename PointT >
-//using CGALVectorPointSet = std::vector< PointT >;
-//using CGALPointSet = CGALVectorPointSet< CGALPoint >;
+using CGALPointSet = CGAL::Point_set_3< CGALPointSetPoint >;
 
-//TODO-elo: later point+normal
-//  using CGALVector = CGALKernel::Vector_3;
-//  using CGALPointVectorPair = std::pair< CGALPoint, CGALVector >;
-//  using CGALPointSet = std::vector< CGALPointVectorPair >;
 
 } // namespace FEVV
 

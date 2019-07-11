@@ -13,9 +13,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 
-#include <iterator> // for std::distance
-#include<boost/iterator/counting_iterator.hpp>
-
+#include <utility> // for std::make_pair
 
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 
@@ -29,40 +27,29 @@
 namespace boost {
 
 template<>
-struct vertex_property_type< FEVV::CGALPointSet >
-{
-  typedef FEVV::CGALPointSet::value_type    type; // aka Point
-};
-
-
-template<>
 struct graph_traits< FEVV::CGALPointSet >
 {
 private:
-  typedef  FEVV::CGALPointSet::value_type                    Point;
+  typedef  FEVV::CGALPointSetPoint                           Point;
 
 public:
-  //
-  typedef  FEVV::CGALPointSet::size_type                     index_type;
-  typedef  boost::counting_iterator<index_type>              index_iterator;
-
   // Graph
-  typedef  index_type                                        vertex_descriptor;
+  typedef  FEVV::CGALPointSet::Index                         vertex_descriptor;
   typedef  Point                                             vertex_property_type;
 
   // HalfedgeGraph
-  typedef  index_type                                        halfedge_descriptor;
+  typedef  int                                               halfedge_descriptor;
     //TODO-elo-fix  halfedge_descriptor needed by SimpleViewer::draw_or_redraw_mesh()
     //              remove when draw_redraw_mesh() is fixed
 
    // FaceGraph
-  typedef  index_type                                        face_descriptor;
+  typedef  int                                               face_descriptor;
     //TODO-elo-fix  face_decriptor needed par SimpleViewer::internal_createMesh()
     //              remove when internal_createMesh() is fixed
   
   // VertexListGraph
-  typedef  index_iterator                                    vertex_iterator;
-  typedef  index_type                                        vertices_size_type;
+  typedef  FEVV::CGALPointSet::iterator                      vertex_iterator;
+  typedef  std::size_t                                       vertices_size_type;
 
   // nulls
   static vertex_descriptor    null_vertex()   { return -1; }
@@ -76,9 +63,10 @@ struct graph_traits< const FEVV::CGALPointSet >
 } // namespace boost
 
 
-namespace std {
+namespace CGAL {
+
   // note:
-  //   FEVV::CGALPointSet is a typedef to std::vector<...> ;
+  //   FEVV::CGALPointSet is a typedef to CGAL::Point_set_3<...> ;
   //   vertices(FEVV::CGALPointSet) must be declared in the same
   //   namespace as CGALPointSet real underlying class for the
   //   name lookup mecanism to work properly ;
@@ -97,20 +85,22 @@ namespace std {
 //! \brief  Returns the iterator range of the vertices of the mesh.
 //!
 
-inline std::pair< typename boost::graph_traits<
-                      FEVV::CGALPointSet >::vertex_iterator,
-                  typename boost::graph_traits<
-                      FEVV::CGALPointSet >::vertex_iterator >
+inline
+std::pair< typename boost::graph_traits<
+                    FEVV::CGALPointSet >::vertex_iterator,
+           typename boost::graph_traits<
+                    FEVV::CGALPointSet >::vertex_iterator >
+vertices(FEVV::CGALPointSet &ps)
+{
+  return std::make_pair(ps.begin(), ps.end());
+}
+
+inline
+std::pair< FEVV::CGALPointSet::const_iterator,
+           FEVV::CGALPointSet::const_iterator >
 vertices(const FEVV::CGALPointSet &ps)
 {
-  // returns the index range of vertices
-  auto it_beg = boost::graph_traits< FEVV::CGALPointSet >::index_iterator(0);
-  auto it_end = boost::graph_traits< FEVV::CGALPointSet >::index_iterator(ps.size());
-
-  return std::pair<
-      typename boost::graph_traits< FEVV::CGALPointSet >::vertex_iterator,
-      typename boost::graph_traits< FEVV::CGALPointSet >::vertex_iterator >(
-      it_beg, it_end);
+  return std::make_pair(ps.begin(), ps.end());
 }
 
 
@@ -120,11 +110,9 @@ vertices(const FEVV::CGALPointSet &ps)
 //!
 inline
 typename boost::graph_traits< FEVV::CGALPointSet >::vertices_size_type
-num_vertices(const FEVV::CGALPointSet &m)
+num_vertices(const FEVV::CGALPointSet &ps)
 {
-  return static_cast<
-      typename boost::graph_traits< FEVV::CGALPointSet >::vertices_size_type >(
-      std::distance(vertices(m).first, vertices(m).second));
+  return ps.number_of_points();
 }
 
 

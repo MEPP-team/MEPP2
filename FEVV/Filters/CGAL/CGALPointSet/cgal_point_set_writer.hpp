@@ -18,8 +18,7 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
-#include <CGAL/IO/write_xyz_points.h>
-#include <CGAL/IO/write_off_points.h>
+#include <CGAL/Point_set_3/IO.h>
 #include <CGAL/IO/write_ply_points.h>
 #if 0 //ELO-note: doesn't compile, extra dependency needed
 #include <CGAL/IO/write_las_points.h>
@@ -57,75 +56,55 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
     throw std::invalid_argument(
         "write_mesh() error: can not open output file " + filename);
   }
-  out.precision(16);
-
-  // retrieve property maps
-  using VertexNormalMap =
-      typename FEVV::PMap_traits< FEVV::vertex_normal_t,
-                                  FEVV::CGALPointSet >::pmap_type;
-  using VertexColorMap =
-      typename FEVV::PMap_traits< FEVV::vertex_color_t,
-                                  FEVV::CGALPointSet >::pmap_type;
-  
-  VertexNormalMap v_nm;
-  bool has_normal = has_map(pmaps, vertex_normal);
-  if(has_normal)
-    v_nm = get_property_map(FEVV::vertex_normal, g, pmaps);
-
-  VertexColorMap v_cm;
-  bool has_color = has_map(pmaps, vertex_color);
-  if(has_color)
-    v_cm = get_property_map(FEVV::vertex_color, g, pmaps);
-  
-  auto pm = get(boost::vertex_point, g);
+  //out.precision(16);
 
   // save point cloud
   if(FEVV::FileUtils::has_extension(filename, ".xyz"))
   {
     // colors are not supported with this file format
 
-    if(has_normal)
-    {
-      // geometry + normal
-      success = CGAL::write_xyz_points(
-          out,
-          boost::irange< std::size_t >(0, g.size()),
-          CGAL::parameters::point_map(pm).normal_map(v_nm));
-    }
-    else
-    {
-      // geometry only
-      success = CGAL::write_xyz_points(out, g);
-    }
+    // write geometry and normals if present
+    success = CGAL::write_xyz_point_set(out, g);
   }
   else if(FEVV::FileUtils::has_extension(filename, ".off"))
   {
     // colors are not supported with this file format
 
-    if(has_normal)
-    {
-      // geometry + normal
-      success = CGAL::write_off_points(
-          out,
-          boost::irange< std::size_t >(0, g.size()),
-          CGAL::parameters::point_map(pm).normal_map(v_nm));
-    }
-    else
-    {
-      // geometry only
-      success = CGAL::write_off_points(out, g);
-    }
+    // write geometry and normals if present
+    success = CGAL::write_off_point_set(out, g);
   }
   else if(FEVV::FileUtils::has_extension(filename, ".ply"))
   {
+    // retrieve property maps
+    using VertexNormalMap =
+        typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+                                    FEVV::CGALPointSet >::pmap_type;
+    using VertexColorMap =
+        typename FEVV::PMap_traits< FEVV::vertex_color_t,
+                                    FEVV::CGALPointSet >::pmap_type;
+    
+    VertexNormalMap v_nm;
+    bool has_normal = has_map(pmaps, vertex_normal);
+    if(has_normal)
+      v_nm = get_property_map(FEVV::vertex_normal, g, pmaps);
+
+    VertexColorMap v_cm;
+    bool has_color = has_map(pmaps, vertex_color);
+    if(has_color)
+      v_cm = get_property_map(FEVV::vertex_color, g, pmaps);
+    
+    auto pm = get(boost::vertex_point, g);
+
+    // set file mode
     CGAL::set_ascii_mode(out);
 
+    // write to file
     if(has_normal && has_color)
     {
       // geometry + normal + color
       success = CGAL::write_ply_points_with_properties(
           out,
-          boost::irange< std::size_t >(0, g.size()),
+          g,
           CGAL::make_ply_point_writer(pm),
           CGAL::make_ply_normal_writer(v_nm),
           std::make_tuple(v_cm,
@@ -138,7 +117,7 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
       // geometry + normal
       success = CGAL::write_ply_points_with_properties(
           out,
-          boost::irange< std::size_t >(0, g.size()),
+          g,
           CGAL::make_ply_point_writer(pm),
           CGAL::make_ply_normal_writer(v_nm));
     }
@@ -147,7 +126,7 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
       // geometry + color
       success = CGAL::write_ply_points_with_properties(
           out,
-          boost::irange< std::size_t >(0, g.size()),
+          g,
           CGAL::make_ply_point_writer(pm),
           std::make_tuple(v_cm,
                           CGAL::PLY_property< double >("red"),
@@ -157,7 +136,10 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
     else
     {
       // geometry only
-      success = CGAL::write_ply_points(out, g);
+      success = CGAL::write_ply_points_with_properties(
+          out,
+          g,
+          CGAL::make_ply_point_writer(pm));
     }
   }
 #if 0 //ELO-note: doesn't compile, extra dependency needed

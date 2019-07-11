@@ -18,20 +18,50 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
-#if 0
-#include <CGAL/IO/read_xyz_points.h>
-#include <CGAL/IO/read_off_points.h>
+#include <CGAL/Point_set_3/IO.h>
 #include <CGAL/IO/read_ply_points.h>
-#else
-#include "read_xyz_points_patched.h"
-#include "read_off_points_patched.h"
-#include "read_ply_points_patched.h"
-#endif
-
-#if 0 //ELO-note: doesn't compile, extra dependency needed
-#include <CGAL/IO/read_las_points.h>
-#endif
 #include <stdexcept> // for std::invalid_argument
+#include <string> // for std::getline
+
+
+namespace FEVV {
+
+// parse PLY header to detect normals and colors
+inline
+void
+parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color)
+{
+  std::string line;
+
+  in.seekg(0); // rewind
+  has_normal = false;
+  has_color = false;
+
+  do
+  {
+    std::getline(in, line);
+
+    // look for "property ... nx" and "property ... red"
+    if(line.substr(0, 8) == "property")
+    {
+      if(line.substr(line.size()-2) == "nx")
+      {
+        has_normal = true;
+        //DBG std::cout << "normal detected in PLY header" << std::endl;
+      }
+      else if(line.substr(line.size()-3) == "red")
+      {
+        has_color = true;
+        //DBG std::cout << "color detected in PLY header" << std::endl;
+      }
+    }
+  }
+  while(line != "end_header");
+  
+  in.seekg(0); // rewind
+}
+
+} // namespace FEVV
 
 
 namespace FEVV {
@@ -70,82 +100,97 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
                                 filename);
   }
 
-  // create normal and color property maps
-  using VertexNormalMap =
-      typename FEVV::PMap_traits< FEVV::vertex_normal_t,
-                                  FEVV::CGALPointSet >::pmap_type;
-  using VertexColorMap =
-      typename FEVV::PMap_traits< FEVV::vertex_color_t,
-                                  FEVV::CGALPointSet >::pmap_type;
-  VertexNormalMap v_nm;
-  VertexColorMap v_cm;
-
-  // retrieve point map
-  auto pm = get(boost::vertex_point, g);
-
   // load point cloud
   if(FEVV::FileUtils::has_extension(filename, ".xyz"))
   {
-    bool normals_found;
-
     // load geometry + normal
-    success = CGAL::read_xyz_points(
-        in,
-        std::back_inserter(g),
-        normals_found,
-        CGAL::parameters::point_map(pm).normal_map(v_nm));
+    success = CGAL::read_xyz_point_set(in, g);
 
-    if(normals_found)
-      put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
+    if(g.has_normal_map())
+      put_property_map(FEVV::vertex_normal, g, pmaps, g.normal_map());
   }
   else if(FEVV::FileUtils::has_extension(filename, ".off"))
   {
-    bool normals_found;
-
     // load geometry + normal
-    success = CGAL::read_off_points(
-        in,
-        std::back_inserter(g),
-        normals_found,
-        CGAL::parameters::point_map(pm).normal_map(v_nm));
+    success = CGAL::read_off_point_set(in, g);
 
-    if(normals_found)
-      put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
+    if(g.has_normal_map())
+      put_property_map(FEVV::vertex_normal, g, pmaps, g.normal_map());
   }
   else if(FEVV::FileUtils::has_extension(filename, ".ply"))
   {
-    bool normals_found, color_found;
+    // parse ply header to detect normals and colors
+    bool has_normal;
+    bool has_color;
+    parse_ply_header(in, has_normal, has_color);
 
-    success = CGAL::read_ply_points_with_properties(
-        in,
-        g,
-        normals_found,
-        color_found,
-        CGAL::make_ply_point_reader(pm),
-        CGAL::make_ply_normal_reader(v_nm),
-        std::make_tuple(v_cm,
-                        typename CGAL::Kernel_traits<
-                            typename VertexColorMap::value_type >::Kernel::
-                            Construct_vector_3(),
-                        CGAL::PLY_property< double >("red"),
-                        CGAL::PLY_property< double >("green"),
-                        CGAL::PLY_property< double >("blue")));
+    // create needed property maps
+    using VertexNormalMap =
+        typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+                                    FEVV::CGALPointSet >::pmap_type;
+    using VertexColorMap =
+        typename FEVV::PMap_traits< FEVV::vertex_color_t,
+                                    FEVV::CGALPointSet >::pmap_type;
+    VertexNormalMap v_nm;
+    VertexColorMap v_cm;
 
-    if(normals_found)
+    if(has_normal)
+    {
+      v_nm = make_property_map(FEVV::vertex_normal, g);
       put_property_map(FEVV::vertex_normal, g, pmaps, v_nm);
+    }
 
-    if(color_found)
+    if(has_color)
+    {
+      v_cm = make_property_map(FEVV::vertex_color, g);
       put_property_map(FEVV::vertex_color, g, pmaps, v_cm);
+    }
+
+    if(has_normal && has_color)
+    {
+      success = CGAL::read_ply_points_with_properties(
+          in,
+          g.index_back_inserter(),
+          CGAL::make_ply_point_reader(g.point_push_map()),
+          CGAL::make_ply_normal_reader(g.push_property_map(v_nm)),
+          std::make_tuple(g.push_property_map(v_cm),
+                          typename CGAL::Kernel_traits<
+                              typename VertexColorMap::value_type >::Kernel::
+                              Construct_vector_3(),
+                          CGAL::PLY_property< double >("red"),
+                          CGAL::PLY_property< double >("green"),
+                          CGAL::PLY_property< double >("blue")));
+    }
+    else if(has_normal)
+    {
+      success = CGAL::read_ply_points_with_properties(
+          in,
+          g.index_back_inserter(),
+          CGAL::make_ply_point_reader(g.point_push_map()),
+          CGAL::make_ply_normal_reader(g.push_property_map(v_nm)));
+    }
+    else if(has_color)
+    {
+      success = CGAL::read_ply_points_with_properties(
+          in,
+          g.index_back_inserter(),
+          CGAL::make_ply_point_reader(g.point_push_map()),
+          std::make_tuple(g.push_property_map(v_cm),
+                          typename CGAL::Kernel_traits<
+                              typename VertexColorMap::value_type >::Kernel::
+                              Construct_vector_3(),
+                          CGAL::PLY_property< double >("red"),
+                          CGAL::PLY_property< double >("green"),
+                          CGAL::PLY_property< double >("blue")));
+    }
+    else
+    {
+      success = CGAL::read_ply_points_with_properties(
+          in,
+          g.index_back_inserter(),
+          CGAL::make_ply_point_reader(g.point_push_map()));
+    }
   }
-#if 0 //ELO-note: doesn't compile, extra dependency needed
-  else if(FEVV::FileUtils::has_extension(filename, ".las") ||
-          FEVV::FileUtils::has_extension(filename, ".laz"))
-  {
-     success = CGAL::read_las_points(
-         in,
-         std::back_inserter(g));
-  }
-#endif
 
   if(! success)
   {
