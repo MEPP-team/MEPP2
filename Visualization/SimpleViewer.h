@@ -439,6 +439,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
@@ -472,6 +473,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
@@ -507,6 +509,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
@@ -586,6 +589,7 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec3Array > >
           &_vertexArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+      const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_tangentsArrays,
       const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
@@ -677,6 +681,7 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec3Array > >
           &_vertexArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+      const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
@@ -709,7 +714,7 @@ protected:
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays,
       v_vertexArrays_edges, v_vertexArrays_vertices;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_normalsArrays,
-      v_normalsArraysF;
+      v_normalsArraysF, v_normalsArrays_vertices;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_tangentsArrays;
   std::vector< std::vector< osg::ref_ptr< osg::Vec4Array > > > v_colorsArrays,
       v_colorsArrays_edges, v_colorsArrays_vertices;
