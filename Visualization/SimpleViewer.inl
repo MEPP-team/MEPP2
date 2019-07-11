@@ -167,9 +167,9 @@ FEVV::SimpleViewer::~SimpleViewer()
     }
   }*/
 
-  // NOTE : same for geometries_edges, geometries_vertices,
-  //        vertexArrays, vertexArrays_edges, vertexArrays_vertices,
-  //        colorsArrays, colorsArrays_edges, colorsArrays_vertices,
+  // NOTE : same for geometries_edges, geometries_vertices, geometries_normals,
+  //        vertexArrays, vertexArrays_edges, vertexArrays_vertices, vertexArrays_normals,
+  //        colorsArrays, colorsArrays_edges, colorsArrays_vertices, colorsArrays_normals,
   //        etc...
 
 #ifdef DEBUG_VISU2
@@ -533,9 +533,11 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
@@ -543,6 +545,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -558,9 +561,11 @@ FEVV::SimpleViewer::internal_createMesh(
                       geometriesP,
                       geometries_edges,
                       geometries_vertices,
+                      geometries_normals,
                       vertexArrays,
                       vertexArrays_edges,
                       vertexArrays_vertices,
+                      vertexArrays_normals,
                       normalsArrays,
                       normalsArraysF,
                       normalsArrays_vertices,
@@ -568,6 +573,7 @@ FEVV::SimpleViewer::internal_createMesh(
                       colorsArrays,
                       colorsArrays_edges,
                       colorsArrays_vertices,
+                      colorsArrays_normals,
                       texcoordsArrays,
                       _pm,
                       _mesh_file);
@@ -586,9 +592,11 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
@@ -596,6 +604,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -1064,6 +1073,14 @@ FEVV::SimpleViewer::internal_createMesh(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    geometries_normals.push_back(new osg::Geometry());
+    geometries_normals[0]->setSupportsDisplayList(true);
+    geometries_normals[0]->setUseDisplayList(true);
+    geometries_normals[0]->setUseVertexBufferObjects(
+        false); /*geometries_normals[0]->setUseVertexArrayObject(false);*/
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     vertexArrays.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1073,6 +1090,10 @@ FEVV::SimpleViewer::internal_createMesh(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     vertexArrays_vertices.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    vertexArrays_normals.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -1101,6 +1122,10 @@ FEVV::SimpleViewer::internal_createMesh(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     colorsArrays_vertices.push_back(new osg::Vec4Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    colorsArrays_normals.push_back(new osg::Vec4Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -1154,6 +1179,14 @@ FEVV::SimpleViewer::internal_createMesh(
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
+      geometries_normals.push_back(new osg::Geometry());
+      geometries_normals[mi]->setSupportsDisplayList(true);
+      geometries_normals[mi]->setUseDisplayList(true);
+      geometries_normals[mi]->setUseVertexBufferObjects(
+          false); /*geometries_normals[mi]->setUseVertexArrayObject(false);*/
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
       vertexArrays.push_back(new osg::Vec3Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1163,6 +1196,10 @@ FEVV::SimpleViewer::internal_createMesh(
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
       vertexArrays_vertices.push_back(new osg::Vec3Array);
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
+      vertexArrays_normals.push_back(new osg::Vec3Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
@@ -1191,6 +1228,10 @@ FEVV::SimpleViewer::internal_createMesh(
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
       colorsArrays_vertices.push_back(new osg::Vec4Array);
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
+      colorsArrays_normals.push_back(new osg::Vec4Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
@@ -1532,7 +1573,7 @@ FEVV::SimpleViewer::internal_createMesh(
       }
       else if(_f_nm != nullptr) // normal per face -> already calculated
       {
-        std::cout << "---> normal per face - normal per face - normal per face"
+        std::cout << "---> normal per face - normal per face - normal per face --> MUST NEVER HAPPENS !!!"
                   << std::endl; // TEMP
 
         normal = (*_f_nm)[*fb];
@@ -1622,9 +1663,11 @@ FEVV::SimpleViewer::internal_createMesh(
                             *_geometries,
                             geometries_edges,
                             geometries_vertices,
+                            geometries_normals,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
+                            vertexArrays_normals,
                             *_normalsArrays,
                             normalsArrays_vertices,
                             tangentsArrays,
@@ -1632,6 +1675,7 @@ FEVV::SimpleViewer::internal_createMesh(
                             colorsArrays,
                             colorsArrays_edges,
                             colorsArrays_vertices,
+                            colorsArrays_normals,
                             _m_mm_size,
                             _vt_nm,
                             v_tan_m,
@@ -1662,15 +1706,18 @@ FEVV::SimpleViewer::internal_createMesh(
                             *_geometries,
                             geometries_edges,
                             geometries_vertices,
+                            geometries_normals,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
+                            vertexArrays_normals,
                             *_normalsArrays,
                             normalsArrays_vertices,
                             texcoordsArrays,
                             colorsArrays,
                             colorsArrays_edges,
                             colorsArrays_vertices,
+                            colorsArrays_normals,
                             _m_mm_size,
                             _texture_type,
                             _vt_nm,
@@ -1718,9 +1765,11 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometriesP,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
@@ -1728,6 +1777,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -1924,6 +1974,14 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    geometries_normals.push_back(new osg::Geometry());
+    geometries_normals[0]->setSupportsDisplayList(true);
+    geometries_normals[0]->setUseDisplayList(true);
+    geometries_normals[0]->setUseVertexBufferObjects(
+        false); /*geometries_normals[0]->setUseVertexArrayObject(false);*/
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     vertexArrays.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1933,6 +1991,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     vertexArrays_vertices.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    vertexArrays_normals.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -1961,6 +2023,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     colorsArrays_vertices.push_back(new osg::Vec4Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    colorsArrays_normals.push_back(new osg::Vec4Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -2095,9 +2161,11 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             *_geometries,
                             geometries_edges,
                             geometries_vertices,
+                            geometries_normals,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
+                            vertexArrays_normals,
                             *_normalsArrays,
                             normalsArrays_vertices,
                             tangentsArrays,
@@ -2105,6 +2173,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             colorsArrays,
                             colorsArrays_edges,
                             colorsArrays_vertices,
+                            colorsArrays_normals,
                             _m_mm_size,
                             _vt_nm,
                             v_tan_m,
@@ -2154,15 +2223,18 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             *_geometries,
                             geometries_edges,
                             geometries_vertices,
+                            geometries_normals,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
+                            vertexArrays_normals,
                             *_normalsArrays,
                             normalsArrays_vertices,
                             texcoordsArrays,
                             colorsArrays,
                             colorsArrays_edges,
                             colorsArrays_vertices,
+                            colorsArrays_normals,
                             _m_mm_size,
                             _texture_type,
                             _vt_nm,
@@ -2343,13 +2415,13 @@ FEVV::SimpleViewer::createMesh(
     osg::ref_ptr< osg::Group > _group)
 {
   std::vector< osg::ref_ptr< osg::Geometry > > l_geometries, l_geometriesL,
-      l_geometriesP, l_geometries_edges, l_geometries_vertices;
+      l_geometriesP, l_geometries_edges, l_geometries_vertices, l_geometries_normals;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_vertexArrays,
-      l_vertexArrays_edges, l_vertexArrays_vertices;
+      l_vertexArrays_edges, l_vertexArrays_vertices, l_vertexArrays_normals;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_normalsArrays,
       l_normalsArraysF, l_normalsArrays_vertices, l_tangentsArrays;
   std::vector< osg::ref_ptr< osg::Vec4Array > > l_colorsArrays,
-      l_colorsArrays_edges, l_colorsArrays_vertices;
+      l_colorsArrays_edges, l_colorsArrays_vertices, l_colorsArrays_normals;
   std::vector< osg::ref_ptr< osg::Vec2Array > > l_texcoordsArrays;
 
   osg::Geode *geode = internal_createMesh(_g,
@@ -2359,9 +2431,11 @@ FEVV::SimpleViewer::createMesh(
                                           l_geometriesP,
                                           l_geometries_edges,
                                           l_geometries_vertices,
+                                          l_geometries_normals,
                                           l_vertexArrays,
                                           l_vertexArrays_edges,
                                           l_vertexArrays_vertices,
+                                          l_vertexArrays_normals,
                                           l_normalsArrays,
                                           l_normalsArraysF,
                                           l_normalsArrays_vertices,
@@ -2369,6 +2443,7 @@ FEVV::SimpleViewer::createMesh(
                                           l_colorsArrays,
                                           l_colorsArrays_edges,
                                           l_colorsArrays_vertices,
+                                          l_colorsArrays_normals,
                                           l_texcoordsArrays,
                                           _pm,
                                           _mesh_file);
@@ -2385,9 +2460,11 @@ FEVV::SimpleViewer::createMesh(
   v_geometriesP.push_back(l_geometriesP);
   v_geometries_edges.push_back(l_geometries_edges);
   v_geometries_vertices.push_back(l_geometries_vertices);
+  v_geometries_normals.push_back(l_geometries_normals);
   v_vertexArrays.push_back(l_vertexArrays);
   v_vertexArrays_edges.push_back(l_vertexArrays_edges);
   v_vertexArrays_vertices.push_back(l_vertexArrays_vertices);
+  v_vertexArrays_normals.push_back(l_vertexArrays_normals);
   v_normalsArrays.push_back(l_normalsArrays);
   v_normalsArraysF.push_back(l_normalsArraysF);
   v_normalsArrays_vertices.push_back(l_normalsArrays_vertices);
@@ -2395,6 +2472,7 @@ FEVV::SimpleViewer::createMesh(
   v_colorsArrays.push_back(l_colorsArrays);
   v_colorsArrays_edges.push_back(l_colorsArrays_edges);
   v_colorsArrays_vertices.push_back(l_colorsArrays_vertices);
+  v_colorsArrays_normals.push_back(l_colorsArrays_normals);
   v_texcoordsArrays.push_back(l_texcoordsArrays);
 
   v_mixed_meshes.push_back(_g);
@@ -2513,10 +2591,13 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
   {
     v_geometries_edges[position].clear();
     v_geometries_vertices[position].clear();
+    v_geometries_normals[position].clear();
     v_vertexArrays_edges[position].clear();
     v_vertexArrays_vertices[position].clear();
+    v_vertexArrays_normals[position].clear();
     v_colorsArrays_edges[position].clear();
     v_colorsArrays_vertices[position].clear();
+    v_colorsArrays_normals[position].clear();
 
     v_normalsArrays_vertices[position].clear();
   }
@@ -2529,9 +2610,11 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                       v_geometriesP[position],
                       v_geometries_edges[position],
                       v_geometries_vertices[position],
+                      v_geometries_normals[position],
                       v_vertexArrays[position],
                       v_vertexArrays_edges[position],
                       v_vertexArrays_vertices[position],
+                      v_vertexArrays_normals[position],
                       v_normalsArrays[position],
                       v_normalsArraysF[position],
                       v_normalsArrays_vertices[position],
@@ -2539,6 +2622,7 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                       v_colorsArrays[position],
                       v_colorsArrays_edges[position],
                       v_colorsArrays_vertices[position],
+                      v_colorsArrays_normals[position],
                       v_texcoordsArrays[position],
                       _pm,
                       v_meshes_names[position]);
