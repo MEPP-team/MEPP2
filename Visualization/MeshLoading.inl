@@ -613,6 +613,29 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
 
           _geode->addDrawable(_geometries_vertices[unit_ii]);
         }
+
+        // [ normals
+        if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+        {
+          std::cout << "[MeshLoading] Drawing normals"
+                    << std::endl;
+
+          // disabled these calls, fixing loading time & FPS problems
+          //_geometries_normals[unit_ii]->setUseVertexBufferObjects(true);
+
+          _geometries_normals[unit_ii]->setVertexAttribArray(
+              0, _vertexArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_normals[unit_ii]->setVertexAttribArray(
+              1, _colorsArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_normals[unit_ii]
+              ->getOrCreateStateSet()
+              ->setAttributeAndModes(superimpProgram.get(),
+                                     osg::StateAttribute::ON |
+                                         osg::StateAttribute::OVERRIDE);
+
+          _geode->addDrawable(_geometries_normals[unit_ii]);
+        }
+        // [ normals
       }
 
     ++unit_ii;
@@ -932,6 +955,18 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
             _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
         _geode->addDrawable(_geometries_vertices[unit_ii]);
       }
+
+    // [ normals
+    if(unit_ii == 0) // MUST be done only one time
+      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+      {
+        _geometries_normals[unit_ii]->setVertexArray(
+            _vertexArrays_normals[unit_ii]);
+        _geometries_normals[unit_ii]->setColorArray(
+            _colorsArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+        _geode->addDrawable(_geometries_normals[unit_ii]);
+      }
+    // ] normals
 
     unit_ii++;
   } while(unit_ii < _m_mm_size);

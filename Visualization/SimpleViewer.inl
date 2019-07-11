@@ -1360,6 +1360,7 @@ FEVV::SimpleViewer::internal_createMesh(
   // (nb_faces==0)) // last test for 'only_pts' mode
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
   {
+    const float MAGNITUDE_N = 0.05;
     // std::cout << "---------> Adding vertices (for superimpose and 'only_pts'
     // mode)" << std::endl;
 
@@ -1385,6 +1386,11 @@ FEVV::SimpleViewer::internal_createMesh(
       vertexArrays_vertices[mtl_id]->push_back(
           Helpers::VectorConverter< HalfedgeGraph >(p0));
 
+      // [ normals
+      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
+      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * MAGNITUDE_N ); // ok because _vt_nm always true
+      // ] normals
+
       sizeSPoints++;
 
       // color
@@ -1395,10 +1401,20 @@ FEVV::SimpleViewer::internal_createMesh(
       else
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Green())); // default color
+
+      // [ normals
+      colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
+      colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
+      // ] normals
     }
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
         osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
+
+    // [ normals
+    geometries_normals[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
+        osg::PrimitiveSet::LINES, 0, vertexArrays_normals[mtl_id]->size()));
+    // ] normals
 
     // NEW_HERE-01 (DEL)
 #if 0
@@ -1443,6 +1459,22 @@ FEVV::SimpleViewer::internal_createMesh(
         GL_LIGHTING, osg::StateAttribute::OFF); // light always OFF for
                                                 // superimpose vertices
   }
+  // [ normals
+  geometries_normals[mtl_id]->setStateSet(NULL);
+  {
+    // set line width
+    osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+    linewidth->setWidth(2.f);
+    geometries_normals[mtl_id]
+        ->getOrCreateStateSet()
+        ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)
+
+    // light
+    geometries_normals[mtl_id]->getOrCreateStateSet()->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF); // light always OFF for normals
+  }
+  // ] normals
 
   /// Adding faces
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
