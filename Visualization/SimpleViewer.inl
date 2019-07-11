@@ -1222,6 +1222,7 @@ FEVV::SimpleViewer::internal_createMesh(
   // if(m_RenderSuperimposedEdges)
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
   {
+    const float MAGNITUDE = 0.0005;
     // std::cout << "---------> Adding edges (for superimpose)" << std::endl;
 
     using EdgeColorMap = typename FEVV::PMap_traits< FEVV::edge_color_t,
@@ -1248,16 +1249,14 @@ FEVV::SimpleViewer::internal_createMesh(
 
       // retrieve vertex-point (source)
       ps = (*_pm)[vs];
-      vertexArrays_edges[mtl_id]->push_back(
-          Helpers::VectorConverter< HalfedgeGraph >(ps));
+      vertexArrays_edges[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(ps) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, vs)) * MAGNITUDE ); // ok because _vt_nm always true
 
       // retrieve vertex (target)
       vt = target(*eb, *_g);
 
       // retrieve vertex-point (target)
       pt = (*_pm)[vt];
-      vertexArrays_edges[mtl_id]->push_back(
-          Helpers::VectorConverter< HalfedgeGraph >(pt));
+      vertexArrays_edges[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(pt) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, vt)) * MAGNITUDE ); // ok because _vt_nm always true
 
       sizeSLines++;
 
@@ -1287,11 +1286,10 @@ FEVV::SimpleViewer::internal_createMesh(
 #if 0
     // set line width
     osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-    linewidth->setWidth(3.0f);
+    linewidth->setWidth(1.5f);
     geometries_edges[mtl_id]
       ->getOrCreateStateSet()
-      ->setAttribute /*setAttributeAndModes*/ (linewidth,
-                                               osg::StateAttribute::ON);
+      ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)
 
     // light
     geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
@@ -1304,11 +1302,10 @@ FEVV::SimpleViewer::internal_createMesh(
   {
     // set line width
     osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-    linewidth->setWidth(3.0f);
+    linewidth->setWidth(1.5f);
     geometries_edges[mtl_id]
         ->getOrCreateStateSet()
-        ->setAttribute /*setAttributeAndModes*/ (linewidth,
-                                                 osg::StateAttribute::ON);
+        ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)
 
     // light
     geometries_edges[mtl_id]->getOrCreateStateSet()->setMode(
