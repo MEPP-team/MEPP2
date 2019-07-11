@@ -748,7 +748,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
     allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
                     "XYZ files (*.xyz);;"
                     "PCD files (*.pcd);;"
-                    "PLY files (*.ply);;";
+                    "PLY files (*.ply)";
   }
   else
   {
