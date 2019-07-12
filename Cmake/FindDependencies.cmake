@@ -188,7 +188,7 @@ if( BUILD_USE_FBX )
     endif()
 
     if(UNIX AND NOT APPLE) # Linux
-      set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.so )
+      set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.so ${CMAKE_DL_LIBS} )
     elseif(APPLE) # Mac OS
       set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.dylib )
     else() # Windows
