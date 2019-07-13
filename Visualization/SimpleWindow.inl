@@ -803,13 +803,16 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
                                     const std::vector< std::string >& files)
 {
   // open a new viewer if needed
-  if(files.size() > 0 && viewer == nullptr)
+  if(files.size() > 0 && viewer == nullptr && (! shift_pressed))
     viewer = createNewViewer();
 
   // load and draw meshes
   int m = 0;
   for(auto filename: files)
   {
+    if (shift_pressed)
+      viewer = createNewViewer();
+
     HalfedgeGraph *mesh = nullptr; 
       // destroyed by the viewer destructor
     FEVV::PMapsContainer *p_pmaps_bag = new FEVV::PMapsContainer;
@@ -839,7 +842,7 @@ inline void
 FEVV::SimpleWindow::on_actionOpen_triggered()
 {
   // capture keyboard state
-  bool shift_pressed =
+  shift_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
   bool alt_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
@@ -860,7 +863,7 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   //       must come before the call to chooseDatastructureMsgBox()
   //       because the latter resets the active window
   SimpleViewer *viewer = nullptr;
-  if(activeMdiChild()  &&  (! shift_pressed))
+  if(activeMdiChild() && (! shift_pressed))
   {
     // open mesh in current viewer
     BaseAdapterVisuQt *bavQt =

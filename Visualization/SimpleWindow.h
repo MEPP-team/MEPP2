@@ -328,6 +328,8 @@ protected:
 
   bool open_only_pts_mode = false;
 
+  bool shift_pressed = false;
+
   Ui::MainWindow ui; //<! Interface : QtDesigner
 };
 
