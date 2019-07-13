@@ -829,12 +829,13 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
         false,
         false,
         FEVV::FileUtils::get_file_full_name(filename),
+        true,
         m * STEP_SPACE);
 
     ++m;
-  }
 
-  updateActiveChildTitle();
+    updateActiveChildTitle();
+  }
 }
 
 
