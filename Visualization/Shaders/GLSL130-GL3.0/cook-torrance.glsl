@@ -130,10 +130,10 @@ void main() {
       normal = normalize(fragMeshInfo_vertTBNMatrix * normal);
     } else {
       // Standard version
-      normal = fragMeshInfo_vertTBNMatrix[2];
+      normal = normalize(fragMeshInfo_vertTBNMatrix[2]);
     }
   } else {
-    normal = fragMeshInfo_vertFlatNormal;
+    normal = normalize(fragMeshInfo_vertFlatNormal);
   }
 
   vec3 fullViewDir = uniCameraPos - fragMeshInfo_vertPosition;

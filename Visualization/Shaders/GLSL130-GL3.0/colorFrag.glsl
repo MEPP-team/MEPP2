@@ -23,9 +23,9 @@ void main() {
 
   vec3 normal;
   if (uniUseSmoothShading)
-    normal = fragMeshInfo_vertNormal;
+    normal = normalize(fragMeshInfo_vertNormal);
   else
-    normal = fragMeshInfo_vertFlatNormal;
+    normal = normalize(fragMeshInfo_vertFlatNormal);
 
   mat3 invViewMatrix = mat3(uniInvViewMatrix);
 
