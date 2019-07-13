@@ -194,9 +194,11 @@ FEVV::SimpleAdapterVisu::createGraphicsWindow(
   traits->alpha = ds->getMinimumNumAlphaBits();
   traits->stencil = ds->getMinimumNumStencilBits();
   traits->sampleBuffers = ds->getMultiSamples();
-  traits->samples = ds->getNumMultiSamples();
 
-  traits->vsync = 0;
+  //traits->samples = ds->getNumMultiSamples();
+  traits->samples = 4; // important : now anti-aliasing is activated here with this value
+
+  traits->vsync = 0; // 0 = disable vsync and 1 = enable vsync
 
   return new osgQt::GraphicsWindowQt(traits.get());
 }
