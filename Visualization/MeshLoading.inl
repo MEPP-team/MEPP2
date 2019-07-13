@@ -11,10 +11,13 @@
 #include "Visualization/Helpers/OSGDebug.hpp"
 
 #include <osg/ShadeModel>
+#include <osgUtil/Optimizer>
 
 #include <memory>
 
 #include "Visualization/SimpleWindow.h"
+
+// TODO : REVOIR les osg::StateAttribute::OVERRIDE et les vérifier !!!
 
 struct CameraPosCallback : public osg::Uniform::Callback
 {
@@ -745,6 +748,30 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     _geode->getOrCreateStateSet()->addUniform(new osg::Uniform(
         energyLocation.c_str(), lights[lightIndex]->getLinearAttenuation()));
   }
+
+  osgUtil::Optimizer optimizer; // https://github.com/openscenegraph/OpenSceneGraph/blob/master/include/osgUtil/Optimizer
+  /*ALL_OPTIMIZATIONS = FLATTEN_STATIC_TRANSFORMS_DUPLICATING_SHARED_SUBGRAPHS |
+                      REMOVE_REDUNDANT_NODES |
+                      REMOVE_LOADED_PROXY_NODES |
+                      COMBINE_ADJACENT_LODS |
+                      SHARE_DUPLICATE_STATE |
+                      MERGE_GEODES |
+                      MERGE_GEOMETRY |
+                      MAKE_FAST_GEOMETRY |
+                      CHECK_GEOMETRY |
+                      SPATIALIZE_GROUPS |
+                      COPY_SHARED_NODES |
+                      TRISTRIP_GEOMETRY |
+                      OPTIMIZE_TEXTURE_SETTINGS |
+                      TEXTURE_ATLAS_BUILDER |
+                      STATIC_OBJECT_DETECTION |
+                      BUFFER_OBJECT_SETTINGS*/
+
+#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+#else
+  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+#endif
 }
 
 template< typename HalfedgeGraph,
@@ -994,4 +1021,12 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
         new osg::ShadeModel(osg::ShadeModel::FLAT);
     _geode->getOrCreateStateSet()->setAttribute(shadeModel);
   }
+
+  osgUtil::Optimizer optimizer; // https://github.com/openscenegraph/OpenSceneGraph/blob/master/include/osgUtil/Optimizer
+
+#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+#else
+  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+#endif
 }
