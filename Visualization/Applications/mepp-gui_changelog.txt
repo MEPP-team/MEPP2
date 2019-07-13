@@ -1,3 +1,14 @@
+v0.11.0 - 13/07/2019 :
+ - improve superimpose edges
+ - add support for vertex normals
+ - increase draw & redraw performance in viewer
+ - fix blinking for superimpose (edges and normals) with shaders
+ - activate VBO if OSG >= 3.6.0
+ - shaders with ATI cards now work correctly under Windows if OSG >= 3.6.0
+ - fix shift pressed mode during meshes opening (case of simultaneous multiple meshes selected)
+ - enable anti-aliasing
+ - fix all shaders (for anti-aliasing)
+
 v0.10.0 - 21/06/2019 :
  - add early support of CGAL Point Set and PCL Point Cloud (load/display/save, geometry only)
 

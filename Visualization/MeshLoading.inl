@@ -11,10 +11,13 @@
 #include "Visualization/Helpers/OSGDebug.hpp"
 
 #include <osg/ShadeModel>
+#include <osgUtil/Optimizer>
 
 #include <memory>
 
 #include "Visualization/SimpleWindow.h"
+
+// TODO : REVOIR les osg::StateAttribute::OVERRIDE et les vérifier !!!
 
 struct CameraPosCallback : public osg::Uniform::Callback
 {
@@ -429,15 +432,19 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
+    const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_tangentsArrays,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
+    const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
     std::size_t _m_mm_size,
     VertexNormalMap *_vt_nm,
     VertexTangentMap *_vt_tm,
@@ -533,7 +540,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
 
     if(unit_ii == 0) // MUST be done only one time
       if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-         m_RenderSuperimposedVertices_Big ||
+         m_RenderSuperimposedVertices_Big || m_Show_Vertex_Normals ||
          (nb_faces == 0)) // last test for 'only_pts' mode
       {
         // RM: adding predefined basic shaders to display superimposed features
@@ -609,6 +616,29 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
 
           _geode->addDrawable(_geometries_vertices[unit_ii]);
         }
+
+        // [ normals
+        if(m_Show_Vertex_Normals)
+        {
+          std::cout << "[MeshLoading] Drawing normals"
+                    << std::endl;
+
+          // disabled these calls, fixing loading time & FPS problems
+          //_geometries_normals[unit_ii]->setUseVertexBufferObjects(true);
+
+          _geometries_normals[unit_ii]->setVertexAttribArray(
+              0, _vertexArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_normals[unit_ii]->setVertexAttribArray(
+              1, _colorsArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_normals[unit_ii]
+              ->getOrCreateStateSet()
+              ->setAttributeAndModes(superimpProgram.get(),
+                                     osg::StateAttribute::ON |
+                                         osg::StateAttribute::OVERRIDE);
+
+          _geode->addDrawable(_geometries_normals[unit_ii]);
+        }
+        // [ normals
       }
 
     ++unit_ii;
@@ -718,6 +748,30 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     _geode->getOrCreateStateSet()->addUniform(new osg::Uniform(
         energyLocation.c_str(), lights[lightIndex]->getLinearAttenuation()));
   }
+
+  osgUtil::Optimizer optimizer; // https://github.com/openscenegraph/OpenSceneGraph/blob/master/include/osgUtil/Optimizer
+  /*ALL_OPTIMIZATIONS = FLATTEN_STATIC_TRANSFORMS_DUPLICATING_SHARED_SUBGRAPHS |
+                      REMOVE_REDUNDANT_NODES |
+                      REMOVE_LOADED_PROXY_NODES |
+                      COMBINE_ADJACENT_LODS |
+                      SHARE_DUPLICATE_STATE |
+                      MERGE_GEODES |
+                      MERGE_GEOMETRY |
+                      MAKE_FAST_GEOMETRY |
+                      CHECK_GEOMETRY |
+                      SPATIALIZE_GROUPS |
+                      COPY_SHARED_NODES |
+                      TRISTRIP_GEOMETRY |
+                      OPTIMIZE_TEXTURE_SETTINGS |
+                      TEXTURE_ATLAS_BUILDER |
+                      STATIC_OBJECT_DETECTION |
+                      BUFFER_OBJECT_SETTINGS*/
+
+#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+#else
+  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+#endif
 }
 
 template< typename HalfedgeGraph,
@@ -734,14 +788,18 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
+    const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
+    const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
     std::size_t _m_mm_size,
     int _texture_type,
     VertexNormalMap *_vt_nm,
@@ -925,6 +983,18 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
         _geode->addDrawable(_geometries_vertices[unit_ii]);
       }
 
+    // [ normals
+    if(unit_ii == 0) // MUST be done only one time
+      if(m_Show_Vertex_Normals)
+      {
+        _geometries_normals[unit_ii]->setVertexArray(
+            _vertexArrays_normals[unit_ii]);
+        _geometries_normals[unit_ii]->setColorArray(
+            _colorsArrays_normals[unit_ii], osg::Array::BIND_PER_VERTEX);
+        _geode->addDrawable(_geometries_normals[unit_ii]);
+      }
+    // ] normals
+
     unit_ii++;
   } while(unit_ii < _m_mm_size);
 
@@ -951,4 +1021,12 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
         new osg::ShadeModel(osg::ShadeModel::FLAT);
     _geode->getOrCreateStateSet()->setAttribute(shadeModel);
   }
+
+  osgUtil::Optimizer optimizer; // https://github.com/openscenegraph/OpenSceneGraph/blob/master/include/osgUtil/Optimizer
+
+#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+#else
+  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+#endif
 }

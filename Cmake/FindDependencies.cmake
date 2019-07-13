@@ -36,14 +36,14 @@ else()
 endif()
 
 ##### Boost is a must unless when building the documentation only
-if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
+#if( BUILD_USE_CGAL OR BUILD_USE_OPENMESH OR BUILD_USE_AIF )
   find_package(Boost COMPONENTS thread system filesystem REQUIRED)
   if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
   else()
     message(FATAL_ERROR "Boost not found. Please install it.")
   endif(Boost_FOUND)
-endif()
+#endif()
 
 ##### EIGEN3 package finding
 if (WIN32)
@@ -188,7 +188,7 @@ if( BUILD_USE_FBX )
     endif()
 
     if(UNIX AND NOT APPLE) # Linux
-      set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.so )
+      set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.so ${CMAKE_DL_LIBS} )
     elseif(APPLE) # Mac OS
       set( FBX_LIBRARY ${FBX_LIBRARY}/${BUILD_CONFIG}/libfbxsdk.dylib )
     else() # Windows

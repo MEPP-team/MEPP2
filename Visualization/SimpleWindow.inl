@@ -738,7 +738,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
 
   if(ds_name == "CGALPOINTSET")
   {
-    allExtensions = "OBJ/OFF files (*.xyz *.off *.ply);;"
+    allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
                     "XYZ files (*.xyz);;"
                     "OFF files (*.off);;"
                     "PLY files (*.ply)";
@@ -748,7 +748,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
     allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
                     "XYZ files (*.xyz);;"
                     "PCD files (*.pcd);;"
-                    "PLY files (*.ply);;";
+                    "PLY files (*.ply)";
   }
   else
   {
@@ -803,13 +803,16 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
                                     const std::vector< std::string >& files)
 {
   // open a new viewer if needed
-  if(files.size() > 0 && viewer == nullptr)
+  if(files.size() > 0 && viewer == nullptr && (! shift_pressed))
     viewer = createNewViewer();
 
   // load and draw meshes
   int m = 0;
   for(auto filename: files)
   {
+    if (shift_pressed)
+      viewer = createNewViewer();
+
     HalfedgeGraph *mesh = nullptr; 
       // destroyed by the viewer destructor
     FEVV::PMapsContainer *p_pmaps_bag = new FEVV::PMapsContainer;
@@ -826,12 +829,13 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
         false,
         false,
         FEVV::FileUtils::get_file_full_name(filename),
+        true,
         m * STEP_SPACE);
 
     ++m;
-  }
 
-  updateActiveChildTitle();
+    updateActiveChildTitle();
+  }
 }
 
 
@@ -839,7 +843,7 @@ inline void
 FEVV::SimpleWindow::on_actionOpen_triggered()
 {
   // capture keyboard state
-  bool shift_pressed =
+  shift_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
   bool alt_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
@@ -860,7 +864,7 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   //       must come before the call to chooseDatastructureMsgBox()
   //       because the latter resets the active window
   SimpleViewer *viewer = nullptr;
-  if(activeMdiChild()  &&  (! shift_pressed))
+  if(activeMdiChild() && (! shift_pressed))
   {
     // open mesh in current viewer
     BaseAdapterVisuQt *bavQt =
@@ -1860,6 +1864,21 @@ FEVV::SimpleWindow::on_actionShow_Grid_triggered()
   }
 }
 
+inline void
+FEVV::SimpleWindow::on_actionShow_Vertex_Normals_triggered()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    bavQt->getViewer()->m_Show_Vertex_Normals =
+        !bavQt->getViewer()->m_Show_Vertex_Normals;
+    bavQt->getViewer()->m_space_time_changeColorMode = false;
+    pre_actionHG(bavQt->getViewer());
+    bavQt->getViewer()->m_space_time_changeColorMode = true;
+  }
+}
 
 #if 0 //TODO-elo-rm-?-ask_MTO
 template< typename HalfedgeGraph >

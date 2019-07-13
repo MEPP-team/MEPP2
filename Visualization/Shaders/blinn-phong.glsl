@@ -60,10 +60,10 @@ void main() {
       normal = normalize(fragMeshInfo.vertTBNMatrix * normal);
     } else {
       // Standard version
-      normal = fragMeshInfo.vertTBNMatrix[2];
+      normal = normalize(fragMeshInfo.vertTBNMatrix[2]);
     }
   } else {
-    normal = fragMeshInfo.vertFlatNormal;
+    normal = normalize(fragMeshInfo.vertFlatNormal);
   }
 
   vec3 baseColor  = texture(uniMaterial.diffuseMap, fragMeshInfo.vertTexcoords).rgb * uniMaterial.diffuse;
