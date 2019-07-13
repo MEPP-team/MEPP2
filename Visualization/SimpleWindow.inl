@@ -1863,6 +1863,21 @@ FEVV::SimpleWindow::on_actionShow_Grid_triggered()
   }
 }
 
+inline void
+FEVV::SimpleWindow::on_actionShow_Vertex_Normals_triggered()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    bavQt->getViewer()->m_Show_Vertex_Normals =
+        !bavQt->getViewer()->m_Show_Vertex_Normals;
+    bavQt->getViewer()->m_space_time_changeColorMode = false;
+    pre_actionHG(bavQt->getViewer());
+    bavQt->getViewer()->m_space_time_changeColorMode = true;
+  }
+}
 
 #if 0 //TODO-elo-rm-?-ask_MTO
 template< typename HalfedgeGraph >

@@ -540,7 +540,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
 
     if(unit_ii == 0) // MUST be done only one time
       if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-         m_RenderSuperimposedVertices_Big ||
+         m_RenderSuperimposedVertices_Big || m_Show_Vertex_Normals ||
          (nb_faces == 0)) // last test for 'only_pts' mode
       {
         // RM: adding predefined basic shaders to display superimposed features
@@ -618,7 +618,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         }
 
         // [ normals
-        if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+        if(m_Show_Vertex_Normals)
         {
           std::cout << "[MeshLoading] Drawing normals"
                     << std::endl;
@@ -985,7 +985,7 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
 
     // [ normals
     if(unit_ii == 0) // MUST be done only one time
-      if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big)
+      if(m_Show_Vertex_Normals)
       {
         _geometries_normals[unit_ii]->setVertexArray(
             _vertexArrays_normals[unit_ii]);
