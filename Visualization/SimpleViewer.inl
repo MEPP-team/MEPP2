@@ -1781,7 +1781,7 @@ FEVV::SimpleViewer::internal_createMesh(
 
   std::string ds_name = FEVV::getDatastructureName(_g);
   geode->setName(_mesh_file + std::string(" [") + ds_name + " " +
-                 bavQt->windowTitle().toStdString() + std::string("]"));
+                 bavQt->windowTitle().left(bavQt->windowTitle().indexOf('>') + 1).toStdString() + std::string("]"));
   geode->addDescription("MESH");
 }
 
@@ -2298,7 +2298,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
 
   std::string ds_name = FEVV::getDatastructureName(_g);
   geode->setName(_mesh_file + std::string(" [") + ds_name + " " +
-                 bavQt->windowTitle().toStdString() + std::string("]"));
+                 bavQt->windowTitle().left(bavQt->windowTitle().indexOf('>') + 1).toStdString() + std::string("]"));
   geode->addDescription("MESH");
 }
 
