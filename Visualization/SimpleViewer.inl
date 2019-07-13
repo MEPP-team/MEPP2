@@ -1360,7 +1360,7 @@ FEVV::SimpleViewer::internal_createMesh(
   // (nb_faces==0)) // last test for 'only_pts' mode
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
   {
-    const float MAGNITUDE_N = 0.05;
+    const float MAGNITUDE_N = 0.08;
     // std::cout << "---------> Adding vertices (for superimpose and 'only_pts'
     // mode)" << std::endl;
 
@@ -1464,7 +1464,7 @@ FEVV::SimpleViewer::internal_createMesh(
   {
     // set line width
     osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-    linewidth->setWidth(2.f);
+    linewidth->setWidth(1.5f);
     geometries_normals[mtl_id]
         ->getOrCreateStateSet()
         ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)

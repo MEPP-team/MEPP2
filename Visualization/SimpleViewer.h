@@ -604,9 +604,8 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
+      const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
-      const std::vector< osg::ref_ptr< osg::Vec4Array > >
-          &_colorsArrays_vertices,
       std::size_t _m_mm_size,
       VertexNormalMap *_vt_nm,
       VertexTangentMap *_vt_tm,
@@ -697,9 +696,8 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
+      const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
-      const std::vector< osg::ref_ptr< osg::Vec4Array > >
-          &_colorsArrays_vertices,
       std::size_t _m_mm_size,
       int _texture_type,
       VertexNormalMap *_vt_nm,
