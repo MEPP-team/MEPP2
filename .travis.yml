@@ -119,28 +119,28 @@ matrix:
 addons:
   apt:
     packages:
+      - cmake
       - libboost-dev
       - libboost-thread-dev
       - libboost-system-dev
       - libboost-filesystem-dev
       - libboost-iostreams-dev
+      - libeigen3-dev
       - libgmp-dev
       - libmpfr-dev
       - libqt4-dev
-      - libqt4-opengl-dev
+#      - libqt4-opengl-dev # USEFULL ?
+      - qtdeclarative5-dev # TEMP, for qt5
       - libopenscenegraph-dev
-      - libeigen3-dev
-      - libflann-dev
-      - libproj-dev
-      - libqhull-dev
-      - libvtk6-dev
-      - libpcl-dev # for DISABLE_LIBUSB-1.0 warning pb : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
       - doxygen
       - graphviz
-      - cmake
+      - libvtk6-dev
+      - libflann-dev
+      - libproj-dev
+#      - libqhull-dev # USEFULL ?
+      - libpcl-dev # 1) CAUTION -> is LINKED with QT5, not QT4 ! - 2) For DISABLE_LIBUSB-1.0 warning pb : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
       - p7zip-full
       - xvfb
-      - qtdeclarative5-dev # DEL ?
 
 install:
   - export TRAVIS=YES
@@ -156,7 +156,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z > /dev/null && cd $TRAVIS_BUILD_DIR; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14-hdr-only; fi
 # ---> because under xenial libvtk6-dev package has a bug (VERIF under FUSION)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libvtkCommonCore-6.2.so /usr/lib/libvtkproj4.so; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libvtkCommonCore-6.2.so /usr/lib/libvtkproj4.so; fi
 # osx :
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
 #
@@ -221,7 +221,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j 2; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make -j 3; fi # ---> travis_wait 60 make ?
 #
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure; fi # MANDATORY for qt5 ! -> --server-args="-screen 0, 1280x1024x24"
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ctest -j 3 --output-on-failure; fi
 #
 # linux only (add qt5 after qt4 in the same job) :
