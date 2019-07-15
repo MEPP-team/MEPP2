@@ -2,11 +2,10 @@ language: cpp
 
 os:
   - linux
-  - osx
+#  - osx
 
-sudo: required # need by trusty
-dist: trusty # Ubuntu 14.04 LTS
-#group: deprecated-2017Q4
+sudo: required
+dist: xenial # Ubuntu 16.04 LTS
 
 osx_image: xcode11 # Xcode 11.0 under Mojave (OS X 10.14)
 #osx_image: xcode10.2 # Xcode 10.2.1 under Mojave (OS X 10.14)
@@ -57,9 +56,9 @@ env:
 #-------------------------------------------------------------------------
 # matrix details :
 #-------------------------------------------------------------------------
-#   - 8x clang  under Linux trusty 14.04 LTS    (debug and release)
+#   - 8x clang  under Linux xenial 16.04 LTS    (debug and release)
 #
-#   - 2x gcc    under Linux trusty 14.04 LTS    (debug and release)
+#   - 2x gcc    under Linux xenial 16.04 LTS    (debug and release)
 #-------------------------------------------------------------------------
 #   - 2x clang  under OS X with Apple LLVM      (debug and release)
 #   - 1x clang  under OS X with Apple LLVM      (release - DOCUMENTATION)
@@ -128,15 +127,16 @@ addons:
       - libgmp-dev
       - libmpfr-dev
       - libqt4-dev
-      - libqt4-opengl-dev # or group: deprecated-2017Q2
+      - libqt4-opengl-dev
       - libopenscenegraph-dev
       - libeigen3-dev
       - libflann-dev
+      - libproj-dev
       - libqhull-dev
-#      - libvtk5-dev
+      - libvtk6-dev
       - doxygen
       - graphviz
-      - cmake # or group: deprecated-2017Q4
+      - cmake
       - p7zip-full
 
 install:
@@ -149,71 +149,10 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then openssl aes-256-cbc -K $encrypted_1b44e42e3841_key -iv $encrypted_1b44e42e3841_iv -in .travis/mepp-public-mt.enc -out .travis/mepp-public-mt -d; chmod 600 .travis/mepp-public-mt; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ls -al .travis; fi
-# ---> because under trusty cgal is v4.2 !!!
+# ---> because under xenial cgal is v4.7 !!!
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/CGAL-4.14-src-hdr-only.7z; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z && cd $TRAVIS_BUILD_DIR; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14-hdr-only; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal-releases-CGAL-4.11-src-bug-patched.zip; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip cgal-releases-CGAL-4.11-src-bug-patched.zip; cd cgal-releases-CGAL-4.11; mkdir buildR && cd buildR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; fi
-#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf cgal-releases-CGAL-4.11-bug-patched.travis-trusty.tgz; cd cgal-releases-CGAL-4.11-bug-patched/buildR; fi
-#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/cgal-releases-CGAL-4.11-bug-patched /tmp/cgal-releases-CGAL-4.11; fi # because we changed the name of the folder with rsync because of the bug corrected...
-#4.11-OFF#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make; cd ..; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/cgal-releases-CGAL-4.11-bug-patched/; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
-# ---> because no openmesh package under linux...
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://www.openmesh.org/media/Releases/6.3/OpenMesh-6.3.tar.gz; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-6.3.tar.gz; cd OpenMesh-6.3; mkdir buildR && cd buildR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/OpenMesh-6.3.travis-trusty.tgz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-6.3.travis-trusty.tgz; cd OpenMesh-6.3/buildR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make; cd ..; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/OpenMesh-6.3/; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
-# ---> because under trusty OSG is v3.2.0-rc1 !!!
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenSceneGraph-3.4.1-JPEG-patched.tgz; cd OpenSceneGraph-OpenSceneGraph-3.4.1; mkdir buildR && cd buildR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DOSG_USE_QT=OFF; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#v341#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/OpenSceneGraph-3.4.1.travis-trusty.tgz; fi
-#v341#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenSceneGraph-3.4.1.travis-trusty.tgz; cd OpenSceneGraph-3.4.1/buildR; fi
-#v341#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ln -s /tmp/OpenSceneGraph-3.4.1 /tmp/OpenSceneGraph-OpenSceneGraph-3.4.1; fi # because we changed the name of the folder with rsync...
-#v341#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/OpenSceneGraph-3.4.1/; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#v341#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo cp -R /usr/local/lib64/* /usr/local/lib; fi # because the build system of OpenSceneGraph is configured to install libraries to /usr/local/lib64
-# ---> because no PCL package under linux 14.04 !!!
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/pcl-pcl-1.7.2-no_more_c99_warning.zip; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip pcl-pcl-1.7.2-no_more_c99_warning.zip -d /tmp; cd /tmp/pcl-pcl-1.7.2; mkdir buildR && cd buildR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/pcl-pcl-1.7.2.travis-trusty.tgz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.7.2.travis-trusty.tgz; cd pcl-pcl-1.7.2/buildR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/pcl-pcl-1.7.2/; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
-# ---> because libvtk5-dev package is not allowed above under trusty for now...
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libvtk5-dev; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get remove -y libvtk5-qt4-dev; fi
-# ---> because under trusty VTK is v5.8 !!!
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://www.vtk.org/files/release/6.3/VTK-6.3.0.tar.gz; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf VTK-6.3.0.tar.gz; cd VTK-6.3.0; mkdir buildR && cd buildR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-trusty/update_2017Q4/VTK-6.3.0.travis-trusty.tgz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf VTK-6.3.0.travis-trusty.tgz; cd VTK-6.3.0/buildR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/VTK-6.3.0/; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd buildR; sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #
 # osx :
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
