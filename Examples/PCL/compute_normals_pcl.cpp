@@ -43,6 +43,8 @@
 
 #include <iostream>
 
+#include <pcl/search/impl/search.hpp>
+
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ascii_io.h>
 #include <pcl/point_cloud.h>
