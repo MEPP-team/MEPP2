@@ -195,14 +195,12 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cgal; fi # ---> install cgal 4.11.1
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
-# -> BEGIN patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/include/CGAL/boost/graph; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv io.h io.h.old; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/io.h; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv cgal_bgl_graph_io.h cgal_bgl_graph_io.h.old; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal411/cgal_bgl_graph_io.h; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
-# -> END patch for cgal 4.11 bug - missing 2x inline in 2 headers - (NO MORE PROBLEM with version >= 4.11.1)
+# -> BEGIN patch for cgal 4.14 bug - missing 12x inline in one header
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/include/CGAL/IO; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mv write_ply_points.h write_ply_points.h.old; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+# -> BEGIN patch for cgal 4.14 bug - missing 12x inline in one header
 #
 # ---> because we want osg34 under osx !!!
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # important to avoid yet another possible homebrew auto-update since the first 'brew update' above
