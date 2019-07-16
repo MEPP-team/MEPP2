@@ -262,7 +262,7 @@ Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JP
 
 ### Installing dependencies
 
- 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff) for `VS2015_64` (download size 446 MB, installation size ~5.8 GB)
+ 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff) for `VS2015_64` (download size 525 MB, installation size ~6.0 GB)
 
  2. Optionally download the ['addon_01' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_01.7z) for Qt4 and OpenSceneGraph
    (download size 390 MB, installation size ~2.8 GB)
