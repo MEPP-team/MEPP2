@@ -15,8 +15,8 @@
 #include "FEVV/Wrappings/Graph_properties_cgal_point_set.h"
 #include "FEVV/Wrappings/properties_cgal_point_set.h"
 
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_writer.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_reader.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 #include "Testing/Utils/utils_are_meshes_identical.hpp"

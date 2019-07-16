@@ -25,9 +25,9 @@
 #include "FEVV/Wrappings/properties_cgal_point_set.h"
   // for FEVV::PMap_traits< FEVV::CGALPointSet > and vector-property-maps
 
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_reader.hpp"
   // for FEVV::Filters::read_mesh< FEVV::CGALPointSet >
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_writer.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
   // for FEVV::Filters::write_mesh< FEVV::CGALPointSet >
 
 #include <CGAL/pca_estimate_normals.h>
