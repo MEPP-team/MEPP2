@@ -42,8 +42,7 @@ manipulations. Point Clouds can be conceived as the geometric information
 of more general concepts like meshes or cell-sets. The PointCloud concept
 offers the ability to manipulate such point clouds independently from such
 other concepts for example when working on point cloud data coming from
-specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)) 
-or in
+specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 
 <b>Notations</b>
  - `PC` A type that is a model of `PointCloud`.
@@ -54,7 +53,7 @@ or in
 
 | Type               | Reference         | Description          |
 |--------------------|-------------------|----------------------|
-| `vertex_size_type`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | The unsigned integer type used to represent the number of point in the point cloud.  |
+| `vertices_size_type`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | The unsigned integer type used to represent the number of point in the point cloud.  |
 | `vertex_descriptor` | [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | A vertex descriptor corresponds to a unique node in a Point Cloud instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
 | `vertex_iterator`   | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | A vertex iterator (obtained via `vertices(g)`) provides access to all of the vertices in a point cloud. A vertex iterator type must meet the requirements of [MultiPassInputIterator](http://www.boost.org/doc/libs/1_60_0/libs/utility/MultiPassInputIterator.html). The value type of the vertex iterator must be the vertex descriptor of the point cloud. |
 
@@ -64,12 +63,12 @@ or in
 |--------------------|-----------------------|----------------------|--------------|
 | **Traversals**     | | | |
 | `vertices(pc)`     | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the points in the point cloud `pc`.|
-| `num_vertices(g)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertex_size_type`                         | Returns the number of vertices in the graph `g`.|
+| `num_vertices(g)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns the number of vertices in the graph `g`.|
 | **Mutability**        | | | |
 | `add_vertex(pc)`       | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `vertex_descriptor`                | Add a new vertex to the point cloud. The vertex_descriptor for the new vertex is returned. |
 | `remove_vertex(v, pc)`  | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `void`                             | Remove `v` from the vertex set of point cloud.|
 | **Miscelaneous**      | | | |
-| `null_vertex()`| [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | | Returns a special `vertex_descriptor` object which does not refer to any vertex of point cloud object which type is PC. |
+| `null_vertex()`| [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | vertex_descriptor | Returns a special `vertex_descriptor` object which does not refer to any vertex of point cloud object which type is PC. |
 
 OPEN QUESTIONS:
  - Should other FEVV concepts be defined as refining this PointCLoud concept ? If not please do provide a clear reason not to do so !
