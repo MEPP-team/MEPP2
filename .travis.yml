@@ -129,8 +129,8 @@ addons:
       - libgmp-dev
       - libmpfr-dev
       - libqt4-dev
-#      - libqt4-opengl-dev # no longer useful
-#      - qtdeclarative5-dev # TEMP, for qt5
+      - libqt4-opengl-dev
+      - qtdeclarative5-dev # TEMP, for qt5
       - libopenscenegraph-dev
       - doxygen
       - graphviz
@@ -173,16 +173,16 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #
 # ---> because libpcl-dev is LINKED with QT5 ! (and is v1.7.2)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz > /dev/null 2>&1; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-1.9.1.tar.gz; cd pcl-pcl-1.9.1; mkdir build && cd build; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz > /dev/null 2>&1; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-1.9.1.tar.gz; cd pcl-pcl-1.9.1; mkdir build && cd build; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-xenial/pcl-pcl-1.9.1.travis-xenial.tgz > /dev/null 2>&1; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.9.1.travis-xenial.tgz; cd pcl-pcl-1.9.1/build; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/pcl-pcl-1.9.1/; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-xenial/pcl-pcl-1.9.1.travis-xenial.tgz > /dev/null 2>&1; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.9.1.travis-xenial.tgz; cd pcl-pcl-1.9.1/build; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/pcl-pcl-1.9.1/; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #
 # osx :
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
@@ -240,8 +240,8 @@ install:
 
 script:
   - mkdir build && cd build
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_QT5=YES; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
 #
