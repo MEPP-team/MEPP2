@@ -131,6 +131,7 @@ addons:
       - libqt4-dev
       - libqt4-opengl-dev
       - qtdeclarative5-dev # TEMP, for qt5
+      - libqt5opengl5-dev # TEMP, for qt5
       - libopenscenegraph-dev
       - doxygen
       - graphviz
