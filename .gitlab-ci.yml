@@ -9,7 +9,7 @@ linux - Debug - GCC - CGAL-4.14 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - GCC - CGAL-4.14 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -18,7 +18,7 @@ linux - Release - GCC - CGAL-4.14 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -28,7 +28,7 @@ linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VT
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -38,7 +38,7 @@ linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -143,7 +143,7 @@ linux - Debug - GCC - CGAL-4.14 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OF
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - GCC - CGAL-4.14 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -152,7 +152,7 @@ linux - Release - GCC - CGAL-4.14 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -162,7 +162,7 @@ linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DR
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -172,7 +172,7 @@ linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -277,7 +277,7 @@ linux - Debug - GCC - CGAL-4.14 - QT4 - CONF3 (ALL):
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - GCC - CGAL-4.14 - QT4 - CONF3 (ALL):
   tags:
@@ -286,7 +286,7 @@ linux - Release - GCC - CGAL-4.14 - QT4 - CONF3 (ALL):
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
   tags:
@@ -296,7 +296,7 @@ linux - Debug - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
   tags:
@@ -306,7 +306,7 @@ linux - Release - CLANG - CGAL-4.14-LTS - QT5 - CONF3 (ALL):
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 3
-    - xvfb-run ctest -j 3 --output-on-failure
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 osx - Debug - QT4 - CONF3 (ALL):
   tags:
