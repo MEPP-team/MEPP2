@@ -130,8 +130,8 @@ addons:
       - libmpfr-dev
       - libqt4-dev
       - libqt4-opengl-dev
-      - qtdeclarative5-dev # TEMP, for qt5
-      - libqt5opengl5-dev # TEMP, for qt5
+#      - qtdeclarative5-dev # TEMP, for qt5
+#      - libqt5opengl5-dev # TEMP, for qt5
       - libopenscenegraph-dev
       - doxygen
       - graphviz
@@ -241,8 +241,8 @@ install:
 
 script:
   - mkdir build && cd build
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_QT5=YES; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
 #
