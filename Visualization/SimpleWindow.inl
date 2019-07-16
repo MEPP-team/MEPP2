@@ -926,11 +926,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
                           "VTU files (*.vtu)";
 
   QString cgalpointsetExtensions = "XYZ files (*.xyz);;"
-                                   "OFF files (*.off);;";
-#if 0 //TODO-elo  restore when link error multiple definition with PLY writer
-      //          is fixed
+                                   "OFF files (*.off);;"
                                    "PLY files (*.ply)";
-#endif
 
   QString pclpointcloudExtensions = "PCD files (*.pcd);;"
                                     "PLY files (*.ply);;";
