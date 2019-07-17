@@ -37,7 +37,7 @@ template< typename Graph,
           typename PointMap,
           typename GeometryTraits = FEVV::Geometry_traits< Graph > >
 void
-calculate_scaling(const Graph &g,
+calculate_scaling(Graph &g,
                   PointMap &pm,
                   typename GeometryTraits::Scalar scale_x,
                   typename GeometryTraits::Scalar scale_y,
@@ -83,7 +83,7 @@ template< typename Graph,
           typename PointMap,
           typename GeometryTraits = FEVV::Geometry_traits< Graph > >
 void
-calculate_scaling(const Graph &g,
+calculate_scaling(Graph &g,
                   PointMap &pm,
                   typename GeometryTraits::Scalar scale_x,
                   typename GeometryTraits::Scalar scale_y,

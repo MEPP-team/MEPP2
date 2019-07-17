@@ -51,8 +51,8 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
 #ifdef FEVV_USE_CGAL
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_reader.hpp"
-#include "FEVV/Filters/CGAL/CGALPointSet/cgal_point_set_writer.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_reader.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
 #endif //FEVV_USE_CGAL
 
 #ifdef FEVV_USE_PCL
@@ -926,11 +926,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
                           "VTU files (*.vtu)";
 
   QString cgalpointsetExtensions = "XYZ files (*.xyz);;"
-                                   "OFF files (*.off);;";
-#if 0 //TODO-elo  restore when link error multiple definition with PLY writer
-      //          is fixed
+                                   "OFF files (*.off);;"
                                    "PLY files (*.ply)";
-#endif
 
   QString pclpointcloudExtensions = "PCD files (*.pcd);;"
                                     "PLY files (*.ply);;";

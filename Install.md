@@ -54,6 +54,10 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ cd /tmp
   $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
   $ cd  &&  unzip /tmp/CGAL-4.14.zip
+  # patch CGAL 4.14
+  $ cd ~/CGAL-4.14/include/CGAL/IO
+  $ mv write_ply_points.h write_ply_points.h.old
+  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
@@ -79,7 +83,7 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   # VTK
   $ sudo apt install libvtk7-dev (or libvtk6-dev)
 
-  # PCL (installation in user home directory) - don't use libpcl-dev package !
+  # PCL (installation in user home directory) - DON'T use libpcl-dev package !
   $ sudo apt install libflann-dev libproj-dev
   $ cd /tmp
   $ wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz
@@ -174,6 +178,14 @@ Optional dependencies:
 ````
   # CGAL
   $ brew install cgal
+  $ brew info cgal
+
+  # -> ONLY if CGAL version above is 4.14 then you have to do that <- :
+  # -------------------------------------------------------------------
+  $ cd /usr/local/include/CGAL/IO
+  $ mv write_ply_points.h write_ply_points.h.old
+  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
+  $ cd
 
   # OpenMesh
   $ brew install open-mesh
@@ -191,7 +203,8 @@ Optional dependencies:
   $ brew info open-scene-graph
   # -> if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
   # compile the good version directly from this source : https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz with
-  $ cd /tmp; wget https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
+  $ cd /tmp
+  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
   $ tar zxf OpenSceneGraph-3.4.1-JPEG-patched.tgz; cd OpenSceneGraph-OpenSceneGraph-3.4.1; mkdir buildR && cd buildR
   $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DOSG_USE_QT=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.4.1
   $ make && make install && cd
