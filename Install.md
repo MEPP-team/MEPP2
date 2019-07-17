@@ -53,7 +53,7 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libgmp-dev libmpfr-dev
   $ cd /tmp
   $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
-  $ cd  &&  unzip /tmp/CGAL-4.14.zip
+  $ cd && unzip /tmp/CGAL-4.14.zip
   # patch CGAL 4.14
   $ cd ~/CGAL-4.14/include/CGAL/IO
   $ mv write_ply_points.h write_ply_points.h.old
