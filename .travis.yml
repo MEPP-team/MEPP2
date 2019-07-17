@@ -251,11 +251,11 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ctest -j 3 --output-on-failure; fi
 #
 # linux only (add qt5 after qt4 in the same job) :
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtdeclarative5-dev libqt5opengl5-dev; fi; fi # ---> now install qt5
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 2; fi; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then sudo apt-get -y install qtdeclarative5-dev libqt5opengl5-dev; fi; fi # ---> now install qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then cd ..; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then mkdir build_linux_qt5 && cd build_linux_qt5 && cmake .. $BTYPE -DBUILD_USE_QT5=YES; fi; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then make -j 2; fi; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "false" ]]; then xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure; fi; fi
 #
 # osx only (add qt5 after qt4 in the same job) :
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt@4; fi; fi # ---> now unlink qt4
