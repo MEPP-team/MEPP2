@@ -49,12 +49,15 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   # Eigen 3
   $ sudo apt install libeigen3-dev
 
-  # CGAL 4.14 (installation in user home directory) - PATCHED version (because of a cgal bug) !
-  $ sudo apt install p7zip-full
+  # CGAL 4.14 (installation in user home directory)
   $ sudo apt install libgmp-dev libmpfr-dev
-  $ cd /tmp && wget https://download.gforge.liris.cnrs.fr/meppbin/src/CGAL-4.14-src-hdr-only.7z
-  $ cd && 7z x /tmp/CGAL-4.14-src-hdr-only.7z
-  $ mv CGAL-4.14-hdr-only CGAL-4.14
+  $ cd /tmp
+  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
+  $ cd  &&  unzip /tmp/CGAL-4.14.zip
+  # patch CGAL 4.14
+  $ cd ~/CGAL-4.14/include/CGAL/IO
+  $ mv write_ply_points.h write_ply_points.h.old
+  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
