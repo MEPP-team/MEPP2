@@ -144,7 +144,7 @@ before_build:
 #  - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" IF %CACHE%==FALSE 7z x CGAL-4.11-bug-patched-CV.7z > nul
 # vs_2015 & vs_2017
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.14-hdr-only.7z
-  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/wK25qmcBPB9AVH7/download -O CGAL-4.14-hdr-only.7z 2> nul
+  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
   - IF %CACHE%==FALSE 7z x CGAL-4.14-hdr-only.7z > nul
 # OpenMesh
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
