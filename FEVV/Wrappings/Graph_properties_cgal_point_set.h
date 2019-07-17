@@ -13,64 +13,31 @@
 #include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
 #include <CGAL/boost/graph/properties.h> // for boost::vertex_point_t
 
+
 namespace FEVV {
 
-//note: get(boost::vertex_point_t,...) must return a shallow copy of the point
-//      map and NOT a reference, so we must create a real CGALPointSetPointMap
-//      class that:
-//       - implement shallow copy
-//       - implement operator[]
-//      see
-//             https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/BGL/include/CGAL/boost/graph/properties_OpenMesh.h#L185
-//      and
-//        https://www.boost.org/doc/libs/1_57_0/libs/property_map/doc/property_map.html
-class CGALPointSetPointMap
-{
-public:
-  typedef boost::read_write_property_map_tag   category;
-  typedef FEVV::CGALPoint    value_type;
-  typedef FEVV::CGALPoint&   reference;
-  typedef typename boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor
-      key_type;
+using CGALPointSetPointMap = CGALPointSet::Point_map;
 
-  CGALPointSetPointMap() : m_ps(NULL) {}
+} // namespace FEVV
 
-  CGALPointSetPointMap(/*const*/ FEVV::CGALPointSet &ps) : m_ps(&ps) {}
 
-  CGALPointSetPointMap(const FEVV::CGALPointSetPointMap &pm) : m_ps(pm.m_ps)
-  {
-  }
-
-  value_type operator[](key_type k) const
-  {
-    return (*m_ps)[k];
-  }
-
-  void set(key_type k, const value_type& v)
-  {
-    (*m_ps)[k] = v;
-  }
-
-private:
-  /*const*/ FEVV::CGALPointSet *m_ps;
-};
-
+namespace CGAL {
 
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
 inline
-CGALPointSetPointMap
+FEVV::CGALPointSetPointMap
 get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
-  FEVV::CGALPointSetPointMap pm(ps);
-  return pm;
+  return ps.point_map();
 }
 
+#if 0//TODO-elo-rm if already ok
 //! Specialization of get(point_map, key) for CGALPointSet
 inline
-CGALPointSetPointMap::value_type
-get(const CGALPointSetPointMap &pm, CGALPointSetPointMap::key_type key)
+FEVV::CGALPointSetPointMap::value_type&
+get(const FEVV::CGALPointSetPointMap &pm, FEVV::CGALPointSetPointMap::key_type key)
 {
   return pm[key];
 }
@@ -78,14 +45,15 @@ get(const CGALPointSetPointMap &pm, CGALPointSetPointMap::key_type key)
 //! Specialization of put(point_map, key, value) for CGALPointSet
 inline
 void
-put(CGALPointSetPointMap &pm,
-    CGALPointSetPointMap::key_type key,
-    const CGALPointSetPointMap::value_type &value)
+put(FEVV::CGALPointSetPointMap &pm,
+    FEVV::CGALPointSetPointMap::key_type key,
+    const FEVV::CGALPointSetPointMap::value_type &value)
 {
-  pm.set(key, value);
+  pm[key] =value;
 }
+#endif
 
-} // namespace FEVV
+} // namespace CGAL
 
 
 namespace boost {
@@ -98,3 +66,28 @@ struct property_traits< FEVV::CGALPointSet >
 };
 
 } // namespace boost
+
+#if 0 //TODO-elo-probably not needed because we will use Point_set_3 internal prop maps
+namespace std {
+
+/**
+ * \brief  Returns the vertex index property map of the mesh.
+ * \note   This function is used for vector-property-maps,
+ *         see properties_cgal_point_set.h ;
+ *         it returns a property map that maps an index
+ *         to a vertex descriptor ;
+ *         see for example
+ *          https://github.com/CGAL/cgal/blob/ea20dfd63fcdec0b98258c9c47b0cbb88cdb356c/Surface_mesh/include/CGAL/boost/graph/properties_Surface_mesh.h#L140
+ *         for FEVV::CGALPointSet, vertex descriptor are already indices,
+ *         so an identity_property_map should do the trick
+ */
+inline
+boost::identity_property_map
+get(const boost::vertex_index_t &, const FEVV::CGALPointSet &)
+{
+  return boost::identity_property_map();
+}
+
+} // namespace std
+#endif
+

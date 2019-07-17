@@ -8,22 +8,17 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#pragma once
 
-#include <CGAL/version_macros.h>
-#include <CGAL/Cartesian.h>
-#include <CGAL/Point_set_3.h>
+#include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
 
-
-namespace FEVV {
+#include "Testing/Concepts/PointCloudConceptCheck.h"
 
 
-using CGALPointSetKernel = CGAL::Cartesian< double >;
-using CGALPointSetPoint  = CGALPointSetKernel::Point_3;
-using CGALPointSetvector = CGALPointSetKernel::Vector_3;
+int main(int argc, char *argv[])
+{
+  FEVV::CGALPointSet pc;
+  FEVV::check_point_cloud_concept(pc);
 
-using CGALPointSet = CGAL::Point_set_3< CGALPointSetPoint >;
-
-
-} // namespace FEVV
-
+  return 0;
+}

@@ -27,7 +27,7 @@ namespace FEVV {
 template<>
 struct RetrieveKernel< CGALPointSet >
 {
-  typedef CGALPointSet::value_type  PointType;
+  typedef CGALPointSetPoint  PointType;
   typedef typename CGAL::Kernel_traits< PointType >::Kernel  Kernel;
 };
 
