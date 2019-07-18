@@ -220,9 +220,12 @@ public:
     // draw output mesh
     if(viewer)
     {
-      // redraw input meshes (for hiding them...), but we finally use TIME mode (see function 'activate_time_mode' below...)
-      //viewer->draw_or_redraw_mesh(meshes[0], pmaps_bags[0], true, false);
-      //viewer->draw_or_redraw_mesh(meshes[1], pmaps_bags[1], true, false);
+      // redraw input meshes
+      // required because the user may have manually moved the meshes
+      auto input_mesh_A = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
+      auto input_mesh_B = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
+      viewer->draw_or_redraw_mesh(input_mesh_A, pmaps_bags[0], true, false);
+      viewer->draw_or_redraw_mesh(input_mesh_B, pmaps_bags[1], true, false);
 
       // draw output mesh
       auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
