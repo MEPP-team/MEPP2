@@ -165,10 +165,6 @@ public:
   // NEW 21/07
   // TODO : standardize template MeshT/HalfedgeGraph
   template< typename MeshT >
-  void load_mesh(const std::string &mesh_filename,
-                 MeshT *&mesh,
-                 FEVV::PMapsContainer &pmaps_bag);
-  template< typename MeshT >
   void draw_or_redraw_mesh(/*const */ MeshT *mesh,
                            /*const */ FEVV::PMapsContainer *pmaps_bag,
                            FEVV::SimpleViewer *viewer,
