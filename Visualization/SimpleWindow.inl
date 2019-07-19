@@ -684,21 +684,6 @@ FEVV::SimpleWindow::updateModelList(bool pick)
 
 template< typename MeshT >
 void
-FEVV::SimpleWindow::load_mesh(const std::string &mesh_filename,
-                              MeshT *&mesh,
-                              FEVV::PMapsContainer &pmaps_bag)
-{
-  statusBar()->showMessage(QObject::tr("Open mesh file...") /*, 2000*/);
-
-  mesh = new MeshT;
-  FEVV::Filters::read_mesh(mesh_filename, *mesh, pmaps_bag, open_only_pts_mode);
-
-  statusBar()->showMessage(QObject::tr("") /*, 2000*/);
-}
-
-
-template< typename MeshT >
-void
 FEVV::SimpleWindow::draw_or_redraw_mesh(
     /*const */ MeshT *mesh,
     /*const */ FEVV::PMapsContainer *pmaps_bag,
@@ -802,39 +787,57 @@ inline void
 FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
                                     const std::vector< std::string >& files)
 {
-  // open a new viewer if needed
-  if(files.size() > 0 && viewer == nullptr && (! shift_pressed))
-    viewer = createNewViewer();
-
   // load and draw meshes
   int m = 0;
   for(auto filename: files)
   {
-    if (shift_pressed)
-      viewer = createNewViewer();
-
-    HalfedgeGraph *mesh = nullptr; 
+    HalfedgeGraph *mesh = new HalfedgeGraph;
       // destroyed by the viewer destructor
     FEVV::PMapsContainer *p_pmaps_bag = new FEVV::PMapsContainer;
       // destroyed by the viewer destructor
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    load_mesh(filename, mesh, *p_pmaps_bag);
-    QApplication::restoreOverrideCursor();
+    statusBar()->showMessage(QObject::tr("Open mesh file...") /*, 2000*/);
 
-    draw_or_redraw_mesh(
-        mesh,
-        p_pmaps_bag,
-        viewer,
-        false,
-        false,
-        FEVV::FileUtils::get_file_full_name(filename),
-        true,
-        m * STEP_SPACE);
+    try
+    {
+      // read mesh from file
+      FEVV::Filters::read_mesh(
+          filename, *mesh, *p_pmaps_bag, open_only_pts_mode);
 
-    ++m;
+      // open a new viewer if needed
+      // and only if the mesh reading was successfull (aka no exception)
+      // to avoid empty viewer
+      if(viewer == nullptr || shift_pressed)
+        viewer = createNewViewer();
+
+      // draw mesh
+      draw_or_redraw_mesh(
+          mesh,
+          p_pmaps_bag,
+          viewer,
+          false,
+          false,
+          FEVV::FileUtils::get_file_full_name(filename),
+          true,
+          m * STEP_SPACE);
+
+      ++m;
+    }
+    catch(const std::exception& e)
+    {
+      std::cout << e.what() << '\n';
+      QMessageBox::warning(
+          0, "", QObject::tr(e.what()));
+
+      // reading the mesh failed, so release memory now
+      delete mesh;
+      delete p_pmaps_bag;
+    }
 
     updateActiveChildTitle();
+    statusBar()->showMessage(QObject::tr("") /*, 2000*/);
+    QApplication::restoreOverrideCursor();
   }
 }
 

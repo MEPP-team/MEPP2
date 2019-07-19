@@ -20,7 +20,7 @@ namespace FEVV {
 
 using CGALPointSetKernel = CGAL::Cartesian< double >;
 using CGALPointSetPoint  = CGALPointSetKernel::Point_3;
-using CGALPointSetvector = CGALPointSetKernel::Vector_3;
+using CGALPointSetVector = CGALPointSetKernel::Vector_3;
 
 using CGALPointSet = CGAL::Point_set_3< CGALPointSetPoint >;
 

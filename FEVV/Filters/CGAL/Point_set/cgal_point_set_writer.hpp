@@ -24,7 +24,6 @@
 #include <CGAL/IO/write_las_points.h>
 #endif
 
-#include<boost/range/irange.hpp> // for boost::irange
 #include <stdexcept> // for std::invalid_argument
 
 
