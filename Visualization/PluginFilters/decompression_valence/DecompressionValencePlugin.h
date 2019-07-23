@@ -195,20 +195,17 @@ public:
     // apply filter
     process(mesh, pmaps_bag);
 
-    // redraw mesh
+    // draw mesh(es)
     SimpleViewer *viewer =
         dynamic_cast< SimpleViewer * >(_adapter->getViewer());
-
     if(viewer)
     {
       using VertexColorMap =
           typename FEVV::PMap_traits< FEVV::vertex_color_t,
                                       HalfedgeGraph >::pmap_type;
 
-      // redraw main mesh -> which is NOW the uncompressed one
+      // draw the uncompressed mesh
       viewer->draw_or_redraw_mesh(mesh, pmaps_bag, false, false, "uncompressed");
-      viewer->centerMesh(mesh);
-      viewer->updateSWModelList();
 
       // space_time mode ON
       viewer->m_space_time = true;
