@@ -223,10 +223,9 @@ public:
     // apply filter
     process(_mesh, pmaps_bag);
 
-    // redraw mesh
+    // redraw/draw meshes
     SimpleViewer *viewer =
         dynamic_cast< SimpleViewer * >(_adapter->getViewer());
-
     if(viewer)
     {
       // redraw main mesh -> which is NOW compressed
