@@ -934,7 +934,7 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
                                    "PLY files (*.ply)";
 
   QString pclpointcloudExtensions = "PCD files (*.pcd);;"
-                                    "PLY files (*.ply);;";
+                                    "PLY files (*.ply)";
 
   FEVV::MixedMeshesVector meshes = viewer->getSelectedMeshes();
   std::vector< std::string > meshes_names = viewer->getSelectedMeshesNames();
