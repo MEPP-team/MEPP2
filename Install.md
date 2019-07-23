@@ -200,14 +200,6 @@ Optional dependencies:
 
   # OpenSceneGraph
   $ brew install open-scene-graph
-  $ brew info open-scene-graph
-  # -> if the version is not 3.4.x then unlink open-scene-graph (brew unlink open-scene-graph) and
-  # compile the good version directly from this source : https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz with
-  $ cd /tmp
-  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/OpenSceneGraph-3.4.1-JPEG-patched.tgz
-  $ tar zxf OpenSceneGraph-3.4.1-JPEG-patched.tgz; cd OpenSceneGraph-OpenSceneGraph-3.4.1; mkdir buildR && cd buildR
-  $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DOSG_USE_QT=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.4.1
-  $ make && make install && cd
 
   # Doxygen and Graphviz
   $ brew install doxygen graphviz
@@ -245,10 +237,10 @@ Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this
   $ make
 ````
 
-Another example, building with CGAL, OpenMesh, GUI (with OpenSceneGraph-3.4.1-JPEG-patched above) can be done like this:
+Another example, building with CGAL, OpenMesh, GUI can be done like this:
 ````
   $ export DYLD_LIBRARY_PATH="$HOME/osg-3.4.1/lib"
-  $ cmake -DBUILD_USE_GUI=ON -DOSG_DIR="$HOME/osg-3.4.1" -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
 
