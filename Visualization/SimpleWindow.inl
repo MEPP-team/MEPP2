@@ -808,7 +808,7 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
       // open a new viewer if needed
       // and only if the mesh reading was successfull (aka no exception)
       // to avoid empty viewer
-      if(viewer == nullptr || shift_pressed)
+      if(viewer == nullptr || ctrl_pressed) // NOTE : ctrl_pressed not documented (here only for internal usage...)
         viewer = createNewViewer();
 
       // draw mesh
@@ -836,6 +836,7 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
     }
 
     updateActiveChildTitle();
+
     statusBar()->showMessage(QObject::tr("") /*, 2000*/);
     QApplication::restoreOverrideCursor();
   }
@@ -846,11 +847,11 @@ inline void
 FEVV::SimpleWindow::on_actionOpen_triggered()
 {
   // capture keyboard state
-  shift_pressed =
+  bool shift_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
   bool alt_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
-  bool ctrl_pressed =
+  ctrl_pressed =
       QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
 
   // for 'only_pts' mode
@@ -867,7 +868,7 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   //       must come before the call to chooseDatastructureMsgBox()
   //       because the latter resets the active window
   SimpleViewer *viewer = nullptr;
-  if(activeMdiChild() && (! shift_pressed))
+  if( activeMdiChild() && (!shift_pressed) && (!ctrl_pressed) ) // NOTE : ctrl_pressed not documented (here only for internal usage...)
   {
     // open mesh in current viewer
     BaseAdapterVisuQt *bavQt =
