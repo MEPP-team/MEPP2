@@ -239,7 +239,6 @@ Another example, building with CGAL, OpenMesh, GUI and FBX can be done like this
 
 Another example, building with CGAL, OpenMesh, GUI can be done like this:
 ````
-  $ export DYLD_LIBRARY_PATH="$HOME/osg-3.4.1/lib"
   $ cmake -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 ````
