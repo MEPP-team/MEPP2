@@ -29,8 +29,6 @@ namespace Filters {
  * \param  vtm  vertex tangent map to be filled with computed tangents.
  *
  * \sa     calculate_halfedges_tangent() to compute tangents from halfedges.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

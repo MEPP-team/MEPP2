@@ -18,7 +18,7 @@
 
 
 namespace FEVV {
-namespace Tools {
+namespace Filters {
 
 /**
  * \brief   Gets the maximum size of the object bounding box.
@@ -39,7 +39,7 @@ get_max_bb_size(const HalfedgeGraph &g,
 {
   typename boost::property_traits< PointMap >::value_type  min_aabb,
                                                            max_aabb;
-  Tools::compute_mesh_bounding_box< HalfedgeGraph,
+  Filters::compute_mesh_bounding_box< HalfedgeGraph,
                                     PointMap,
                                     GeometryTraits >(g,
                                                      pm,
@@ -77,5 +77,5 @@ get_max_bb_size(const HalfedgeGraph &g,
                        GeometryTraits >(g, pm, gt);
 }
 
-} //namespace Tools
+} //namespace Filters
 } //namespace FEVV

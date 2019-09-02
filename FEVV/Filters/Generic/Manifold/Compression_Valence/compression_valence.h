@@ -45,8 +45,6 @@ namespace Filters {
  *
  * \sa      the simplified variant that use the default geometry traits
  *          of the mesh.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,
@@ -118,8 +116,6 @@ compression_valence(HalfedgeGraph &g,
  *          vertices number, number of layers, calculation time...)
  *
  * \sa      the variant that use the geometry traits provided by the user.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

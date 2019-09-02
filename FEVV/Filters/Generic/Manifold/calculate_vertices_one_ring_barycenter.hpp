@@ -16,11 +16,6 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Operators/Generic/Manifold/vertex_one_ring_barycenter.hpp"
 
-/**
- * \file
- * \ingroup GenericManifoldFilters GeometricFilters AIFFilters
- */
-
 namespace FEVV {
 namespace Filters {
 

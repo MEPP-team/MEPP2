@@ -31,8 +31,6 @@ namespace Filters {
  * \param[out] vnm  The Property Map that will be populated with the
  *                  resulting normal vectors.
  * \param[in]  gt   The Geometry Traits associated to the mesh
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,
@@ -76,8 +74,6 @@ calculate_vertex_normals(const HalfedgeGraph &g,
  * \param[in]  fnm  The Property Map providing the face normal vectors
  * \param[out] vnm  The Property Map that will be populated with the
  *                  resulting normal vectors.
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

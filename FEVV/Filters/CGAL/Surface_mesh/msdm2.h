@@ -767,7 +767,7 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
                                 gt_org,
                                 nb_level,
                                 msdm2_pmap,
-                                Tools::get_max_bb_size(m_poly_degrad,
+                                Filters::get_max_bb_size(m_poly_degrad,
                                                     pm_degrad,
                                                     gt_deg),
                                 msdm2_value);

@@ -29,8 +29,6 @@ namespace Filters {
  * \param[in]  gt   The Geometry Traits used to perfom the geometrical
  *                  calculations
  *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
- *
  * \note: this function name is prefixed with 'calculate_' to mimic
  *        CGAL usage of the term 'compute'.
  */
@@ -66,8 +64,6 @@ calculate_face_normals(const HalfedgeGraph &g,
  * \param  g     mesh
  * \param  pm    point map
  * \param  fnm   face normal map
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

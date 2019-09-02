@@ -30,8 +30,6 @@ namespace Filters {
  *
  * \sa      the simplified variant that use the default geometry traits
  *          of the mesh.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename Graph,
           typename PointMap,
@@ -76,8 +74,6 @@ calculate_scaling(Graph &g,
  * \param  scaleZ            z scale factor
  *
  * \sa      the variant that use the geometry traits provided by the user.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename Graph,
           typename PointMap,
