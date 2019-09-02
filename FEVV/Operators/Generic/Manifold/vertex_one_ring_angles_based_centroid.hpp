@@ -43,7 +43,6 @@ namespace Operators {
  * \param[in] gt The geometry trait object.
  * \return The angles-based centroid of the vertex v. 
  * \pre     g must be a triangular mesh.
- * \ingroup GenericManifoldFilters
  */
 template< typename FaceGraph,
           typename PointMap,

@@ -23,8 +23,6 @@ namespace Operators {
  * \param  g   mesh
  * \param  h   the halfedge
  * \param  pm  point map of the mesh
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph, typename PointMap >
 void

@@ -36,7 +36,6 @@ namespace Operators {
  * \param e The edge to be split.
  * \param midpoint_vertex The new vertex used for the splitting.
  * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
- * \ingroup  AIFOperators
  */
 template< typename MutableFaceIncidentGraph // similar concept to
                                              // MutableCellIncidentGraph, but
@@ -183,7 +182,6 @@ split_edge(
  * \param e The edge to be split.
  * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
  *         In this version, the new vertex is created internally via add_vertex(g).
- * \ingroup  AIFOperators
  */
 template< typename MutableFaceIncidentGraph // similar concept to MutableCellIncidentGraph, but limited to 0, 1 and 2 dimensional cells
                >
@@ -214,7 +212,6 @@ typename boost::graph_traits<MutableFaceIncidentGraph>::edge_descriptor
  * \param e The edge to be split.
  * \return The newly inserted edge incident to inserted vertex (target vertex is the new one).
  *         In this version, the new vertex is created internally via add_vertex(g).
- * \ingroup  AIFOperators
  */
 template< typename MutableFaceIncidentGraph, // similar concept to MutableCellIncidentGraph, but limited to 0, 1 and 2 dimensional cells
           typename PointMap,
