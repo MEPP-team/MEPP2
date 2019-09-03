@@ -25,8 +25,6 @@ namespace Operators {
  * \param[in] pm    The Point Map holding the vertices geometry
  * \param[in] gt    The Geometry Traits associated to the mesh
  *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
- *
  * \note: this function name is prefixed with 'calculate_' to mimic
  *        CGAL usage of the term 'compute'.
  */

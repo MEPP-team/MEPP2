@@ -38,8 +38,6 @@ namespace Filters {
  *                     of the mesh being read
  *
  * \sa     the variant that use the geometry traits provided by the user.
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template<>
 inline

@@ -32,8 +32,6 @@ namespace Operators {
  * \param[in]  uv2  second vertex's texture coordinates.
  * \param[in]  uv3  third vertex's texture coordinates.
  * \param[in,out] vtm  vertex tangent map to be filled with computed tangents.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

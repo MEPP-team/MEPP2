@@ -23,8 +23,6 @@ namespace Filters {
  * \param  g    the halfedge graph from which we take the mesh's informations.
  * \param  vtm  vertex tangent map in which we normalize tangents.
  * \param  gt   geometry traits object used to normalize a Vector.
- *
- * \ingroup  GenericManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename VertexTangentMap,

@@ -53,8 +53,6 @@ namespace Filters {
  *
  * \sa      the simplified variant that use the default geometry traits
  *          of the mesh.
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
@@ -808,8 +806,6 @@ read_mesh(const std::string &filename,
  *                     of the mesh being read
  *
  * \sa     the variant that use the geometry traits provided by the user.
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >

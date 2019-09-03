@@ -135,39 +135,55 @@ namespace Comparator
          if( minie1_is_pe1_pv1 )
          {
 			 if( minie2_is_pe2_pv1 )
+             {
 				 if( e1_v1_deg!= e2_v1_deg)
 			       return e1_v1_deg < e2_v1_deg;
-			 else 
+             }
+			 else
+             {				 
 				 if( e1_v1_deg!= e2_v2_deg)
 				   return e1_v1_deg < e2_v2_deg;
+             }
 		 }	
          else 
          {
 			 if( minie2_is_pe2_pv1 )
+             {
 				 if( e1_v2_deg!= e2_v1_deg)				 
 				   return e1_v2_deg < e2_v1_deg;
+             }
 			 else
+             {				 
 				 if( e1_v2_deg!= e2_v2_deg)
 				   return e1_v2_deg < e2_v2_deg; 
+             }
 		 }		 
 		 
          if( !minie1_is_pe1_pv1 )
          {
 			 if( !minie2_is_pe2_pv1 )
+             {
 				 if( e1_v1_deg!= e2_v1_deg)
 			       return e1_v1_deg < e2_v1_deg;
+             }
 			 else 
+             {
 				 if( e1_v1_deg!= e2_v2_deg)
 				   return e1_v1_deg < e2_v2_deg;
+             }
 		 }	
          else 
          {
 			 if( !minie2_is_pe2_pv1 )
+             {
 				 if( e1_v2_deg!= e2_v1_deg)				 
 				   return e1_v2_deg < e2_v1_deg;
+             }
 			 else
+             {
 				 if( e1_v2_deg!= e2_v2_deg)
 				   return e1_v2_deg < e2_v2_deg; 
+             }
 		 }			 
 	  }
 

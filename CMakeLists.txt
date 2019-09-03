@@ -16,10 +16,6 @@ option( BUILD_EXAMPLES                       "Build the examples (MEPP2)." ON )
 option( BUILD_TESTS                          "Build the tests (MEPP2)." ON )
 option( BUILD_ADVANCED_TESTS_COMPR_VALENCE   "Build advanced compression-decompression valence tests (MEPP2)." OFF )
 
-if( BUILD_USE_AIF )
-	option( BUILD_USE_GENERATE_TRIANGLE		"2D (and soon 3D) triangle meshes generator." ON )
-endif( BUILD_USE_AIF )
-
 #####
 # Set CMAKE module path unless provided by user
 if( NOT CMAKE_MODULE_PATH )

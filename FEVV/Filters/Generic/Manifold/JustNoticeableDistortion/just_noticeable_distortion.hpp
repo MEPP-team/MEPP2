@@ -375,7 +375,7 @@ just_noticeable_distortion_filter(const HalfedgeGraph &halfedge_graph,
 
   // Computation of the bounding box of the mesh
   typename boost::property_traits< PointMap >::value_type minAABB, maxAABB;
-  Tools::compute_mesh_bounding_box< HalfedgeGraph, PointMap, GeometryTraits >(
+  Filters::compute_mesh_bounding_box< HalfedgeGraph, PointMap, GeometryTraits >(
       halfedge_graph, point_map, minAABB, maxAABB, geometry_traits);
 
   typename GeometryTraits::Vector minbb(geometry_traits.get_x(minAABB),

@@ -15,7 +15,7 @@
 #include "FEVV/Wrappings/Geometry_traits.h"
 
 namespace FEVV {
-namespace Tools {
+namespace Filters {
 /**
  * \brief Compute the mesh Axis-Aligned Bounding-Box (AABB).
  *
@@ -70,5 +70,5 @@ compute_mesh_bounding_box(
   }
 }
 
-} // namespace Tools
+} // namespace Filters
 } // namespace FEVV
