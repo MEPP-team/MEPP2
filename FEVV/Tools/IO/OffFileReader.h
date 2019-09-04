@@ -115,12 +115,16 @@ read_off_file(std::string file_path,
     texture_coords.reserve(nb_total_vertices);
 
   // read vertices
+  std::vector< CoordType > point;
+  std::vector< CoordNType > normal;
+  std::vector< CoordCType > color;
+  std::vector< CoordTType > tex_coord;
   while(nb_read_vertices < nb_total_vertices)
   {
     if(getline_skip_comment(file, line_str, line_ss))
     {
       // get vertex coordinates
-      std::vector< CoordType > point;
+      point.clear();
       for(unsigned int i = 0; i < vertex_dim; ++i)
       {
         line_ss >> coord;
@@ -131,7 +135,7 @@ read_off_file(std::string file_path,
       // get vertex normal
       if(vertices_have_normals)
       {
-        std::vector< CoordNType > normal;
+        normal.clear();
         for(unsigned int i = 0; i < normal_dim; ++i)
         {
           line_ss >> n_coord;
@@ -143,7 +147,7 @@ read_off_file(std::string file_path,
       // get vertex color
       if(vertices_have_color)
       {
-        std::vector< CoordCType > color;
+        color.clear();
         for(unsigned int i = 0; i < color_dim; ++i)
         {
           line_ss >> c_coord;
@@ -155,7 +159,7 @@ read_off_file(std::string file_path,
       // get vertex texture coordinates
       if(vertices_have_texture)
       {
-        std::vector< CoordTType > tex_coord;
+        tex_coord.clear();
         for(unsigned int i = 0; i < texture_dim; ++i)
         {
           line_ss >> t_coord;
@@ -174,12 +178,13 @@ read_off_file(std::string file_path,
   }
 
   // read faces
+  std::vector< IndexType > face;
   while(nb_read_faces < nb_total_faces)
   {
     if(getline_skip_comment(file, line_str, line_ss))
     {
       // read face vertices
-      std::vector< IndexType > face;
+      face.clear();
       line_ss >> face_degree;
       for(unsigned int i = 0; i < face_degree; ++i)
       {
@@ -198,7 +203,7 @@ read_off_file(std::string file_path,
         //       a whitespace, so .good() is not enough to be
         //       sure that a color is provided for this face
 
-        std::vector< CoordCType > color;
+        color.clear();
         for(unsigned int i = 0; i < color_dim; ++i)
         {
           line_ss >> c_coord;
