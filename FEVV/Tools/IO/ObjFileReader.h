@@ -332,203 +332,225 @@ read_obj_file(const std::string &file_path,
               std::vector< MaterialType > &materials,  // list of materials
               std::vector< IndexType > &face_material) // material of each face
 {
-  unsigned int cpt_l = count_file_lines(file_path);
   points_coords.clear();
-  points_coords.reserve(
-      (size_t)(cpt_l * 0.4f)); // TO DO find exactly the nb of points
   normals_coords.clear();
-  normals_coords.reserve((size_t)(cpt_l * 0.4f));
   face_indices.clear();
-  face_indices.reserve(
-      (size_t)(cpt_l * 0.6f)); // TO DO find exactly the nb of faces
   texture_face_indices.clear();
 
-  bool usemtl_found = false;
-  IndexType current_material_id = -1;
+  unsigned int cpt_l = count_file_lines(file_path);
+  points_coords.reserve((size_t)(cpt_l * 0.4f));
+      // TO DO find exactly the nb of points
+  normals_coords.reserve((size_t)(cpt_l * 0.4f));
+  face_indices.reserve((size_t)(cpt_l * 0.6f));
+      // TO DO find exactly the nb of faces
 
   std::ifstream file(file_path);
 
-  if(file.is_open())
-  {
-    std::string line;
-    CoordType coord;
-    CoordNType n_coord;
-    CoordTType t_coord;
-    CoordCType c_coord;
-    int64_t f_ind, t_ind, n_ind;
-
-    while(safe_getline(file, line))
-    {
-      std::vector< std::string > tokens = split(line, "\t ");
-
-      size_t tokens_size = tokens.size();
-      if(!tokens.empty())
-      {
-        if(is_equal(tokens[0], "o")) // MESH NAME
-        {
-          // TODO : find a place to keep the mesh name
-        }
-        if(is_equal(tokens[0], "mtllib"))
-        {
-          // append mtl file name to obj file path
-          std::string str_parent_directory = get_parent_directory(file_path);
-          if(str_parent_directory.empty())
-            str_parent_directory = ".";
-          std::string mtl_file_name = str_parent_directory + "/" + tokens[1];
-
-          // remove ending '\r' if present
-          // TODO-elo-note:  is it still necessary because
-          //                now we use safe_getline ?
-          if(mtl_file_name.back() == '\r')
-            mtl_file_name.pop_back();
-
-          // search texture file name in mtl file
-          read_mtl_file(mtl_file_name, materials);
-          /*//TODO-elo-dbg*/ dbg_display_materials(materials);
-        }
-        else if(is_equal(tokens[0], "vn")) // NORMAL POINT
-        {
-          std::vector< CoordNType > normal;
-
-          for(unsigned int i = 1; i < 4; ++i)
-          {
-            convert(tokens[i], n_coord);
-            normal.push_back(n_coord);
-          }
-          normals_coords.push_back(normal);
-        }
-        else if(is_equal(tokens[0], "vt")) // TEXTURE POINT
-        {
-          std::vector< CoordTType > tex_coord;
-
-          for(unsigned int i = 1; i < 3; ++i)
-          {
-            convert(tokens[i], t_coord);
-            tex_coord.push_back(t_coord);
-          }
-          texture_coords.push_back(tex_coord);
-        }
-        else if(is_equal(tokens[0], "v")) // POINT
-        {
-          std::vector< CoordType > point;
-          std::vector< CoordCType > color;
-
-          if(tokens_size == 5 || tokens_size == 8)
-          { // homogeneous point
-            throw std::runtime_error(
-                "Reader::read_obj_file -> homogeneous point find in file : not "
-                "implemented yet.");
-          }
-          else if(tokens_size == 4 || tokens_size == 7)
-          { // cartesian point
-            for(unsigned int i = 1; i < 4; ++i)
-            {
-              convert(tokens[i], coord);
-              point.push_back(coord);
-            }
-          }
-          else
-          {
-            throw std::runtime_error("Reader::read_obj_file -> wrong number of "
-                                     "coordinates for a point.");
-          }
-          if(tokens_size == 7 || tokens_size == 8)
-          { // colored point
-            for(size_t i = tokens_size - 3; i < tokens_size; ++i)
-            {
-              convert(tokens[i], c_coord);
-              color.push_back(c_coord);
-            }
-          }
-          points_coords.push_back(point);
-          vertex_color_coords.push_back(color);
-        }
-        else if(is_equal(tokens[0], "f")) // FACE
-        {
-          std::vector< IndexType > face_points, face_textures, face_normals;
-          bool has_normal = false, has_texture = false,
-               is_first_face_token = true;
-          for(size_t i = 1; i < tokens_size; ++i)
-          {
-            std::vector< std::string > face_tokens = split(
-                tokens[i],
-                "/",
-                true); // the last "true" parameter stands for keep empty tokens
-
-            // Determined whether the face has normals and/or texture
-            //  point/texture/normal
-            if(is_first_face_token)
-            {
-              if(face_tokens.size() == 2)
-              {
-                has_texture = true;
-              }
-              else if(face_tokens.size() == 3)
-              {
-                has_normal = true;
-                if(!face_tokens[1].empty())
-                  has_texture = true;
-              }
-              is_first_face_token = false;
-            }
-
-            convert(face_tokens[0], f_ind);
-            face_points.push_back(static_cast< IndexType >(
-                f_ind < 0
-                    ? f_ind + points_coords.size()
-                    : f_ind - 1)); // the indices needs to start to 0, which is
-                                   // not the case in obj format (starts to 1)
-
-            if(has_texture) // TODO : maybe have to check if all the face tokens
-                            // are formed the same way (eg : not 0//12 1/1 2/3/9)
-                            // as the standard explicitly set it
-            {
-              convert(face_tokens[1], t_ind);
-              face_textures.push_back(static_cast< IndexType >(
-                  t_ind < 0 ? t_ind + texture_coords.size() : t_ind - 1));
-            }
-            if(has_normal) // TODO : maybe have to check if all the face tokens
-                           // are formed the same way (eg : not 0//12 1/1 2/3/9)
-                           // as the standard explicitly set it
-            {
-              convert(face_tokens[2], n_ind);
-              face_normals.push_back(static_cast< IndexType >(
-                  n_ind < 0 ? n_ind + normals_coords.size() : n_ind - 1));
-            }
-          }
-
-          face_indices.push_back(face_points);
-          texture_face_indices.push_back(face_textures);
-          normal_face_indices.push_back(face_normals);
-          if(usemtl_found)
-            face_material.push_back(current_material_id);
-        }
-        else if(is_equal(tokens[0], "usemtl")) // MATERIAL
-        {
-          usemtl_found = true;
-          std::string mtl_name = tokens[1];
-          current_material_id = -1;
-          // std::cout << "---------> mtl_name: " << mtl_name << std::endl;
-          for(IndexType i = 0; i < materials.size(); i++)
-          {
-            // std::cout << "-------------------> materials[i].name: " <<
-            // materials[i].name << std::endl;
-            if(materials[i].name == mtl_name)
-            {
-              current_material_id = i;
-              break;
-            }
-          }
-        }
-      }
-    }
-    file.close();
-  }
-  else
+  if(! file.is_open())
   {
     throw std::runtime_error(
         "Reader::read_obj_file -> input file failed to open.");
   }
+
+  std::string line_str, word;
+  std::istringstream line_ss, word_ss;
+  char delim;
+
+  bool usemtl_found = false;
+  IndexType current_material_id = -1;
+
+  CoordType coord;
+  CoordNType n_coord;
+  CoordTType t_coord;
+  CoordCType c_coord;
+  int64_t v_ind, t_ind, n_ind;
+
+  while(getline_skip_comment(file, line_str, line_ss))
+  {
+    line_ss >> word;
+
+    if(word == "o") // MESH NAME
+    {
+      // TODO : find a place to keep the mesh name
+    }
+    else if(word == "mtllib")
+    {
+      // read mtl file name
+      line_ss >> word;
+
+      // append mtl file name to obj file path
+      std::string str_parent_directory = get_parent_directory(file_path);
+      if(str_parent_directory.empty())
+        str_parent_directory = ".";
+      std::string mtl_file_name = str_parent_directory + "/" + word;
+
+      // search texture file name in mtl file
+      read_mtl_file(mtl_file_name, materials);
+      /*//TODO-elo-dbg*/ dbg_display_materials(materials);
+    }
+    else if(word == "vn") // NORMAL POINT
+    {
+      std::vector< CoordNType > normal;
+
+      for(unsigned int i = 1; i < 4; ++i)
+      {
+        line_ss >> n_coord;
+        normal.push_back(n_coord);
+      }
+      normals_coords.push_back(normal);
+    }
+    else if(word == "vt") // TEXTURE POINT
+    {
+      std::vector< CoordTType > tex_coord;
+
+      for(unsigned int i = 1; i < 3; ++i)
+      {
+        line_ss >> t_coord;
+        tex_coord.push_back(t_coord);
+      }
+      texture_coords.push_back(tex_coord);
+    }
+    else if(word == "v") // POINT
+    {
+      // supported line format:
+      // - "v x y z"
+      // - "v x y z r g b"
+      // homogeneous point (x, y, z, w) not supported
+
+      std::vector< CoordType > point;
+      std::vector< CoordCType > color;
+
+      // read point coordinates
+      for(unsigned int i = 0; i < 3; ++i)
+      {
+        line_ss >> coord;
+        point.push_back(coord);
+      }
+
+      if(line_ss.fail())
+      {
+        // remove DOS end of line extra character
+        if(line_str.back() == '\r')
+          line_str.pop_back();
+
+        throw std::runtime_error(
+            "Reader::read_obj_file -> unsupported line format at line "
+            "'" + line_str + "'. "
+            "Supported format is 'v x y z [r g b]'."); 
+      }
+
+      // read point color if present
+      for(unsigned int i = 0; i < 3; ++i)
+      {
+        line_ss >> c_coord;
+        color.push_back(c_coord);
+      }
+
+      if(line_ss.fail())
+      {
+        // invalid color
+        color.clear();
+      }
+
+      points_coords.push_back(point);
+      vertex_color_coords.push_back(color);
+    }
+    else if(word == "f") // FACE
+    {
+      // supported line format:
+      // - minimal aka vertex indices only
+      //     "f v1 v2 v3 ...."
+      // - with vertex texture
+      //     "f v1/vt1 v2/vt2 v3/vt3 ..."
+      // - with vertex texture and vertex normal
+      //     "f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3 ..."
+      // - with vertex normal
+      //     "f v1//vn1 v2//vn2 v3//vn3 ..."
+
+      std::vector< IndexType > face_points, face_textures, face_normals;
+
+      // parse each "v1/vt1/vn1" (or variant) of the face line
+      while(line_ss >> word)
+      {
+        word_ss.clear();
+        word_ss.str(word);
+
+        // read vertex indice
+        word_ss >> v_ind;
+        face_points.push_back(static_cast< IndexType >(
+            v_ind < 0 ? v_ind + points_coords.size() : v_ind - 1));
+            // the indices needs to start to 0, which is
+            // not the case in obj format (starts to 1)
+
+        // read vertex texture indice if any
+        if((word_ss >> delim) && (word_ss >> t_ind))
+        {
+          face_textures.push_back(static_cast< IndexType >(
+              t_ind < 0 ? t_ind + texture_coords.size() : t_ind - 1));
+        }
+
+        // clear stream error state in case there is no vertex texture
+        // and a vertex normal aka "v1//vn1"
+        word_ss.clear();
+
+        // read vertex normal
+        if((word_ss >> delim) && (word_ss >> n_ind))
+        {
+          face_normals.push_back(static_cast< IndexType >(
+              n_ind < 0 ? n_ind + normals_coords.size() : n_ind - 1));
+        }
+      }
+
+      // ensure all or none vertices of the face have texture or normal
+      bool texture_ok =
+          face_textures.empty() ||
+          (face_textures.size() == face_points.size());
+      bool normal_ok =
+          face_normals.empty() ||
+          (face_normals.size() == face_points.size());
+      if(! (texture_ok && normal_ok))
+      {
+        // remove DOS end of line extra character
+        if(line_str.back() == '\r')
+          line_str.pop_back();
+
+        throw std::runtime_error(
+            "Reader::read_obj_file -> unsupported line format at line "
+            "'" + line_str + "'. "
+            "Supported formats are: "
+            "'f v1 v2 v3 ....', "
+            "'f v1/vt1 v2/vt2 v3/vt3 ...', "
+            "'f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3 ...', "
+            "'f v1//vn1 v2//vn2 v3//vn3 ...'."); 
+      }
+
+      face_indices.push_back(face_points);
+      texture_face_indices.push_back(face_textures);
+      normal_face_indices.push_back(face_normals);
+      if(usemtl_found)
+        face_material.push_back(current_material_id);
+    }
+    else if(word == "usemtl") // MATERIAL
+    {
+      usemtl_found = true;
+      std::string mtl_name;
+      line_ss >> mtl_name;
+      current_material_id = -1;
+      // std::cout << "---------> mtl_name: " << mtl_name << std::endl;
+      for(IndexType i = 0; i < materials.size(); i++)
+      {
+        // std::cout << "-------------------> materials[i].name: " <<
+        // materials[i].name << std::endl;
+        if(materials[i].name == mtl_name)
+        {
+          current_material_id = i;
+          break;
+        }
+      }
+    }
+  }
+
+  file.close();
 }
 
 } // namespace IO
