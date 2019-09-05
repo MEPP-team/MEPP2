@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 #include <vector>
@@ -214,6 +215,53 @@ safe_getline(std::ifstream &input, std::string &str)
 
   return input;
 }
+
+/**
+ * Get a line from the input stream skipping any commented line.
+ * To be used in the same way as std::getline(stream, string).
+ *
+ * \param  input  the input stream to read from
+ * \param  line   the string that will be filled with the line being read
+ *
+ * \return  true if the read succeeded, else false (aka when EOF)
+ */
+inline
+bool
+getline_skip_comment(std::istream &input, std::string &line)
+{
+  while(std::getline(input, line))
+  {
+    // skip empty line and comment line
+    if(! (line.empty() || line[0] == '#'))
+      break;
+  }
+
+  return static_cast< bool >(input);
+}
+
+/**
+ * Get a line from the input stream skipping any commented line.
+ * To be used in the same way as std::getline(stream, string).
+ *
+ * \param  input    the input stream to read from
+ * \param  line     the string that will be filled with the line being read
+ * \param  line_ss  the stringstream based on the read line
+ *
+ * \return  true if the read succeeded, else false (aka when EOF)
+ */
+inline
+bool
+getline_skip_comment(std::istream &input,
+                     std::string &line,
+                     std::istringstream &line_ss)
+{
+  getline_skip_comment(input, line);
+  line_ss.clear();
+  line_ss.str(line);
+
+  return static_cast< bool >(input);
+}
+
 
 /**
  * Copy a file. Display a warning if destination file exists

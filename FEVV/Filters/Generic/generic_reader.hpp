@@ -37,9 +37,29 @@
 
 #include "FEVV/Types/Material.h"
 
+#include <chrono> // for time measurement
 
 namespace FEVV {
 namespace Filters {
+
+
+/**
+ *
+ * \brief  Measure time since starting time and reset starting time.
+ *
+ * \param  Starting time
+ * \return Elapsed time in seconds since starting time.
+ */
+inline double
+get_time_and_reset(
+    std::chrono::time_point< std::chrono::steady_clock > &time_start)
+{
+    auto time_now = std::chrono::steady_clock::now();
+    std::chrono::duration< double > duration = time_now - time_start;
+    time_start = time_now;
+
+    return duration.count();
+}
 
 
 /**
@@ -126,6 +146,8 @@ read_mesh(const std::string &filename,
 
   bool obj_file = false;
 
+  auto time = std::chrono::steady_clock::now();
+
   if(FEVV::FileUtils::has_extension(filename, ".obj"))
   {
     IO::read_obj_file(filename,
@@ -206,6 +228,8 @@ read_mesh(const std::string &filename,
                       face_material);
   }
 #endif
+
+  auto parsing_duration = get_time_and_reset(time);
 
   if (only_pts)
   {
@@ -781,6 +805,8 @@ read_mesh(const std::string &filename,
     }
   }
 
+  auto populating_duration = get_time_and_reset(time);
+
   // display some information
 
   if(duplicated_vertices_nbr > 0)
@@ -792,7 +818,10 @@ read_mesh(const std::string &filename,
             << " vertices, " << size_of_edges(g) << " edges, "
             << size_of_faces(g) << " faces." << std::endl;
   std::cout << "Generic reading of \""
-            << FEVV::FileUtils::get_file_full_name(filename) << "\" Done."
+            << FEVV::FileUtils::get_file_full_name(filename) << "\" done"
+            << " in " << parsing_duration + populating_duration << "s"
+            << " (parsing " << parsing_duration << "s"
+            << ", populating DS " << populating_duration << "s)."
             << std::endl;
 }
 
