@@ -365,6 +365,15 @@ read_obj_file(const std::string &file_path,
   CoordCType c_coord;
   int64_t v_ind, t_ind, n_ind;
 
+  // declare containers outside main loop to avoid creation/destruction
+  // at each iteration and save some time
+  std::vector< CoordNType > normal;
+  std::vector< CoordTType > tex_coord;
+  std::vector< CoordType > point;
+  std::vector< CoordCType > color;
+  std::vector< IndexType > face_points, face_textures, face_normals;
+
+
   while(getline_skip_comment(file, line_str, line_ss))
   {
     line_ss >> word;
@@ -390,7 +399,7 @@ read_obj_file(const std::string &file_path,
     }
     else if(word == "vn") // NORMAL POINT
     {
-      std::vector< CoordNType > normal;
+      normal.clear();
 
       for(unsigned int i = 1; i < 4; ++i)
       {
@@ -401,7 +410,7 @@ read_obj_file(const std::string &file_path,
     }
     else if(word == "vt") // TEXTURE POINT
     {
-      std::vector< CoordTType > tex_coord;
+      tex_coord.clear();
 
       for(unsigned int i = 1; i < 3; ++i)
       {
@@ -417,8 +426,8 @@ read_obj_file(const std::string &file_path,
       // - "v x y z r g b"
       // homogeneous point (x, y, z, w) not supported
 
-      std::vector< CoordType > point;
-      std::vector< CoordCType > color;
+      point.clear();
+      color.clear();
 
       // read point coordinates
       for(unsigned int i = 0; i < 3; ++i)
@@ -467,7 +476,9 @@ read_obj_file(const std::string &file_path,
       // - with vertex normal
       //     "f v1//vn1 v2//vn2 v3//vn3 ..."
 
-      std::vector< IndexType > face_points, face_textures, face_normals;
+      face_points.clear();
+      face_textures.clear();
+      face_normals.clear();
 
       // parse each "v1/vt1/vn1" (or variant) of the face line
       while(line_ss >> word)
