@@ -22,8 +22,6 @@ namespace Filters {
  *
  * \param  g   mesh
  * \param  pm  point map of the mesh
- *
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph, typename PointMap >
 void

@@ -134,7 +134,7 @@ inline double tr(double &n)
  * \brief  Measure time since starting time and reset starting time.
  *
  * \param  Starting time
- * \return Elapsed time since starting time.
+ * \return Elapsed time in seconds since starting time.
  */
 inline double
 get_time_and_reset(

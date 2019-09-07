@@ -39,7 +39,6 @@ namespace Operators {
  * \param[in] gt The geometry trait object.
  * \return The barycenter centroid of the vertex v.
  * \pre     g must be a triangular mesh.
- * \ingroup GenericManifoldFilters
  */
 template< typename FaceGraph,
           typename PointMap,

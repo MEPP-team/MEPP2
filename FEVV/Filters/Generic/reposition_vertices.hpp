@@ -18,7 +18,6 @@
 namespace FEVV {
 namespace Filters {
 /**
- * \ingroup AIFFilters
  * \brief Apply new vertex positions to vertex position property map.
  *
  * \tparam PropertyGraph  a Mesh type that provides a Model of the
@@ -69,7 +68,6 @@ reposition_vertices(
 }
 
 /*
- * \ingroup AIFFilters
  * \brief The only purpose of this function is to instantiate the last argument
  *        in order to simplify caller's syntax. This is to circumvent an
  *        apparent impossibility of providing a default argument out of a

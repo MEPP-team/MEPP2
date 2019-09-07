@@ -37,7 +37,6 @@ namespace Operators {
  * \param[in] pm    The Point Map holding the vertices geometry
  * \param[in] gt    The Geometry Traits associated to the mesh
  * \return   The vertex v' normal.
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph, typename PointMap, typename GeometryTraits >
 typename GeometryTraits::Vector
@@ -104,7 +103,6 @@ catch(...)
  * \param[in] fnm   The Face Normal Map providing the normals to incident faces
  * \param[in] gt    The Geometry Traits associated to the mesh
  * \return   The vertex v' normal.
- * \ingroup  GenericManifoldFilters GenericNonManifoldFilters
  */
 template< typename HalfedgeGraph,
           typename PointMap,

@@ -940,7 +940,7 @@ public:
 
     auto pm = get(boost::vertex_point, *_mesh);
 
-    double max_bb_size = Tools::get_max_bb_size(*_mesh, pm);
+    double max_bb_size = Filters::get_max_bb_size(*_mesh, pm);
 
     auto f_nm = make_property_map(FEVV::face_normal, *_mesh);
 
