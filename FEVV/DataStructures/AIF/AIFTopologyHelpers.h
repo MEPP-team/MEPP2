@@ -3208,6 +3208,8 @@ public:
           if(**it == *(first_v))
           {
             ++it;
+            if(it == ite)
+              it = resV.begin();
             if(**it == *(second_v))
               v1BeforeV2InFace =
                   true; // if the following is V2 => true, else => false
@@ -3217,6 +3219,8 @@ public:
           else if(**it == *(second_v))
           {
             ++it;
+            if (it == ite)
+              it = resV.begin();
             if(**it != *(first_v))
               v1BeforeV2InFace = true; // if the following is different from V1
                                        // => true, else => false

@@ -17,6 +17,8 @@
 
 #include "FEVV/Operators/Generic/Manifold/no_normal_flip_for_collapse.hpp"
 
+#include "FEVV/Operators/AIF/topology_predicates.hpp"
+
 #include <vector>
 
 namespace FEVV {
@@ -80,9 +82,9 @@ namespace Filters {
     {
       if (forbidden_edges_to_collapse.find(*edge_it) == forbidden_edges_to_collapse.end())
       {
-        bool is_a_2_manifold_collapse;
+        bool is_a_2_manifold_collapse = Helpers::is_2_manifold_edge(*edge_it);
         bool edge_ok_for_collapse = !forbid_non_manifold_edge ||
-          ((is_a_2_manifold_collapse = Helpers::is_2_manifold_edge(*edge_it)) && // cannot encode neither cut vertices, nor complexe edges with triplets (v,left, right)
+          ( is_a_2_manifold_collapse && // cannot encode neither cut vertices, nor complex edges with triplets (v,left, right)
             Helpers::is_one_ring_2_manifold(source(*edge_it, g)) &&
             Helpers::is_one_ring_2_manifold(target(*edge_it, g)));
 
@@ -118,15 +120,10 @@ namespace Filters {
         }
         bool is_a_triangular_collapse = true;
 
-        if (forbid_non_triangular_incident_face_to_edge && edge_ok_for_collapse)
+        if (forbid_non_triangular_incident_face_to_edge && edge_ok_for_collapse )
         {
-          typename boost::graph_traits<FaceGraph>::halfedge_descriptor h1 = halfedge(*edge_it, g);
-          typename boost::graph_traits<FaceGraph>::halfedge_descriptor h2 = opposite(h1, g);
-
           // forbid polygonal edge collapse
-          if ((!CGAL::is_border(h1, g) && !CGAL::is_triangle(h1, g)) ||
-            (!CGAL::is_border(h2, g) && !CGAL::is_triangle(h2, g))
-            )
+          if ( !FEVV::Operators::has_only_incident_triangular_faces(*edge_it, g) )
           {
             edge_ok_for_collapse = false;
             is_a_triangular_collapse = false;
