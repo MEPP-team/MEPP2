@@ -10,8 +10,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
-#include <CGAL/boost/graph/helpers.h> // is_border
-
 #include "FEVV/Wrappings/Graph_traits_extension_aif.h" 
 #include "FEVV/Wrappings/Geometry_traits.h"
 
@@ -109,13 +107,13 @@ namespace Filters {
         if (forbid_border_edge && edge_ok_for_collapse)
         {
           // forbid border edge collapse
-          if (CGAL::is_border(*edge_it, g))
+          if (Helpers::is_surface_border_edge(*edge_it))
             edge_ok_for_collapse = false;
         }
         if (forbid_inner_edge && edge_ok_for_collapse)
         {
           // forbid inner edge collapse
-          if (!CGAL::is_border(*edge_it, g))
+          if (Helpers::is_surface_interior_edge(*edge_it))
             edge_ok_for_collapse = false;
         }
         bool is_a_triangular_collapse = true;
