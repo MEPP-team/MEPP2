@@ -569,13 +569,13 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         superimpProgram->addShader(superimpVertShader);
 
         // uncomment to use GEOMETRY shader
-          osg::ref_ptr< osg::Shader > superimpGeomShader =
+          /*osg::ref_ptr< osg::Shader > superimpGeomShader =
               new osg::Shader(osg::Shader::GEOMETRY);
           if(!superimpGeomShader->loadShaderSourceFromFile(
                  shadersDirectory + "superimposeGeom.glsl"))
             std::cerr << "[MeshLoading] Could not read GEOMETRY shader from file"
                       << std::endl;
-          superimpProgram->addShader(superimpGeomShader);
+          superimpProgram->addShader(superimpGeomShader);*/
         // uncomment to use GEOMETRY shader
 
         osg::ref_ptr< osg::Shader > superimpFragShader =

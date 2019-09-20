@@ -43,10 +43,10 @@ void main() {
   // ---
 
   // uncomment to use GEOMETRY shader
-    geomMeshInfo.vertPosition = modelMat * vertPosition;
+    /*geomMeshInfo.vertPosition = modelMat * vertPosition;
     geomMeshInfo.vertColor    = vertColor;
 
     mat3 normalMatrix = mat3(transpose(inverse(view * model)));
-    geomMeshInfo.vertNormal = normalize(vec3(projection * vec4(normalMatrix * vertNormal, 0.0)));
+    geomMeshInfo.vertNormal = normalize(vec3(projection * vec4(normalMatrix * vertNormal, 0.0)));*/
   // uncomment to use GEOMETRY shader
 }
