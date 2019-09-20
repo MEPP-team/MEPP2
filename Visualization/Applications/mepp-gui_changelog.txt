@@ -1,3 +1,6 @@
+v0.11.2 - 20/09/2019 :
+ - minor small internal modifications
+
 v0.11.1 - 23/07/2019 :
  - restore desired 'shift pressed mode' during meshes opening (case of simultaneous multiple meshes selected)
 
