@@ -84,6 +84,19 @@ struct InverseViewMatrixCallback : public osg::Uniform::Callback
   osg::Camera *camera;
 };
 
+struct ProjectionMatrixCallback : public osg::Uniform::Callback
+{
+  explicit ProjectionMatrixCallback(osg::Camera *camera) : camera{camera} {}
+
+  virtual void operator()(osg::Uniform *uniform,
+                          osg::NodeVisitor *nodeVisitor) override
+  {
+    uniform->set(osg::Matrix(camera->getProjectionMatrix()));
+  }
+
+  osg::Camera *camera;
+};
+
 struct MVPMatrixCallback : public osg::Uniform::Callback
 {
   explicit MVPMatrixCallback(osg::Camera *camera) : camera{camera} {}
@@ -438,6 +451,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_tangentsArrays,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
@@ -554,6 +568,16 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
                     << std::endl;
         superimpProgram->addShader(superimpVertShader);
 
+        // uncomment to use GEOMETRY shader
+          osg::ref_ptr< osg::Shader > superimpGeomShader =
+              new osg::Shader(osg::Shader::GEOMETRY);
+          if(!superimpGeomShader->loadShaderSourceFromFile(
+                 shadersDirectory + "superimposeGeom.glsl"))
+            std::cerr << "[MeshLoading] Could not read GEOMETRY shader from file"
+                      << std::endl;
+          superimpProgram->addShader(superimpGeomShader);
+        // uncomment to use GEOMETRY shader
+
         osg::ref_ptr< osg::Shader > superimpFragShader =
             new osg::Shader(osg::Shader::FRAGMENT);
         if(!superimpFragShader->loadShaderSourceFromFile(
@@ -575,6 +599,8 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
               0, _vertexArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
           _geometries_edges[unit_ii]->setVertexAttribArray(
               1, _colorsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_edges[unit_ii]->setVertexAttribArray(
+              2, _normalsArrays_edges[unit_ii], osg::Array::BIND_PER_VERTEX);
           _geometries_edges[unit_ii]
               ->getOrCreateStateSet()
               ->setAttributeAndModes(superimpProgram.get(),
@@ -598,6 +624,8 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
               0, _vertexArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
           _geometries_vertices[unit_ii]->setVertexAttribArray(
               1, _colorsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_vertices[unit_ii]->setVertexAttribArray(
+              2, _normalsArrays_vertices[unit_ii], osg::Array::BIND_PER_VERTEX);
           _geometries_vertices[unit_ii]
               ->getOrCreateStateSet()
               ->setAttributeAndModes(superimpProgram.get(),
@@ -700,6 +728,25 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
   mvpMatrix->setUpdateCallback(new MVPMatrixCallback(view->getCamera()));
   _geode->getOrCreateStateSet()->addUniform(mvpMatrix);
 
+
+  // MTO: setting callback for model matrix
+  osg::Uniform *g_modelMatrix =
+      new osg::Uniform(osg::Uniform::FLOAT_MAT4, "model");
+  g_modelMatrix->setUpdateCallback(new ModelMatrixCallback());
+  _geode->getOrCreateStateSet()->addUniform(g_modelMatrix);
+
+  // MTO: setting callback for view matrix
+  osg::Uniform *g_viewMatrix =
+      new osg::Uniform(osg::Uniform::FLOAT_MAT4, "view");
+  g_viewMatrix->setUpdateCallback(new ViewMatrixCallback(view->getCamera()));
+  _geode->getOrCreateStateSet()->addUniform(g_viewMatrix);
+
+  // MTO: setting callback for projection matrix
+  osg::Uniform *g_projectionMatrix =
+      new osg::Uniform(osg::Uniform::FLOAT_MAT4, "projection");
+  g_projectionMatrix->setUpdateCallback(new ProjectionMatrixCallback(view->getCamera()));
+  _geode->getOrCreateStateSet()->addUniform(g_projectionMatrix);
+
   /*
   RM: creating light(s)
     - Point light: position = x/y/z/1, no need to set direction
@@ -794,6 +841,7 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,

@@ -540,6 +540,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
@@ -568,6 +569,7 @@ FEVV::SimpleViewer::internal_createMesh(
                       vertexArrays_normals,
                       normalsArrays,
                       normalsArraysF,
+                      normalsArrays_edges,
                       normalsArrays_vertices,
                       tangentsArrays,
                       colorsArrays,
@@ -599,6 +601,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
@@ -1105,6 +1108,10 @@ FEVV::SimpleViewer::internal_createMesh(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    normalsArrays_edges.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     normalsArrays_vertices.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1208,6 +1215,10 @@ FEVV::SimpleViewer::internal_createMesh(
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
       normalsArraysF.push_back(new osg::Vec3Array);
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
+      normalsArrays_edges.push_back(new osg::Vec3Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
@@ -1318,6 +1329,18 @@ FEVV::SimpleViewer::internal_createMesh(
         colorsArrays_edges[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Yellow())); // default color
       }
+
+      // normal (only for GEOMETRY shader)
+      if(_vt_nm)
+      {
+        normalsArrays_edges[mtl_id]->push_back(
+            Helpers::VectorConverter< HalfedgeGraph >(
+                get(v_nm, vs)));
+
+        normalsArrays_edges[mtl_id]->push_back(
+            Helpers::VectorConverter< HalfedgeGraph >(
+                get(v_nm, vt)));
+      }
     }
 
     geometries_edges[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
@@ -1401,6 +1424,12 @@ FEVV::SimpleViewer::internal_createMesh(
       else
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Green())); // default color
+
+      // normal (only for GEOMETRY shader)
+      if(_vt_nm)
+        normalsArrays_vertices[mtl_id]->push_back(
+            Helpers::VectorConverter< HalfedgeGraph >(
+                get(v_nm, *v_it)));
 
       // [ normals
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
@@ -1652,16 +1681,16 @@ FEVV::SimpleViewer::internal_createMesh(
 
       ++sizeFace;
     }
+
+    std::cout << "[SimpleViewer] I have drawn " << sizeFace << " faces (with "
+            << sizeVertex << " vertices)." << std::endl;
+    std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints
+            << " (superimpose) points and " << sizeSLines
+            << " superimpose lines." << std::endl;
   }
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
-
-  std::cout << "[SimpleViewer] I have drawn " << sizeFace << " faces (with "
-            << sizeVertex << " vertices)." << std::endl;
-  std::cout << "[SimpleViewer] I have also drawn " << sizeSPoints
-            << " (superimpose) points and " << sizeSLines
-            << " superimpose lines." << std::endl;
 
   // auto gui_props = get((*_m_gpm), 0);
   // geode->setNodeMask(gui_props.is_visible ? 0xffffffff : 0x0); // 19/03/19
@@ -1701,6 +1730,7 @@ FEVV::SimpleViewer::internal_createMesh(
                             vertexArrays_vertices,
                             vertexArrays_normals,
                             *_normalsArrays,
+                            normalsArrays_edges,
                             normalsArrays_vertices,
                             tangentsArrays,
                             texcoordsArrays,
@@ -1744,6 +1774,7 @@ FEVV::SimpleViewer::internal_createMesh(
                             vertexArrays_vertices,
                             vertexArrays_normals,
                             *_normalsArrays,
+                            normalsArrays_edges,
                             normalsArrays_vertices,
                             texcoordsArrays,
                             colorsArrays,
@@ -1804,6 +1835,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &tangentsArrays,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays,
@@ -2038,6 +2070,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    normalsArrays_edges.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     normalsArrays_vertices.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -2120,6 +2156,8 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
         osg::PrimitiveSet::POINTS, 0, vertexArrays_vertices[mtl_id]->size()));
 
     _vt_cm = SAVE_vt_cm;
+
+    std::cout << "[SimpleViewer] I have drawn " << sizeSPoints << " points." << std::endl;
   }
 
   // NEW_HERE-01 (ADD)
@@ -2144,8 +2182,6 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
-
-  std::cout << "[SimpleViewer] I have drawn " << sizeSPoints << " points." << std::endl;
 
   const auto loadingStartTime = std::chrono::system_clock::now();
 
@@ -2199,6 +2235,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             vertexArrays_vertices,
                             vertexArrays_normals,
                             *_normalsArrays,
+                            normalsArrays_edges,
                             normalsArrays_vertices,
                             tangentsArrays,
                             texcoordsArrays,
@@ -2261,6 +2298,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             vertexArrays_vertices,
                             vertexArrays_normals,
                             *_normalsArrays,
+                            normalsArrays_edges,
                             normalsArrays_vertices,
                             texcoordsArrays,
                             colorsArrays,
@@ -2451,7 +2489,7 @@ FEVV::SimpleViewer::createMesh(
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_vertexArrays,
       l_vertexArrays_edges, l_vertexArrays_vertices, l_vertexArrays_normals;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_normalsArrays,
-      l_normalsArraysF, l_normalsArrays_vertices, l_tangentsArrays;
+      l_normalsArraysF, l_normalsArrays_edges, l_normalsArrays_vertices, l_tangentsArrays;
   std::vector< osg::ref_ptr< osg::Vec4Array > > l_colorsArrays,
       l_colorsArrays_edges, l_colorsArrays_vertices, l_colorsArrays_normals;
   std::vector< osg::ref_ptr< osg::Vec2Array > > l_texcoordsArrays;
@@ -2470,6 +2508,7 @@ FEVV::SimpleViewer::createMesh(
                                           l_vertexArrays_normals,
                                           l_normalsArrays,
                                           l_normalsArraysF,
+                                          l_normalsArrays_edges,
                                           l_normalsArrays_vertices,
                                           l_tangentsArrays,
                                           l_colorsArrays,
@@ -2499,6 +2538,7 @@ FEVV::SimpleViewer::createMesh(
   v_vertexArrays_normals.push_back(l_vertexArrays_normals);
   v_normalsArrays.push_back(l_normalsArrays);
   v_normalsArraysF.push_back(l_normalsArraysF);
+  v_normalsArrays_edges.push_back(l_normalsArrays_edges);
   v_normalsArrays_vertices.push_back(l_normalsArrays_vertices);
   v_tangentsArrays.push_back(l_tangentsArrays);
   v_colorsArrays.push_back(l_colorsArrays);
@@ -2631,6 +2671,7 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
     v_colorsArrays_vertices[position].clear();
     v_colorsArrays_normals[position].clear();
 
+    v_normalsArrays_edges[position].clear();
     v_normalsArrays_vertices[position].clear();
   }
 
@@ -2649,6 +2690,7 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                       v_vertexArrays_normals[position],
                       v_normalsArrays[position],
                       v_normalsArraysF[position],
+                      v_normalsArrays_edges[position],
                       v_normalsArrays_vertices[position],
                       v_tangentsArrays[position],
                       v_colorsArrays[position],
