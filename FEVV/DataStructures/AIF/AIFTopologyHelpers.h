@@ -552,7 +552,7 @@ public:
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
                                                                                                                 ComparatorType cmp, 
                                                                                                                 edge_descriptor edge,
-                                                                                                                bool do_full_incident_edge_sorting = true)
+                                                                                                                bool do_full_incident_edge_sorting)
   {
     if(do_full_incident_edge_sorting)
       std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
@@ -589,7 +589,8 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
-                                                                                              ComparatorType cmp)
+                                                                                              ComparatorType cmp,
+                                                                                              bool do_full_incident_edge_sorting)
   {
 
     return sort_incident_edges_starting_with_edge<ComparatorType>(vertex, 
@@ -597,7 +598,7 @@ public:
                                                                   *std::min_element(vertex->m_Incident_PtrEdges.begin(), 
                                                                                     vertex->m_Incident_PtrEdges.end(), 
                                                                                     cmp),
-                                                                  true);
+                                                                  do_full_incident_edge_sorting);
   }
 
   /*!
@@ -606,13 +607,15 @@ public:
   * \param	cmp   The involving comparator object used for the sorting. Comparator can be based
   *               on natural ordering, on a spanning tree, on one-ring vertex order (if incident
   *               faces are counterclokwise oriented, then one-ring is clockwise oriented) etc.
+  * \param  do_full_incident_edge_sorting A boolean to do a sorting before starting at minimun edge.
   */
   template<typename ComparatorType>
   static void sort_incident_edges(edge_descriptor edge,
-                                  ComparatorType cmp)
+                                  ComparatorType cmp,
+                                  bool do_full_incident_edge_sorting)
   {
-    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp);
-    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp);
+    sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
+    sort_incident_edges<ComparatorType>(edge->get_second_vertex(), cmp, do_full_incident_edge_sorting);
   }
 
   /*!
