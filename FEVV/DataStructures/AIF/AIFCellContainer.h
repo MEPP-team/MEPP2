@@ -52,12 +52,40 @@ public:
     // Remove element #i.
     // If #i is not the last element, then replace #i by the last
     // element, then free the last slot.
-
-    if(i != lastId)
+    std::size_t tmp = container[i]->GetIndex();
+    bool ascending_order = (tmp==i) && (container[lastId]->GetIndex() == lastId); // not exact, but avoid linear access for meshes without vertex reordering
+    //for(std::size_t n=0; (n < lastId) && ascending_order; ++n)
+    //  if (container[n]->GetIndex() > container[n + 1]->GetIndex())
+    //  {
+    //    ascending_order = false;
+    //    break;
+    //  }
+    if (ascending_order)
+    {
       container[i] = container[lastId];
-    // or std::swap(container[i], container[lastId]);
+      container[i]->SetIndex(i);
+    }
+    else
+    {
+      if (tmp == lastId)
+      {
+        container[i] = container[lastId];
+      }
+      else
+      {
+        std::size_t index_max = 0;
+        for(std::size_t n=1; n <= lastId; ++n)
+          if (container[n]->GetIndex() > container[index_max]->GetIndex())
+          {
+            index_max = n;
+          }
 
-    container[i]->SetIndex(i);
+        container[i] = container[lastId];
+
+        container[index_max]->SetIndex(tmp);
+      }
+    }
+
     container.pop_back();
 
     return lastId;
