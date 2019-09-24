@@ -49,7 +49,7 @@ template< class T >
 static T
 asin_degree(T sine)
 {
-  return rad2deg(Geometry::asin< T >(sine));
+  return Math::rad2deg(Geometry::asin< T >(sine));
 }
 
 /**
@@ -82,7 +82,7 @@ template< class T >
 inline T
 acos_degree(T cosine)
 {
-  return rad2deg(Geometry::acos< T >(cosine));
+  return Math::rad2deg(Geometry::acos< T >(cosine));
 }
 } // namespace Geometry
 

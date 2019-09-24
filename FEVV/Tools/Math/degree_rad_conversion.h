@@ -14,15 +14,19 @@
 
 
 namespace FEVV {
+namespace Math {
 
-inline double deg2rad(double deg)
+template< typename T >
+inline T deg2rad(T deg)
 {
-  return deg * (M_PI / 180.f);
+  return static_cast< T >(deg * (M_PI / 180.f));
 }
 
-inline double rad2deg(double rad)
+template< typename T >
+inline T rad2deg(T rad)
 {
-  return rad * (180.f / M_PI);
+  return static_cast< T >(rad * (180.f / M_PI));
 }
 
+} // namespace Math
 } // namespace FEVV
