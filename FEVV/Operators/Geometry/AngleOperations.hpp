@@ -10,10 +10,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#include "FEVV/Tools/Math/degree_rad_conversion.h" // rad2deg()
 #include <cmath> // M_PI, asin
 
-#define DEG2RAD(deg) (deg * (M_PI / 180.f))
-#define RAD2DEG(rad) (rad * (180.f / M_PI))
 
 namespace FEVV {
 namespace Operators {
@@ -50,7 +49,7 @@ template< class T >
 static T
 asin_degree(T sine)
 {
-  return RAD2DEG(Geometry::asin< T >(sine));
+  return rad2deg(Geometry::asin< T >(sine));
 }
 
 /**
@@ -83,7 +82,7 @@ template< class T >
 inline T
 acos_degree(T cosine)
 {
-  return RAD2DEG(Geometry::acos< T >(cosine));
+  return rad2deg(Geometry::acos< T >(cosine));
 }
 } // namespace Geometry
 
