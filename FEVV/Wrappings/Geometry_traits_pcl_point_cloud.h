@@ -35,8 +35,7 @@ public:
   typedef FEVV::PCLPoint                  Point;
   typedef Eigen::Vector3f                 Vector;
     // see pcl-1.8.1/include/pcl-1.8/pcl/impl/point_types.hpp
-  typedef float                           Scalar;
-    // hardcoded in pcl-1.8.1/include/pcl-1.8/pcl/impl/point_types.hpp
+  typedef FEVV::PCLKernelType             Scalar;
 };
 
 /**
@@ -68,25 +67,17 @@ class Geometry_traits< MeshT, PCLPointCloud_kernel_generator >
 public:
   typedef MeshT Mesh;
   typedef typename RetrieveKernel< Mesh >::Kernel Kernel;
-  typedef typename Kernel::Point Point;
+  typedef typename Kernel::Point  Point;
   typedef typename Kernel::Vector Vector;
   typedef typename Kernel::Scalar Scalar;
 
   Geometry_traits(const Mesh &m) : m_mesh(const_cast< Mesh & >(m)) {}
 
-  template< int D >
-  static Scalar get(const Point &p)
-  {
-    // see
-    // https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/impl/point_types.hpp#L281
-    return p.data[D];
-  }
+  static Scalar get_x(const Point &p) { return p.x; }
 
-  static Scalar get_x(const Point &p) { return get< 0 >(p); }
+  static Scalar get_y(const Point &p) { return p.y; }
 
-  static Scalar get_y(const Point &p) { return get< 1 >(p); }
-
-  static Scalar get_z(const Point &p) { return get< 2 >(p); }
+  static Scalar get_z(const Point &p) { return p.z; }
 
 protected:
   Mesh &m_mesh;
