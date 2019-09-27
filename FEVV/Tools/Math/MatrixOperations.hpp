@@ -10,6 +10,8 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#include "degree_rad_conversion.h" // rad2deg()
+
 #include <iostream>
 #include <vector>
 #include <limits>
@@ -735,7 +737,7 @@ static double
 get_angle_in_degree_from_unit_vectors(const ElementType v1[DIM],
                                       const ElementType v2[DIM])
 {
-  return RAD2DEG(
+  return rad2deg(
       (Vector::get_angle_from_unit_vectors< ElementType, DIM >(v1, v2)));
 }
 
@@ -756,7 +758,7 @@ static double
 get_angle_in_degree_from_unit_vectors(const std::vector< ElementType > &v1,
                                       const std::vector< ElementType > &v2)
 {
-  return RAD2DEG((Vector::get_angle_from_unit_vectors< ElementType >(v1, v2)));
+  return rad2deg((Vector::get_angle_from_unit_vectors< ElementType >(v1, v2)));
 }
 ///////////////////////////////////////////////////////////////////////////
 /// V1 and V2 does not need to be unit vectors!
@@ -787,7 +789,7 @@ static double
 get_angle_in_degree_from_non_unit_vectors(const std::vector< ElementType > &v1,
                                           const std::vector< ElementType > &v2)
 {
-  return RAD2DEG(
+  return rad2deg(
       (Vector::get_angle_from_non_unit_vectors< ElementType >(v1, v2)));
 }
 template< class ElementType >
@@ -809,7 +811,7 @@ get_angle_in_degree_from3positions(
     const std::vector< ElementType > &p2, // point onto which angle is computed
     const std::vector< ElementType > &p3)
 {
-  return RAD2DEG((Vector::get_angle_from3positions< ElementType >(p1, p2, p3)));
+  return rad2deg((Vector::get_angle_from3positions< ElementType >(p1, p2, p3)));
 }
 ///////////////////////////////////////////////////////////////////////////
 // Rotate a coordinate system to be perpendicular to the given normal
