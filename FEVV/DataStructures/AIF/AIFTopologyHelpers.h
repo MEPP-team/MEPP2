@@ -3117,8 +3117,23 @@ public:
             if(is_cut_vertex(v)                // non-manifold
                || notUsedEdgesCopy.size() > 0) // hole within the one-ring
             { // non-manifold case: not all cases managed => to do later
-              assert(notUsedEdgesCopy.size() > 0);
-              if(notUsedEdgesCopy.size() <= 2)
+              if (notUsedEdgesCopy.size() == 0)
+              {                
+                if (notSortedOneRing.size() == 2)
+                {
+                  if (are_adjacent(*notSortedOneRing.begin(), result.front()))
+                  {
+                    auto it_tmp = notSortedOneRing.begin();
+                    ++it_tmp;
+                    nextEdge = *it_tmp;
+                  }
+                  else
+                    nextEdge = *notSortedOneRing.begin();
+                }
+                else
+                  nextEdge = *notSortedOneRing.begin();
+              }
+              else if(notUsedEdgesCopy.size() <= 2)
                 nextEdge = *notUsedEdgesCopy.begin();
               else
               {
