@@ -22,10 +22,10 @@ Mandatory dependencies:
  - Eigen 3
 
 Optional dependencies:
- - CGAL >= 4.14: used for CGAL data structures
+ - CGAL >= 4.14.1: used for CGAL data structures
  - OpenMesh >= 6.2: used for OpenMesh data structures
  - Qt 4 or 5: mandatory for building the GUI
- - OpenSceneGraph: mandatory for building the GUI
+ - OpenSceneGraph >= 3.2: mandatory for building the GUI
  - Doxygen and Graphviz: used to generate the documentation
 
 Other optional dependencies are:
@@ -49,15 +49,11 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   # Eigen 3
   $ sudo apt install libeigen3-dev
 
-  # CGAL 4.14 (installation in user home directory)
+  # CGAL 4.14.1 (installation in user home directory)
   $ sudo apt install libgmp-dev libmpfr-dev
   $ cd /tmp
-  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14/CGAL-4.14.zip
-  $ cd && unzip /tmp/CGAL-4.14.zip
-  # patch CGAL 4.14
-  $ cd ~/CGAL-4.14/include/CGAL/IO
-  $ mv write_ply_points.h write_ply_points.h.old
-  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
+  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.1/CGAL-4.14.1.zip
+  $ cd && unzip /tmp/CGAL-4.14.1.zip
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
@@ -72,7 +68,13 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
   $ sudo apt install libqt4-dev libqt4-opengl-dev (or qtdeclarative5-dev libqt5opengl5-dev for Qt 5 but today OpenSceneGraph is only SingleThread with Qt 5, so prefer Qt 4...)
 
   # OpenSceneGraph
-  $ sudo apt install libopenscenegraph-3.4-dev (or libopenscenegraph-dev)
+  $ sudo apt install libjpeg-dev libpng-dev libtiff-dev libfreetype6-dev
+  $ cd /tmp
+  $ wget https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.6.4.tar.gz
+  $ tar zxf OpenSceneGraph-3.6.4.tar.gz; cd OpenSceneGraph-OpenSceneGraph-3.6.4; mkdir build && cd build
+  $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.6.4
+  $ make
+  $ make install && cd
 
   # Doxygen and Graphviz
   $ sudo apt install doxygen graphviz
@@ -124,7 +126,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
@@ -132,11 +134,11 @@ Scripting commands for compiling Mepp2:
   $ make
 
   # compile with CGAL, OpenMesh, GUI and FBX
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DBUILD_DOCUMENTATION=ON ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DBUILD_DOCUMENTATION=ON ..
   $ make doc
 ````
 
@@ -180,8 +182,8 @@ Optional dependencies:
   $ brew install cgal
   $ brew info cgal
 
-  # -> ONLY if CGAL version above is 4.14 then you have to patch CGAL <- :
-  # ----------------------------------------------------------------------
+  # -> ONLY if CGAL version above is 4.14 then you have to patch CGAL (NO MORE PROBLEM with version >= 4.14.1) <- :
+  # ---------------------------------------------------------------------------------------------------------------
   $ cd /usr/local/include/CGAL/IO
   $ mv write_ply_points.h write_ply_points.h.old
   $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
@@ -262,17 +264,17 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
  - Update Windows 7/8/8.1/10 (services packs and Windows Update)
 
  - Download and install Visual Studio Express 2015 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
-   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/Visual%20Studio%20Community%202017/vs2017layout-fr.7z) (download size 1.8 GB, installation size ~2.4 GB).
+   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or Visual Studio Community 2019 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
 
 ### Installing dependencies
 
- 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff) for `VS2015_64` (download size 525 MB, installation size ~6.0 GB)
+ 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff) for `VS2015_64` (download size 529 MB, installation size ~6.0 GB)
 
  2. Optionally download the ['addon_01' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_01.7z) for Qt4 and OpenSceneGraph
-   (download size 390 MB, installation size ~2.8 GB)
+   (download size 396 MB, installation size ~2.9 GB)
 
  3. Optionally download the ['addon_02' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_02.7z) for Qt5
-   (download size 485 MB, installation size ~2.8 GB)
+   (download size 314 MB, installation size ~1.6 GB)
 
  4. Optionally download the ['addon_03' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_03.7z) for PCL
    (download size 31 MB, installation size ~417 MB)
@@ -288,7 +290,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  8. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
 
- 9. Extract CMake 3.12.4 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.12.4-win64-x64.zip'
+ 9. Extract CMake 3.15.3 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.15.3-win64-x64'
 
  10. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
 
@@ -312,7 +314,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  - Run cmake-gui.exe
 
- - Choose 'Visual Studio 14 2015 Win64' as the compiler version
+ - Choose 'Visual Studio 14 2015 Win64/x64' as the compiler version (or 'Visual Studio 15 2017 Win64/x64' or 'Visual Studio 16 2019 Win64/x64')
 
  - Where is the source code = ".../MEPP2"
 
@@ -324,11 +326,11 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  - Click "Generate"
 
- - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015, select 'Release' mode, then generate the 'ALL_BUILD' target
+ - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015 (or MSVC 2017 or MSVC 2019), select 'Release' mode, then generate the 'ALL_BUILD' target
 
 ### Run tests
 
- - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015
+ - Open ".../MEPP2/build/MEPP2.sln" solution with MSVC 2015 (or MSVC 2017 or MSVC 2019)
  - Generate the 'RUN_TESTS' target
 
 ### Run the GUI and plugin filters
