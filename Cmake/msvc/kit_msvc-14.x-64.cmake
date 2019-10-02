@@ -9,11 +9,15 @@ endif()
 
 ### 'core' : boost, CGAL, OpenMesh, Eigen 3, Img-3rdparty: jpeg, zlib (for png), png, tiff
 
-if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "19.10.25017.0") # 19.10.25017.0 -> info from boost 1_64_0 sources
-	set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
+# from https://github.com/Kitware/CMake/blob/master/Modules/Platform/Windows-MSVC.cmake
+if(MSVC_VERSION GREATER_EQUAL 1920)
+	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2019 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V142) 	# VS2019 x64
+elseif(MSVC_VERSION GREATER_EQUAL 1910)
+	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
 else()
-	set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
-	#set(BOOST_ROOT					${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
+	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
 endif()
 
 set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
@@ -56,13 +60,13 @@ set(TIFF_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/libtiff.li
 
 if(BUILD_USE_QT5)
 	# with qt5
-	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.0/5.6/msvc2015_64)
+	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)	
 else(BUILD_USE_QT5)
 	# with qt4
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)
 endif(BUILD_USE_QT5)
 
-set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.4.0)
+set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.6.4)
 
 ### addon 03 : PCL, FLANN
 
