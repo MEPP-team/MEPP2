@@ -60,8 +60,7 @@ set(TIFF_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/libtiff.li
 
 if(BUILD_USE_QT5)
 	# with qt5
-	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.0/5.6/msvc2015_64)
-	#set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)
+	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)
 else(BUILD_USE_QT5)
 	# with qt4
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)

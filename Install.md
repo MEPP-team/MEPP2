@@ -263,8 +263,8 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  - Update Windows 7/8/8.1/10 (services packs and Windows Update)
 
- - Download and install Visual Studio Express 2015 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
-   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use Visual Studio Community 2017 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or Visual Studio Community 2019 from [LIRIS host](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
+ - Download and install [Visual Studio Express 2015 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
+   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use [Visual Studio Community 2017 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or [Visual Studio Community 2019 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
 
 ### Installing dependencies
 
