@@ -118,11 +118,25 @@ public:
    * Function determining if the argument vertex is degenerated
    *
    * \param  vertex  The involving vertex
-   * \return return  true if vertex==null_vertex, and false otherwise.
+   * \return return  true if vertex==null_vertex or
+   *                 if vertex has a degenerated incident edge, 
+   *                 and false otherwise.
    */
   static bool is_degenerated_vertex(vertex_descriptor vertex)
   {
-    return vertex == null_vertex();
+    if (vertex == null_vertex())
+      return true;
+
+    auto eRange = incident_edges(vertex);
+    for (auto eIt = eRange.begin(); eIt != eRange.end(); ++eIt)
+    {
+      if( *eIt == null_edge() || 
+          (*eIt)->get_first_vertex() ==
+          (*eIt)->get_second_vertex() )
+        return true;
+    }
+
+    return false;
   }
 
   /*!
@@ -505,9 +519,9 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, const ComparatorType& cmp)
   {
-    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp);
+    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp); // here std::sort ok (no issue detected)
     return mesh->GetVertices();
   }
 
@@ -519,7 +533,7 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, const ComparatorType& cmp)
   {
     return sort_vertices<ComparatorType>(mesh.get(), cmp);
   }
@@ -532,7 +546,7 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, const ComparatorType& cmp)
   {
     return sort_vertices<ComparatorType>(&mesh, cmp);
   }
@@ -550,12 +564,14 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
-                                                                                                                ComparatorType cmp, 
+                                                                                                                const ComparatorType& cmp, 
                                                                                                                 edge_descriptor edge,
                                                                                                                 bool do_full_incident_edge_sorting)
   {
-    if(do_full_incident_edge_sorting)
-      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
+    if (do_full_incident_edge_sorting)
+    { // here std::sort not ok (issue detected when doing spanning tree based compression)
+      sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
+    }
     /////////////////////////////////////////////////////////////////////////
     std::list<edge_descriptor> ltmp, ltmpnext;
     edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
@@ -564,6 +580,10 @@ public:
     {
       ltmpnext.push_back(*it);
       ++it;
+    }
+    if (it == ite)
+    { // starting edge not found, do nothing
+      return incident_edges(vertex);
     }
     while (it != ite)
     {
@@ -589,7 +609,7 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
-                                                                                              ComparatorType cmp,
+                                                                                              const ComparatorType& cmp,
                                                                                               bool do_full_incident_edge_sorting)
   {
 
@@ -611,7 +631,7 @@ public:
   */
   template<typename ComparatorType>
   static void sort_incident_edges(edge_descriptor edge,
-                                  ComparatorType cmp,
+                                  const ComparatorType& cmp,
                                   bool do_full_incident_edge_sorting)
   {
     sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
@@ -627,7 +647,7 @@ public:
   */
   template<typename ComparatorType>
   static void sort_one_ring_incident_edges( edge_descriptor edge,
-                                            ComparatorType cmp)
+                                            const ComparatorType& cmp)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
@@ -1237,9 +1257,9 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, const ComparatorType& cmp)
   {
-    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp);
+    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp); // here std::sort ok (no issue detected)
     return mesh->GetEdges();
   }
 
@@ -1250,7 +1270,7 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, const ComparatorType& cmp)
   {
     return sort_edges<ComparatorType>(mesh.get(), cmp);
   }
@@ -1262,7 +1282,7 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, const ComparatorType& cmp)
   {
     return sort_edges<ComparatorType>(&mesh, cmp);
   }
@@ -2018,6 +2038,62 @@ public:
   faces(ref_cmesh mesh)
   {
     return faces(&mesh);
+  }
+
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(ptr_cmesh mesh)
+  {
+    auto iter_range_v = vertices(mesh);
+    auto iter_v = iter_range_v.begin();
+    for (; iter_v != iter_range_v.end(); ++iter_v)
+      if (is_degenerated_vertex(*iter_v))
+        return false;
+    auto iter_range_e = edges(mesh);
+    auto iter_e = iter_range_e.begin();
+    for (; iter_e != iter_range_e.end(); ++iter_e)
+      if (is_degenerated_edge(*iter_e))
+        return false;
+    auto iter_range_f = faces(mesh);
+    auto iter_f = iter_range_f.begin();
+    for (; iter_f != iter_range_f.end(); ++iter_f)
+      if (is_degenerated_face(*iter_f))
+        return false;
+
+    return true;
+  }
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(smart_ptr_cmesh mesh)
+  {
+    return check_mesh_validity(mesh.get());
+  }
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(ref_cmesh mesh)
+  {
+    return check_mesh_validity(&mesh);
   }
 
   /*!
@@ -3844,6 +3920,31 @@ private:
 
     face->clear_vertex_incidency(); // clear the caching incidency relation with
                                     // vertices
+  }
+  private:
+  ///////////////////////////////////////////////////////////////////////////
+  /*! a sorting algorithm different from std::sort (usefull for debug)
+  */
+  template< typename RandomIt, typename Compare >
+  static void sort(RandomIt first, RandomIt last, Compare comp)
+  {
+    for (; first != last; ++first)
+    {
+      auto min_location = first;
+      auto first2 = min_location;
+      ++first2;
+      for (; first2 != last; ++first2)
+      {
+        if (comp(*first2, *min_location))
+        {
+          min_location = first2;
+        }
+      }
+      if (min_location != first)
+      {
+        std::swap(*first, *min_location);
+      }
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////
