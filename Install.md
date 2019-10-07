@@ -290,7 +290,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  8. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
 
- 9. Extract CMake 3.15.3 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.15.3-win64-x64'
+ 9. Extract CMake 3.15.3 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.15.3-win64-x64.zip'
 
  10. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
 
