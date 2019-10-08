@@ -2144,12 +2144,19 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
 
       // color
       if(_vt_cm)
-        colorsArrays_vertices[mtl_id]->push_back(
-            Helpers::VectorColorConverter< PointCloud >(
-                get(v_cm, *v_it))); // user/filter/plugin colors
+      {
+        auto color_uint8 = get(v_cm, *v_it);
+        osg::Vec4 colorf((float)(color_uint8[0]/255.0f),
+                         (float)(color_uint8[1]/255.0f),
+                         (float)(color_uint8[2]/255.0f),
+                         1.0f);
+        colorsArrays_vertices[mtl_id]->push_back(colorf);
+      }
       else
+      {
         colorsArrays_vertices[mtl_id]->push_back(
             Helpers::ColorConverter(Color::Green())); // default color
+      }
     }
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
