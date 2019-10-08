@@ -408,7 +408,6 @@ public:
     typedef edge_container_in_vertex::const_iterator it_type;
     // if (vertex1 == null_vertex() || vertex2 == null_vertex())
     //  return null_edge();
-    std::vector< edge_descriptor > common_edges;
     boost::iterator_range< it_type > edges_range = incident_edges(
         vertex1); // we need to use the first vertex (the source in concept!!)
 
@@ -431,15 +430,15 @@ public:
                                                      vertex_descriptor vertex2)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
-    std::vector< edge_descriptor > common_edges;
+    std::vector< edge_descriptor > com_edges;
     boost::iterator_range< it_type > edges_range = incident_edges(vertex1);
 
     for(it_type it = edges_range.begin(); it != edges_range.end(); ++it)
     {
       if(opposite_vertex(*it, vertex1) == vertex2)
-        common_edges.push_back(*it);
+        com_edges.push_back(*it);
     }
-    return common_edges;
+    return com_edges;
   }
   /*!
    * Vertex and edge link.
@@ -1644,6 +1643,57 @@ public:
         return *it;
     }
     return null_face();
+  }
+
+  /*!
+  * 			First common edge between two faces
+  * \param	face1	The first involving face
+  * \param	face2	The second involving face
+  * \return	The first common edge between face1 and face2.
+  */
+  static edge_descriptor common_edge(face_descriptor face1,
+                                     face_descriptor face2)
+  {
+    typedef edge_container_in_face::const_iterator it_type;
+    // if (face1 == null_face() || face2 == null_face())
+    //  return null_edge();
+    boost::iterator_range< it_type > edges_range1 = incident_edges(face1); 
+    boost::iterator_range< it_type > edges_range2 = incident_edges(face2);
+
+    for (it_type it1 = edges_range1.begin(); it1 != edges_range1.end(); ++it1)
+    {
+      for (it_type it2 = edges_range2.begin(); it2 != edges_range2.end(); ++it2)
+      {
+        if (*it1 == *it2)
+          return *it1;
+      }
+    }
+    return null_edge();
+  }
+  /*!
+  * 			Common edges between two faces
+  * \param	face1	The first involving face
+  * \param	face2	The second involving face
+  * \return	An std::vector of the common edges between face1 and face1
+  * (there can be 0, 1, or min(degree(face1),degree(face2)) common edges).
+  */
+  static std::vector< edge_descriptor > common_edges(face_descriptor face1,
+                                                     face_descriptor face2)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+    std::vector< edge_descriptor > com_edges;
+    boost::iterator_range< it_type > edges_range1 = incident_edges(face1);
+    boost::iterator_range< it_type > edges_range2 = incident_edges(face2);
+
+    for (it_type it1 = edges_range1.begin(); it1 != edges_range1.end(); ++it1)
+    {
+      for (it_type it2 = edges_range2.begin(); it2 != edges_range2.end(); ++it2)
+      {
+        if ( (*it1 == *it2) && (std::find(com_edges.begin(), com_edges.end(), *it1) == com_edges.end()) )
+          com_edges.push_back(*it1);
+      }
+    }
+    return com_edges;
   }
   //////////////////////////////////	Mesh AIFTopologyHelpers
   /////////////////////////////////////
