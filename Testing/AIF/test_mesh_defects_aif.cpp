@@ -179,7 +179,7 @@ main(int narg, char **argv)
         if (all_faces.find(*iter_f) != all_faces.end())
         {
           edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
-          if (AIFHelpers::is_2_manifold_edge(e_tmp))
+          if (!AIFHelpers::is_complex_edge(e_tmp))
           {
             set_current_component.insert(*iter_f);
             all_faces.erase(*iter_f);
@@ -345,7 +345,7 @@ main(int narg, char **argv)
       ++nb_degenerated_faces;
   }
   /////////////////////////////////////////////////////////////////////////////
-  // 2 - Remove isolated elements
+  // 2 - Remove isolated elements + output filename generation
   std::string suffix = "";
   if(remove_isolated_elements == "y" || remove_isolated_elements == "Y")
   {
@@ -459,8 +459,10 @@ main(int narg, char **argv)
 
           if (degree(face_id_to_edge[current_id], *ptr_mesh) == 1)
           { // first processed face
-            put(pos_pm, source(face_id_to_edge[current_id], *ptr_mesh), get(pos_pm, v_pe_old));
-            put(pos_pm, target(face_id_to_edge[current_id], *ptr_mesh), get(pos_pm, v_ae_old));
+            auto p = get(pos_pm, v_pe_old); // to avoid some writing bugs
+            put(pos_pm, source(face_id_to_edge[current_id], *ptr_mesh), p);
+            p = get(pos_pm, v_ae_old);
+            put(pos_pm, target(face_id_to_edge[current_id], *ptr_mesh), p);
 
             AIFHelpers::add_edge(source(face_id_to_edge[current_id], *ptr_mesh), pe);
             AIFHelpers::add_vertex(pe, source(face_id_to_edge[current_id], *ptr_mesh), AIFHelpers::vertex_position(pe, v_pe_old));
@@ -488,25 +490,73 @@ main(int narg, char **argv)
 
     ++iter_e;
   }
-#if 0
+
   // duplicate cut vertices
   auto iter_v = cut_vertices.begin(), iter_v_end = cut_vertices.end();
   while (iter_v != iter_v_end)
   {
+    // cut vertices
+    std::cout << "degree of current cut vertex: " << degree(*iter_v, *ptr_mesh) << std::endl; // debug
+    // faces segmented with the same id need to replace *iter_v by a new vertex
+    // except for the first piece of surface
     auto face_range = AIFHelpers::incident_faces(*iter_v);
-    auto it_f = face_range.begin();
-    for (; it_f != face_range.end(); ++it_f)
-    {
-      // faces segmented with the same id need to replace *iter_v by a new vertex
-      // except for the first piece of surface
-      
-      vertex_descriptor v_tmp = AIFHelpers::add_vertex(*ptr_mesh);
 
+    std::set<face_descriptor> current_faces(face_range.begin(), face_range.end()),
+                              next_faces;
+    std::map<int, vertex_descriptor> face_id_to_vertex;
+    bool first = true;
+    while (!current_faces.empty())
+    {
+      face_descriptor current_f = *current_faces.begin();
+      int current_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+        "f:2_manifold_component_seg", current_f->GetIndex());
+
+      if (first)
+      { // the first component keep the initial complex edge
+        face_id_to_vertex.insert(std::make_pair(current_id, *iter_v));
+      }
+      else
+      {
+        std::cout << "create a new vertex" << std::endl; // debug
+        vertex_descriptor v_tmp = AIFHelpers::add_vertex(*ptr_mesh);
+        auto p = get(pos_pm, *iter_v); // to avoid some writing bugs
+        put(pos_pm, v_tmp, p);
+
+        face_id_to_vertex.insert(std::make_pair(current_id, v_tmp));
+      }
+
+      auto iter_f = current_faces.begin(), iter_f_end = current_faces.end();
+      for (; iter_f != iter_f_end; ++iter_f)
+      {
+        if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+          "f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
+          next_faces.insert(*iter_f);
+        else
+        {
+          if (first)
+            continue;
+
+          auto edge_range = AIFHelpers::incident_edges(*iter_f);
+          auto it_e = edge_range.begin();
+          for (; it_e != edge_range.end(); ++it_e)
+          {
+            if (AIFHelpers::are_incident(*it_e, *iter_v))
+            {
+              AIFHelpers::remove_edge(*iter_v, *it_e);
+              AIFHelpers::add_edge(face_id_to_vertex[current_id], *it_e);
+              AIFHelpers::add_vertex(*it_e, face_id_to_vertex[current_id], AIFHelpers::vertex_position(*it_e, *iter_v));
+            }
+          }
+        }
+      }
+
+      first = false;
+      current_faces.swap(next_faces);
+      next_faces.clear();
     }
 
     ++iter_v;
   }
-#endif
   /////////////////////////////////////////////////////////////////////////////
   // 4 - Save corrected mesh
   writer_type my_writer;
