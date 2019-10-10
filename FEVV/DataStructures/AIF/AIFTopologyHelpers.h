@@ -762,6 +762,74 @@ public:
     }
     return null_edge();
   }
+  /*!
+  * 			Are the two given faces incident to v and edge connected?
+  * \param	vertex	The involving vertex
+  * \param	face1    The first involving face
+  * \param	face2    The second involving face
+  * \return	True when face1 and face2 are incident to vertex and if we can reach
+  *         face2 from face1 (and vice-versa) by turning around vertex and without
+  *         meeting neither a border edge nor a complexe edge. Else return false.
+  */
+  static bool are_incident_to_vertex_and_edge_connected(vertex_descriptor vertex, face_descriptor face1, face_descriptor face2)
+  {
+    if (!are_incident(vertex, face1) || !are_incident(vertex, face2))
+      return false;
+  
+    auto face_range = incident_faces(vertex);
+    std::set<face_descriptor> current_faces(face_range.begin(), face_range.end());
+
+    edge_descriptor e1 = common_edge(vertex, face1);
+    edge_descriptor e2 = common_edge(vertex, face1, e1);
+    if (are_incident(face2, e1) || are_incident(face2, e2))
+      return true;
+    if ((e1 == null_edge()) && (e2 == null_edge()))
+      return false;
+    face_descriptor current_f_tmp = face1;
+    while ((e1!=null_edge()) &&
+           (degree(e1) == 2) &&
+           (current_faces.find(current_f_tmp) != current_faces.end()))
+    {
+      auto face_range2 = incident_faces(e1);
+      auto it_f2 = face_range2.begin();
+      for (; it_f2 != face_range2.end(); ++it_f2)
+      {
+        if (*it_f2 != current_f_tmp)
+        {
+          current_faces.erase(current_f_tmp);
+          current_f_tmp = *it_f2;
+          e1 = common_edge(vertex, current_f_tmp, e1);
+          if (are_incident(face2, e1))
+            return true;
+          break;
+        }
+      }
+    }
+    if(current_f_tmp != face1)
+      current_faces.erase(current_f_tmp);
+    if(degree(e2) == 2)
+      current_faces.insert(face1);
+    while ((e2 != null_edge()) &&
+           (degree(e2) == 2) &&
+           (current_faces.find(face1) != current_faces.end()))
+    {
+      auto face_range2 = incident_faces(e2);
+      auto it_f2 = face_range2.begin();
+      for (; it_f2 != face_range2.end(); ++it_f2)
+      {
+        if (*it_f2 != face1)
+        {
+          current_faces.erase(face1);
+          face1 = *it_f2;
+          e2 = common_edge(vertex, face1, e2);
+          if (are_incident(face2, e2))
+            return true;
+          break;
+        }
+      }
+    }
+    return false;
+  }
   //////////////////////////////////	Edge AIFTopologyHelpers
   /////////////////////////////////////
   /*!

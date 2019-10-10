@@ -179,7 +179,12 @@ main(int narg, char **argv)
         if (all_faces.find(*iter_f) != all_faces.end())
         {
           edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
-          if (!AIFHelpers::is_complex_edge(e_tmp))
+          //edge_descriptor e_prev = AIFHelpers::get_edge_of_face_before_edge(*iter_f, e_tmp);
+          //edge_descriptor e_next = AIFHelpers::get_edge_of_face_after_edge(*iter_f, e_tmp);
+          if (!AIFHelpers::is_complex_edge(e_tmp) /*&&
+              !AIFHelpers::is_complex_edge(e_prev) && 
+              !AIFHelpers::is_complex_edge(e_next) */
+            )
           {
             set_current_component.insert(*iter_f);
             all_faces.erase(*iter_f);
@@ -497,8 +502,8 @@ main(int narg, char **argv)
   {
     // cut vertices
     std::cout << "degree of current cut vertex: " << degree(*iter_v, *ptr_mesh) << std::endl; // debug
-    // faces segmented with the same id need to replace *iter_v by a new vertex
-    // except for the first piece of surface
+    // pieces of surface need to replace *iter_v by a new vertex
+    // except for the first piece of surface which keeps *iter_v
     auto face_range = AIFHelpers::incident_faces(*iter_v);
 
     std::set<face_descriptor> current_faces(face_range.begin(), face_range.end()),
@@ -514,6 +519,49 @@ main(int narg, char **argv)
       if (first)
       { // the first component keep the initial complex edge
         face_id_to_vertex.insert(std::make_pair(current_id, *iter_v));
+
+        // also continue for the same piece of surface else add to next_faces
+        // remove edge-adjacent face around *iter_v
+        edge_descriptor e1 = AIFHelpers::common_edge(*iter_v, current_f);
+        edge_descriptor e2 = AIFHelpers::common_edge(*iter_v, current_f, e1);
+        face_descriptor current_f_tmp = current_f;
+        while ((degree(e1, *ptr_mesh) == 2) && 
+               (current_faces.find(current_f_tmp)!= current_faces.end()))
+        {
+          auto face_range2 = AIFHelpers::incident_faces(e1);
+          auto it_f2 = face_range2.begin();
+          for (; it_f2 != face_range2.end(); ++it_f2)
+          {
+            if (*it_f2 != current_f_tmp)
+            {
+              current_faces.erase(current_f_tmp);
+              current_f_tmp = *it_f2;
+              e1 = AIFHelpers::common_edge(*iter_v, current_f_tmp, e1);
+              break;
+            }
+          }
+        }
+        if(current_f_tmp != current_f)
+          current_faces.erase(current_f_tmp);
+        if(degree(e2, *ptr_mesh) == 2)
+          current_faces.insert(current_f);
+        while ((degree(e2, *ptr_mesh) == 2) &&
+               (current_faces.find(current_f) != current_faces.end()))
+        {
+          auto face_range2 = AIFHelpers::incident_faces(e2);
+          auto it_f2 = face_range2.begin();
+          for (; it_f2 != face_range2.end(); ++it_f2)
+          {
+            if (*it_f2 != current_f)
+            {
+              current_faces.erase(current_f);
+              current_f = *it_f2;
+              e2 = AIFHelpers::common_edge(*iter_v, current_f, e2);
+              break;
+            }
+          }
+        }
+
       }
       else
       {
@@ -526,15 +574,25 @@ main(int narg, char **argv)
       }
 
       auto iter_f = current_faces.begin(), iter_f_end = current_faces.end();
+      std::map<face_descriptor, bool> face_to_next;
+      for (; iter_f != iter_f_end; ++iter_f)
+        if (current_f == *iter_f)
+          face_to_next[*iter_f] = false;
+        else if(AIFHelpers::are_incident_to_vertex_and_edge_connected(*iter_v, current_f, *iter_f))
+          face_to_next[*iter_f] = false;
+        else
+          face_to_next[*iter_f] = true;
+      iter_f = current_faces.begin();
       for (; iter_f != iter_f_end; ++iter_f)
       {
-        if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
-          "f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
+        if (face_to_next[*iter_f])
           next_faces.insert(*iter_f);
         else
         {
           if (first)
-            continue;
+          {
+            continue;           
+          }
 
           auto edge_range = AIFHelpers::incident_edges(*iter_f);
           auto it_e = edge_range.begin();
