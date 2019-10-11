@@ -130,4 +130,35 @@ num_vertices(const FEVV::PCLPointCloud &m)
 }
 
 
+// BGL VertexMutableGraph Concept
+//!
+//! \brief  Adds a new vertex to the graph without initializing the
+//! connectivity.
+//!
+inline
+typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
+add_vertex(FEVV::PCLPointCloud &pc)
+{
+  FEVV::PCLEnrichedPoint new_point;
+  pc.push_back(new_point);
+
+  // return index of new point
+  return pc.size() - 1;
+}
+
+
+// CGAL MutableHalfedgeGraph Concept
+//!
+//! \brief  Removes v from the mesh.
+//!
+inline
+void
+remove_vertex(typename boost::graph_traits<
+                  FEVV::PCLPointCloud >::vertex_descriptor v,
+              FEVV::PCLPointCloud &pc)
+{
+  pc.erase(pc.begin() + v);
+}
+
+
 } // namespace pcl
