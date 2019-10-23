@@ -184,6 +184,43 @@ public:
   }
 
   /*!
+  * Function determining if the argument vertex is has either
+  *          a dangling or complex incident edge.
+  *
+  * \param  vertex  The involving vertex
+  * \return true if the argument vertex has either a dangling
+  *         or complex incident edge, false otherwise.
+  */
+  static bool has_dangling_or_complex_incident_edge(vertex_descriptor vertex)
+  {
+    auto incidentEdgesRange = incident_edges(vertex);
+    auto it = incidentEdgesRange.begin();
+    auto ite = incidentEdgesRange.end();
+    for (; it != ite; ++it)
+    {
+      if (is_complex_edge(*it) || is_dangling_edge(*it))
+        return true;
+    }
+    return false;
+  }
+
+  /*!
+  * Function determining if the argument vertex is a regular 
+  *          surface vertex (border or interior). Isolated
+  *          vertex is not considered here.
+  *
+  * \param  vertex  The involving vertex
+  * \return true if the argument vertex is a regular vertex, false otherwise.
+  */
+  static bool is_regular_vertex(vertex_descriptor vertex)
+  {
+    if (is_cut_vertex(vertex) || has_dangling_or_complex_incident_edge(vertex))
+      return false;
+
+    return true;
+  }
+
+  /*!
    * Function determining if the argument vertex is a 2-manifold vertex
    * considering only the topology (not the geometry)
    *
@@ -763,7 +800,8 @@ public:
     return null_edge();
   }
   /*!
-  * 			Are the two given faces incident to v and edge connected?
+  *       Are the two given faces incident to v reachable without
+  *       meeting neither a border edge nor a complex edge?
   * \param	vertex	The involving vertex
   * \param	face1    The first involving face
   * \param	face2    The second involving face
@@ -781,10 +819,10 @@ public:
 
     edge_descriptor e1 = common_edge(vertex, face1);
     edge_descriptor e2 = common_edge(vertex, face1, e1);
-    if (are_incident(face2, e1) || are_incident(face2, e2))
-      return true;
     if ((e1 == null_edge()) && (e2 == null_edge()))
       return false;
+    if (are_incident(face2, e1) || are_incident(face2, e2))
+      return true;
     face_descriptor current_f_tmp = face1;
     while ((e1!=null_edge()) &&
            (degree(e1) == 2) &&
@@ -849,6 +887,17 @@ public:
     return degree(edge) == 1;
   }
   /*!
+  * 			Function determining if the argument edge is a surface 
+  *       regular interior edge.
+  * \param	edge	The involving edge
+  * \return	true if the argument edge has 2 incident faces, false
+  * otherwise. 
+  */
+  static bool is_surface_regular_edge(edge_descriptor edge)
+  {
+    return degree(edge) == 2;
+  }
+  /*!
    * Function determining if the argument edge is not on a border
    *
    * \param  edge  The involving edge
@@ -859,7 +908,19 @@ public:
   {
     return !is_surface_border_edge(edge) && !is_dangling_edge(edge);
   }
-
+  /*!
+  * 			Function determining if the argument edge is a regular edge.
+  * \param	edge	The involving edge
+  * \return	true if the argument edge has 2 incident faces for
+  *         interior edges and 1 for border edges, false otherwise.
+  */
+  static bool is_regular_edge(edge_descriptor edge)
+  {
+    if (is_surface_interior_edge(edge))
+      return is_surface_regular_edge(edge);
+    else
+      return is_surface_border_edge(edge);
+  }
   /*!
    * 			Function determining if the argument edge is isolated
    *       (without any incident face + its vertices are 1 degree vertices)
@@ -886,6 +947,7 @@ public:
   }
   /*!
    * Function determining if the argument edge is a complex edge
+   *          (singular or non-regular).
    *
    * \param  edge  The involving edge
    *

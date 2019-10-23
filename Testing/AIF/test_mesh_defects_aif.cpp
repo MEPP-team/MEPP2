@@ -181,9 +181,10 @@ main(int narg, char **argv)
           edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
           //edge_descriptor e_prev = AIFHelpers::get_edge_of_face_before_edge(*iter_f, e_tmp);
           //edge_descriptor e_next = AIFHelpers::get_edge_of_face_after_edge(*iter_f, e_tmp);
-          if (!AIFHelpers::is_complex_edge(e_tmp) /*&&
-              !AIFHelpers::is_complex_edge(e_prev) && 
-              !AIFHelpers::is_complex_edge(e_next) */
+          if (AIFHelpers::is_surface_regular_edge(e_tmp) 
+              /*&&
+              (AIFHelpers::is_regular_vertex(source(e_tmp, *ptr_mesh)) &&
+              AIFHelpers::is_regular_vertex(target(e_tmp, *ptr_mesh)))*/
             )
           {
             set_current_component.insert(*iter_f);
@@ -211,6 +212,7 @@ main(int narg, char **argv)
       nb_vertices_with_similar_incident_edges = 0;
   std::vector< vertex_descriptor > v_to_remeove;
   std::vector< vertex_descriptor > cut_vertices;
+  
   for(; vi != vi_end; ++vi)
   {
     if(AIFHelpers::is_isolated_vertex(*vi))
@@ -226,9 +228,11 @@ main(int narg, char **argv)
               "v:color", (*vi)->GetIndex(), red);
       }
     }
-    else if(AIFHelpers::is_cut_vertex(*vi))
-    {
-      ++nb_cut_vertices;
+    else if(AIFHelpers::is_cut_vertex(*vi) && 
+            !AIFHelpers::has_dangling_or_complex_incident_edge(*vi) // we must process dangling and complex edges first 
+      )                                                             // and we can even either create new cut vertices 
+    {                                                               // during the complex edge processing or resolve a cut
+      ++nb_cut_vertices;                                            // vertex...
       if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
         cut_vertices.push_back(*vi);
       else
@@ -300,11 +304,22 @@ main(int narg, char **argv)
       else
       {
         if (colorize_mesh == "y" || colorize_mesh == "Y")
+        {
+         /* ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+            "v:color", (*ei)->get_first_vertex()->GetIndex(), blue);
+          ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+            "v:color", (*ei)->get_second_vertex()->GetIndex(), blue);*/
+          
           ptr_mesh->SetProperty< AIFMeshT::edge_type::ptr, AIFMeshT::Vector >(
             "e:color", (*ei)->GetIndex(), blue);
+        }
       }
     }
-    else if (AIFHelpers::is_surface_border_edge(*ei))
+    //else if (AIFHelpers::has_inconsistent_incident_face_orientation(*ei))
+    //{
+    //  // case not treated yet
+    //}
+    else if (AIFHelpers::is_surface_regular_edge(*ei))
     {
       ++nb_border_edges;
       if (colorize_mesh == "y" || colorize_mesh == "Y")
@@ -328,16 +343,19 @@ main(int narg, char **argv)
   for(; fi != fi_end; ++fi)
   {
     if(AIFHelpers::is_isolated_face(*fi))
-    {
+    { // note that removing isolated faces may create hole in the surface!
+      // especially after processing cut vertices.
+      // Therefore, it is rather advised to preserved them, and use
+      // a higher level algorithm to keep or remove them.
       ++nb_isolated_faces;
-      if(remove_isolated_elements == "y" || remove_isolated_elements == "Y")
-        f_to_remeove.push_back(*fi);
-      else
-      {
+      //if(remove_isolated_elements == "y" || remove_isolated_elements == "Y")
+      //  f_to_remeove.push_back(*fi);
+      //else
+      //{
         if (colorize_mesh == "y" || colorize_mesh == "Y")
           ptr_mesh->SetProperty< AIFMeshT::face_type::ptr, AIFMeshT::Vector >(
               "f:color", (*fi)->GetIndex(), red);
-      }
+      //}
     }
     else
     {
@@ -388,21 +406,44 @@ main(int narg, char **argv)
   // 3 - Process non-2-manifold elements
   auto pos_pm = get(boost::vertex_point, *ptr_mesh);
 
-  // remove dangling edges
+  // remove dangling edges (+ update list of cut vertices)
   auto iter_e = dangling_edges.begin(), iter_e_end = dangling_edges.end();
   while (iter_e != iter_e_end)
   {
-    if(degree(source(*iter_e, *ptr_mesh), *ptr_mesh)==1)
+    if (degree(source(*iter_e, *ptr_mesh), *ptr_mesh) == 1)
+    {
+      auto v_tmp = target(*iter_e, *ptr_mesh);
       FEVV::Operators::collapse_edge_keep_target(*ptr_mesh, *iter_e);
-    else if (degree(target(*iter_e, *ptr_mesh), *ptr_mesh) == 1)
-      FEVV::Operators::collapse_edge_keep_source(*ptr_mesh, *iter_e);
+      if (AIFHelpers::is_cut_vertex(v_tmp))
+      {
+        ++nb_cut_vertices;                                            // vertex...
+        if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
+          cut_vertices.push_back(v_tmp);
+        else
+          if (colorize_mesh == "y" || colorize_mesh == "Y")
+            ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+              "v:color", v_tmp->GetIndex(), blue);
+      }
+    }
     else
+    {
+      auto v_tmp = source(*iter_e, *ptr_mesh);
       FEVV::Operators::collapse_edge_keep_source(*ptr_mesh, *iter_e);
-    
+      if (AIFHelpers::is_cut_vertex(v_tmp))
+      {
+        ++nb_cut_vertices;                                            // vertex...
+        if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
+          cut_vertices.push_back(v_tmp);
+        else
+          if (colorize_mesh == "y" || colorize_mesh == "Y")
+            ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+              "v:color", v_tmp->GetIndex(), blue);
+      }
+    }
     ++iter_e;
   }
 
-  // decomplexify complex edges
+  // decomplexify complex edges (+ update list of cut vertices)
   iter_e = complex_edges.begin(), iter_e_end = complex_edges.end();
   while (iter_e != iter_e_end)
   {
@@ -493,10 +534,38 @@ main(int narg, char **argv)
       next_faces.clear();
     }
 
+    // update cut vertices
+    auto iter_map = face_id_to_edge.begin(), iter_map_e = face_id_to_edge.end();
+    for (; iter_map != iter_map_e; ++iter_map)
+    {
+      auto v_tmp = source(iter_map->second, *ptr_mesh);
+      if (AIFHelpers::is_cut_vertex(v_tmp))
+      {
+        ++nb_cut_vertices;                                            // vertex...
+        if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
+          cut_vertices.push_back(v_tmp);
+        else
+          if (colorize_mesh == "y" || colorize_mesh == "Y")
+            ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+              "v:color", v_tmp->GetIndex(), blue);
+      }
+      v_tmp = target(iter_map->second, *ptr_mesh);
+      if (AIFHelpers::is_cut_vertex(v_tmp))
+      {
+        ++nb_cut_vertices;                                            // vertex...
+        if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
+          cut_vertices.push_back(v_tmp);
+        else
+          if (colorize_mesh == "y" || colorize_mesh == "Y")
+            ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+              "v:color", v_tmp->GetIndex(), blue);
+      }
+    }
+
     ++iter_e;
   }
 
-  // duplicate cut vertices
+  // duplicate cut vertices [local partition and cutting]
   auto iter_v = cut_vertices.begin(), iter_v_end = cut_vertices.end();
   while (iter_v != iter_v_end)
   {
