@@ -1746,6 +1746,56 @@ public:
   }
 
   /*!
+  * 			Function determining if two incident faces are oriented
+  *       consistently.
+  * \param	face1	The first involving face
+  * \param	face2	The first involving face
+  * \return	true if the argument faces are adjacent and consitently
+  *         oriented.
+  */
+  static bool have_consistent_orientation(face_descriptor face1, face_descriptor face2)
+  {
+    auto vertices_range1 = incident_vertices(face1);
+    auto vertices_range2 = incident_vertices(face2);
+    auto it1 = vertices_range1.begin();
+    for (; it1 != vertices_range1.end(); ++it1) {
+      auto it2 = vertices_range2.begin();
+      for (; it2 != vertices_range2.end(); ++it2) {
+        if (*it1 == *it2)
+        {
+          auto it1_b = it1;
+          if (it1_b == vertices_range1.begin())
+            it1_b = vertices_range1.end();
+          --it1_b;
+
+          ++it1;
+          if (it1 == vertices_range1.end())
+            it1 = vertices_range1.begin();
+
+          auto it2_b = it2;
+          if (it2_b == vertices_range2.begin())
+            it2_b = vertices_range2.end();
+          --it2_b;
+
+          ++it2;
+          if (it2 == vertices_range2.end())
+            it2 = vertices_range2.begin();
+
+          if ( (*it1 == *it2) || (*it1_b == *it2_b))
+          {
+            return false;
+          }
+          if ( (*it1 == *it2_b) || (*it1_b==*it2) )
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /*!
   * 			Reverse the incident edge order of the given face.
   * \param	face	The involved face
   */

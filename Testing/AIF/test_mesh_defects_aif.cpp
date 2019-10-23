@@ -176,7 +176,8 @@ main(int narg, char **argv)
       auto vector_faces = AIFHelpers::adjacent_faces(current_f, true);
       auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
       for( ; iter_f!=iter_f_end; ++iter_f)
-        if (all_faces.find(*iter_f) != all_faces.end())
+        if ((all_faces.find(*iter_f) != all_faces.end()) && 
+            AIFHelpers::have_consistent_orientation(current_f, *iter_f))
         {
           edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
           //edge_descriptor e_prev = AIFHelpers::get_edge_of_face_before_edge(*iter_f, e_tmp);
