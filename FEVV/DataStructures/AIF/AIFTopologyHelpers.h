@@ -164,6 +164,10 @@ public:
    *
    * \param  vertex  The involving vertex
    * \return true if the argument vertex is a cut vertex, false otherwise.
+   * \note Sometimes a vertex can have disconnected adjacent faces that are
+   *       disconnected because their edge' end-vertex differ (T-junction).
+   *       For general processing, it thus can be useful to process T-junction
+   *       vertices before processing cut vertices.
    */
   static bool is_cut_vertex(vertex_descriptor vertex)
   {

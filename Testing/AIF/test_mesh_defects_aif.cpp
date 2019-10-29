@@ -19,13 +19,70 @@
 
 #include "FEVV/Operators/AIF/similarity.hpp"
 #include "FEVV/Operators/AIF/collapse_edge.hpp"
+#include "FEVV/DataStructures/AIF/AIFMeshHelpers.h"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 
 #include <vector>
 #include <set>
+#include <map>
 
 using namespace FEVV::DataStructures::AIF;
+template< typename IterFaceType, typename PointMap >
+AIFMeshT extract_vertex_local_neighborhood(IterFaceType begin, IterFaceType end, PointMap pm)
+{
+  typedef typename boost::graph_traits< AIFMeshT >::vertex_descriptor vertex_descriptor;
+  AIFMeshT res;
+  auto pm_new = get(boost::vertex_point, res);
+  std::map<vertex_descriptor, vertex_descriptor> from_current_to_new;
+  auto iter_f = begin;
+  for (; iter_f != end; ++iter_f)
+  {
+    std::vector<vertex_descriptor> face_vertices; // for current new face to add
+    auto vertex_range = AIFHelpers::incident_vertices(*iter_f);
+    auto iter_v = vertex_range.begin();
+    for (; iter_v != vertex_range.end(); ++iter_v)
+    {
+      if (from_current_to_new.find(*iter_v) == from_current_to_new.end())
+      {
+        vertex_descriptor v_n = AIFHelpers::add_vertex(res);
+        from_current_to_new[*iter_v] = v_n;
+        auto p = get(pm, *iter_v); // to avoid some writing bugs
+        put(pm_new, v_n, p);
+      }
+      face_vertices.push_back(from_current_to_new[*iter_v]);
+    }
+
+    CGAL::Euler::add_face(face_vertices, res);
+  }
+  return res;
+}
+template<typename PointMap>
+AIFMeshT extract_vertex_local_neighborhood(
+  typename boost::graph_traits< AIFMeshT >::vertex_descriptor v,
+  const AIFMeshT& g,
+  PointMap pm)
+{
+  auto face_range = AIFHelpers::incident_faces(v);
+
+  return extract_vertex_local_neighborhood(face_range.begin(), face_range.end(), pm);
+}
+template<typename PointMap>
+AIFMeshT extract_edge_local_neighborhood(
+  typename boost::graph_traits< AIFMeshT >::edge_descriptor e,
+  const AIFMeshT& g,
+  PointMap pm)
+{
+  typedef typename boost::graph_traits< AIFMeshT >::face_descriptor face_descriptor;
+
+  auto face_range_s = AIFHelpers::incident_faces(source(e,g));
+  auto face_range_t = AIFHelpers::incident_faces(target(e, g));
+
+  std::set<face_descriptor> faces(face_range_s.begin(), face_range_s.end());
+  faces.insert(face_range_t.begin(), face_range_t.end());
+
+  return extract_vertex_local_neighborhood(faces.begin(), faces.end(), pm);
+}
 
 int
 main(int narg, char **argv)
@@ -209,11 +266,12 @@ main(int narg, char **argv)
   auto iterator_pair_v = vertices(*ptr_mesh);
   vertex_iterator vi = iterator_pair_v.first;
   vertex_iterator vi_end = iterator_pair_v.second;
-  int nb_isolated_vertices = 0, nb_cut_vertices = 0,
+  int nb_isolated_vertices = 0, nb_cut_vertices = 0, nb_t_junction_vertices = 0,
       nb_vertices_with_similar_incident_edges = 0;
   std::vector< vertex_descriptor > v_to_remeove;
   std::vector< vertex_descriptor > cut_vertices;
-  
+  std::vector< vertex_descriptor > t_junction_vertices;
+  GeometryTraits gt(*ptr_mesh);
   for(; vi != vi_end; ++vi)
   {
     if(AIFHelpers::is_isolated_vertex(*vi))
@@ -228,6 +286,16 @@ main(int narg, char **argv)
           ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
               "v:color", (*vi)->GetIndex(), red);
       }
+    }
+    else if (FEVV::DataStructures::AIF::AIFMeshHelpers::is_a_T_junction_vertex(*vi, *ptr_mesh, gt))
+    {
+      ++nb_t_junction_vertices;
+      if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
+        t_junction_vertices.push_back(*vi);
+      else
+        if (colorize_mesh == "y" || colorize_mesh == "Y")
+          ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+            "v:color", (*vi)->GetIndex(), blue);
     }
     else if(AIFHelpers::is_cut_vertex(*vi) && 
             !AIFHelpers::has_dangling_or_complex_incident_edge(*vi) // we must process dangling and complex edges first 
@@ -349,14 +417,14 @@ main(int narg, char **argv)
       // Therefore, it is rather advised to preserved them, and use
       // a higher level algorithm to keep or remove them.
       ++nb_isolated_faces;
-      //if(remove_isolated_elements == "y" || remove_isolated_elements == "Y")
-      //  f_to_remeove.push_back(*fi);
-      //else
-      //{
+      if(remove_isolated_elements == "y" || remove_isolated_elements == "Y")
+        f_to_remeove.push_back(*fi);
+      else
+      {
         if (colorize_mesh == "y" || colorize_mesh == "Y")
           ptr_mesh->SetProperty< AIFMeshT::face_type::ptr, AIFMeshT::Vector >(
               "f:color", (*fi)->GetIndex(), red);
-      //}
+      }
     }
     else
     {
@@ -448,6 +516,21 @@ main(int narg, char **argv)
   iter_e = complex_edges.begin(), iter_e_end = complex_edges.end();
   while (iter_e != iter_e_end)
   {
+    { // mesh file writing debug
+      auto res_mesh =
+      extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+      writer_type my_writer;
+      try
+      {
+          my_writer.write(res_mesh,
+            FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
+      }
+      catch (...)
+      {
+        std::cout << "writing failed";
+        return -1;
+      }
+    }
     // complex edges
     std::cout << "degree of current complex edge: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
     auto faces_range_pair = in_edges(*iter_e, *ptr_mesh); // get incident faces
@@ -570,8 +653,29 @@ main(int narg, char **argv)
   auto iter_v = cut_vertices.begin(), iter_v_end = cut_vertices.end();
   while (iter_v != iter_v_end)
   {
+    { // mesh file writing debug
+      auto res_mesh =
+        extract_vertex_local_neighborhood(*iter_v, *ptr_mesh, pos_pm);
+      writer_type my_writer;
+      try
+      {
+        my_writer.write(res_mesh,
+          FEVV::FileUtils::get_file_name(input_file_path) + "_vertex_" + FEVV::StrUtils::convert((*iter_v)->GetIndex()) + ".off");
+      }
+      catch (...)
+      {
+        std::cout << "writing failed";
+        return -1;
+      }
+    }
     // cut vertices
-    std::cout << "degree of current cut vertex: " << degree(*iter_v, *ptr_mesh) << std::endl; // debug
+    if (AIFHelpers::is_cut_vertex(*iter_v))
+      std::cout << "degree of current cut vertex: " << degree(*iter_v, *ptr_mesh) << std::endl; // debug
+    else
+    {
+      std::cout << "current vertex is not more a cut vertex!" << std::endl;
+      continue;
+    }
     // pieces of surface need to replace *iter_v by a new vertex
     // except for the first piece of surface which keeps *iter_v
     auto face_range = AIFHelpers::incident_faces(*iter_v);
@@ -587,7 +691,7 @@ main(int narg, char **argv)
         "f:2_manifold_component_seg", current_f->GetIndex());
 
       if (first)
-      { // the first component keep the initial complex edge
+      { // the first component keep the initial cut vertex
         face_id_to_vertex.insert(std::make_pair(current_id, *iter_v));
 
         // also continue for the same piece of surface else add to next_faces
@@ -683,6 +787,25 @@ main(int narg, char **argv)
       next_faces.clear();
     }
 
+    if (!AIFHelpers::is_cut_vertex(*iter_v))
+    {
+      std::cout << "failed to correct current vertex!" << std::endl; // debug
+      { // mesh file writing debug
+        auto res_mesh =
+          extract_vertex_local_neighborhood(*iter_v, *ptr_mesh, pos_pm);
+        writer_type my_writer;
+        try
+        {
+          my_writer.write(res_mesh,
+            FEVV::FileUtils::get_file_name(input_file_path) + "_vertex_after_" + FEVV::StrUtils::convert((*iter_v)->GetIndex()) + ".off");
+        }
+        catch (...)
+        {
+          std::cout << "writing failed";
+          return -1;
+        }
+      }
+    }
     ++iter_v;
   }
   /////////////////////////////////////////////////////////////////////////////

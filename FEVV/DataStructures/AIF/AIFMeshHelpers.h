@@ -32,6 +32,7 @@ public:
   typedef AIFPropertiesHelpers::Point Point;
   typedef AIFPropertiesHelpers::Vector Vector;
 
+  typedef AIFTopologyHelpers::mesh_type mesh_type;
   typedef AIFTopologyHelpers::ptr_mesh ptr_mesh;
   typedef AIFTopologyHelpers::vertex_descriptor vertex_descriptor;
   typedef AIFTopologyHelpers::edge_descriptor edge_descriptor;
@@ -56,7 +57,7 @@ public:
    */
   template< typename GeometryTraits >
   static bool is_a_T_junction_vertex(vertex_descriptor v,
-                                     ptr_mesh mesh,
+                                     mesh_type mesh,
                                      const GeometryTraits &gt)
   {
     if(AIFTopologyHelpers::is_surface_interior_vertex(v))
