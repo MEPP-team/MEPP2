@@ -32,7 +32,7 @@ public:
   typedef AIFPropertiesHelpers::Point Point;
   typedef AIFPropertiesHelpers::Vector Vector;
 
-  typedef AIFTopologyHelpers::mesh_type mesh_type;
+  typedef AIFTopologyHelpers::ref_mesh ref_mesh;
   typedef AIFTopologyHelpers::ptr_mesh ptr_mesh;
   typedef AIFTopologyHelpers::vertex_descriptor vertex_descriptor;
   typedef AIFTopologyHelpers::edge_descriptor edge_descriptor;
@@ -54,12 +54,15 @@ public:
    *
    *  from GHARIAL commit 24d25d4b145cb50087747183adb9c0894ab116fb (19 sept.
    * 2016)
+   * \note A T-junction on v or on an adjacent vertex of v does
+   *       not mean that v is a cut vertex. But v may also be a cut vertex.
    */
   template< typename GeometryTraits >
   static bool is_a_T_junction_vertex(vertex_descriptor v,
-                                     mesh_type mesh,
+                                     ref_mesh mesh,
                                      const GeometryTraits &gt)
   {
+    // Does not give stable results (several successive runs give different results)
     if(AIFTopologyHelpers::is_surface_interior_vertex(v))
       return false;
     // all incident edges are interior edges, thus we are sure
@@ -89,14 +92,15 @@ public:
         Point &itPoint = AIFPropertiesHelpers::get_point(mesh, *it);
         Point &it2Point = AIFPropertiesHelpers::get_point(mesh, *it2);
 
-        std::vector< double > vVector(vPoint.cbegin(), vPoint.cend());
-        std::vector< double > itVector(itPoint.cbegin(), itPoint.cend());
         std::vector< double > it2Vector(it2Point.cbegin(), it2Point.cend());
 
-        if(Math::Vector::are_aligned(vVector, itVector, it2Vector) &&
-           // must be on both sides of v vertex
-           (gt.dot_product(Math::Vector::sub(vVector, itVector),
-                           Math::Vector::sub(vVector, it2Vector)) < 0.))
+        if(Math::Vector::are_aligned<GeometryTraits>(vPoint, itPoint, it2Point) &&
+           // must be on both on the same side of v vertex for an adjacent T-junction
+           // or on both side of v for a T-junction on v. However last case may be confused with
+          // a classical border case.
+           (gt.dot_product(gt.sub(vPoint, itPoint),
+                           gt.sub(vPoint, it2Point)) < 0.)
+          )
         {
           if(AIFTopologyHelpers::is_surface_border_edge(
                  AIFTopologyHelpers::common_edge(v, *it)) &&
@@ -124,10 +128,8 @@ public:
               }
 
               Point &tmpIPoint = AIFPropertiesHelpers::get_point(mesh, *tmpI);
-              std::vector< double > tmpIVector(tmpIPoint.cbegin(),
-                                               tmpIPoint.cend());
 
-              if(Math::Vector::are_aligned(vVector, itVector, tmpIVector))
+              if(Math::Vector::are_aligned<GeometryTraits>(vPoint, itPoint, tmpIPoint))
               {
                 if(AIFTopologyHelpers::are_adjacent(*tmpI, *it) &&
                    AIFTopologyHelpers::is_surface_border_edge(
@@ -154,6 +156,118 @@ public:
     return false; // not found any collinear triplet
   }
 
+  template< typename GeometryTraits >
+  static bool has_adjacent_T_junction_vertex(vertex_descriptor v,
+    ref_mesh mesh,
+    const GeometryTraits &gt)
+  {
+#if 0
+    // Does not give stable results (several successive runs give different results)
+    vertex_container_in_vertex oneR =
+      AIFTopologyHelpers::get_ordered_one_ring_of_adjacent_vertices(v);
+    auto it = oneR.begin();
+    auto ite = oneR.end();
+    for (; it != ite; ++it)
+    {
+      if (is_a_T_junction_vertex(*it, mesh, gt))
+        return true;
+    }
+#else
+    // Does not give stable results (several successive runs give different results)
+    if (AIFTopologyHelpers::is_surface_interior_vertex(v))
+      return false;
+    // all incident edges are interior edges, thus we are sure
+    // there is not T-junction at this position
+
+    ////////////////////////////////////////////////////////////////////////////
+    vertex_container_in_vertex oneR =
+      AIFTopologyHelpers::get_ordered_one_ring_of_adjacent_vertices(v);
+    auto it = oneR.begin();
+    auto ite = oneR.end();
+    decltype(it) it2;
+    if (it == ite)
+      return false;
+    ////////////////////////////////////////////////////////////////////////////
+    // We must find 3 aligned points including current point (this) =>
+    // T-junction detection which does not work for general crack detection for
+    // 3D surfaces [in that case we can apply an orthogonal projection for this
+    // point, but it is sensitive to numerical precision...]. Anyway, a crack
+    // can also be considered as wanted surface holes...
+    while (it != ite)
+    {
+      it2 = it;
+      ++it2;
+      while (it2 != ite)
+      {
+        Point &vPoint = AIFPropertiesHelpers::get_point(mesh, v);
+        Point &itPoint = AIFPropertiesHelpers::get_point(mesh, *it);
+        Point &it2Point = AIFPropertiesHelpers::get_point(mesh, *it2);
+
+        std::vector< double > it2Vector(it2Point.cbegin(), it2Point.cend());
+
+        if (Math::Vector::are_aligned<GeometryTraits>(vPoint, itPoint, it2Point) &&
+          // must be on both on the same side of v vertex for an adjacent T-junction
+          // or on both side of v for a T-junction on v. However last case may be confused with
+          // a classical border case.
+          (gt.dot_product(gt.sub(vPoint, itPoint),
+            gt.sub(vPoint, it2Point)) > 0.)
+          )
+        {
+          if (AIFTopologyHelpers::is_surface_border_edge(
+            AIFTopologyHelpers::common_edge(v, *it)) &&
+            AIFTopologyHelpers::is_surface_border_edge(
+              AIFTopologyHelpers::common_edge(v, *it2)))
+          {
+            if (AIFTopologyHelpers::are_adjacent(*it, *it2))
+            {
+              // simple T-junction case (2 triangles)
+              return true;
+            }
+
+            vertex_container_in_vertex tmp =
+              AIFTopologyHelpers::get_ordered_one_ring_of_adjacent_vertices(
+                *it2);
+            auto tmpI = tmp.begin();
+            auto tmpIe = tmp.end();
+
+            while (tmpI != tmpIe)
+            {
+              if (**tmpI == *v)
+              {
+                ++tmpI;
+                continue;
+              }
+
+              Point &tmpIPoint = AIFPropertiesHelpers::get_point(mesh, *tmpI);
+
+              if (Math::Vector::are_aligned<GeometryTraits>(vPoint, itPoint, tmpIPoint))
+              {
+                if (AIFTopologyHelpers::are_adjacent(*tmpI, *it) &&
+                  AIFTopologyHelpers::is_surface_border_edge(
+                    AIFTopologyHelpers::common_edge(*tmpI, *it)))
+                {
+                  // more complex T-junction case (3 triangles)
+                  return true;
+                }
+
+                // more complex T-junction case (4 and more triangles)
+                // are not taken into account yet
+              }
+
+              ++tmpI;
+            }
+          }
+        }
+
+        ++it2;
+      }
+      ++it;
+    }
+#endif
+    ////////////////////////////////////////////////////////////////////////////
+    return false; // not found any collinear triplet
+  }
+
   /*!
    * 			A 2 manifold vertex one ring
    * \param	v	The involving vertex
@@ -162,7 +276,7 @@ public:
    */
   template< typename GeometryTraits >
   static bool is_one_ring_2_manifold(vertex_descriptor v,
-                                     ptr_mesh mesh,
+                                     ref_mesh mesh,
                                      const GeometryTraits &gt)
   {
     if(is_a_T_junction_vertex(v, mesh, gt))

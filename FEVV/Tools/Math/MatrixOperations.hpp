@@ -696,6 +696,18 @@ are_aligned(const std::vector< ElementType > &p1, /// the central point
                                       sub< ElementType >(p1, p3));
 }
 
+template< typename GeometryTraits >
+static bool
+are_aligned(const typename GeometryTraits::Point &p1, /// the central point
+            const typename GeometryTraits::Point &p2,
+            const typename GeometryTraits::Point &p3)
+{
+  return are_aligned(
+    std::vector< typename GeometryTraits::Scalar >{p1[0], p1[1], p1[2]},
+    std::vector< typename GeometryTraits::Scalar >{p2[0], p2[1], p2[2]},
+    std::vector< typename GeometryTraits::Scalar >{p3[0], p3[1], p3[2]});
+}
+
 /// Compute v1 * coef
 template< typename ElementType >
 static std::vector< ElementType >

@@ -290,6 +290,7 @@ main(int narg, char **argv)
     else if (FEVV::DataStructures::AIF::AIFMeshHelpers::is_a_T_junction_vertex(*vi, *ptr_mesh, gt))
     {
       ++nb_t_junction_vertices;
+      //std::cout << "T-junction detected!" << std::endl;
       if (make_2_mani_not_2_mani == "y" || make_2_mani_not_2_mani == "Y")
         t_junction_vertices.push_back(*vi);
       else
@@ -298,6 +299,7 @@ main(int narg, char **argv)
             "v:color", (*vi)->GetIndex(), blue);
     }
     else if(AIFHelpers::is_cut_vertex(*vi) && 
+            !FEVV::DataStructures::AIF::AIFMeshHelpers::has_adjacent_T_junction_vertex(*vi, *ptr_mesh, gt) && // we must process T-junction vectices first
             !AIFHelpers::has_dangling_or_complex_incident_edge(*vi) // we must process dangling and complex edges first 
       )                                                             // and we can even either create new cut vertices 
     {                                                               // during the complex edge processing or resolve a cut
@@ -831,7 +833,7 @@ main(int narg, char **argv)
   std::cout << "The mesh file named "
             << FEVV::FileUtils::get_file_name(input_file_path) +
                    FEVV::FileUtils::get_file_extension(input_file_path);
-  if(nb_isolated_vertices > 0 || nb_cut_vertices > 0 || nb_isolated_edges > 0 ||
+  if(nb_isolated_vertices > 0 || nb_t_junction_vertices > 0 || nb_cut_vertices > 0 || nb_isolated_edges > 0 ||
      nb_dangling_edges > 0 || nb_complex_edges > 0)
     std::cout << " is not 2-manifold " << std::endl;
   else
@@ -851,6 +853,7 @@ main(int narg, char **argv)
                : "Number of vertices with similar incident edges: ";
   std::cout << prefix << nb_vertices_with_similar_incident_edges << std::endl;
   /////////////////////////////////////////////////////////////////////////////
+  std::cout << "Number of T-junction vertices: " << nb_t_junction_vertices << std::endl;
   std::cout << "Number of cut vertices: " << nb_cut_vertices << std::endl;
   std::cout << "Number of dangling edges: " << nb_dangling_edges << std::endl;
   std::cout << "Number of complex edges: " << nb_complex_edges << std::endl;
