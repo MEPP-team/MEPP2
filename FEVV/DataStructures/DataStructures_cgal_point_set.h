@@ -10,10 +10,15 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#if defined _MSC_VER
+#pragma warning(disable : 4244)
+  // workaround issue https://github.com/CGAL/cgal/issues/4367
+  // remove the pragma when issue is fixed
+#endif
 #include <CGAL/version_macros.h>
 #include <CGAL/Cartesian.h>
 #include <CGAL/Point_set_3.h>
-#include <CGAL/IO/Color.h> // for std::array
+#include <CGAL/IO/Color.h>
 
 
 namespace FEVV {
