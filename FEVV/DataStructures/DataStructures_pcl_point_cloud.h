@@ -42,6 +42,11 @@ struct PCLPoint
     z = _z;
   }
 
+  bool operator==(const FEVV::PCLPoint& rhs)
+  {
+    return (x == rhs.x  &&  y == rhs.y  &&  z == rhs.z);
+  }
+
   friend std::ostream& operator<<(std::ostream& stream, const PCLPoint& p)
   {
     stream << p.x << " " << p.y << " " << p.z;
@@ -81,6 +86,11 @@ struct PCLNormal
     }
   }
 
+  bool operator==(const FEVV::PCLNormal& rhs)
+  {
+    return (x == rhs.x  &&  y == rhs.y  &&  z == rhs.z);
+  }
+
   friend std::ostream& operator<<(std::ostream& stream, const PCLNormal& n)
   {
     stream << n.x << " " << n.y << " " << n.z;
@@ -118,6 +128,11 @@ struct PCLColor
       throw std::runtime_error("FEVV::PCLColor: invalid index in operator[]");
       return 0; // dummy return to avoid a warning
     }
+  }
+
+  bool operator==(const FEVV::PCLColor& rhs)
+  {
+    return (r == rhs.r  &&  g == rhs.g  &&  b == rhs.b);
   }
 
   friend std::ostream& operator<<(std::ostream& stream, const PCLColor& c)

@@ -37,13 +37,13 @@ add_test( Test_complying_concepts_pcl
           test_complying_concepts_pcl )
 
 #####
-add_executable( test_property_map_pcl
-                test_property_map_pcl.cpp )
-target_link_libraries( test_property_map_pcl
+add_executable( test_property_maps_pcl
+                test_property_maps_pcl.cpp )
+target_link_libraries( test_property_maps_pcl
                        ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
                        )
-add_test( Test_property_map_pcl
-          test_property_map_pcl )
+add_test( Test_property_maps_pcl
+          test_property_maps_pcl )
 
 #####
 add_executable( test_reader_writer_pcl
