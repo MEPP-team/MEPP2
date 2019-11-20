@@ -36,6 +36,18 @@ test_property_maps_point_cloud(PointCloud& pc)
     add_vertex(pc);
 
   //--------------------------------------------------------------------------
+  // test Point type
+  //--------------------------------------------------------------------------
+  //
+  {
+    Point p1; // ctor with no parameter
+    Point p2(1., 2., 3.); // ctor with 3 parameters
+    auto tmp = p1[0]; // operator[] as RValue
+    std::ostringstream ss;
+    ss << p2; // operator<<
+  }
+
+  //--------------------------------------------------------------------------
   // initialize PointMap
   //--------------------------------------------------------------------------
   //

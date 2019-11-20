@@ -42,6 +42,23 @@ struct PCLPoint
     z = _z;
   }
 
+  // convenient operator[] to mimic other data structures
+  PCLKernelType operator[](int i)	const
+  {
+    if(i == 0)
+      return x;
+    else if(i == 1)
+      return y;
+    else if(i == 2)
+      return z;
+    else
+    {
+      throw std::runtime_error("FEVV::PCLPoint: invalid index in operator[]");
+      return 0; // dummy return to avoid a warning
+    }
+  }
+
+
   bool operator==(const FEVV::PCLPoint& rhs)
   {
     return (x == rhs.x  &&  y == rhs.y  &&  z == rhs.z);
