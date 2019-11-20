@@ -50,6 +50,7 @@ add_executable( test_reader_writer_pcl
                 test_reader_writer_pcl.cpp )
 target_link_libraries( test_reader_writer_pcl
                        ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
+                       ${VTK_LIBRARIES} ${FBX_LIBRARY}
                        )
 add_test( Test_reader_writer_pcl
           test_reader_writer_pcl
