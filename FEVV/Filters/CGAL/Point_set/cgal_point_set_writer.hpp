@@ -107,9 +107,9 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
           CGAL::make_ply_point_writer(pm),
           CGAL::make_ply_normal_writer(v_nm),
           std::make_tuple(v_cm,
-                          CGAL::PLY_property< double >("red"),
-                          CGAL::PLY_property< double >("green"),
-                          CGAL::PLY_property< double >("blue")));
+                          CGAL::PLY_property< unsigned char >("red"),
+                          CGAL::PLY_property< unsigned char >("green"),
+                          CGAL::PLY_property< unsigned char >("blue")));
     }
     else if(has_normal)
     {
@@ -128,9 +128,9 @@ write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
           g,
           CGAL::make_ply_point_writer(pm),
           std::make_tuple(v_cm,
-                          CGAL::PLY_property< double >("red"),
-                          CGAL::PLY_property< double >("green"),
-                          CGAL::PLY_property< double >("blue")));
+                          CGAL::PLY_property< unsigned char >("red"),
+                          CGAL::PLY_property< unsigned char >("green"),
+                          CGAL::PLY_property< unsigned char >("blue")));
     }
     else
     {

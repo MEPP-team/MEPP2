@@ -16,7 +16,7 @@ namespace FEVV {
 
 template<typename PointCloudT>
 void
-check_point_cloud_concept(PointCloudT pc)
+check_point_cloud_concept(PointCloudT &pc)
 {
   // types
   typedef  boost::graph_traits< PointCloudT >         GraphTraits;
@@ -37,10 +37,10 @@ check_point_cloud_concept(PointCloudT pc)
   vertices_size_type n = num_vertices(pc);
 
   // add_vertex(pc)
-  //vertex_descriptor vd = add_vertex(pc);
+  vertex_descriptor vd = add_vertex(pc);
 
   // remove_vertex(vd, pc)
-  //remove_vertex(vd, pc);
+  remove_vertex(vd, pc);
 }
 
 

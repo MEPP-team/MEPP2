@@ -121,6 +121,7 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_normal_t >
   }
 };
 
+#if 0
 // specialize the property maps traits for vertex-tangent
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_tangent_t >
@@ -130,7 +131,9 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_tangent_t >
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_tangent").first;
+    return const_cast< FEVV::CGALPointSet & >(m)
+        .add_property_map< Vector_3 >("vertex_tangent")
+        .first;
   }
 };
 
@@ -143,120 +146,27 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_texcoord_t >
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_texcoord").first;
+    return const_cast< FEVV::CGALPointSet & >(m)
+        .add_property_map< Vector_3 >("vertex_texcoord")
+        .first;
   }
 };
+#endif
 
 // specialize the standard property map for vertex-color
 template<>
 struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_color_t >
 {
-  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
-  typedef FEVV::CGALPointSet::Vector_3     Vector_3;
+  typedef FEVV::CGALPointSetColor          Color;
+  typedef FEVV::CGALPointSet::Property_map< Color > pmap_type;
 
   static pmap_type create(const FEVV::CGALPointSet &m)
   {
-    return const_cast< FEVV::CGALPointSet& >(m).add_property_map<Vector_3>("vertex_color").first;
+    return const_cast< FEVV::CGALPointSet & >(m)
+        .add_property_map< Color >("vertex_color")
+        .first;
   }
 };
 
-#if 0 // useless for point cloud
-
-// specialize the property maps traits for halfedge-normal
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::halfedge_normal_t >
-{
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Halfedge_pmap_traits< FEVV::CGALPointSet,
-                                         value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::halfedge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for halfedge-texcoord
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::halfedge_texcoord_t >
-{
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Halfedge_pmap_traits< FEVV::CGALPointSet,
-                                         value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::halfedge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for edge-color
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::edge_color_t >
-{
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Edge_pmap_traits< FEVV::CGALPointSet,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::edge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-normal
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::face_normal_t >
-{
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Face_pmap_traits< FEVV::CGALPointSet,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-color
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::face_color_t >
-{
-  typedef typename FEVV::Geometry_traits< FEVV::CGALPointSet >::Vector
-      value_type;
-  typedef typename Face_pmap_traits< FEVV::CGALPointSet,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-material
-struct _PMap_traits< FEVV::CGALPointSet, FEVV::face_material_t >
-{
-  typedef size_t value_type;
-  typedef typename Face_pmap_traits< FEVV::CGALPointSet,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const FEVV::CGALPointSet &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-#endif
 
 } // namespace FEVV

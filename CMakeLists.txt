@@ -58,6 +58,7 @@ enable_testing()
 
 ### Recurse
 set( TESTING_DATA_DIR "${PROJECT_SOURCE_DIR}/Testing/Data" )
+set( TESTING_REFOUTPUT_DIR "${PROJECT_SOURCE_DIR}/Testing/RefOutput" )
 
 add_subdirectory( Testing )
 add_subdirectory( Examples )

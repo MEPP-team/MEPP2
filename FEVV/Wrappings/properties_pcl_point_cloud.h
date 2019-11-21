@@ -14,85 +14,42 @@
 #include "FEVV/Wrappings/Wrappings_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
 
-#if 0 //TODO-elo-fix
+#include <boost/property_map/property_map.hpp> // for boost property maps
+
 
 namespace FEVV {
 
-// _PMap_traits specialization for CGAL::Surface_mesh
-// use boost::vector_property_map
+// _PMap_traits specialization for FEVV::PCLPointCloud
+// use boost::vector_property_map except for NormalMap
+// and ColorMap ; NormalMap and ColorMap are mapping
+// over PCL datastructure
 
 
 // define default property map type (associative property map,
 // vector property map...) for each cell type (vertex, face...) ;
 
-// default vertex property map
-template< typename ValueT, typename PointT >
-struct Vertex_pmap_traits< CGAL::Surface_mesh< PointT >, ValueT >
+// vertex desciptor already is an index, so we can use it
+// as boost::vector_property_map key
+inline
+boost::identity_property_map
+get(const boost::vertex_index_t&, const FEVV::PCLPointCloud&)
 {
-  typedef typename boost::property_map< CGAL::Surface_mesh< PointT >,
+  return boost::identity_property_map();
+}
+
+// default vertex property map
+template< typename ValueT >
+struct Vertex_pmap_traits< FEVV::PCLPointCloud, ValueT >
+{
+  typedef typename boost::property_map< FEVV::PCLPointCloud,
                                         boost::vertex_index_t >::const_type
       vertex_index_map_type;
   typedef typename boost::vector_property_map< ValueT, vertex_index_map_type >
       pmap_type;
 
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
+  static pmap_type create(const FEVV::PCLPointCloud &pc)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-
-// default face property map
-template< typename ValueT, typename PointT >
-struct Face_pmap_traits< CGAL::Surface_mesh< PointT >, ValueT >
-{
-  typedef typename boost::property_map< CGAL::Surface_mesh< PointT >,
-                                        boost::face_index_t >::const_type
-      face_index_map_type;
-  typedef typename boost::vector_property_map< ValueT, face_index_map_type >
-      pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// default edge property map
-template< typename ValueT, typename PointT >
-struct Edge_pmap_traits< CGAL::Surface_mesh< PointT >, ValueT >
-{
-  typedef typename boost::property_map< CGAL::Surface_mesh< PointT >,
-                                        boost::edge_index_t >::const_type
-      edge_index_map_type;
-  typedef typename boost::vector_property_map< ValueT, edge_index_map_type >
-      pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::edge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// default halfedge property map
-template< typename ValueT, typename PointT >
-struct Halfedge_pmap_traits< CGAL::Surface_mesh< PointT >, ValueT >
-{
-  typedef typename boost::property_map< CGAL::Surface_mesh< PointT >,
-                                        boost::halfedge_index_t >::const_type
-      halfedge_index_map_type;
-  typedef typename boost::vector_property_map< ValueT, halfedge_index_map_type >
-      pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::halfedge_index, m);
+    auto index_map = get(boost::vertex_index, pc);
     pmap_type pmap(index_map);
     return pmap;
   }
@@ -103,22 +60,18 @@ struct Halfedge_pmap_traits< CGAL::Surface_mesh< PointT >, ValueT >
 // for example vertex-normal
 
 // specialize the property maps traits for vertex-normal
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_normal_t >
+template<>
+struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_normal_t >
 {
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::PCLPointCloudNormalMap   pmap_type;
 
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
+  static pmap_type create(const FEVV::PCLPointCloud &pc)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return pmap_type(const_cast< FEVV::PCLPointCloud& >(pc));
   }
 };
 
+#if 0 //TODO-elo-rm
 // specialize the property maps traits for vertex-tangent
 template< typename PointT >
 struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_tangent_t >
@@ -152,126 +105,18 @@ struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_texcoord_t >
     return pmap;
   }
 };
+#endif
 
 // specialize the standard property map for vertex-color
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_color_t >
+template<>
+struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_color_t >
 {
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Vertex_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                       value_type >::pmap_type pmap_type;
+  typedef FEVV::PCLPointCloudColorMap   pmap_type;
 
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
+  static pmap_type create(const FEVV::PCLPointCloud &pc)
   {
-    auto index_map = get(boost::vertex_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for halfedge-normal
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::halfedge_normal_t >
-{
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Halfedge_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                         value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::halfedge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for halfedge-texcoord
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::halfedge_texcoord_t >
-{
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Halfedge_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                         value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::halfedge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for edge-color
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::edge_color_t >
-{
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Edge_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::edge_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-normal
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::face_normal_t >
-{
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Face_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-color
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::face_color_t >
-{
-  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
-      value_type;
-  typedef typename Face_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
-  }
-};
-
-// specialize the property maps traits for face-material
-template< typename PointT >
-struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::face_material_t >
-{
-  typedef size_t value_type;
-  typedef typename Face_pmap_traits< CGAL::Surface_mesh< PointT >,
-                                     value_type >::pmap_type pmap_type;
-
-  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
-  {
-    auto index_map = get(boost::face_index, m);
-    pmap_type pmap(index_map);
-    return pmap;
+    return pmap_type(const_cast< FEVV::PCLPointCloud& >(pc));
   }
 };
 
 } // namespace FEVV
-
-
-#endif
