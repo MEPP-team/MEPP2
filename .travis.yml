@@ -237,10 +237,9 @@ install:
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake --version; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cmake; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew switch cmake 3.0.2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/cmake-3.4.3-Darwin-x86_64.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar zxvf cmake-3.4.3-Darwin-x86_64.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/cmake-3.4.3-Darwin-x86_64.tar.gz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar zxvf cmake-3.4.3-Darwin-x86_64.tar.gz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 #
 # documentation :
   - if [[ "$GENDOC" == "true" ]]; then if [[ "$Mepp_Original_Repo" == "true" ]]; then if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then DOC="true"; echo "---> DOCUMENTATION <---"; fi; fi; fi
