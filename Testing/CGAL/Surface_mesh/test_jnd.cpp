@@ -10,20 +10,21 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #include <CGAL/Cartesian.h>
 #include <CGAL/Surface_mesh.h>
-#include <CGAL/boost/graph/graph_traits_Surface_mesh.h>
+#include <CGAL/boost/graph/graph_traits_Surface_mesh.h> // CGAL Graph traits wrapper
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_surface_mesh.h" // FEVV extension for Graph traits wrapper
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
-#include "FEVV/Wrappings/Graph_traits_extension_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h" // FEVV geometry wrapper
+
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "FEVV/Filters/Generic/calculate_face_normals.hpp"
-#include "FEVV/Filters/Generic/Manifold/calculate_vertex_normals.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 #include "Testing/Utils/utils_are_meshes_identical.hpp"
 #include "Testing/Utils/utils_identical_text_based_files.hpp"
 
+#include "FEVV/Filters/Generic/calculate_face_normals.hpp"
+#include "FEVV/Filters/Generic/Manifold/calculate_vertex_normals.hpp"
 #include "FEVV/Filters/Generic/Manifold/JustNoticeableDistortion/just_noticeable_distortion.hpp"
 #include "FEVV/Filters/Generic/minmax_map.h"
 #include "FEVV/Filters/Generic/color_mesh.h"

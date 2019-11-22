@@ -11,7 +11,8 @@
 #include <CGAL/Surface_mesh.h>
 #include <CGAL/Cartesian.h>
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h" // FEVV geometry wrapper
+
 #include "Testing/Utils/utils_are_meshes_identical.hpp"
 
 #include <CGAL/boost/graph/Euler_operations.h>

@@ -56,6 +56,7 @@ public:
    * 2016)
    * \note A T-junction on v or on an adjacent vertex of v does
    *       not mean that v is a cut vertex. But v may also be a cut vertex.
+   * \fixme This code does not work yet.
    */
   template< typename GeometryTraits >
   static bool is_a_T_junction_vertex(vertex_descriptor v,

@@ -10,9 +10,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #include <CGAL/Cartesian.h>
 #include <CGAL/Surface_mesh.h>
-#include <CGAL/boost/graph/graph_traits_Surface_mesh.h>
+#include <CGAL/boost/graph/graph_traits_Surface_mesh.h> // CGAL Graph traits wrapper
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h" // FEVV geometry wrapper
 
 //#define USE_GENERIC_READER_WRITER // when activated you need to link to vtk
 //libs if VTK is used

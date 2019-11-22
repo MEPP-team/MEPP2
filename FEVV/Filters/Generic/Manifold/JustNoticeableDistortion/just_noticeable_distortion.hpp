@@ -218,7 +218,7 @@ compute_threshold(const GeometryTraits &geom,
                                         mesh,
                                         f_nm,
                                         h,
-                                        T * dir,
+                                        geom.scalar_mult(dir, T),
                                         light,
                                         cam,
                                         screen,
@@ -237,7 +237,7 @@ compute_threshold(const GeometryTraits &geom,
                                         mesh,
                                         f_nm,
                                         next(h, mesh),
-                                        T * dir,
+                                        geom.scalar_mult(dir, T),
                                         light,
                                         cam,
                                         screen,
@@ -267,7 +267,7 @@ compute_threshold(const GeometryTraits &geom,
                                           mesh,
                                           f_nm,
                                           h,
-                                          T * dir,
+                                          geom.scalar_mult(dir, T),
                                           light,
                                           cam,
                                           screen,
@@ -286,7 +286,7 @@ compute_threshold(const GeometryTraits &geom,
                                           mesh,
                                           f_nm,
                                           next(h, mesh),
-                                          T * dir,
+                                          geom.scalar_mult(dir, T),
                                           light,
                                           cam,
                                           screen,
@@ -390,7 +390,10 @@ just_noticeable_distortion_filter(const HalfedgeGraph &halfedge_graph,
 
   // Creation of a camera position (should be externalized later)
   typename GeometryTraits::Vector cam =
-      bbox_c + typename GeometryTraits::Vector(0., 0., 1.) * bbox_diag_len;
+	  geometry_traits.add(bbox_c, 
+		                  geometry_traits.scalar_mult(typename GeometryTraits::Vector(0., 0., 1.0), 
+							                          bbox_diag_len) 
+	                     ) ;
 #ifndef FEVV_USE_AIF
   if(data_output)
     std::cout << "Cam:" << cam << std::endl;
