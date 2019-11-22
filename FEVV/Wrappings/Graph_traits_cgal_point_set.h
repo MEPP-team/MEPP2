@@ -116,4 +116,39 @@ num_vertices(const FEVV::CGALPointSet &ps)
 }
 
 
-} // namespace FEVV
+// BGL VertexMutableGraph Concept
+//!
+//! \brief  Adds a new vertex to the graph without initializing the
+//! connectivity.
+//!
+inline
+typename boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor
+add_vertex(FEVV::CGALPointSet &ps)
+{
+  FEVV::CGALPointSet::iterator new_point_it = ps.insert();
+
+  // return index of new point
+  return new_point_it - ps.begin();
+}
+
+
+// CGAL MutableHalfedgeGraph Concept
+//!
+//! \brief  Removes v from the mesh.
+//!
+inline
+void
+remove_vertex(typename boost::graph_traits<
+                  FEVV::CGALPointSet >::vertex_descriptor v,
+              FEVV::CGALPointSet &ps)
+{
+  ps.remove(v);
+
+  // collect_garbage() must be called to really remove the point from container
+  // and ensure that the point index is equivalent to the non-removed-point
+  // iterator
+  ps.collect_garbage();
+}
+
+
+} // namespace CGAL

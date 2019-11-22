@@ -31,7 +31,7 @@ namespace boost {
 template<>
 struct vertex_property_type< FEVV::PCLPointCloud >
 {
-  typedef FEVV::PCLPoint   type;
+  typedef FEVV::PCLEnrichedPoint   type;
 };
 
 
@@ -39,12 +39,12 @@ template<>
 struct graph_traits< FEVV::PCLPointCloud >
 {
 private:
-  typedef  FEVV::PCLPoint   Point;
+  typedef  FEVV::PCLEnrichedPoint   Point;
 
 public:
   //
   typedef  FEVV::PCLPointCloud::VectorType::size_type        index_type;
-    // FEVV::PCLPointCloud::points is a std::vector of FEVV::PCLPoint
+    // FEVV::PCLPointCloud::points is a std::vector of FEVV::PCLEnrichedPoint
     // see https://github.com/PointCloudLibrary/pcl/blob/39732f5a7c8455ed51fd0f6278d8b25322a68dd9/common/include/pcl/point_cloud.h#L426
   typedef  boost::counting_iterator<index_type>              index_iterator;
 
@@ -78,7 +78,7 @@ struct graph_traits< const FEVV::PCLPointCloud >
 } // namespace boost
 
 
-namespace FEVV {
+namespace pcl {
 
 // Essential free functions specialization for PCLPointCloud.
 
@@ -88,11 +88,15 @@ namespace FEVV {
 // See http://doc.cgal.org/latest/BGL/group__PkgBGLConcepts.html
 // for CGAL-BGL concepts description.
 
+// note:  Must be in 'pcl' namespace because the real type of
+//        FEVV::PCLPointCloud is pcl::PointCloud<...> and the
+//        functions must be in the same namespace as one of their
+//        parameters.
+
 // BGL VertexListGraph
 //!
 //! \brief  Returns the iterator range of the vertices of the mesh.
 //!
-
 inline std::pair< typename boost::graph_traits<
                       FEVV::PCLPointCloud >::vertex_iterator,
                   typename boost::graph_traits<
@@ -126,5 +130,35 @@ num_vertices(const FEVV::PCLPointCloud &m)
 }
 
 
-} // namespace FEVV
+// BGL VertexMutableGraph Concept
+//!
+//! \brief  Adds a new vertex to the graph without initializing the
+//! connectivity.
+//!
+inline
+typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
+add_vertex(FEVV::PCLPointCloud &pc)
+{
+  FEVV::PCLEnrichedPoint new_point;
+  pc.push_back(new_point);
 
+  // return index of new point
+  return pc.size() - 1;
+}
+
+
+// CGAL MutableHalfedgeGraph Concept
+//!
+//! \brief  Removes v from the mesh.
+//!
+inline
+void
+remove_vertex(typename boost::graph_traits<
+                  FEVV::PCLPointCloud >::vertex_descriptor v,
+              FEVV::PCLPointCloud &pc)
+{
+  pc.erase(pc.begin() + v);
+}
+
+
+} // namespace pcl

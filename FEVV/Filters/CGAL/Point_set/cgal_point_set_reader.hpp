@@ -31,35 +31,51 @@ inline
 void
 parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color)
 {
-  std::string line;
-
   in.seekg(0); // rewind
   has_normal = false;
   has_color = false;
 
+  std::string line, word;
+
   do
   {
     std::getline(in, line);
+    std::istringstream line_ss(line);
 
-    // look for "property ... nx" and "property ... red"
-    if(line.substr(0, 8) == "property")
+    // look for "property ... nx" and "property ... r"
+    line_ss >> word;
+    if(word == "property")
     {
-      if(line.substr(line.size()-2) == "nx")
+      line_ss >> word;
+      line_ss >> word;
+
+      if(word == "nx")
       {
         has_normal = true;
-        //DBG std::cout << "normal detected in PLY header" << std::endl;
       }
-      else if(line.substr(line.size()-3) == "red")
+      else if(word == "red")
       {
         has_color = true;
-        //DBG std::cout << "color detected in PLY header" << std::endl;
       }
     }
   }
-  while(line != "end_header");
+  while(word != "end_header");
   
   in.seekg(0); // rewind
 }
+
+
+// Functor to be able to use CGALPointSetColor with
+// CGAL::read_ply_points_with_properties()
+struct Construct_color
+{
+  FEVV::CGALPointSetColor operator()(const unsigned char &r,
+                                     const unsigned char &g,
+                                     const unsigned char &b)
+  {
+    return FEVV::CGALPointSetColor(r, g, b);
+  }
+};
 
 } // namespace FEVV
 
@@ -152,12 +168,11 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
           CGAL::make_ply_point_reader(g.point_push_map()),
           CGAL::make_ply_normal_reader(g.push_property_map(v_nm)),
           std::make_tuple(g.push_property_map(v_cm),
-                          typename CGAL::Kernel_traits<
-                              typename VertexColorMap::value_type >::Kernel::
-                              Construct_vector_3(),
-                          CGAL::PLY_property< double >("red"),
-                          CGAL::PLY_property< double >("green"),
-                          CGAL::PLY_property< double >("blue")));
+                          FEVV::Construct_color(),
+                          CGAL::PLY_property< unsigned char >("red"),
+                          CGAL::PLY_property< unsigned char >("green"),
+                          CGAL::PLY_property< unsigned char >("blue")));
+        // see https://doc.cgal.org/latest/Point_set_processing_3/Point_set_processing_3_2read_ply_points_with_colors_example_8cpp-example.html#a7
     }
     else if(has_normal)
     {
@@ -174,12 +189,11 @@ read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
           g.index_back_inserter(),
           CGAL::make_ply_point_reader(g.point_push_map()),
           std::make_tuple(g.push_property_map(v_cm),
-                          typename CGAL::Kernel_traits<
-                              typename VertexColorMap::value_type >::Kernel::
-                              Construct_vector_3(),
-                          CGAL::PLY_property< double >("red"),
-                          CGAL::PLY_property< double >("green"),
-                          CGAL::PLY_property< double >("blue")));
+                          FEVV::Construct_color(),
+                          CGAL::PLY_property< unsigned char >("red"),
+                          CGAL::PLY_property< unsigned char >("green"),
+                          CGAL::PLY_property< unsigned char >("blue")));
+        // see https://doc.cgal.org/latest/Point_set_processing_3/Point_set_processing_3_2read_ply_points_with_colors_example_8cpp-example.html#a7
     }
     else
     {

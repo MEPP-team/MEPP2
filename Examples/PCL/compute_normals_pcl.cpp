@@ -1,3 +1,117 @@
+// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published 
+// by the Free Software Foundation; either version 3 of the License, 
+// or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+#if 1
+
+// *** MEPP2 code calling PCL native filters.            ***
+// *** Point and normal stored in a FEVV::PCLPointCloud. ***
+
+#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
+  // for FEVV::PCLPointCloud
+#include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
+  // for boost::graph_traits< FEVV::PCLPointCloud >
+#include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
+  // for FEVV::RetrieveKernel< FEVV::PCLPointCloud >
+#include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
+  // for get(FEVV::PCLPointCloudPointMap&, ...)
+#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
+  // for FEVV::PMap_traits< FEVV::PCLPointCloud >
+
+#include "FEVV/Filters/PCL/pcl_point_cloud_reader.hpp"
+  // for FEVV::Filters::read_mesh< FEVV::PCLPointCloud >
+#include "FEVV/Filters/PCL/pcl_point_cloud_writer.hpp"
+  // for FEVV::Filters::write_mesh< FEVV::PCLPointCloud >
+
+#include <pcl/search/impl/search.hpp>
+#include <pcl/features/normal_3d.h>
+#include <pcl/kdtree/kdtree_flann.h>
+
+
+// main
+int main(int argc, char *argv[])
+{
+  // parse arguments
+  if(argc != 3)
+  {
+    std::cout << "Usage:  " << argv[0]
+              << "  input_mesh_filename  output_mesh_filename" << std::endl;
+    std::cout << "Example:  " << argv[0] << "  ../Testing/Data/tetra.xyz  tetra.out.ply"
+              << std::endl;
+    return EXIT_FAILURE;
+  }
+  std::string input_file = argv[1];
+  std::string output_file = argv[2];
+
+  //----------------------------------
+
+  // create point cloud
+  typedef  FEVV::PCLPointCloud  PointCloudT;
+  PointCloudT pc;
+
+  // load point cloud
+  std::cout << "load point cloud" << std::endl;
+  FEVV::PMapsContainer pmaps_bag;
+  FEVV::Filters::read_mesh(input_file, pc, pmaps_bag);
+
+  //----------------------------------
+
+  // retrieve Point Map
+  auto pm = get(boost::vertex_point, pc);
+
+  // create vertex-normal property map
+  using VertexNormalMap = typename FEVV::PMap_traits< FEVV::vertex_normal_t,
+                                                      PointCloudT >::pmap_type;
+  VertexNormalMap v_nm;
+  std::cout << "create vertex-normal map" << std::endl;
+  v_nm = make_property_map(FEVV::vertex_normal, pc);
+
+  // store property map in property maps bag
+  put_property_map(FEVV::vertex_normal, pc, pmaps_bag, v_nm);
+
+  // compute normals
+  std::cout << "compute normals" << std::endl;
+
+  //----------------------------------
+  // PCL specific section - begin
+  //----------------------------------
+
+  typedef  FEVV::PCLEnrichedPoint  PointType;
+  typedef  FEVV::PCLEnrichedPoint  NormalType;
+    // use the cloud point to store the normal
+
+  pcl::NormalEstimation< PointType, NormalType > normal_estimator;
+  normal_estimator.setInputCloud(pc.makeShared());
+
+  pcl::search::KdTree< PointType >::Ptr kdtree(
+      new pcl::search::KdTree< PointType >);
+  normal_estimator.setSearchMethod(kdtree);
+
+  normal_estimator.setRadiusSearch(0.03);
+  normal_estimator.compute(pc);
+
+  //----------------------------------
+  // PCL specific section - end
+  //----------------------------------
+
+  // save point cloud with normals
+  std::cout << "save point cloud with normals" << std::endl;
+  FEVV::Filters::write_mesh(output_file, pc, pmaps_bag);
+  
+  return 0;
+}
+
+#else
+
+// *** PCL Native code. ***
+
 /*
  * Software License Agreement (BSD License)
  *
@@ -183,3 +297,5 @@ main (int argc, char** argv)
 
   return 0;
 }
+
+#endif
