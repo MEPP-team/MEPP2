@@ -10,14 +10,14 @@ CMake compilation flags short list:
  - `BUILD_DOCUMENTATION`: build the documentation (ON or OFF)
 
 ## Platform specifics:
- - [Linux Ubuntu](#linux-ubuntu-installation)
+ - [Linux Ubuntu](#linux-ubuntu-installation) - [Linux Ubuntu Virtual Machine Images](#linux-ubuntu-virtual-machine-images)
  - [MacOS](#macos-installation)
  - [Windows](#windows-installation)
 
 ## Dependencies
 Mandatory dependencies:
  - CMake >= 2.8.11
-   - Note: [Boost 1.64 requires cmake 3.8 or newer](https://stackoverflow.com/questions/42123509/cmake-finds-boost-but-the-imported-targets-not-available-for-boost-version)
+   - Note: [Boost 1.64 requires CMake 3.8 or newer](https://stackoverflow.com/questions/42123509/cmake-finds-boost-but-the-imported-targets-not-available-for-boost-version)
  - Boost >= 1.59
  - Eigen 3
 
@@ -153,6 +153,31 @@ Scripting commands for compiling Mepp2:
 ````
   $ ./Visualization/Applications/mepp-gui
 ````
+
+## Linux Ubuntu Virtual Machine Images
+
+### VMware
+
+1. Download [VMware Workstation Player for Windows (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-player-15.5.0-14665864.exe) or [VMware Workstation Player for Linux (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-Player-15.5.0-14665864.x86_64.bundle).
+
+2. Download and extract the [MEPP2 Linux Ubuntu 18.04 Virtual Machine Image (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/UbuntuLTS-18.04.3-MEPP.vmwarevm.7z).
+
+3. Start the MEPP2 Linux Ubuntu Virtual Machine Image with VMware Workstation Player.
+
+User is 'dev' and password is 'devdev'.
+Password for root is also 'devdev'.
+
+All the dependencies of MEPP2 are already installed (see installation documentation above) so you can therefore use the following variables with CMake:
+- CGAL_DIR="$HOME/CGAL-4.14.1"
+- OPENMESH_DIR="$HOME/OpenMesh-7.1"
+- OSG_DIR="$HOME/osg-3.6.4"
+- PCL_DIR="$HOME/pcl-1.9.1/share/pcl-1.9"
+- FBX_DIR="$HOME/FBX_SDK/2019.0"
+- DRACO_DIR="$HOME/draco-1.3.5"
+
+### Docker
+
+Soon...
 
 ## MacOS installation
 Various successful installations that we reported:
