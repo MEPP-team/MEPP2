@@ -55,7 +55,7 @@ vertex_one_ring_geometric_laplacian(
       Point; // this Point type cannot be const because the center Point must be
              // modifiable
   typedef typename boost::property_traits< PointMap >::reference Reference;
-  typedef GeometryTraits::Scalar Scalar;
+  typedef typename GeometryTraits::Scalar Scalar;
 
   std::vector< typename boost::graph_traits< FaceGraph >::vertex_descriptor >
       qv;
