@@ -30,6 +30,7 @@
 
 #include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_barycenter.hpp"
 #include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_angles_based_centroid.hpp"
+#include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_geometric_laplacian.hpp"
 #include "FEVV/Filters/Generic/reposition_vertices.hpp"
 
 #include <fstream>
@@ -86,6 +87,10 @@ test_smoothing_polyhedron(std::string filename)
   FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
 
   FEVV::Filters::calculate_vertices_one_ring_angles_based_centroid(
+      m, pos_pm, barycenters_pm, 0.2f);
+  FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
+
+  FEVV::Filters::calculate_vertices_one_ring_geometric_laplacian(
       m, pos_pm, barycenters_pm, 0.2f);
   FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
   /**********************************************************************************************************/

@@ -39,7 +39,7 @@ namespace Operators {
  *            position.
  * \param[in] smoothing_factor A (usually positive) factor used to compute the
  *            position of the returned centroid following
- *            V_pos + SMOOTHING_FACTORx(C_computed - V_pos).
+ *            V_pos + smoothing_factor x(C_computed - V_pos).
  * \param[in] gt The geometry trait object.
  * \return The angles-based centroid of the vertex v. 
  * \pre     g must be a triangular mesh.

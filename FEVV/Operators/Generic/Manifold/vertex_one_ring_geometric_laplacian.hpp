@@ -22,29 +22,29 @@ namespace FEVV {
 namespace Operators {
 
 /**
- * \brief  Barycenter of the vertex' one ring of vertex positions.
+ * \brief  Geometric Laplacian of the vertex' one ring of vertex positions.
  *
  * \tparam  FaceGraph a Mesh type that provides a Model of the
  *          FaceGraph Concept through a boost::graph_traits<> specialization.
  * \tparam  PointMap A modifiable point map to manage vertex positions.
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
- * \param[in] v The vertex whose one-ring barycenter is computed.
+ * \param[in] v The vertex whose one-ring geometric laplacian is computed.
  * \param[in] g The FaceGraph instance from which the v vertex will be taken.
  * \param[in] pm The point map which associate a vertex descriptor with a vertex
  *            position.
- * \param[in] smoothing_factor A (usually positive) factor used to compute the
- *            position of the returned centroid following
- *            V_pos + smoothing_factor x(C_computed - V_pos).
+ * \param[in] smoothing_factor A (positive/move towards or negative/move away from)
+ *            factor used to compute the position of the returned geometric laplacian
+ *            V_pos + smoothing_factor x(GL_computed - V_pos).
  * \param[in] gt The geometry trait object.
- * \return The barycenter centroid of the vertex v.
+ * \return The geometric laplacian of the vertex v.
  * \pre     g must be a triangular mesh.
  */
 template< typename FaceGraph,
           typename PointMap,
           typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
 typename boost::property_traits< PointMap >::value_type
-vertex_one_ring_barycenter(
+vertex_one_ring_geometric_laplacian(
     typename boost::graph_traits< FaceGraph >::vertex_descriptor v,
     const FaceGraph &g,
     const PointMap &pm,
@@ -55,12 +55,15 @@ vertex_one_ring_barycenter(
       Point; // this Point type cannot be const because the center Point must be
              // modifiable
   typedef typename boost::property_traits< PointMap >::reference Reference;
+  typedef GeometryTraits::Scalar Scalar;
 
   std::vector< typename boost::graph_traits< FaceGraph >::vertex_descriptor >
       qv;
   Operators::extract_1_ring_not_including_v< FaceGraph, GeometryTraits >(v, g, qv);
 
-  Point center(0, 0, 0);
+  Point geom_laplacian(0, 0, 0);
+  Scalar sum = 0;
+  Point center = get(pm, v); // works for all mesh structures
   unsigned int cpt = 0;
   typename std::vector< typename boost::graph_traits<
       const FaceGraph >::vertex_descriptor >::const_iterator it(qv.begin()),
@@ -68,18 +71,24 @@ vertex_one_ring_barycenter(
   for(; it != ite; ++it, ++cpt)
   {
     Point tmp = get(pm, *it); // works for all mesh structures
-    center = Point(gt.get_x(tmp) + gt.get_x(center),
-                   gt.get_y(tmp) + gt.get_y(center),
-                   gt.get_z(tmp) + gt.get_z(center));
+    Scalar len = gt.length(center, tmp);
+    if(::fabs(len) > std::numeric_limits<typename GeometryTraits::Scalar>::epsilon())
+    {
+      sum += 1./len ;
+      geom_laplacian = Point(gt.get_x(tmp)/len + gt.get_x(geom_laplacian),
+                             gt.get_y(tmp)/len + gt.get_y(geom_laplacian),
+                             gt.get_z(tmp)/len + gt.get_z(geom_laplacian));
+    }
   }
   if(cpt > 0)
   {
-    return gt.add_p(get(pm, v),
+    return gt.add_p(center,
                     gt.scalar_mult(smoothing_factor,
-                                   gt.sub(Point(gt.get_x(center) / cpt,
-                                                gt.get_y(center) / cpt,
-                                                gt.get_z(center) / cpt),
-                                          get(pm, v))));
+                                   gt.sub(Point(gt.get_x(geom_laplacian) / sum,
+                                                gt.get_y(geom_laplacian) / sum,
+                                                gt.get_z(geom_laplacian) / sum),
+                                          center
+                                          )));
   }
   else
     return get(pm, v);
