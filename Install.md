@@ -158,14 +158,21 @@ Scripting commands for compiling Mepp2:
 
 ### VMware
 
-1. Download [VMware Workstation Player for Windows (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-player-15.5.0-14665864.exe) or [VMware Workstation Player for Linux (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-Player-15.5.0-14665864.x86_64.bundle).
+1. Download [VMware Workstation Player for Windows (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-player-15.5.1-15018445.exe) or [VMware Workstation Player for Linux (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/VMware-Player/VMware-Player-15.5.1-15018445.x86_64_linux.zip).
 
 2. Download and extract the [MEPP2 Linux Ubuntu 18.04 Virtual Machine Image (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/vmware/mepp2/UbuntuLTS-18.04.3-MEPP.vmwarevm.7z).
+````
+  # under Linux, if the 7zip utility is not already installed in your system, run this command to install it
+  $ sudo apt install p7zip-full
+
+  # then extract the VM with
+  $ 7z x UbuntuLTS-18.04.3-MEPP.vmwarevm.7z
+````
 
 3. Start the MEPP2 Linux Ubuntu Virtual Machine Image with VMware Workstation Player.
 
-User is 'dev' and password is 'devdev'.
-Password for root is also 'devdev'.
+User is '**dev**' and password is '**devdev**'.
+Password for **root** is also '**devdev**'.
 
 All the dependencies of MEPP2 are already installed (see installation documentation above) so you can therefore use the following variables with CMake:
 - CGAL_DIR="$HOME/CGAL-4.14.1"
@@ -177,7 +184,7 @@ All the dependencies of MEPP2 are already installed (see installation documentat
 
 ### Docker
 
-Soon...
+Soon, under construction...
 
 ## MacOS installation
 Various successful installations that we reported:
