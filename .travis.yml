@@ -141,7 +141,7 @@ addons:
       - libflann-dev
       - libproj-dev
 #      - libqhull-dev # no longer useful
-#      - libpcl-dev # 1) CAUTION -> is LINKED with QT5 ! - 2) For DISABLE_LIBUSB-1.0 warning pb, see : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
+#      - libpcl-dev # 1) CAUTION -> is LINKED with QT5, so BOOM with QT4 & clang ! - 2) For DISABLE_LIBUSB-1.0 warning pb, see : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
       - p7zip-full
       - xvfb
 
