@@ -16,6 +16,15 @@
 #include <stdexcept> // for std::runtime_error
 
 
+#if defined _MSC_VER
+#pragma warning(disable : 4334) // warning C4334 in FLANN
+#endif
+#include <pcl/kdtree/kdtree_flann.h>
+#include <utility> // for std::make_pair
+#include <memory>  // for std::unique_ptr
+#include <cmath>   // for std::sqrt
+
+
 namespace FEVV {
 
 // --------------- Point map ---------------
@@ -88,6 +97,7 @@ get(const boost::vertex_point_t, FEVV::PCLPointCloud &pc)
   FEVV::PCLPointCloudPointMap pm(pc);
   return pm;
 }
+
 
 } // namespace pcl
 
@@ -288,3 +298,95 @@ struct property_traits< FEVV::PCLPointCloudPointMap >
 };
 
 } // namespace boost
+
+
+// MEPP2 PointCloud kNN-search concept
+namespace pcl {
+
+// kNN-search types
+struct PCLPointCloudKNNSearch
+{
+  typedef  pcl::KdTreeFLANN< FEVV::PCLEnrichedPoint >  KdTree;
+  typedef  std::unique_ptr< KdTree >                   KdTreePtr;
+};
+
+
+// MEPP2 PointCloud concept
+//!
+//! \brief  Initialize a k-d tree with all cloud points.
+//!
+inline
+PCLPointCloudKNNSearch::KdTreePtr
+create_kd_tree(const FEVV::PCLPointCloud &pc)
+{
+  typedef  PCLPointCloudKNNSearch::KdTree     KdTree;
+  typedef  PCLPointCloudKNNSearch::KdTreePtr  KdTreePtr;
+
+  // create k-d tree
+  KdTreePtr kd_tree(new KdTree);
+
+  // copy all points in the tree
+  kd_tree->setInputCloud(pc.makeShared());
+  // note : cloud is passed as a shared pointer here
+  //        so all data is copied twice:
+  //        1. whole point cloud copied to shared pointer
+  //           due to makeShared()
+  //        2. all points X,Y,Z copied into kdtree by
+  //           setInputCloud()
+  
+  return kd_tree;
+}
+
+
+// MEPP2 PointCloud concept
+//!
+//! \brief   Search the k nearest neighbors of a geometric point.
+//! \return  A pair containing a vector of vertex descriptors
+//!          (the ids of the k nearest neighbors) and a vector of distances
+//!          (the distance to each nearest neighbor) ; both vectors have size k.
+//!
+inline
+std::pair< std::vector< typename boost::graph_traits<
+               FEVV::PCLPointCloud >::vertex_descriptor >,
+           std::vector< double > >
+kNN_search(
+    const PCLPointCloudKNNSearch::KdTree &kd_tree,
+    unsigned int k,
+    const FEVV::PCLPoint &query,
+    const FEVV::PCLPointCloud &pc) // useless for PCL
+{
+  typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
+      vertex_descriptor;
+
+  // prepare query
+  FEVV::PCLEnrichedPoint search_point;
+  search_point.x = query.x;
+  search_point.y = query.y;
+  search_point.z = query.z;
+
+  // search K nearest neighbours
+  std::vector< int > nn_ids_tmp(k);
+  std::vector< float > nn_distances_tmp(k); // squared distance
+  int nn_nbr =
+      kd_tree.nearestKSearch(search_point, k, nn_ids_tmp, nn_distances_tmp);
+  // note : kd_tree.nearestKSearch() wants a std::vector< int > and a
+  //        std::vector< float > as outputs, and nothing else ; the more
+  //        generic std::vector< vertex_descriptor > and 
+  //        std::vector <double > trigger a compilation error as of PCL 1.9.1
+
+  // note : should launch an exception if nn_nbr != k ?
+
+  // convert ids and distances
+  std::vector< vertex_descriptor > nn_ids(nn_nbr);
+  std::vector< double > nn_distances(nn_nbr);
+  for(int i = 0; i < nn_nbr; i++)
+  {
+    nn_ids[i] = static_cast< vertex_descriptor >(nn_ids_tmp[i]);
+    nn_distances[i] = std::sqrt(nn_distances_tmp[i]);
+  }
+
+  // return pair (vector_of_ids, vector_of_distances)
+  return make_pair(nn_ids, nn_distances);
+}
+
+} // namespace pcl
