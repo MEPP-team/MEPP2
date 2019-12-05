@@ -59,6 +59,16 @@ add_test( Test_reader_writer_pcl
           ${TESTING_REFOUTPUT_DIR}/PCL/test_reader_writer_pcl.ref.ply
           )
 
+#####
+add_executable( test_kNN_search_concept_pcl
+                test_kNN_search_concept_pcl.cpp )
+target_link_libraries( test_kNN_search_concept_pcl
+                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
+                       ${FLANN_LIBRARIES}
+                       )
+add_test( Test_kNN_search_concept_pcl
+          test_kNN_search_concept_pcl )
+
 
 #------
 
