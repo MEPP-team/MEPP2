@@ -15,7 +15,6 @@
 
 #include "FEVV/Wrappings/properties.h"
 
-#include "FEVV/Filters/Generic/generic_reader.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
 #include <CGAL/Point_set_3/IO.h>
@@ -94,14 +93,13 @@ namespace Filters {
  *
  * \sa     the variant that use the geometry traits provided by the user.
  */
-template<>
 inline
 void
-read_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
+read_mesh(
     const std::string &filename,
     FEVV::CGALPointSet &g,
     PMapsContainer &pmaps,
-    bool only_pts)
+    bool only_pts = false)
 {
 #if 1
   bool success = false;
