@@ -13,6 +13,13 @@
 #include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
 #include <CGAL/boost/graph/properties.h> // for boost::vertex_point_t
 
+#include <CGAL/Search_traits_3.h>
+#include <CGAL/Search_traits_adapter.h>
+#include <CGAL/Orthogonal_k_neighbor_search.h>
+#include <CGAL/boost/iterator/counting_iterator.hpp>
+#include <memory> // for std::unique_ptr
+#include <utility> // for std::make_pair
+
 
 namespace FEVV {
 
@@ -23,6 +30,13 @@ using CGALPointSetPointMap = CGALPointSet::Point_map;
 
 namespace CGAL {
 
+// note:
+//   FEVV::CGALPointSet is a typedef to CGAL::Point_set_3<...> ;
+//   functions f(FEVV::CGALPointSet) must be declared in the same
+//   namespace as CGALPointSet real underlying class for the
+//   name lookup mecanism to work properly ;
+//   see https://en.cppreference.com/w/cpp/language/adl
+
 /**
  * \brief  Returns the points property map (aka the geometry) of the mesh.
  */
@@ -31,6 +45,93 @@ FEVV::CGALPointSetPointMap
 get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
   return ps.point_map();
+}
+
+
+// MEPP2 PointCloud kNN-search concept types
+struct CGALPointSetKNNSearch
+{
+  // k-d tree type
+  using vertex_descriptor =
+      boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor;
+  using Traits_base = CGAL::Search_traits_3< FEVV::CGALPointSetKernel >;
+  using Traits = CGAL::Search_traits_adapter< vertex_descriptor,
+                                              FEVV::CGALPointSetPointMap,
+                                              Traits_base >;
+  using K_neighbor_search = CGAL::Orthogonal_k_neighbor_search< Traits >;
+  using KdTree = K_neighbor_search::Tree;
+  using KdTreePtr = std::unique_ptr< KdTree >;
+    // note : CGAL::Orthogonal_k_neighbor_search< >::Tree can not be returned
+    //        by a function because its copy constructor is private ; a compilation
+    //        error occurs even in case of copy elision ; so we use a
+    //        smart pointer as a workaround ;
+};
+
+
+// MEPP2 PointCloud concept
+//!
+//! \brief  Initialize a k-d tree with all cloud points.
+//!
+inline
+CGALPointSetKNNSearch::KdTreePtr
+create_kd_tree(const FEVV::CGALPointSet &pc)
+{
+  typedef  CGALPointSetKNNSearch::Traits     Traits;
+  typedef  CGALPointSetKNNSearch::KdTree     KdTree;
+  typedef  CGALPointSetKNNSearch::KdTreePtr  KdTreePtr;
+
+  // retrieve Point map
+  auto ppmap = pc.point_map();
+
+  // create kdtree (insert all points in the tree)
+  KdTreePtr kd_tree(
+      new KdTree(boost::counting_iterator< std::size_t >(0),
+                 boost::counting_iterator< std::size_t >(pc.number_of_points()),
+                 KdTree::Splitter(),
+                 Traits(ppmap)));
+
+  return kd_tree;
+}
+
+
+// MEPP2 PointCloud concept
+//!
+//! \brief   Search the k nearest neighbors of a geometric point.
+//! \return  A pair containing a vector of vertex descriptors
+//!          (the ids of the k nearest neighbors) and a vector of distances
+//!          (the distance to each nearest neighbor) ; both vectors have size k.
+//!
+inline
+std::pair< std::vector< CGALPointSetKNNSearch::vertex_descriptor >,
+           std::vector< double > >
+kNN_search(
+    const CGALPointSetKNNSearch::KdTree &kd_tree,
+    unsigned int k,
+    const FEVV::CGALPointSetPoint &query,
+    const FEVV::CGALPointSet& pc)
+{
+  typedef CGALPointSetKNNSearch::vertex_descriptor  vertex_descriptor;
+  typedef CGALPointSetKNNSearch::K_neighbor_search  K_neighbor_search;
+  typedef K_neighbor_search::Distance               Distance;
+
+  // retrieve Point map
+  auto ppmap = pc.point_map();
+
+  // search K nearest neighbours
+  Distance sq_dist(ppmap); // squared distance
+  K_neighbor_search search(kd_tree, query, k, 0, true, sq_dist);
+
+  // convert ids and distances
+  std::vector< vertex_descriptor > nn_ids;
+  std::vector< double > nn_distances;
+  for(auto it = search.begin(); it != search.end(); it++)
+  {
+    nn_ids.push_back(it->first);
+    nn_distances.push_back(sq_dist.inverse_of_transformed_distance(it->second));
+  }
+
+  // return pair (vector_of_ids, vector_of_distances)
+  return make_pair(nn_ids, nn_distances);
 }
 
 } // namespace CGAL
