@@ -63,12 +63,15 @@ specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 |--------------------|-----------------------|----------------------|--------------|
 | **Traversals**     | | | |
 | `vertices(pc)`     | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the points in the point cloud `pc`.|
-| `num_vertices(g)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns the number of vertices in the graph `g`.|
+| `num_vertices(pc)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns the number of vertices in the point cloud `pc`.|
 | **Mutability**        | | | |
 | `add_vertex(pc)`       | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `vertex_descriptor`                | Add a new vertex to the point cloud. The vertex_descriptor for the new vertex is returned. |
 | `remove_vertex(v, pc)`  | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `void`                             | Remove `v` from the vertex set of point cloud.|
 | **Miscelaneous**      | | | |
 | `null_vertex()`| [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | vertex_descriptor | Returns a special `vertex_descriptor` object which does not refer to any vertex of point cloud object which type is PC. |
+| **Neighborhood**      | | | |
+| `create_kd_tree(pc)`| | Smart pointer to a k-d tree | Returns a smart pointer to a k-d tree that can be later used for nearest neighbor searches. The smart pointer must NOT be manually deleted. |
+| `kNN_search(kd_tree, k, query, pc)`| | std::pair<\n &nbsp;&nbsp;std::vector<vertex_descriptor>,  &nbsp;&nbsp;std::vector<double>\n > | Looks for the 'k' nearest neighbors of the point 'query' in the point cloud 'pc' using the previously created k-d tree 'kd_tree'. Returns a pair of vectors: the first vector contains the vertex descriptors of the k nearest neighbors, the second vector contains the distance of each nearest neighbor to the 'query' point. The 'query' point is given by its geometry and do not need to be an existing point of the point cloud. |
 
 OPEN QUESTIONS:
  - Should other FEVV concepts be defined as refining this PointCLoud concept ? If not please do provide a clear reason not to do so !

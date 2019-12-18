@@ -34,7 +34,7 @@ Refer to
 |`faces_around_target(h, g)` | `Iterator_range< Face_around_target_iterator<G> >` | Returns an iterator range over all faces around vertex `target(h,g)`. |
 |`faces_around_face( h, g)` | `Iterator_range< Face_around_face_iterator<G> >` | Returns an iterator range over all edge-adjacent faces to the same face `face(h,g)`. |
 |`vertices_around_target(h, g)` | `Iterator_range< Vertex_around_target_iterator<G> >` | Returns an iterator range over all vertices adjacent to the vertex `target(h,g)`. |
-| `vertices_around_face(h, g)` | `Iterator_range< Vertex_around_target_iterator<G> >` | Returns an iterator range over all vertices adjacent to the face `face(h,g)`. |
+| `vertices_around_face(h, g)` | `Iterator_range< Vertex_around_face_iterator<G> >` | Returns an iterator range over all vertices adjacent to the face `face(h,g)`. |
 | **[Handles and circulators (CGAL)](https://doc.cgal.org/latest/Circulator/group__PkgHandlesAndCirculatorsFunctions.html)** | | |
 |`CGAL_For_all(ic1, ic2)`| `#define` | A macro simplifying the writing simple loops. `ic1` and `ic2` can be either iterators or circulators. The macro loops through the range `[ic1, ic2)`. It increments `ic1` until it reaches `ic2`.|
 |`CGAL_For_all_backwards(ic1, ic2)`| `#define` | Similar to `CGAL_For_all(ic1, ic2)` except that the macro decrements `ic2` until it reaches `ic1`.|
