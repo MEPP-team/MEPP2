@@ -32,20 +32,16 @@ add_definitions( ${PCL_DEFINITIONS} )
 add_executable( compute_normals_pcl
                 compute_normals_pcl.cpp )
 target_link_libraries( compute_normals_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
-                       ${PCL_KDTREE} ${PCL_SEARCH_LIBRARIES} ${PCL_FEATURES_LIBRARIES}
+                       ${PCL_LIBRARIES}
                        ${Boost_LIBRARIES}
-                       ${FLANN_LIBRARIES}
                        )
 
 #####
 add_executable( shot_color_estimation_pcl
                 shot_color_estimation_pcl.cpp )
 target_link_libraries( shot_color_estimation_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
-                       ${PCL_KDTREE} ${PCL_SEARCH_LIBRARIES} ${PCL_FEATURES_LIBRARIES}
+                       ${PCL_LIBRARIES}
                        ${Boost_LIBRARIES}
-                       ${FLANN_LIBRARIES}
                        )
 
 #####
@@ -53,6 +49,5 @@ add_executable( example_prop_maps_pcl
                 example_prop_maps_pcl.cpp )
 target_link_libraries( example_prop_maps_pcl
                        ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
-                       ${PCL_KDTREE} ${PCL_SEARCH_LIBRARIES} ${PCL_FEATURES_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )

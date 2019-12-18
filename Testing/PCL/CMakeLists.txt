@@ -23,15 +23,19 @@ endif()
 add_definitions( -DCGAL_NDEBUG )
 
 #####
-add_executable(pcd_write_test pcd_write.cpp)
-target_link_libraries(pcd_write_test ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES})
+add_executable( pcd_write_test pcd_write.cpp )
+target_link_libraries( pcd_write_test
+                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(pcd_write_test pcd_write_test)
 
 #####
 add_executable( test_complying_concepts_pcl
                 test_complying_concepts_pcl.cpp )
 target_link_libraries( test_complying_concepts_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
+                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
+                       ${Boost_LIBRARIES}
                        )
 add_test( Test_complying_concepts_pcl
           test_complying_concepts_pcl )
@@ -40,7 +44,8 @@ add_test( Test_complying_concepts_pcl
 add_executable( test_property_maps_pcl
                 test_property_maps_pcl.cpp )
 target_link_libraries( test_property_maps_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
+                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
+                       ${Boost_LIBRARIES}
                        )
 add_test( Test_property_maps_pcl
           test_property_maps_pcl )
@@ -49,7 +54,8 @@ add_test( Test_property_maps_pcl
 add_executable( test_reader_writer_pcl
                 test_reader_writer_pcl.cpp )
 target_link_libraries( test_reader_writer_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
+                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
+                       ${Boost_LIBRARIES}
                        )
 add_test( Test_reader_writer_pcl
           test_reader_writer_pcl
@@ -62,8 +68,8 @@ add_test( Test_reader_writer_pcl
 add_executable( test_kNN_search_concept_pcl
                 test_kNN_search_concept_pcl.cpp )
 target_link_libraries( test_kNN_search_concept_pcl
-                       ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} ${Boost_LIBRARIES}
-                       ${FLANN_LIBRARIES}
+                       ${PCL_LIBRARIES}
+                       ${Boost_LIBRARIES}
                        )
 add_test( Test_kNN_search_concept_pcl
           test_kNN_search_concept_pcl )
