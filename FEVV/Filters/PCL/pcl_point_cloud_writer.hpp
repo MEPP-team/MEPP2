@@ -15,7 +15,6 @@
 
 #include "FEVV/Wrappings/properties.h"
 
-#include "FEVV/Filters/Generic/generic_writer.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
 #include <pcl/io/pcd_io.h>
@@ -35,10 +34,9 @@ namespace Filters {
  * \param  g           mesh to write to file
  * \param  pmaps       property maps bag of the mesh
  */
-template<>
 inline
 void
-write_mesh< FEVV::PCLPointCloud, FEVV::Geometry_traits< FEVV::PCLPointCloud > >(
+write_mesh(
     const std::string &filename,
     FEVV::PCLPointCloud &g,
     PMapsContainer &pmaps)
