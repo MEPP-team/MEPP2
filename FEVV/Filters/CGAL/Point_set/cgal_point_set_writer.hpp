@@ -15,7 +15,6 @@
 
 #include "FEVV/Wrappings/properties.h"
 
-#include "FEVV/Filters/Generic/generic_writer.hpp" // specialization of
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
 #include <CGAL/Point_set_3/IO.h>
@@ -38,10 +37,9 @@ namespace Filters {
  * \param  g           mesh to write to file
  * \param  pmaps       property maps bag of the mesh
  */
-template<>
 inline
 void
-write_mesh< FEVV::CGALPointSet, FEVV::Geometry_traits< FEVV::CGALPointSet > >(
+write_mesh(
     const std::string &filename,
     FEVV::CGALPointSet &g,
     PMapsContainer &pmaps)

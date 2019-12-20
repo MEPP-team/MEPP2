@@ -1898,7 +1898,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     v_nm = get_property_map(FEVV::vertex_normal, *_g, *_pmaps);
     _vt_nm = &v_nm;
   }
-#if 0 //TODO-elo-restore
+#if 0 //TODO-elo-restore-if-needed
   // compute vertex normals if not provided
   if(_vt_nm == nullptr || m_recomputeNT_if_redraw)
   {
@@ -2141,8 +2141,15 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                      GeometryTraits::get_y(p0),
                      GeometryTraits::get_z(p0))));
       // [ normals
-      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) );
-      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) * MAGNITUDE_N ); // ok because _vt_nm always true
+      if(_vt_nm)
+      {
+        vertexArrays_normals[mtl_id]->push_back(
+            Helpers::VectorConverter< PointCloud >(p0));
+        vertexArrays_normals[mtl_id]->push_back(
+            Helpers::VectorConverter< PointCloud >(p0) +
+            Helpers::VectorConverter< PointCloud >(get(*_vt_nm, *v_it)) *
+                MAGNITUDE_N);
+      }
       // ] normals
 
       sizeSPoints++;
@@ -2167,7 +2174,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       if(_vt_nm)
         normalsArrays_vertices[mtl_id]->push_back(
             Helpers::VectorConverter< PointCloud >(
-                get(v_nm, *v_it)));
+                get(*_vt_nm, *v_it)));
 
       // [ normals
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
