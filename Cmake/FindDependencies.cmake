@@ -145,14 +145,6 @@ if( BUILD_USE_PCL )
   else()
     message (FATAL_ERROR "PCL not found. Turn BUILD_USE_PCL to OFF.")
   endif ()
-
-  # not necessary for PCL usage, just here for flann example...
-  find_package(Flann)
-  if ( FLANN_FOUND )
-    add_definitions( -DFEVV_USE_FLANN )
-  else()
-    message ( "Unfound Flann package." )
-  endif ()
 endif ()
 
 ##### VTK package finding
