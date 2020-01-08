@@ -169,9 +169,9 @@ if( BUILD_USE_FBX )
 
     set( FBX_LIBRARY       ${FBX_DIR}/lib )
 
-    if( "${CMAKE_BUILD_TYPE}" MATCHES "(D|d)eb" )
+    if(( "${CMAKE_BUILD_TYPE}" MATCHES "(D|d)eb" ) OR ( "${CMAKE_CONFIGURATION_TYPES}" MATCHES "(D|d)eb" ))
       set ( BUILD_CONFIG "debug" )
-    elseif( "${CMAKE_BUILD_TYPE}" MATCHES "(R|r)el" )
+    elseif(( "${CMAKE_BUILD_TYPE}" MATCHES "(R|r)el" ) OR ( "${CMAKE_CONFIGURATION_TYPES}" MATCHES "(R|r)el" ))
       set ( BUILD_CONFIG "release" )
     else()
       message( "Unrecognized build type to use FBX." )
