@@ -34,6 +34,9 @@ namespace Comparator
     VertexComparator(const Graph& g, const PointMap& pm, const GeometryTraits& gt) :_g(g), _pm(pm), _gt(gt) {}
     bool operator()(vertex_descriptor v1, vertex_descriptor v2)
     {
+      if(v1==v2)
+        return false;
+
       Point pv1 = get(_pm, v1);
       Point pv2 = get(_pm, v2);
 
