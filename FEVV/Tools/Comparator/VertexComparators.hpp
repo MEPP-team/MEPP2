@@ -59,14 +59,14 @@ namespace Comparator
       auto iter_e_v = e_v1.first;
 	  for( ; iter_e_v!=e_v1.second; ++iter_e_v)
 	  {
-		  auto e_vopp = in_edges(source(*iter_e_v, _g),_g);
+		  auto e_vopp = (source(*iter_e_v, _g)!=v1)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
 		  e_v1_deg += std::distance(e_vopp.first, e_vopp.second);
 	  }
 	  
 	  iter_e_v = e_v2.first;
 	  for( ; iter_e_v!=e_v2.second; ++iter_e_v)
 	  {
-		  auto e_vopp = in_edges(source(*iter_e_v, _g),_g);
+		  auto e_vopp = (source(*iter_e_v, _g)!=v2)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
 		  e_v2_deg += std::distance(e_vopp.first, e_vopp.second);
 	  }
 	  
