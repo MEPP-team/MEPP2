@@ -142,6 +142,7 @@ public:
                                                &pm,
                                                &v_cm,
                                                p3dFilePath,
+                                               has_color,
                                                write_info,
                                                intermediate_meshes,
                                                intermediate_vertexColorMaps,
@@ -149,10 +150,13 @@ public:
                                                write_intermediate_meshes);
 
       // existing property maps are no more valid due to topological changes
-      // purge the property maps bag except the vertex color map
+      // purge the property maps bag
       FEVV::PMapsContainer new_pmaps_bag;
-      FEVV::put_property_map(FEVV::vertex_color, *_mesh, new_pmaps_bag, v_cm);
       *pmaps_bag = new_pmaps_bag;
+
+      // keep vertex color map if compressed mesh really has colors
+      if(has_color)
+        FEVV::put_property_map(FEVV::vertex_color, *_mesh, *pmaps_bag, v_cm);
     }
     catch(std::runtime_error &e)
     {
@@ -227,8 +231,11 @@ public:
           VertexColorMap *v_cm_i = (*intermediate_vertexColorMaps)[i];
 
           FEVV::PMapsContainer *pmaps_bag_i = new FEVV::PMapsContainer;
-          FEVV::put_property_map(
-              FEVV::vertex_color, *mesh_i, *pmaps_bag_i, *v_cm_i);
+          if(has_color)
+          {
+            FEVV::put_property_map(
+                FEVV::vertex_color, *mesh_i, *pmaps_bag_i, *v_cm_i);
+          }
 
           // draw intermediate mesh
           viewer->draw_or_redraw_mesh(mesh_i,
@@ -391,6 +398,7 @@ protected:
   bool write_intermediate_meshes; // write to files
   void *intermediate_meshes_void;
   void *intermediate_vertexColorMaps_void;
+  bool has_color;
 };
 
 } // namespace FEVV

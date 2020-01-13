@@ -643,6 +643,7 @@ public:
   void Decompress_Init(HalfedgeGraph &pMesh,
                        PointMap *_pm,
                        VertexColorMap *_v_cm,
+                       bool &has_color,
                        const std::string &Input_File_Name);
 
 #if 0 // TODO-elo-restore-if-needed

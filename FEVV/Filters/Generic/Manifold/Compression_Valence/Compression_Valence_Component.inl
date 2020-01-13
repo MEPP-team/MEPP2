@@ -5470,6 +5470,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     Decompress_Init(HalfedgeGraph &_pMesh,
                     PointMap *_pm,
                     VertexColorMap *_v_cm,
+                    bool &has_color,
                     const std::string &Input_File_Name)
 {
   this->File_name = Input_File_Name;
@@ -5545,6 +5546,9 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   }
   else
     this->IsColored = false;
+
+  // set color flag for calling function
+  has_color = this->IsColored;
 
   // read color information for each component
   if((this->IsColored) && (!this->IsOneColor))

@@ -38,6 +38,8 @@ namespace Filters {
  * \param  intermediate_vertexColorMaps
  *                           if not null, used to store the vertex color
  *                           map of each intermediate mesh
+ * \param  has_color         output parameter, contains true if the
+ *                           compressed mesh has colors
  * \param  do_write_intermediate_meshes
  *                           write intermediate meshes to files during
  *                           decompression progression
@@ -59,6 +61,7 @@ decompression_valence(
     PointMap *pm,
     VertexColorMap *v_cm,
     const std::string &input_filename,
+    bool &has_color, /* output value : has color flag */
     bool do_write_info,
     std::vector< HalfedgeGraph * > *intermediate_meshes, /* nullptr allowed */
     std::vector< VertexColorMap * >
@@ -73,6 +76,7 @@ decompression_valence(
   compr_valence_component.Decompress_Init(g,    /* mesh */
                                           pm,   /* point map */
                                           v_cm, /* vertex color map */
+                                          has_color,
                                           input_filename);
 
   std::string result = compr_valence_component.Decompression_All_From_File(
@@ -111,6 +115,8 @@ decompression_valence(
  * \param  intermediate_vertexColorMaps
  *                           if not null, used to store the vertex color
  *                           map of each intermediate mesh
+ * \param  has_color         output parameter, contains true if the
+ *                           compressed mesh has colors
  * \param  do_write_intermediate_meshes
  *                           write intermediate meshes to files during
  *                           decompression progression
@@ -130,6 +136,7 @@ decompression_valence(
     PointMap *pm,
     VertexColorMap *v_cm,
     const std::string &input_filename,
+    bool &has_color, /* output value : has color flag */
     bool do_write_info = false,
     std::vector< HalfedgeGraph * > *intermediate_meshes =
         nullptr, /* optional */
@@ -146,6 +153,7 @@ decompression_valence(
                                                  pm,
                                                  v_cm,
                                                  input_filename,
+                                                 has_color,
                                                  do_write_info,
                                                  intermediate_meshes,
                                                  intermediate_vertex_color_maps,
