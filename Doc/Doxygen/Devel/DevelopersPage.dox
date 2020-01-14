@@ -5,7 +5,7 @@
  - @subpage DevelopersInceptionPage
  - @subpage DevelopersCodingStyleGeneralitiesPage
  - @subpage DevelopersCodingStyleSpecificitiesPage
- - @subpage DevelopersAIFCellsAndPropertyMapsPage
+ - @subpage DatastructureSpecificFilterAndPlugin
  - Design notes
    - @subpage DevelopersDesignCMakeFilesPage
    - @subpage DevelopersDesignTheSocietyOfTypesPage
