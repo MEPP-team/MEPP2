@@ -1,4 +1,4 @@
-v0.12.1 - 07/01/2020 :
+v0.12.1 - 17/01/2020 :
  - bug fixes related to point clouds
  - activate PCL 1.9.1
 
