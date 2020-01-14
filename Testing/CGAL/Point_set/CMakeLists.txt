@@ -43,3 +43,18 @@ target_link_libraries( test_kNN_search_concept_cgal_point_set
 add_test( Test_kNN_search_concept_cgal_point_set
           test_kNN_search_concept_cgal_point_set
           )
+
+#####
+add_executable( test_point_cloud_curvature_cgal_point_set
+                test_point_cloud_curvature_cgal_point_set.cpp )
+target_link_libraries( test_point_cloud_curvature_cgal_point_set
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+add_test( Test_point_cloud_curvature_cgal_point_set
+          test_point_cloud_curvature_cgal_point_set
+          ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+          test_point_cloud_curvature_cgal_point_set_monkey.ply
+          15
+          ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_monkey.ref.ply
+          )
