@@ -73,3 +73,19 @@ target_link_libraries( test_kNN_search_concept_pcl
                        )
 add_test( Test_kNN_search_concept_pcl
           test_kNN_search_concept_pcl )
+
+#####
+add_executable( test_point_cloud_curvature_pcl
+                test_point_cloud_curvature_pcl.cpp )
+target_link_libraries( test_point_cloud_curvature_pcl
+                       ${PCL_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+add_test( Test_point_cloud_curvature_pcl
+          test_point_cloud_curvature_pcl
+          ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+          test_point_cloud_curvature_pcl_monkey.ply
+          15
+          ${TESTING_REFOUTPUT_DIR}/PCL/test_point_cloud_curvature_pcl_monkey.ref.ply
+          )
+
