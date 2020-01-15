@@ -13,11 +13,69 @@
 #include <CGAL/boost/graph/properties.h>
 #include <boost/foreach.hpp>
 #include <limits>
+#include <memory>    // for std::unique_ptr
+#include <stdexcept> // for std::invalid_argument
+#include <cmath>     // for std::fmod
 
 namespace FEVV {
 namespace Filters {
 
 // Numeric maps
+
+
+/**
+ * \brief  Create a RGB LUT based on an HSV range.
+ */
+inline
+std::unique_ptr< double[] >
+make_LUT(float h1 = 180,
+         float h2 = 0,
+         unsigned int colors_nbr = 255,
+         bool color_in_0_255 = true)
+{
+  // check parameters
+  if(h1 == h2)
+    throw std::invalid_argument("make_LUT: h1 and h2 must be different.");
+  if(colors_nbr == 0)
+    throw std::invalid_argument("make_LUT: colors_nbr must not be zero.");
+
+  // create LUT
+  std::unique_ptr< double[] > rgb_LUT(new double[3 * colors_nbr]);
+
+  // initializations
+  float max_color_value = 1;
+  if(color_in_0_255)
+    max_color_value = 255;
+  float step = (h2 - h1)/colors_nbr;
+  float H = h1;
+  const float S = 1;
+  const float V = 1;
+
+  // helper lambda function to convert HSV to RGB
+  // see https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB
+  // section "HSV to RGB alternative"
+  auto f = [](float h, float s, float v, int n) -> float
+  {
+    float k = std::fmod(n + h/60.0, 6);
+    return v - v*s*std::max(std::min({k, 4-k, 1.0f}), 0.0f);
+  };
+
+  // populate LUT
+  for(unsigned int i = 0; i < colors_nbr; i++)
+  {
+    std::cout << "  H=" << H; //TODO-elo-rm
+    rgb_LUT[3 * i]     = max_color_value * f(H, S, V, 5); // R
+    std::cout << "  R=" << rgb_LUT[3 * i]; //TODO-elo-rm
+    rgb_LUT[3 * i + 1] = max_color_value * f(H, S, V, 3); // G
+    std::cout << "  G=" << rgb_LUT[3 * i + 1]; //TODO-elo-rm
+    rgb_LUT[3 * i + 2] = max_color_value * f(H, S, V, 1); // B
+    std::cout << "  B=" << rgb_LUT[3 * i + 2] << std::endl; //TODO-elo-rm
+
+    H += step;
+  }
+
+  return rgb_LUT;
+}
 
 
 /**
@@ -88,7 +146,7 @@ color_faces_from_map(const HalfedgeGraph &g,
                      ColorMap &color_pmap,
                      const MapType min_metric,
                      const MapType max_metric,
-                     double *colors,
+                     double *colors = make_LUT().get(),
                      int number_of_colors = 255)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::face_descriptor
@@ -130,7 +188,7 @@ color_vertices_from_map(const HalfedgeGraph &g,
                         ColorMap &color_pmap,
                         const MapType min_metric,
                         const MapType max_metric,
-                        double *colors,
+                        double *colors = make_LUT().get(),
                         int number_of_colors = 255)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor
@@ -172,7 +230,7 @@ color_halfedges_from_map(const HalfedgeGraph &g,
                          ColorMap &color_pmap,
                          const MapType min_metric,
                          const MapType max_metric,
-                         double *colors,
+                         double *colors = make_LUT().get(),
                          int number_of_colors = 255)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor
