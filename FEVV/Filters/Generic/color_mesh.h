@@ -27,17 +27,17 @@ namespace Filters {
  * \brief  Create a RGB LUT based on an HSV range.
  *         Default range create a cyan-green-yellow-red gradient.
  *
- * \param  h1  1st bound of the H range
- * \param  h2  2nd bound of the H range
- * \param  colors_nbr  number of different colors of the LUT
+ * \param  colors_nbr  number of different colors in the LUT
+ * \param  h1          1st bound of the H range
+ * \param  h2          2nd bound of the H range
  * \param  color_in_0_255  if true the RGB values are in [0;255]
  *                         else they are in [0;1]
  */
 inline
 std::unique_ptr< double[] >
-make_LUT(float h1 = 180,
+make_LUT(unsigned int colors_nbr = 256,
+         float h1 = 180,
          float h2 = 0,
-         unsigned int colors_nbr = 255,
          bool color_in_0_255 = true)
 {
   // check parameters
@@ -70,6 +70,9 @@ make_LUT(float h1 = 180,
   // populate LUT
   for(unsigned int i = 0; i < colors_nbr; i++)
   {
+
+    std::cout << "LUT"; //TODO-elo-rm
+    std::cout << "  i=" << i; //TODO-elo-rm
     std::cout << "  H=" << H; //TODO-elo-rm
     rgb_LUT[3 * i]     = max_color_value * f(H, S, V, 5); // R
     std::cout << "  R=" << rgb_LUT[3 * i]; //TODO-elo-rm
@@ -125,7 +128,7 @@ color_descriptor_from_map(const Descriptor &d,
 
     // convert value to LUT id
     MapType id = (val_metric - min_metric) / (max_metric - min_metric);
-    int indice_lut = static_cast< int >(std::floor(number_of_colors * id));
+    int indice_lut = static_cast< int >(std::floor((number_of_colors - 1) * id));
     std::cout << "val_metric=" << val_metric << "  min_metric=" << min_metric << "  max_metric=" << max_metric << "  id=" << id << "  indice_lut = " << indice_lut << std::endl; //TODO-elo-rm
 
     // convert value to color
@@ -164,8 +167,8 @@ color_faces_from_map(const HalfedgeGraph &g,
                      ColorMap &color_pmap,
                      const MapType min_metric,
                      const MapType max_metric,
-                     double *colors = make_LUT().get(),
-                     int number_of_colors = 255)
+                     double *colors = make_LUT(256).get(),
+                     int number_of_colors = 256)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::face_descriptor
       Face_Descriptor;
@@ -206,8 +209,8 @@ color_vertices_from_map(const HalfedgeGraph &g,
                         ColorMap &color_pmap,
                         const MapType min_metric,
                         const MapType max_metric,
-                        double *colors = make_LUT().get(),
-                        int number_of_colors = 255)
+                        double *colors = make_LUT(256).get(),
+                        int number_of_colors = 256)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor
       Vertex_Descriptor;
@@ -248,8 +251,8 @@ color_halfedges_from_map(const HalfedgeGraph &g,
                          ColorMap &color_pmap,
                          const MapType min_metric,
                          const MapType max_metric,
-                         double *colors = make_LUT().get(),
-                         int number_of_colors = 255)
+                         double *colors = make_LUT(256).get(),
+                         int number_of_colors = 256)
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor
       Halfedge_Descriptor;
