@@ -25,6 +25,13 @@ namespace Filters {
 
 /**
  * \brief  Create a RGB LUT based on an HSV range.
+ *         Default range create a cyan-green-yellow-red gradient.
+ *
+ * \param  h1  1st bound of the H range
+ * \param  h2  2nd bound of the H range
+ * \param  colors_nbr  number of different colors of the LUT
+ * \param  color_in_0_255  if true the RGB values are in [0;255]
+ *                         else they are in [0;1]
  */
 inline
 std::unique_ptr< double[] >
@@ -108,9 +115,20 @@ color_descriptor_from_map(const Descriptor &d,
 
   if(min_metric != max_metric)
   {
+    // retrieve value from property map
     MapType val_metric = get(prop_map, d);
+    std::cout << "val_metric=" << val_metric << std::endl; //TODO-elo-rm
+
+    // ensure value is between min and max to avoid LUT overflow
+    val_metric = std::min(val_metric, max_metric);
+    val_metric = std::max(val_metric, min_metric);
+
+    // convert value to LUT id
     MapType id = (val_metric - min_metric) / (max_metric - min_metric);
     int indice_lut = static_cast< int >(std::floor(number_of_colors * id));
+    std::cout << "val_metric=" << val_metric << "  min_metric=" << min_metric << "  max_metric=" << max_metric << "  id=" << id << "  indice_lut = " << indice_lut << std::endl; //TODO-elo-rm
+
+    // convert value to color
     Color newcolor(colors[3 * indice_lut],
                    colors[3 * indice_lut + 1],
                    colors[3 * indice_lut + 2]);
