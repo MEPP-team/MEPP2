@@ -145,14 +145,6 @@ if( BUILD_USE_PCL )
   else()
     message (FATAL_ERROR "PCL not found. Turn BUILD_USE_PCL to OFF.")
   endif ()
-
-  # not necessary for PCL usage, just here for flann example...
-  find_package(Flann)
-  if ( FLANN_FOUND )
-    add_definitions( -DFEVV_USE_FLANN )
-  else()
-    message ( "Unfound Flann package." )
-  endif ()
 endif ()
 
 ##### VTK package finding
@@ -177,9 +169,9 @@ if( BUILD_USE_FBX )
 
     set( FBX_LIBRARY       ${FBX_DIR}/lib )
 
-    if( "${CMAKE_BUILD_TYPE}" MATCHES "(D|d)eb" )
+    if(( "${CMAKE_BUILD_TYPE}" MATCHES "(D|d)eb" ) OR ( "${CMAKE_CONFIGURATION_TYPES}" MATCHES "(D|d)eb" ))
       set ( BUILD_CONFIG "debug" )
-    elseif( "${CMAKE_BUILD_TYPE}" MATCHES "(R|r)el" )
+    elseif(( "${CMAKE_BUILD_TYPE}" MATCHES "(R|r)el" ) OR ( "${CMAKE_CONFIGURATION_TYPES}" MATCHES "(R|r)el" ))
       set ( BUILD_CONFIG "release" )
     else()
       message( "Unrecognized build type to use FBX." )

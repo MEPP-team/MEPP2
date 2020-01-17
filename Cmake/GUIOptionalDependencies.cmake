@@ -200,7 +200,7 @@ if( BUILD_USE_GUI )
   endif()
 
   # Find osgQt - caution, no more 'osgQt' module embedded by default since openscenegraph 3.5.5 !
-  message( STATUS "OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
+  message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
     set( OSGQT_INCLUDE_DIR
       "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
