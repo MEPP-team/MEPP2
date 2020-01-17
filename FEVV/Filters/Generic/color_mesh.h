@@ -13,32 +13,35 @@
 #include <CGAL/boost/graph/properties.h>
 #include <boost/foreach.hpp>
 #include <limits>
-#include <memory>    // for std::unique_ptr
 #include <stdexcept> // for std::invalid_argument
 #include <cmath>     // for std::fmod
+#include <vector>
 
 namespace FEVV {
 namespace Filters {
 
 // Numeric maps
 
+typedef  std::vector< float >   ColorMeshLUT;
 
 /**
  * \brief  Create a RGB LUT based on an HSV range.
  *         Default range create a cyan-green-yellow-red gradient.
  *
+ * \param  color_in_0_255  if true the RGB values are in [0;255]
+ *                         else they are in [0;1]
  * \param  colors_nbr  number of different colors in the LUT
  * \param  h1          1st bound of the H range
  * \param  h2          2nd bound of the H range
- * \param  color_in_0_255  if true the RGB values are in [0;255]
- *                         else they are in [0;1]
+ *
+ * \return  LUT as a 1D array of size 3*colors_nbr
  */
 inline
-std::unique_ptr< double[] >
-make_LUT(unsigned int colors_nbr = 256,
+ColorMeshLUT
+make_LUT(bool color_in_0_255 = true,
+         unsigned int colors_nbr = 256,
          float h1 = 180,
-         float h2 = 0,
-         bool color_in_0_255 = true)
+         float h2 = 0)
 {
   // check parameters
   if(h1 == h2)
@@ -47,7 +50,7 @@ make_LUT(unsigned int colors_nbr = 256,
     throw std::invalid_argument("make_LUT: colors_nbr must not be zero.");
 
   // create LUT
-  std::unique_ptr< double[] > rgb_LUT(new double[3 * colors_nbr]);
+  ColorMeshLUT rgb_LUT(3*colors_nbr);
 
   // initializations
   float max_color_value = 1;
@@ -63,7 +66,7 @@ make_LUT(unsigned int colors_nbr = 256,
   // section "HSV to RGB alternative"
   auto f = [](float h, float s, float v, int n) -> float
   {
-    float k = std::fmod(n + h/60.0, 6);
+    float k = std::fmod(n + h/60.0f, 6.0f);
     return v - v*s*std::max(std::min({k, 4-k, 1.0f}), 0.0f);
   };
 
@@ -92,13 +95,12 @@ make_LUT(unsigned int colors_nbr = 256,
  * \brief  Set the color for the descriptor using a numerical property map and
  * the color array given
  *
- * \param  d                 Descriptor used as key for the property map
- * \param  prop_map			Property map containing numerical values
- * \param  color_pmap		Property map containing color values
- * \param  minMetric         minimum value of the property map
- * \param  maxMetric         maximum value of the property map
- * \param  colors			array of dimension N*3
- * \param  number_of_colors	number N of colors in the array
+ * \param  d            Descriptor used as key for the property map
+ * \param  prop_map     Property map containing numerical values
+ * \param  color_pmap   Property map containing color values
+ * \param  minMetric    minimum value of the property map
+ * \param  maxMetric    maximum value of the property map
+ * \param  colors       1D array of size N*3
  *
  */
 template< typename Descriptor,
@@ -111,10 +113,10 @@ color_descriptor_from_map(const Descriptor &d,
                           ColorMap &color_pmap,
                           const MapType min_metric,
                           const MapType max_metric,
-                          double *colors,
-                          int number_of_colors)
+                          const ColorMeshLUT &colors)
 {
   typedef typename boost::property_traits< ColorMap >::value_type Color;
+  size_t number_of_colors = colors.size() / 3;
 
   if(min_metric != max_metric)
   {
@@ -148,13 +150,12 @@ color_descriptor_from_map(const Descriptor &d,
  * \brief  Fill the color map for the faces of a mesh using a numerical property
  * map
  *
- * \param  g                 mesh to color
- * \param  prop_map			Property map containing numerical values
- * \param  color_pmap		Property map containing color values
- * \param  minMetric         minimum value of the property map
- * \param  maxMetric         maximum value of the property map
- * \param  colors			array of dimension N*3
- * \param  number_of_colors	number N of colors in the array
+ * \param  g            mesh to colorize
+ * \param  prop_map     property map containing numerical values
+ * \param  color_pmap   property map containing color values
+ * \param  minMetric    minimum value of the property map
+ * \param  maxMetric    maximum value of the property map
+ * \param  colors       1D array of size N*3
  *
  */
 template< typename HalfedgeGraph,
@@ -167,8 +168,7 @@ color_faces_from_map(const HalfedgeGraph &g,
                      ColorMap &color_pmap,
                      const MapType min_metric,
                      const MapType max_metric,
-                     double *colors = make_LUT(256).get(),
-                     int number_of_colors = 256)
+                     const ColorMeshLUT &colors = make_LUT())
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::face_descriptor
       Face_Descriptor;
@@ -180,8 +180,7 @@ color_faces_from_map(const HalfedgeGraph &g,
                               color_pmap,
                               min_metric,
                               max_metric,
-                              colors,
-                              number_of_colors);
+                              colors);
   }
 }
 
@@ -190,13 +189,12 @@ color_faces_from_map(const HalfedgeGraph &g,
  * \brief  Fill the color map for the vertices of a mesh using a numerical
  * property map
  *
- * \param  g                 mesh to color
- * \param  prop_map			Property map containing numerical values
- * \param  color_pmap		Property map containing color values
- * \param  minMetric         minimum value of the property map
- * \param  maxMetric         maximum value of the property map
- * \param  colors			array of dimension N*3
- * \param  number_of_colors	number N of colors in the array
+ * \param  g            mesh to colorize
+ * \param  prop_map     property map containing numerical values
+ * \param  color_pmap   property map containing color values
+ * \param  minMetric    minimum value of the property map
+ * \param  maxMetric    maximum value of the property map
+ * \param  colors       1D array of size N*3
  *
  */
 template< typename HalfedgeGraph,
@@ -209,8 +207,7 @@ color_vertices_from_map(const HalfedgeGraph &g,
                         ColorMap &color_pmap,
                         const MapType min_metric,
                         const MapType max_metric,
-                        double *colors = make_LUT(256).get(),
-                        int number_of_colors = 256)
+                        const ColorMeshLUT &colors = make_LUT())
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor
       Vertex_Descriptor;
@@ -222,8 +219,7 @@ color_vertices_from_map(const HalfedgeGraph &g,
                               color_pmap,
                               min_metric,
                               max_metric,
-                              colors,
-                              number_of_colors);
+                              colors);
   }
 }
 
@@ -232,13 +228,12 @@ color_vertices_from_map(const HalfedgeGraph &g,
  * \brief  Fill the color map for the halfedges of a mesh using a numerical
  * property map
  *
- * \param  g                 mesh to color
- * \param  prop_map			Property map containing numerical values
- * \param  color_pmap		Property map containing color values
- * \param  minMetric         minimum value of the property map
- * \param  maxMetric         maximum value of the property map
- * \param  colors			array of dimension N*3
- * \param  number_of_colors	number N of colors in the array
+ * \param  g            mesh to colorize
+ * \param  prop_map     property map containing numerical values
+ * \param  color_pmap   property map containing color values
+ * \param  minMetric    minimum value of the property map
+ * \param  maxMetric    maximum value of the property map
+ * \param  colors       1D array of size N*3
  *
  */
 template< typename HalfedgeGraph,
@@ -251,8 +246,7 @@ color_halfedges_from_map(const HalfedgeGraph &g,
                          ColorMap &color_pmap,
                          const MapType min_metric,
                          const MapType max_metric,
-                         double *colors = make_LUT(256).get(),
-                         int number_of_colors = 256)
+                         const ColorMeshLUT &colors = make_LUT())
 {
   typedef typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor
       Halfedge_Descriptor;
@@ -264,8 +258,7 @@ color_halfedges_from_map(const HalfedgeGraph &g,
                               color_pmap,
                               min_metric,
                               max_metric,
-                              colors,
-                              number_of_colors);
+                              colors);
   }
 }
 
