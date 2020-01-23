@@ -230,10 +230,12 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
                 test )
     endif()
   elseif( MSVC )
-    add_test( ${FILE}
-              ${FILE}
-              ${DATA_TEST}
-              ${VTEST} )
+    if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED ${DOCKER_RUN}) ) # temp
+        add_test( ${FILE}
+                  ${FILE}
+                  ${DATA_TEST}
+                  ${VTEST} )
+    endif()
   else()
     # LINUX
     add_test( ${FILE}
