@@ -133,9 +133,13 @@ main(int argc, char **argv)
   FEVV::SimpleApplication app(argc, argv);
   FEVV::SimpleWindow gui;
 
+#ifndef FEVV_USE_PCL
+  #define PCL_VERSION_PRETTY "(no PCL)"
+#endif
+
   gui.setWindowTitle(
       QObject::tr("%1 - %2 - %3 - %4 - Qt (compiled) %5 - Qt (run-time) %6 - "
-                  "OSG %7 - CGAL %8 (%9.%10.%11)")
+                  "OSG %7 - CGAL %8 (%9.%10.%11) - PCL %12")
           .arg(MAINWINDOW_TITLE)
           .arg(MEPP_VERSION)
           .arg(ARCHITECTURE)
@@ -146,7 +150,8 @@ main(int argc, char **argv)
           .arg(CGAL_VERSION_STR)
           .arg(CGAL_VERSION_MAJOR)
           .arg(CGAL_VERSION_MINOR)
-          .arg(CGAL_VERSION_PATCH));
+          .arg(CGAL_VERSION_PATCH)
+          .arg(PCL_VERSION_PRETTY));
 
   gui.init(test);
 

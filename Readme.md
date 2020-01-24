@@ -34,7 +34,7 @@ an abstraction layer that provides interoperability over several third party dat
 **Installation and developer documentation is [available on the Wiki](https://github.com/MEPP-team/MEPP2/wiki)**
 
 
-![MEPP-GUI](https://projet.liris.cnrs.fr/mepp/images/mepp2/MEPP2-GUI.PNG)
+![MEPP-GUI](https://projet.liris.cnrs.fr/mepp/images/mepp2/MEPP2-GUI-V2.PNG)
 
 
 Linux / Mac OS X (under Travis CI) : [![Build Status](https://travis-ci.org/MEPP-team/MEPP2.svg?branch=master)](https://travis-ci.org/MEPP-team/MEPP2)

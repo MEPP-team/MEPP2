@@ -73,8 +73,3 @@ target_link_libraries( test_kNN_search_concept_pcl
                        )
 add_test( Test_kNN_search_concept_pcl
           test_kNN_search_concept_pcl )
-
-
-#------
-
-add_subdirectory( flann )
