@@ -65,10 +65,8 @@ calculate_vertices_one_ring_geometric_laplacian(
 
   vertex_iterator vi = iterator_pair.first;
   vertex_iterator vi_end = iterator_pair.second;
-  int cpt = 0;
   for(; vi != vi_end; ++vi)
   {
-    cpt++;
     geom_laplacians_pm[*vi] =
         Operators::vertex_one_ring_geometric_laplacian< FaceGraph,
                                                         PointMap,
