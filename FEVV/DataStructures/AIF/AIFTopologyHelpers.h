@@ -118,11 +118,25 @@ public:
    * Function determining if the argument vertex is degenerated
    *
    * \param  vertex  The involving vertex
-   * \return return  true if vertex==null_vertex, and false otherwise.
+   * \return return  true if vertex==null_vertex or
+   *                 if vertex has a degenerated incident edge, 
+   *                 and false otherwise.
    */
   static bool is_degenerated_vertex(vertex_descriptor vertex)
   {
-    return vertex == null_vertex();
+    if (vertex == null_vertex())
+      return true;
+
+    auto eRange = incident_edges(vertex);
+    for (auto eIt = eRange.begin(); eIt != eRange.end(); ++eIt)
+    {
+      if( *eIt == null_edge() || 
+          (*eIt)->get_first_vertex() ==
+          (*eIt)->get_second_vertex() )
+        return true;
+    }
+
+    return false;
   }
 
   /*!
@@ -150,6 +164,10 @@ public:
    *
    * \param  vertex  The involving vertex
    * \return true if the argument vertex is a cut vertex, false otherwise.
+   * \note Sometimes a vertex can have disconnected adjacent faces that are
+   *       disconnected because their edge' end-vertex differ (T-junction).
+   *       For general processing, it thus can be useful to process T-junction
+   *       vertices before processing cut vertices.
    */
   static bool is_cut_vertex(vertex_descriptor vertex)
   {
@@ -167,6 +185,43 @@ public:
       return false;
     else
       return ((nbBoundaryEdges - 4) % 2 == 0);
+  }
+
+  /*!
+  * Function determining if the argument vertex is has either
+  *          a dangling or complex incident edge.
+  *
+  * \param  vertex  The involving vertex
+  * \return true if the argument vertex has either a dangling
+  *         or complex incident edge, false otherwise.
+  */
+  static bool has_dangling_or_complex_incident_edge(vertex_descriptor vertex)
+  {
+    auto incidentEdgesRange = incident_edges(vertex);
+    auto it = incidentEdgesRange.begin();
+    auto ite = incidentEdgesRange.end();
+    for (; it != ite; ++it)
+    {
+      if (is_complex_edge(*it) || is_dangling_edge(*it))
+        return true;
+    }
+    return false;
+  }
+
+  /*!
+  * Function determining if the argument vertex is a regular 
+  *          surface vertex (border or interior). Isolated
+  *          vertex is not considered here.
+  *
+  * \param  vertex  The involving vertex
+  * \return true if the argument vertex is a regular vertex, false otherwise.
+  */
+  static bool is_regular_vertex(vertex_descriptor vertex)
+  {
+    if (is_cut_vertex(vertex) || has_dangling_or_complex_incident_edge(vertex))
+      return false;
+
+    return true;
   }
 
   /*!
@@ -394,7 +449,6 @@ public:
     typedef edge_container_in_vertex::const_iterator it_type;
     // if (vertex1 == null_vertex() || vertex2 == null_vertex())
     //  return null_edge();
-    std::vector< edge_descriptor > common_edges;
     boost::iterator_range< it_type > edges_range = incident_edges(
         vertex1); // we need to use the first vertex (the source in concept!!)
 
@@ -417,15 +471,15 @@ public:
                                                      vertex_descriptor vertex2)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
-    std::vector< edge_descriptor > common_edges;
+    std::vector< edge_descriptor > com_edges;
     boost::iterator_range< it_type > edges_range = incident_edges(vertex1);
 
     for(it_type it = edges_range.begin(); it != edges_range.end(); ++it)
     {
       if(opposite_vertex(*it, vertex1) == vertex2)
-        common_edges.push_back(*it);
+        com_edges.push_back(*it);
     }
-    return common_edges;
+    return com_edges;
   }
   /*!
    * Vertex and edge link.
@@ -505,9 +559,9 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ptr_mesh mesh, const ComparatorType& cmp)
   {
-    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp);
+    std::sort(mesh->GetVertices().begin(), mesh->GetVertices().end(), cmp); // here std::sort ok (no issue detected)
     return mesh->GetVertices();
   }
 
@@ -519,7 +573,7 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(smart_ptr_mesh mesh, const ComparatorType& cmp)
   {
     return sort_vertices<ComparatorType>(mesh.get(), cmp);
   }
@@ -532,7 +586,7 @@ public:
   * \return	An iterator range on the vertices (AIFVertex pointer) of the involving mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<vertex_container::const_iterator> sort_vertices(ref_mesh mesh, const ComparatorType& cmp)
   {
     return sort_vertices<ComparatorType>(&mesh, cmp);
   }
@@ -550,12 +604,14 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges_starting_with_edge(vertex_descriptor vertex, 
-                                                                                                                ComparatorType cmp, 
+                                                                                                                const ComparatorType& cmp, 
                                                                                                                 edge_descriptor edge,
                                                                                                                 bool do_full_incident_edge_sorting)
   {
-    if(do_full_incident_edge_sorting)
-      std::sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
+    if (do_full_incident_edge_sorting)
+    { // here std::sort not ok (issue detected when doing spanning tree based compression)
+      sort(vertex->m_Incident_PtrEdges.begin(), vertex->m_Incident_PtrEdges.end(), cmp); // possible break of clockwise ordering (but no matter since usual order is insertion order)
+    }
     /////////////////////////////////////////////////////////////////////////
     std::list<edge_descriptor> ltmp, ltmpnext;
     edge_container_in_vertex::const_iterator it = vertex->m_Incident_PtrEdges.begin(),
@@ -564,6 +620,10 @@ public:
     {
       ltmpnext.push_back(*it);
       ++it;
+    }
+    if (it == ite)
+    { // starting edge not found, do nothing
+      return incident_edges(vertex);
     }
     while (it != ite)
     {
@@ -589,7 +649,7 @@ public:
   */
   template<typename ComparatorType>
   static boost::iterator_range<edge_container_in_vertex::const_iterator> sort_incident_edges( vertex_descriptor vertex, 
-                                                                                              ComparatorType cmp,
+                                                                                              const ComparatorType& cmp,
                                                                                               bool do_full_incident_edge_sorting)
   {
 
@@ -611,7 +671,7 @@ public:
   */
   template<typename ComparatorType>
   static void sort_incident_edges(edge_descriptor edge,
-                                  ComparatorType cmp,
+                                  const ComparatorType& cmp,
                                   bool do_full_incident_edge_sorting)
   {
     sort_incident_edges<ComparatorType>(edge->get_first_vertex(), cmp, do_full_incident_edge_sorting);
@@ -627,7 +687,7 @@ public:
   */
   template<typename ComparatorType>
   static void sort_one_ring_incident_edges( edge_descriptor edge,
-                                            ComparatorType cmp)
+                                            const ComparatorType& cmp)
   {
     typedef edge_container_in_vertex::const_iterator it_type;
     boost::iterator_range<it_type> edges_range = incident_edges(edge->get_first_vertex());
@@ -743,6 +803,75 @@ public:
     }
     return null_edge();
   }
+  /*!
+  *       Are the two given faces incident to v reachable without
+  *       meeting neither a border edge nor a complex edge?
+  * \param	vertex	The involving vertex
+  * \param	face1    The first involving face
+  * \param	face2    The second involving face
+  * \return	True when face1 and face2 are incident to vertex and if we can reach
+  *         face2 from face1 (and vice-versa) by turning around vertex and without
+  *         meeting neither a border edge nor a complexe edge. Else return false.
+  */
+  static bool are_incident_to_vertex_and_edge_connected(vertex_descriptor vertex, face_descriptor face1, face_descriptor face2)
+  {
+    if (!are_incident(vertex, face1) || !are_incident(vertex, face2))
+      return false;
+  
+    auto face_range = incident_faces(vertex);
+    std::set<face_descriptor> current_faces(face_range.begin(), face_range.end());
+
+    edge_descriptor e1 = common_edge(vertex, face1);
+    edge_descriptor e2 = common_edge(vertex, face1, e1);
+    if ((e1 == null_edge()) && (e2 == null_edge()))
+      return false;
+    if (are_incident(face2, e1) || are_incident(face2, e2))
+      return true;
+    face_descriptor current_f_tmp = face1;
+    while ((e1!=null_edge()) &&
+           (degree(e1) == 2) &&
+           (current_faces.find(current_f_tmp) != current_faces.end()))
+    {
+      auto face_range2 = incident_faces(e1);
+      auto it_f2 = face_range2.begin();
+      for (; it_f2 != face_range2.end(); ++it_f2)
+      {
+        if (*it_f2 != current_f_tmp)
+        {
+          current_faces.erase(current_f_tmp);
+          current_f_tmp = *it_f2;
+          e1 = common_edge(vertex, current_f_tmp, e1);
+          if (are_incident(face2, e1))
+            return true;
+          break;
+        }
+      }
+    }
+    if(current_f_tmp != face1)
+      current_faces.erase(current_f_tmp);
+    if(degree(e2) == 2)
+      current_faces.insert(face1);
+    while ((e2 != null_edge()) &&
+           (degree(e2) == 2) &&
+           (current_faces.find(face1) != current_faces.end()))
+    {
+      auto face_range2 = incident_faces(e2);
+      auto it_f2 = face_range2.begin();
+      for (; it_f2 != face_range2.end(); ++it_f2)
+      {
+        if (*it_f2 != face1)
+        {
+          current_faces.erase(face1);
+          face1 = *it_f2;
+          e2 = common_edge(vertex, face1, e2);
+          if (are_incident(face2, e2))
+            return true;
+          break;
+        }
+      }
+    }
+    return false;
+  }
   //////////////////////////////////	Edge AIFTopologyHelpers
   /////////////////////////////////////
   /*!
@@ -762,6 +891,17 @@ public:
     return degree(edge) == 1;
   }
   /*!
+  * 			Function determining if the argument edge is a surface 
+  *       regular interior edge.
+  * \param	edge	The involving edge
+  * \return	true if the argument edge has 2 incident faces, false
+  * otherwise. 
+  */
+  static bool is_surface_regular_edge(edge_descriptor edge)
+  {
+    return degree(edge) == 2;
+  }
+  /*!
    * Function determining if the argument edge is not on a border
    *
    * \param  edge  The involving edge
@@ -772,7 +912,19 @@ public:
   {
     return !is_surface_border_edge(edge) && !is_dangling_edge(edge);
   }
-
+  /*!
+  * 			Function determining if the argument edge is a regular edge.
+  * \param	edge	The involving edge
+  * \return	true if the argument edge has 2 incident faces for
+  *         interior edges and 1 for border edges, false otherwise.
+  */
+  static bool is_regular_edge(edge_descriptor edge)
+  {
+    if (is_surface_interior_edge(edge))
+      return is_surface_regular_edge(edge);
+    else
+      return is_surface_border_edge(edge);
+  }
   /*!
    * 			Function determining if the argument edge is isolated
    *       (without any incident face + its vertices are 1 degree vertices)
@@ -799,6 +951,7 @@ public:
   }
   /*!
    * Function determining if the argument edge is a complex edge
+   *          (singular or non-regular).
    *
    * \param  edge  The involving edge
    *
@@ -1237,9 +1390,9 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ptr_mesh mesh, const ComparatorType& cmp)
   {
-    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp);
+    std::sort(mesh->GetEdges().begin(), mesh->GetEdges().end(), cmp); // here std::sort ok (no issue detected)
     return mesh->GetEdges();
   }
 
@@ -1250,7 +1403,7 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(smart_ptr_mesh mesh, const ComparatorType& cmp)
   {
     return sort_edges<ComparatorType>(mesh.get(), cmp);
   }
@@ -1262,7 +1415,7 @@ public:
   * \return	An iterator range on the edges (AIFEdge pointer) of the involve mesh.
   */
   template<typename ComparatorType>
-  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, ComparatorType cmp)
+  static boost::iterator_range<edge_container::const_iterator> sort_edges(ref_mesh mesh, const ComparatorType& cmp)
   {
     return sort_edges<ComparatorType>(&mesh, cmp);
   }
@@ -1597,6 +1750,56 @@ public:
   }
 
   /*!
+  * 			Function determining if two incident faces are oriented
+  *       consistently.
+  * \param	face1	The first involving face
+  * \param	face2	The first involving face
+  * \return	true if the argument faces are adjacent and consitently
+  *         oriented.
+  */
+  static bool have_consistent_orientation(face_descriptor face1, face_descriptor face2)
+  {
+    auto vertices_range1 = incident_vertices(face1);
+    auto vertices_range2 = incident_vertices(face2);
+    auto it1 = vertices_range1.begin();
+    for (; it1 != vertices_range1.end(); ++it1) {
+      auto it2 = vertices_range2.begin();
+      for (; it2 != vertices_range2.end(); ++it2) {
+        if (*it1 == *it2)
+        {
+          auto it1_b = it1;
+          if (it1_b == vertices_range1.begin())
+            it1_b = vertices_range1.end();
+          --it1_b;
+
+          ++it1;
+          if (it1 == vertices_range1.end())
+            it1 = vertices_range1.begin();
+
+          auto it2_b = it2;
+          if (it2_b == vertices_range2.begin())
+            it2_b = vertices_range2.end();
+          --it2_b;
+
+          ++it2;
+          if (it2 == vertices_range2.end())
+            it2 = vertices_range2.begin();
+
+          if ( (*it1 == *it2) || (*it1_b == *it2_b))
+          {
+            return false;
+          }
+          if ( (*it1 == *it2_b) || (*it1_b==*it2) )
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /*!
   * 			Reverse the incident edge order of the given face.
   * \param	face	The involved face
   */
@@ -1624,6 +1827,57 @@ public:
         return *it;
     }
     return null_face();
+  }
+
+  /*!
+  * 			First common edge between two faces
+  * \param	face1	The first involving face
+  * \param	face2	The second involving face
+  * \return	The first common edge between face1 and face2.
+  */
+  static edge_descriptor common_edge(face_descriptor face1,
+                                     face_descriptor face2)
+  {
+    typedef edge_container_in_face::const_iterator it_type;
+    // if (face1 == null_face() || face2 == null_face())
+    //  return null_edge();
+    boost::iterator_range< it_type > edges_range1 = incident_edges(face1); 
+    boost::iterator_range< it_type > edges_range2 = incident_edges(face2);
+
+    for (it_type it1 = edges_range1.begin(); it1 != edges_range1.end(); ++it1)
+    {
+      for (it_type it2 = edges_range2.begin(); it2 != edges_range2.end(); ++it2)
+      {
+        if (*it1 == *it2)
+          return *it1;
+      }
+    }
+    return null_edge();
+  }
+  /*!
+  * 			Common edges between two faces
+  * \param	face1	The first involving face
+  * \param	face2	The second involving face
+  * \return	An std::vector of the common edges between face1 and face1
+  * (there can be 0, 1, or min(degree(face1),degree(face2)) common edges).
+  */
+  static std::vector< edge_descriptor > common_edges(face_descriptor face1,
+                                                     face_descriptor face2)
+  {
+    typedef edge_container_in_vertex::const_iterator it_type;
+    std::vector< edge_descriptor > com_edges;
+    boost::iterator_range< it_type > edges_range1 = incident_edges(face1);
+    boost::iterator_range< it_type > edges_range2 = incident_edges(face2);
+
+    for (it_type it1 = edges_range1.begin(); it1 != edges_range1.end(); ++it1)
+    {
+      for (it_type it2 = edges_range2.begin(); it2 != edges_range2.end(); ++it2)
+      {
+        if ( (*it1 == *it2) && (std::find(com_edges.begin(), com_edges.end(), *it1) == com_edges.end()) )
+          com_edges.push_back(*it1);
+      }
+    }
+    return com_edges;
   }
   //////////////////////////////////	Mesh AIFTopologyHelpers
   /////////////////////////////////////
@@ -2018,6 +2272,62 @@ public:
   faces(ref_cmesh mesh)
   {
     return faces(&mesh);
+  }
+
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(ptr_cmesh mesh)
+  {
+    auto iter_range_v = vertices(mesh);
+    auto iter_v = iter_range_v.begin();
+    for (; iter_v != iter_range_v.end(); ++iter_v)
+      if (is_degenerated_vertex(*iter_v))
+        return false;
+    auto iter_range_e = edges(mesh);
+    auto iter_e = iter_range_e.begin();
+    for (; iter_e != iter_range_e.end(); ++iter_e)
+      if (is_degenerated_edge(*iter_e))
+        return false;
+    auto iter_range_f = faces(mesh);
+    auto iter_f = iter_range_f.begin();
+    for (; iter_f != iter_range_f.end(); ++iter_f)
+      if (is_degenerated_face(*iter_f))
+        return false;
+
+    return true;
+  }
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(smart_ptr_cmesh mesh)
+  {
+    return check_mesh_validity(mesh.get());
+  }
+  /*!
+  * 			Check wether or not the mesh contains
+  *       - degenerated vertex/degenerated edge/degenerated face
+  *       - incidence relationship: no null element
+  * \param	mesh	The involving mesh
+  * \return	True if the mesh is valid (no degenerated elements)
+  *         , false otherwise.
+  */
+  static bool
+    check_mesh_validity(ref_cmesh mesh)
+  {
+    return check_mesh_validity(&mesh);
   }
 
   /*!
@@ -3844,6 +4154,31 @@ private:
 
     face->clear_vertex_incidency(); // clear the caching incidency relation with
                                     // vertices
+  }
+  private:
+  ///////////////////////////////////////////////////////////////////////////
+  /*! a sorting algorithm different from std::sort (usefull for debug)
+  */
+  template< typename RandomIt, typename Compare >
+  static void sort(RandomIt first, RandomIt last, Compare comp)
+  {
+    for (; first != last; ++first)
+    {
+      auto min_location = first;
+      auto first2 = min_location;
+      ++first2;
+      for (; first2 != last; ++first2)
+      {
+        if (comp(*first2, *min_location))
+        {
+          min_location = first2;
+        }
+      }
+      if (min_location != first)
+      {
+        std::swap(*first, *min_location);
+      }
+    }
   }
   ///////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////

@@ -14,28 +14,30 @@
 #include <boost/graph/properties.hpp>
 
 #include "FEVV/Wrappings/Geometry_traits.h"
-#include "FEVV/Operators/Generic/Manifold/vertex_one_ring_barycenter.hpp"
+#include "FEVV/Operators/Generic/Manifold/vertex_one_ring_geometric_laplacian.hpp"
 
 namespace FEVV {
 namespace Filters {
 
 /**
- * \brief Compute barycenters for all vertices and store them in barycenters_pm.
+ * \brief Compute geometric laplacians for all vertices and store them in 
+ *          geom_laplacians_pm.
  *
  * \tparam  FaceGraph a Mesh type that provides a Model of the
  *          FaceGraph Concept through a boost::graph_traits<> specialization.
  * \tparam  PointMap A modifiable point map to manage vertex positions.
- * \tparam  CentroidMap A modifiable point map to manage vertex' barycenter.
+ * \tparam  CentroidMap A modifiable point map to manage vertex' geometric 
+ *          laplacians.
  * \tparam  GeometryTraits The geometric kernel when available. This is
  *          defaulted to FEVV::Geometry_traits<FaceGraph>.
  * \param   g The FaceGraph instance from which the vertices will be taken.
  * \param   pm The point map which associate a vertex descriptor with a vertex
  *          position.
- * \param   barycenters_pm  The point map to store the computed vertex
- *          centroids.
- * \param   SMOOTHING_FACTOR A (usually positive) factor used to compute the
- *          position of a stored centroid following
- *          V_pos + SMOOTHING_FACTORx(C_computed - V_pos).
+ * \param   geom_laplacians_pm  The point map to store the computed vertex
+ *          geometric laplacians.
+ * \param   smoothing_factor A (usually positive) factor used to compute the
+ *          position of a stored geometric laplacian following
+ *          V_pos + smoothing_factor x(GL_computed - V_pos).
  * \param   gt The geometry trait object.
  * \pre     g must be a triangular mesh.
  */
@@ -44,10 +46,10 @@ template< typename FaceGraph,
           typename CentroidMap,
           typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
 void
-calculate_vertices_one_ring_barycenter(
+calculate_vertices_one_ring_geometric_laplacian(
     const FaceGraph &g,
     const PointMap &pm,         // const map (follows CGAL usage)
-    CentroidMap barycenters_pm, // modifiable map (follows CGAL usage)
+    CentroidMap geom_laplacians_pm, // modifiable map (follows CGAL usage)
     const typename GeometryTraits::Scalar smoothing_factor,
     const GeometryTraits &gt)
 {
@@ -61,15 +63,14 @@ calculate_vertices_one_ring_barycenter(
   // this code works only for Polyhedron_3, Surface Mesh, OpenMesh and AIF
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair
 
-  // VertexMap barycenters_pm(get(boost::vertex_index, g));
   vertex_iterator vi = iterator_pair.first;
   vertex_iterator vi_end = iterator_pair.second;
   for(; vi != vi_end; ++vi)
   {
-    barycenters_pm[*vi] =
-        Operators::vertex_one_ring_barycenter< FaceGraph,
-                                               PointMap,
-                                               GeometryTraits >(
+    geom_laplacians_pm[*vi] =
+        Operators::vertex_one_ring_geometric_laplacian< FaceGraph,
+                                                        PointMap,
+                                                        GeometryTraits >(
             *vi, g, pm, smoothing_factor, gt);
   }
 }
@@ -79,19 +80,19 @@ template< typename FaceGraph,
           typename CentroidMap,
           typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
 void
-calculate_vertices_one_ring_barycenter(
+calculate_vertices_one_ring_geometric_laplacian(
     const FaceGraph &g,
     const PointMap &pm,         // const map (follows CGAL usage)
-    CentroidMap barycenters_pm, // modifiable map (follows CGAL usage)
+    CentroidMap geom_laplacians_pm, // modifiable map (follows CGAL usage)
     const typename GeometryTraits::Scalar smoothing_factor = 0.1)
 
 {
   GeometryTraits gt(g);
-  return calculate_vertices_one_ring_barycenter< FaceGraph,
-                                                 PointMap,
-                                                 CentroidMap,
-                                                 GeometryTraits >(
-      g, pm, barycenters_pm, smoothing_factor, gt);
+  return calculate_vertices_one_ring_geometric_laplacian< FaceGraph,
+                                                          PointMap,
+                                                          CentroidMap,
+                                                          GeometryTraits >(
+      g, pm, geom_laplacians_pm, smoothing_factor, gt);
 }
 
 } // namespace Filters

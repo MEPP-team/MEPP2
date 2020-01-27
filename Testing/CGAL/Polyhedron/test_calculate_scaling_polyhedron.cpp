@@ -16,7 +16,7 @@
 #include <CGAL/IO/Polyhedron_iostream.h>
 #include <CGAL/Polyhedron_items_with_id_3.h>
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_polyhedron_3.h" // Geometry adaptor
+#include "FEVV/Wrappings/Geometry_traits_cgal_polyhedron_3.h" // FEVV geometry wrapper
 
 #include "FEVV/Filters/Generic/scaling.hpp"
 

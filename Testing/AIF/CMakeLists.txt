@@ -472,7 +472,7 @@ target_link_libraries(test_mesh_defects_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
 add_test( Test_mesh_defects_aif
-          test_mesh_defects_aif  ${TESTING_DATA_DIR}/TriangleMeshCutVertices.off)
+          test_mesh_defects_aif  ${TESTING_DATA_DIR}/TriangleMeshCutVertices.off n)
 #####
 add_executable( test_load_dangling_edge_aif test_load_dangling_edge_aif.cpp )
 target_compile_definitions( test_load_dangling_edge_aif PUBLIC

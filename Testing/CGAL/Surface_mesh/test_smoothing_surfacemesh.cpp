@@ -10,9 +10,9 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #include <CGAL/Cartesian.h>
 #include <CGAL/Surface_mesh.h>
-#include <CGAL/boost/graph/graph_traits_Surface_mesh.h>
+#include <CGAL/boost/graph/graph_traits_Surface_mesh.h> // CGAL Graph traits wrapper
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h" // FEVV geometry wrapper
 
 //#define USE_GENERIC_READER_WRITER // when activated you need to link to vtk
 //libs if VTK is used
@@ -27,6 +27,7 @@
 
 #include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_barycenter.hpp"
 #include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_angles_based_centroid.hpp"
+#include "FEVV/Filters/Generic/Manifold/calculate_vertices_one_ring_geometric_laplacian.hpp"
 #include "FEVV/Filters/Generic/reposition_vertices.hpp"
 
 #include <fstream>
@@ -70,6 +71,10 @@ test_smoothing_surface_mesh(std::string filename)
   FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
 
   FEVV::Filters::calculate_vertices_one_ring_angles_based_centroid(
+      m, pos_pm, barycenters_pm, 0.2f);
+  FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
+
+  FEVV::Filters::calculate_vertices_one_ring_geometric_laplacian(
       m, pos_pm, barycenters_pm, 0.2f);
   FEVV::Filters::reposition_vertices(m, pos_pm, barycenters_pm);
   /**********************************************************************************************************/

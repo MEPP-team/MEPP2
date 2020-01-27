@@ -130,7 +130,7 @@ triangle_area(const typename GeometryTraits::Point &a,
                            mesh quality using the sum of shape potential of
                            each triangle, the sum may overflow.
  * \param[in]   gt         The geometry trait object.
- * \return  The triangle area (double Scalar).
+ * \return  The triangle shape potential (double Scalar).
  */
 template< typename FaceGraph,
           typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
