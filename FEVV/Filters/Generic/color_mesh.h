@@ -26,7 +26,7 @@ typedef  std::vector< float >   ColorMeshLUT;
 
 /**
  * \brief  Create a RGB LUT based on an HSV range.
- *         Default range create a cyan-green-yellow-red gradient.
+ *         Default range creates a blue-cyan-green-yellow-red gradient.
  *
  * \param  color_in_0_255  if true the RGB values are in [0;255]
  *                         else they are in [0;1]
@@ -40,7 +40,7 @@ inline
 ColorMeshLUT
 make_LUT(bool color_in_0_255 = true,
          unsigned int colors_nbr = 256,
-         float h1 = 180,
+         float h1 = 240,
          float h2 = 0)
 {
   // check parameters
