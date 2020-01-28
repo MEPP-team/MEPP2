@@ -91,28 +91,14 @@ curvature_to_color(const PointCloud &pc,
   // compute mean and stdev of absolute curvature
   double curv_mean, curv_stdev;
   compute_mean_stdev_curvature(pc, v_curvm_abs, curv_mean, curv_stdev);
-  std::cout << "curv_mean = " << curv_mean << std::endl; //TODO-elo-rm
-  std::cout << "curv_stdev = " << curv_stdev << std::endl; //TODO-elo-rm
 
   // compute a restricted curvature range to eliminate outliers
   double curv_range_min = 0;
   double curv_range_max = curv_mean + 2*curv_stdev;
-  std::cout << "curv_range_min= " << curv_range_min << std::endl; //TODO-elo-rm
-  std::cout << "curv_range_max= " << curv_range_max << std::endl; //TODO-elo-rm
 
   // populate color map
   FEVV::Filters::color_vertices_from_map(
       pc, v_curvm_abs, v_cm, curv_range_min, curv_range_max);
-  
-  // DBG //TODO-elo-rm
-  vi = iterator_pair.first;
-  for(; vi != vi_end; ++vi)
-  {
-    auto curv = get(v_curvm, *vi);
-    auto curv_abs = get(v_curvm_abs, *vi);
-    auto color = get(v_cm, *vi);
-    std::cout << "curv= " << curv << "  curv_abs=" << curv_abs << "  color=" << color << std::endl; //TODO-elo-rm
-  }
 }
 
 
@@ -144,7 +130,6 @@ curvature_at_point(const Point &origin,
 	Eigen::Vector3d mu;
 	mu.setZero();
 	size_t nneighbors = neighbors_ids.size();
-  std::cout << "nneighbors = " << nneighbors << std::endl; //TODO-elo-rm
 
 	for (size_t i = 0; i < nneighbors; ++i)
 	{
@@ -191,10 +176,6 @@ curvature_at_point(const Point &origin,
 
 	Eigen::VectorXd coeffs = A.colPivHouseholderQr().solve(B);
 
-	//TODO-elo-rm  //corresponding point:
-	//TODO-elo-rm  Eigen::Vector3d delta = coeffs(5)*n;
-	//TODO-elo-rm  proj = origin + delta;
-
 	//corresponding curvature
 	double fxx = 2 * coeffs(0);
 	double fyy = 2 * coeffs(1);
@@ -237,8 +218,6 @@ point_cloud_curvature(const PointCloud &pc,
   auto kd_tree_ptr = create_kd_tree(pc);
 
   // compute curvature at each vertex
-  //TODO-elo-rm  double cmin = std::numeric_limits<float>::max();
-  //TODO-elo-rm  double cmax = -cmin;
   auto iterator_pair = vertices(pc);
   auto vi = iterator_pair.first;
   auto vi_end = iterator_pair.second;
@@ -253,14 +232,9 @@ point_cloud_curvature(const PointCloud &pc,
 
     // compute curvature
     double curv = curvature_at_point(point, pm, neighbors_ids, gt);
-    std::cout << "curv = " << curv << std::endl; //TODO-elo-rm
 
     // store curvature into property map
     put(v_curvm, *vi, curv);
-
-    //TODO-elo-rm  // keep min and max values of curvature
-    //TODO-elo-rm  cmin = std::min(cmin, curv);
-    //TODO-elo-rm  cmax = std::max(cmax, curv);
   }
 
   // convert curvature to color for display

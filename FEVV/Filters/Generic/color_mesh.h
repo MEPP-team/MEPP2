@@ -74,15 +74,9 @@ make_LUT(bool color_in_0_255 = true,
   for(unsigned int i = 0; i < colors_nbr; i++)
   {
 
-    std::cout << "LUT"; //TODO-elo-rm
-    std::cout << "  i=" << i; //TODO-elo-rm
-    std::cout << "  H=" << H; //TODO-elo-rm
     rgb_LUT[3 * i]     = max_color_value * f(H, S, V, 5); // R
-    std::cout << "  R=" << rgb_LUT[3 * i]; //TODO-elo-rm
     rgb_LUT[3 * i + 1] = max_color_value * f(H, S, V, 3); // G
-    std::cout << "  G=" << rgb_LUT[3 * i + 1]; //TODO-elo-rm
     rgb_LUT[3 * i + 2] = max_color_value * f(H, S, V, 1); // B
-    std::cout << "  B=" << rgb_LUT[3 * i + 2] << std::endl; //TODO-elo-rm
 
     H += step;
   }
@@ -122,7 +116,6 @@ color_descriptor_from_map(const Descriptor &d,
   {
     // retrieve value from property map
     MapType val_metric = get(prop_map, d);
-    std::cout << "val_metric=" << val_metric << std::endl; //TODO-elo-rm
 
     // ensure value is between min and max to avoid LUT overflow
     val_metric = std::min(val_metric, max_metric);
@@ -131,7 +124,6 @@ color_descriptor_from_map(const Descriptor &d,
     // convert value to LUT id
     MapType id = (val_metric - min_metric) / (max_metric - min_metric);
     int indice_lut = static_cast< int >(std::floor((number_of_colors - 1) * id));
-    std::cout << "val_metric=" << val_metric << "  min_metric=" << min_metric << "  max_metric=" << max_metric << "  id=" << id << "  indice_lut = " << indice_lut << std::endl; //TODO-elo-rm
 
     // convert value to color
     Color newcolor(colors[3 * indice_lut],
