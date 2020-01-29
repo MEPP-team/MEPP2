@@ -3529,7 +3529,10 @@ public:
         if(are_adjacent(result[i], result[(i + 1) % nbE]))
           second_v = common_vertex(result[i], result[(i + 1) % nbE]);
         else
+        {
+          assert(false); // should never be executed
           second_v = result[i]->get_second_vertex();
+        }
         first_v = opposite_vertex(result[i], second_v);
         while(it != ite)
         {
@@ -3690,7 +3693,7 @@ public:
     oneR.reserve(nbE);
     if(nbE == 1)
     {
-		update_for_single_edge(v, orderedOneRing, 0, oneR);
+      update_for_single_edge(v, orderedOneRing, 0, oneR);
     }
     else
     {
@@ -3719,11 +3722,8 @@ public:
         // the 2 one-ring edges are not connected
 		  if (nbE == 2)
 		  {
-			  oneR.push_back(orderedOneRing[0]->get_first_vertex());
-			  if (orderedOneRing[0]->get_first_vertex() !=
-				  orderedOneRing[0]->get_second_vertex())
-				  oneR.push_back(orderedOneRing[0]->get_second_vertex());
-			  lastVertex = orderedOneRing[0]->get_second_vertex();
+            update_for_single_edge(v, orderedOneRing, 0, oneR);
+            lastVertex = oneR.back();
 		  }
 		  else
 		  {
@@ -3766,7 +3766,7 @@ public:
 				  for (size_t j = 0; j < i; ++j)
 					  tmp.push_back(orderedOneRing[j]);
 				  
-				  orderedOneRing = tmp;
+				  orderedOneRing.swap(tmp);
 
 				  if (are_incident(orderedOneRing[0]->get_second_vertex(),
 					  orderedOneRing[1]))
@@ -3789,11 +3789,8 @@ public:
 			  }
 			  else
 			  {
-				  oneR.push_back(orderedOneRing[0]->get_first_vertex());
-				  if (orderedOneRing[0]->get_first_vertex() !=
-					  orderedOneRing[0]->get_second_vertex())
-					  oneR.push_back(orderedOneRing[0]->get_second_vertex());
-				  lastVertex = orderedOneRing[0]->get_second_vertex();
+                update_for_single_edge(v, orderedOneRing, 0, oneR);
+                lastVertex = oneR.back();
 			  }
 		  }
       }
@@ -3818,10 +3815,7 @@ public:
             }
             else
             {
-              oneR.push_back(orderedOneRing[i]->get_first_vertex());
-              if(orderedOneRing[i]->get_first_vertex() !=
-                 orderedOneRing[i]->get_second_vertex())
-                oneR.push_back(orderedOneRing[i]->get_second_vertex());
+              update_for_single_edge(v, orderedOneRing, i, oneR);
             }
 
             break;
@@ -3834,7 +3828,7 @@ public:
               if(std::find(oneR.begin(),
                            oneR.end(),
                            orderedOneRing[i]->get_second_vertex()) !=
-                 oneR.end())
+                                                             oneR.end())
               {
                 if(orderedOneRing[i]->get_first_vertex() !=
                    orderedOneRing[i]->get_second_vertex())
@@ -3880,16 +3874,16 @@ public:
             else
             {
               // the 2 one-ring edges are not connected (thus edge
-			  // orderedOneRing[i] is isolated in the one-ring
+              // orderedOneRing[i] is isolated in the one-ring
               if(orderedOneRing[i]->get_first_vertex() !=
                  orderedOneRing[i]->get_second_vertex())
               {
-				  update_for_single_edge(v, orderedOneRing, i, oneR);
-				  lastVertex = oneR.back();
-				  oneR.pop_back();
+                update_for_single_edge(v, orderedOneRing, i, oneR);
+                lastVertex = oneR.back();
+                oneR.pop_back();
               }
-			  else 
-				  lastVertex = orderedOneRing[i]->get_second_vertex();
+              else 
+                lastVertex = orderedOneRing[i]->get_second_vertex();
             }
           }
         }
