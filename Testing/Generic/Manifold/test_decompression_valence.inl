@@ -130,7 +130,8 @@ test_decompression_valence(int argc, const char **argv)
   put_property_map(FEVV::vertex_color, m, pmaps_bag, v_cm);
 
   // apply Compression Valence filter
-  FEVV::Filters::decompression_valence(m, &pm, &v_cm, input_file_path);
+  bool has_color;
+  FEVV::Filters::decompression_valence(m, &pm, &v_cm, input_file_path, has_color);
 
   // display memory usage after decompression
 #ifdef UNIX

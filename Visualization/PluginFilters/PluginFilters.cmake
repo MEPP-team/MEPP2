@@ -5,4 +5,5 @@ include( "${CMAKE_CURRENT_LIST_DIR}/decompression_valence/decompression_valence.
 include( "${CMAKE_CURRENT_LIST_DIR}/Helloworld/helloworld.cmake" )
 include( "${CMAKE_CURRENT_LIST_DIR}/jnd/jnd.cmake" )
 include( "${CMAKE_CURRENT_LIST_DIR}/msdm2/msdm2.cmake" )
+include( "${CMAKE_CURRENT_LIST_DIR}/PointCloudCurvature/point_cloud_curvature.cmake" )
 include( "${CMAKE_CURRENT_LIST_DIR}/scaling/scaling.cmake" )
