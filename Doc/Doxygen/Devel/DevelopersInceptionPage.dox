@@ -107,4 +107,6 @@ Examples/CGAL/LCC/myexample_filter_cgal_linear_cell_complex ../Testing/Data/Cube
 ### Further readings
 You might also find useful to walk around the [`FEVV/Filters`](https://github.com/MEPP-team/MEPP2/tree/master/FEVV/Filters) directory in order get acquainted with the available filters (and possibly read some code for further inspiration).
 
+The \ref DatastructureSpecificFilterAndPlugin "Datastructure specific filter and plugin" page gives some hints about writing data-structure specific (aka non-generic) filters and plugins.
+
  */
