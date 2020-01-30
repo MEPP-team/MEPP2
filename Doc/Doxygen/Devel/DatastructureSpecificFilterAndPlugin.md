@@ -29,11 +29,11 @@ some_specific_mesh_function(g); // specific expression
 
 ## Calling a datastructure specific filter from a command line application
 
-The application must create the datastructure object, then call the filter. There is no restriction upon the datastructure definition, provided it belongs to one of the supported library (CGAL, OpenMesh, AIF, PCL).
+The application must create the datastructure object, then call the filter. There is no restriction upon the datastructure definition, provided it belongs to one of the supported library (CGAL, OpenMesh, AIF, PCL). In particular, there is no limitation on the kernel that can be used with the datastructure.
 
 Example:
 ```
-Datastructure mesh;
+CGAL::Surface_mesh<ExoticKernel::Point_3> mesh;
 specific_filter(mesh);
 ```
 
@@ -43,7 +43,9 @@ A plugin must be written to be able to run the filter inside MEPP2 GUI. One must
 
 ### Use MEPP2 predefined type to avoid a kernel mismatch issue
 
-To avoid kernel issues, the datastructure used in the plugin and the filter must be one of those pre-defined for the GUI:
+The datastructure kernel can no more be chosen by the user but is enforced by the GUI code, because the GUI is reponsible for creating the datastructure object.
+
+As a consequence, to avoid compilation errors due to kernel issues, the datastructure used in the plugin and the filter must be one of those pre-defined for the GUI:
 - FEVV::MeshPolyhedron (CGAL::Polyhedron_3)
 - FEVV::MeshSurface (CGAL::Surface_mesh)
 - FEVV::MeshLCC (CGAL::Linear_cell_complex_for_combinatorial_map)
