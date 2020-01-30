@@ -45,6 +45,19 @@ namespace Comparator
     EdgeComparator(const EdgeComparator& other): _g(other._g), _pm(other._pm), _ew(other._ew), _gt(other._gt) {}
     bool operator()(edge_descriptor e1, edge_descriptor e2)
     {
+      if(e1==e2)
+        return false;
+
+      if(e1==GraphTraits::null_edge())
+      {
+		  return false;
+	  }
+	  
+      if(e2==GraphTraits::null_edge())
+      {
+		  return false;
+	  }
+		
       if (_ew.storage_begin()!= _ew.storage_end())
       {
         Scalar val_e1 = get(_ew, e1), val_e2 = get(_ew, e2);
