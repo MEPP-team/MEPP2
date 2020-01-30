@@ -37,6 +37,16 @@ namespace Comparator
       if(v1==v2)
         return false;
 
+      if(v1==GraphTraits::null_vertex())
+      {
+		  return false;
+	  }
+	  
+      if(v2==GraphTraits::null_vertex())
+      {
+		  return false;
+	  }	  
+	  
       Point pv1 = get(_pm, v1);
       Point pv2 = get(_pm, v2);
 

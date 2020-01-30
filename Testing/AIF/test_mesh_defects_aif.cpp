@@ -860,6 +860,5 @@ main(int narg, char **argv)
   std::cout << "Number of surface border edges: " << nb_border_edges << std::endl;
   std::cout << "Number of degenerated faces: " << nb_degenerated_faces << std::endl;
   /////////////////////////////////////////////////////////////////////////////
-  system("pause");
   return 0;
 }
