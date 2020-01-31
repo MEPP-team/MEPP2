@@ -217,7 +217,7 @@ safe_getline(std::ifstream &input, std::string &str)
 }
 
 /**
- * Get a line from the input stream skipping any commented line.
+ * Get a line from the input stream skipping any commented or empty line.
  * To be used in the same way as std::getline(stream, string).
  *
  * \param  input  the input stream to read from
@@ -229,10 +229,16 @@ inline
 bool
 getline_skip_comment(std::istream &input, std::string &line)
 {
+  // note:
+  //   handling the case of empty DOS line, aka line equal to exactly one '\r'
+  //   character, is enough to deal with DOS EOL as far as lines are parsed
+  //   with std::istringstream operator>> which nicely handles '\r' as a word
+  //   separator.
+
   while(std::getline(input, line))
   {
-    // skip empty line and comment line
-    if(! (line.empty() || line[0] == '#'))
+    // skip comment line, UNIX empty line and DOS empty line
+    if(! (line.empty() || line[0] == '#' || line[0] == '\r'))
       break;
   }
 
