@@ -67,7 +67,7 @@ public:
 public:
   void init() override
   {
-    init(false, false, false, 3, false);
+    init(false, false, false, 3, true);
     LUT_CourbureClust = FEVV::Filters::make_LUT(false);
   }
 
