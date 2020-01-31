@@ -177,13 +177,6 @@ public:
   typedef typename Kernel::Normal Vector;
   typedef typename Kernel::Scalar Scalar;
 
-  /// Coordinate accessor
-  template< int D >
-  Scalar get(const Point &p)
-  {
-    return Scalar();
-  }
-
   /**
    * \brief Returns the unit normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_unit_normal unit_normal() free

@@ -18,53 +18,6 @@ namespace FEVV {
 
 /**
  * \ingroup Geometry_traits_group
- * \brief Generic class used as a trick to circumvent C++ absence of
- *        inner member specialisation. This templated struct avoids testing
- *        the dimension argument of
- *        \link
- *          Geometry_traits_for_cgal_get_int_Point
- *          Geometry_traits_for_cgal::get< int >( Point) member
- *        \endlink
- *        at run time.
- */
-template< typename Point, typename Scalar, int D >
-struct CGAL_point_get
-{
-  static Scalar apply(const Point &p) { return 0; }
-};
-
-/*
- * \ingroup Geometry_traits_group
- * \brief Template specialisation of \ref CGAL_point_get
- */
-template< typename Point, typename Scalar >
-struct CGAL_point_get< Point, Scalar, 0 >
-{
-  static Scalar apply(const Point &p) { return p.x(); }
-};
-
-/*
- * \ingroup Geometry_traits_group
- * \brief Template specialisation of \ref CGAL_point_get
- */
-template< typename Point, typename Scalar >
-struct CGAL_point_get< Point, Scalar, 1 >
-{
-  static Scalar apply(const Point &p) { return p.y(); }
-};
-
-/*
- * \ingroup Geometry_traits_group
- * \brief Template specialisation of \ref CGAL_point_get
- */
-template< typename Point, typename Scalar >
-struct CGAL_point_get< Point, Scalar, 2 >
-{
-  static Scalar apply(const Point &p) { return p.z(); }
-};
-
-/**
- * \ingroup Geometry_traits_group
  * \anchor Geometry_traits_for_cgal
  * \brief  Many mesh representations of CGLA, e.g.
  *         CGAL::Exact_predicate_inexact_construction_kernel and
@@ -105,13 +58,6 @@ public:
   static Scalar get_y(const Point &p) { return p.y(); }
 
   static Scalar get_z(const Point &p) { return p.z(); }
-
-  /// \anchor Geometry_traits_for_cgal_get_int_Point
-  template< int D >
-  static Scalar get(const Point &p)
-  {
-    return CGAL_point_get< Point, Scalar, D >::apply(p);
-  }
 
   static Vector unit_normal(const Point &p1, const Point &p2, const Point &p3)
   {
