@@ -11,6 +11,7 @@
 
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 #include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_point_set.h"
 
 #include "Testing/Concepts/PointCloudConceptCheck.h"
 

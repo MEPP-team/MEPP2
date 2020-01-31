@@ -11,6 +11,7 @@
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
+#include "FEVV/Wrappings/Graph_traits_extension_pcl_point_cloud.h"
 
 #include "Testing/Concepts/PointCloudConceptCheck.h"
 

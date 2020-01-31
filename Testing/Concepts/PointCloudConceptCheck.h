@@ -33,8 +33,11 @@ check_point_cloud_concept(PointCloudT &pc)
   std::pair< vertex_iterator, vertex_iterator > iterator_pair;
   iterator_pair = vertices(pc);
 
+  // size_of_vertices(pc)
+  vertices_size_type n1 = size_of_vertices(pc);
+
   // num_vertices(pc)
-  vertices_size_type n = num_vertices(pc);
+  vertices_size_type n2 = num_vertices(pc);
 
   // add_vertex(pc)
   vertex_descriptor vd = add_vertex(pc);
