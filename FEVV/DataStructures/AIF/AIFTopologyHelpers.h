@@ -3676,7 +3676,7 @@ public:
 	{
 		auto iter_v = m_One_Ring_Vertices.begin(), iter_v_e = m_One_Ring_Vertices.end();
 		for (; iter_v != iter_v_e; ++iter_v)
-			if (is_degenerated_vertex(*iter_v))
+			if (is_isolated_vertex(*iter_v) || is_degenerated_vertex(*iter_v))
 			{
 				v->m_Is_One_Ring_Vertices_Computed = false;
 				break;
