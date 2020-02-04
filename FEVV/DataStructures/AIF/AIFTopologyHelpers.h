@@ -3671,13 +3671,23 @@ public:
   get_ordered_one_ring_vertices(vertex_descriptor v)
   {
     auto &m_One_Ring_Vertices = v->m_One_Ring_Vertices;
-
+	////////////////////////////////////////////////////////////////////////////
+	if (v->m_Is_One_Ring_Vertices_Computed)
+	{
+		auto iter_v = m_One_Ring_Vertices.begin(), iter_v_e = m_One_Ring_Vertices.end();
+		for (; iter_v != iter_v_e; ++iter_v)
+			if (is_degenerated_vertex(*iter_v))
+			{
+				v->m_Is_One_Ring_Vertices_Computed = false;
+				break;
+			}
+	}
+	////////////////////////////////////////////////////////////////////////////
     if(v->m_Is_One_Ring_Vertices_Computed)
     {
       // DBG std::cout << "Use one-ring-vertices cache" << std::endl;
       return m_One_Ring_Vertices; // already in cache
     }
-
     ////////////////////////////////////////////////////////////////////////////
     // Currently compute the ordered one-ring of vertices
     // (not necessarily adjacent vertices if some incident faces are not
