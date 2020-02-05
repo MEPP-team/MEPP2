@@ -2944,11 +2944,11 @@ public:
   {
     if(vertex == null_vertex())
       throw std::invalid_argument(
-          "AIFTopologyHelpers::add_edge(v, e) -> vertex is a null vertex.");
+          "AIFTopologyHelpers::add_vertex(e, v) -> vertex is a null vertex.");
 
     if(edge == null_edge())
       throw std::invalid_argument(
-          "AIFTopologyHelpers::add_edge(v, e) -> edge is a null edge.");
+          "AIFTopologyHelpers::add_vertex(e, v) -> edge is a null edge.");
 
     if(!are_incident(edge, vertex))
     {
@@ -3671,13 +3671,28 @@ public:
   get_ordered_one_ring_vertices(vertex_descriptor v)
   {
     auto &m_One_Ring_Vertices = v->m_One_Ring_Vertices;
-
+	////////////////////////////////////////////////////////////////////////////
+	// one-ring buffers are emptied for each local operation between an edge
+	// and a vertex. If you still experience issues on adjacent vertex computation
+	// you may look inside local operations between an edge and a face.
+	//if (v->m_Is_One_Ring_Vertices_Computed)
+	//{
+    //  // check for indirect one-ring modification(s)
+	//	auto iter_v = m_One_Ring_Vertices.begin(), iter_v_e = m_One_Ring_Vertices.end();
+	//	for (; iter_v != iter_v_e; ++iter_v)
+	//		if (is_isolated_vertex(*iter_v) || 
+    //         !are_adjacent(v, *iter_v) )
+	//		{
+	//			v->m_Is_One_Ring_Vertices_Computed = false;
+	//			break;
+	//		}
+	//}
+	////////////////////////////////////////////////////////////////////////////
     if(v->m_Is_One_Ring_Vertices_Computed)
     {
       // DBG std::cout << "Use one-ring-vertices cache" << std::endl;
       return m_One_Ring_Vertices; // already in cache
     }
-
     ////////////////////////////////////////////////////////////////////////////
     // Currently compute the ordered one-ring of vertices
     // (not necessarily adjacent vertices if some incident faces are not
@@ -4100,13 +4115,26 @@ private:
       vertex_descriptor vertex,
       enum vertex_pos position) // without telling it to the vertex
   {
-    if(position == vertex_pos::FIRST)
-      edge->set_first_vertex(vertex);
-    else
-      edge->set_second_vertex(vertex);
+	vertex_descriptor opp_v;
+	if (position == vertex_pos::FIRST)
+	{
+		edge->set_first_vertex(vertex);
+		opp_v = edge->get_second_vertex();
+	}
+	else
+	{
+		edge->set_second_vertex(vertex);
+		opp_v = edge->get_first_vertex();
+	}
 
     vertex->m_Is_One_Ring_Vertices_Computed = false;
     vertex->m_One_Ring_Vertices.clear(); // free memory
+
+	if (opp_v != null_vertex())
+	{
+		opp_v->m_Is_One_Ring_Vertices_Computed = false;
+		opp_v->m_One_Ring_Vertices.clear(); // free memory
+	}
   }
   /*!
    * An incidence relation is created between the vertex and the edge
@@ -4143,15 +4171,28 @@ private:
    * \see  remove_vertex(edge, vertex)
    */
   static void remove_vertex_from_edge(edge_descriptor edge,
-                                      vertex_descriptor vertex)
+	  vertex_descriptor vertex)
   {
-    if(vertex_position(edge, vertex) == vertex_pos::FIRST)
-      edge->set_first_vertex(null_vertex());
-    else
-      edge->set_second_vertex(null_vertex());
+	  vertex_descriptor opp_v;
+	  if (vertex_position(edge, vertex) == vertex_pos::FIRST)
+	  {
+		  edge->set_first_vertex(null_vertex());
+		  opp_v = edge->get_second_vertex();
+	  }
+	  else
+	  {
+	      edge->set_second_vertex(null_vertex());
+		  opp_v = edge->get_first_vertex();
+      }
 
     vertex->m_Is_One_Ring_Vertices_Computed = false;
     vertex->m_One_Ring_Vertices.clear(); // free memory
+	
+	if (opp_v != null_vertex())
+	{
+		opp_v->m_Is_One_Ring_Vertices_Computed = false;
+		opp_v->m_One_Ring_Vertices.clear(); // free memory
+	}
   }
   /*!
    * An incidence relation is removed between the vertex and the edge
