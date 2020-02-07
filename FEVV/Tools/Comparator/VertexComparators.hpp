@@ -90,7 +90,7 @@ namespace Comparator
   template <typename Graph, typename PointMap, typename GeometryTraits = FEVV::Geometry_traits<Graph> >
   static 
   VertexComparator<Graph, PointMap, GeometryTraits>
-    get_vertex_comparator(const Graph& g, PointMap pm) { return VertexComparator<Graph, PointMap, GeometryTraits>(g, pm); }
+    get_vertex_comparator(const Graph& g, const PointMap& pm) { return VertexComparator<Graph, PointMap, GeometryTraits>(g, pm); }
 } // namespace Container
 } // namespace FEVV
 
