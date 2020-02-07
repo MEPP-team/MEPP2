@@ -230,7 +230,7 @@ namespace Comparator
             typename GeometryTraits = FEVV::Geometry_traits<Graph> >
   static
   EdgeComparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>
-    get_edge_comparator(const Graph& g, PointMap pm) { return EdgeComparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>(g, pm); }
+    get_edge_comparator(const Graph& g, const PointMap& pm) { return EdgeComparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>(g, pm); }
 } // namespace Container
 } // namespace FEVV
 
