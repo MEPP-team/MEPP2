@@ -36,12 +36,12 @@ add_test(Collapse_edge_openmesh_1
          test_collapse_edge_openmesh
          ${TESTING_DATA_DIR}/flat.off
          1
-         ${TESTING_DATA_DIR}/collapse_edge_34_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_34_keep_target.off )
 add_test(Collapse_edge_openmesh_2
          test_collapse_edge_openmesh
          ${TESTING_DATA_DIR}/flat.off
          2
-         ${TESTING_DATA_DIR}/collapse_edge_43_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_43_keep_target.off )
 
 #####
 add_executable( test_collapse_edge_Euler_openmesh
@@ -52,12 +52,12 @@ add_test(Collapse_edge_Euler_openmesh_1
          test_collapse_edge_Euler_openmesh
          ${TESTING_DATA_DIR}/flat.off
          1
-         ${TESTING_DATA_DIR}/collapse_edge_34_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_34_keep_target.off )
 add_test(Collapse_edge_Euler_openmesh_2
          test_collapse_edge_Euler_openmesh
          ${TESTING_DATA_DIR}/flat.off
          2
-         ${TESTING_DATA_DIR}/collapse_edge_43_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_43_keep_target.off )
 
 #####
 add_executable( test_calculate_scaling_openmesh
@@ -83,7 +83,7 @@ target_link_libraries( test_euler_add_center_vertex_openmesh
 add_test(Euler_add_center_vertex_openmesh
          test_euler_add_center_vertex_openmesh
          ${TESTING_DATA_DIR}/flat.off
-         ${TESTING_DATA_DIR}/euler_add_center_vertex.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/euler_add_center_vertex.off )
 
 #####
 # Checking of concepts is done at build time (no add_test required)
@@ -130,23 +130,23 @@ target_link_libraries( test_generic_writer_openmesh
                        )
 
 add_test( Generic_writer_openmesh_obj_simple
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFaces.obj  test_generic_writer_obj_simple.obj  ${TESTING_DATA_DIR}/CubeTriangleFaces.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFaces.obj  test_generic_writer_obj_simple.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFaces.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_obj_with_vertex-normals
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.obj  test_generic_writer_obj_with_vertex-normals.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.obj  test_generic_writer_obj_with_vertex-normals.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormals.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_obj_with_vertex-normals_and_vertex-color
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.obj  test_generic_writer_obj_with_vertex-normals_and_vertex-color.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.obj  test_generic_writer_obj_with_vertex-normals_and_vertex-color.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndColor.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_obj_with_vertex-normals_and_vertex-texture
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_obj_with_halfedge-texture
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/usb/usb.obj  test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_DATA_DIR}/textures/usb/usb.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/usb/usb.obj  test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_off_flat
           test_generic_writer_openmesh  ${TESTING_DATA_DIR}/flat.off  test_generic_writer_off_flat.off  ${TESTING_DATA_DIR}/flat.off)
 add_test( Generic_writer_openmesh_off_aircraft
           test_generic_writer_openmesh  ${TESTING_DATA_DIR}/aircraft.off  test_generic_writer_off_aircraft.off  ${TESTING_DATA_DIR}/aircraft.off)
 add_test( Generic_writer_openmesh_obj_non-manifold_with_vertex-texture
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.obj  test_generic_writer_obj_non-manifold_with_vertex-texture.obj  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.writer-output.duplicatedvertex.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.obj  test_generic_writer_obj_non-manifold_with_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple-non-manifold-vertextexcoord.writer-output.duplicatedvertex.obj.ref)
 add_test( Generic_writer_openmesh_obj_non-manifold_with_halfedge-texture
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.obj  test_generic_writer_obj_non-manifold_with_halfedge-texture.obj  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.writer-output.duplicatedvertex.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.obj  test_generic_writer_obj_non-manifold_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple-non-manifold-halfedgetexcoord.writer-output.duplicatedvertex.obj.ref)
 add_test( Generic_writer_openmesh_off_with_face-color
           test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off  test_generic_writer_off_with_face-color.off  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off)
 #TODO-elo  diagnose, fix, then restore test
@@ -156,7 +156,7 @@ add_test( Generic_writer_openmesh_off_with_face-color
 # this may also explain why the rendering of this mesh in mepp-gui
 # is different with OpenMesh
 #add_test( Generic_writer_openmesh_obj_with_face-normal
-#          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  test_generic_writer_obj_with_face-normal.obj  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.writer-output.obj.ref)
+#          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  test_generic_writer_obj_with_face-normal.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple_with_face_normals.writer-output.obj.ref)
 # For the next test, the comparison beteween files fails, but it should not
 #add_test( Generic_writer_openmesh_msh_SimpleBeam
 #          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh  test_generic_writer_msh_SimpleBeam.msh  ${TESTING_DATA_DIR}/curves/SimpleBeam0000016.msh)
@@ -178,7 +178,7 @@ add_test( Test_compression_valence_openmesh_nefertiti_v100_qtz10_noQA
 		  test_compression_valence_openmesh
 			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 			test_compression_valence_openmesh_nefertiti_v100_qtz10_noQA.off
-			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
+			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
 			-withCompr
 			-maxV 100
 			-Qbits 10
@@ -189,7 +189,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -199,7 +199,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v100_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 12
@@ -209,7 +209,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v1000_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 12
@@ -219,7 +219,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_openmesh_monkey_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -229,7 +229,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_openmesh_monkey_v500_qtz15_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
 				-withCompr
 				-maxV 500
 				-Qbits 15
@@ -239,7 +239,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_openmesh_swirl_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -249,7 +249,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_openmesh_swirl_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -260,7 +260,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -271,7 +271,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -282,7 +282,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v100_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -293,7 +293,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_openmesh_nefertiti_v1000_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -304,7 +304,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_openmesh_monkey_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -315,7 +315,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_openmesh_monkey_v500_qtz15_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 500
@@ -329,7 +329,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_openmesh
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 	#            test_compression_valence_openmesh_swirl_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -339,7 +339,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_openmesh_swirl_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -351,7 +351,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_openmesh
 				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor.off
 				test_compression_valence_openmesh_swirl_nocolor_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -364,7 +364,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_openmesh
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient.off
 	#            test_compression_valence_openmesh_swirl_colorgradient_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -387,9 +387,9 @@ set(TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE 2e-5)
 # test decompression of rgb_nefertiti.off/Openmesh/v100/qtz10/noQA from mepp1
 add_test( Test_decompression_valence_openmesh_nefertiti_v100_qtz10_noQA
 		  test_decompression_valence_openmesh
-		  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
+		  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
 		  test_decompression_valence_openmesh_nefertiti_v100_qtz10_noQA.off
-		  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+		  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 		  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 		  )
 
@@ -397,92 +397,92 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	# test decompression of rgb_nefertiti.off/Openmesh/v1000/qtz10/noQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v1000_qtz10_noQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v1000_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Openmesh/v100/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v100_qtz12_noQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v100_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Openmesh/v1000/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v1000_qtz12_noQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v1000_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Openmesh/v100/qtz10/noQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_openmesh_monkey_v100_qtz10_noQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
 			  test_decompression_valence_openmesh_monkey_v100_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Openmesh/v500/qtz15/noQA from mepp1
 	add_test( Test_decompression_valence_openmesh_monkey_v500_qtz15_noQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
 			  test_decompression_valence_openmesh_monkey_v500_qtz15_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 
 	# test decompression of rgb_nefertiti.off/Openmesh/v100/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v100_qtz10_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Openmesh/v1000/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v1000_qtz10_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v1000_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Openmesh/v100/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v100_qtz12_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v100_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Openmesh/v1000/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_openmesh_nefertiti_v1000_qtz12_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
 			  test_decompression_valence_openmesh_nefertiti_v1000_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Openmesh/v100/qtz10/withQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_openmesh_monkey_v100_qtz10_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_openmesh_monkey_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Openmesh/v500/qtz15/withQA from mepp1
 	add_test( Test_decompression_valence_openmesh_monkey_v500_qtz15_withQA
 			  test_decompression_valence_openmesh
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
 			  test_decompression_valence_openmesh_monkey_v500_qtz15_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE}
 			  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )

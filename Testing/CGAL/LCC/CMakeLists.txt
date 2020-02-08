@@ -42,7 +42,7 @@ add_test( Test_compression_valence_lcc_nefertiti_v100_qtz10_noQA
 		  test_compression_valence_lcc
 			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 			test_compression_valence_lcc_nefertiti_v100_qtz10_noQA.off
-			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
+			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
 			-withCompr
 			-maxV 100
 			-Qbits 10
@@ -54,7 +54,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -64,7 +64,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v100_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 12
@@ -74,7 +74,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v1000_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 12
@@ -84,7 +84,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_lcc_monkey_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -94,7 +94,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_lcc_monkey_v500_qtz15_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
 				-withCompr
 				-maxV 500
 				-Qbits 15
@@ -104,7 +104,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_lcc_swirl_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -114,7 +114,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_lcc_swirl_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -125,7 +125,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -136,7 +136,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -147,7 +147,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v100_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -158,7 +158,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_lcc_nefertiti_v1000_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -169,7 +169,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_lcc_monkey_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -180,7 +180,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_lcc_monkey_v500_qtz15_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 500
@@ -194,7 +194,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_lcc
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 	#            test_compression_valence_lcc_swirl_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -205,7 +205,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_lcc_swirl_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -217,7 +217,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_lcc
 				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor.off
 				test_compression_valence_lcc_swirl_nocolor_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -230,7 +230,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_lcc
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient.off
 	#            test_compression_valence_lcc_swirl_colorgradient_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -254,9 +254,9 @@ if( NOT WIN32 )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v100/qtz10/noQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v100_qtz10_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v100_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 endif( NOT WIN32 )
@@ -265,92 +265,92 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v1000/qtz10/noQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v1000_qtz10_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v1000_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v100/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v100_qtz12_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v100_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v1000/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v1000_qtz12_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v1000_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Surfacemesh/v100/qtz10/noQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_lcc_monkey_v100_qtz10_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
 			  test_decompression_valence_lcc_monkey_v100_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Surfacemesh/v500/qtz15/noQA from mepp1
 	add_test( Test_decompression_valence_lcc_monkey_v500_qtz15_noQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
 			  test_decompression_valence_lcc_monkey_v500_qtz15_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v100/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v100_qtz10_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v1000/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v1000_qtz10_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v1000_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v100/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v100_qtz12_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v100_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Surfacemesh/v1000/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_lcc_nefertiti_v1000_qtz12_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
 			  test_decompression_valence_lcc_nefertiti_v1000_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Surfacemesh/v100/qtz10/withQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_lcc_monkey_v100_qtz10_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_lcc_monkey_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Surfacemesh/v500/qtz15/withQA from mepp1
 	add_test( Test_decompression_valence_lcc_monkey_v500_qtz15_withQA
 			  test_decompression_valence_lcc
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
 			  test_decompression_valence_lcc_monkey_v500_qtz15_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
