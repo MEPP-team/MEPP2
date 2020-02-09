@@ -21,6 +21,8 @@
 #include "draco/io/mesh_io.h"
 #include "draco/io/point_cloud_io.h"
 
+#include "FEVV/Tools/IO/FileUtilities.hpp"
+
 namespace {
 
 struct Options {
@@ -351,7 +353,7 @@ int main(int argc, char **argv) {
 
   if (options.output.empty()) {
     // Create a default output file by attaching .drc to the input file name.
-    options.output = options.input + ".drc";
+    options.output = FEVV::FileUtils::get_file_name(options.input) + ".drc";
   }
 
   PrintOptions(*pc.get(), options);

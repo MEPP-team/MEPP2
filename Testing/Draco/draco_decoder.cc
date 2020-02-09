@@ -21,6 +21,8 @@
 #include "draco/io/parser_utils.h"
 #include "draco/io/ply_encoder.h"
 
+#include "FEVV/Tools/IO/FileUtilities.hpp"
+
 namespace {
 
 struct Options {
@@ -130,7 +132,7 @@ int main(int argc, char **argv) {
 
   if (options.output.empty()) {
     // Save the output model into a ply file.
-    options.output = options.input + ".ply";
+    options.output = FEVV::FileUtils::get_file_name(options.input) + ".ply";
   }
 
   // Save the decoded geometry into a file.
