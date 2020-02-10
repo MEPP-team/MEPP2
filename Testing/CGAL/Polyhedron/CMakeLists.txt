@@ -32,25 +32,25 @@ add_test(Split_edge_polyhedron_1
          ${TESTING_DATA_DIR}/flat.off
          0
          flat_0.off
-         ${TESTING_DATA_DIR}/split_edge_border_12_or_21.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_border_12_or_21.off )
 add_test(Split_edge_polyhedron_2
          test_split_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          1
          flat_1.off
-         ${TESTING_DATA_DIR}/split_edge_border_12_or_21.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_border_12_or_21.off )
 add_test(Split_edge_polyhedron_3
          test_split_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          2
          flat_2.off
-         ${TESTING_DATA_DIR}/split_edge_34_or_43.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_34_or_43.off )
 add_test(Split_edge_polyhedron_4
          test_split_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          3
          flat_3.off
-         ${TESTING_DATA_DIR}/split_edge_34_or_43.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_34_or_43.off )
 add_test(Split_edge_polyhedron_5
          test_split_edge_polyhedron
          ${TESTING_DATA_DIR}/square2.off
@@ -77,25 +77,25 @@ add_test(Split_edge_Euler_polyhedron_1
          ${TESTING_DATA_DIR}/flat.off
          0
          flat_Euler_0.off
-         ${TESTING_DATA_DIR}/split_edge_border_12_or_21.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_border_12_or_21.off )
 add_test(Split_edge_Euler_polyhedron_2
          test_split_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          1
          flat_Euler_1.off
-         ${TESTING_DATA_DIR}/split_edge_border_12_or_21.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_border_12_or_21.off )
 add_test(Split_edge_Euler_polyhedron_3
          test_split_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          2
          flat_Euler_2.off
-         ${TESTING_DATA_DIR}/split_edge_34_or_43.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_34_or_43.off )
 add_test(Split_edge_Euler_polyhedron_4
          test_split_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          3
          flat_Euler_3.off
-         ${TESTING_DATA_DIR}/split_edge_34_or_43.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/split_edge_34_or_43.off )
 add_test(Split_edge_Euler_polyhedron_5
          test_split_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/square2.off
@@ -119,12 +119,12 @@ add_test(Collapse_edge_polyhedron_1
          test_collapse_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          1
-         ${TESTING_DATA_DIR}/collapse_edge_34_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_34_keep_target.off )
 add_test(Collapse_edge_polyhedron_2
          test_collapse_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          2
-         ${TESTING_DATA_DIR}/collapse_edge_43_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_43_keep_target.off )
 add_test(Collapse_edge_polyhedron_3
          test_collapse_edge_polyhedron
          ${TESTING_DATA_DIR}/flat.off
@@ -144,12 +144,12 @@ add_test(Collapse_edge_Euler_polyhedron_1
          test_collapse_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          1
-         ${TESTING_DATA_DIR}/collapse_edge_34_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_34_keep_target.off )
 add_test(Collapse_edge_Euler_polyhedron_2
          test_collapse_edge_Euler_polyhedron
          ${TESTING_DATA_DIR}/flat.off
          2
-         ${TESTING_DATA_DIR}/collapse_edge_43_keep_target.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/collapse_edge_43_keep_target.off )
 
 #####
 add_executable( test_polyhedron test_polyhedron.cpp )
@@ -176,7 +176,7 @@ target_link_libraries( test_euler_add_center_vertex_polyhedron
 add_test(Euler_add_center_vertex_polyhedron
          test_euler_add_center_vertex_polyhedron
          ${TESTING_DATA_DIR}/flat.off
-         ${TESTING_DATA_DIR}/euler_add_center_vertex.off )
+         ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/euler_add_center_vertex.off )
 
 #####
 add_executable( test_calculate_scaling_polyhedron
@@ -236,27 +236,27 @@ target_link_libraries( test_generic_writer_polyhedron
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/polyhedron)
 add_test( Generic_writer_polyhedron_obj_simple
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFaces.obj  polyhedron/test_generic_writer_obj_simple.obj  ${TESTING_DATA_DIR}/CubeTriangleFaces.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFaces.obj  polyhedron/test_generic_writer_obj_simple.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFaces.writer-output.obj.ref)
 add_test( Generic_writer_polyhedron_obj_with_vertex-normals
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.obj  polyhedron/test_generic_writer_obj_with_vertex-normals.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormals.obj  polyhedron/test_generic_writer_obj_with_vertex-normals.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormals.writer-output.obj.ref)
 add_test( Generic_writer_polyhedron_obj_with_vertex-normals_and_vertex-color
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.obj  polyhedron/test_generic_writer_obj_with_vertex-normals_and_vertex-color.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.obj  polyhedron/test_generic_writer_obj_with_vertex-normals_and_vertex-color.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndColor.writer-output.obj.ref)
 add_test( Generic_writer_polyhedron_obj_with_vertex-normals_and_vertex-texture
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  polyhedron/test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  polyhedron/test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
 add_test( Generic_writer_polyhedron_obj_with_halfedge-texture
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/usb/usb.obj  polyhedron/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_DATA_DIR}/textures/usb/usb.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/usb/usb.obj  polyhedron/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
 add_test( Generic_writer_polyhedron_off_flat
           test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/flat.off  polyhedron/test_generic_writer_off_flat.off  ${TESTING_DATA_DIR}/flat.off)
 add_test( Generic_writer_polyhedron_off_aircraft
           test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/aircraft.off  polyhedron/test_generic_writer_off_aircraft.off  ${TESTING_DATA_DIR}/aircraft.off)
 add_test( Generic_writer_polyhedron_obj_non-manifold_with_vertex-texture
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.obj  polyhedron/test_generic_writer_obj_non-manifold_with_vertex-texture.obj  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.writer-output.duplicatedvertex.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-vertextexcoord.obj  polyhedron/test_generic_writer_obj_non-manifold_with_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple-non-manifold-vertextexcoord.writer-output.duplicatedvertex.obj.ref)
 add_test( Generic_writer_polyhedron_obj_non-manifold_with_halfedge-texture
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.obj  polyhedron/test_generic_writer_obj_non-manifold_with_halfedge-texture.obj  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.writer-output.duplicatedvertex.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple-non-manifold-halfedgetexcoord.obj  polyhedron/test_generic_writer_obj_non-manifold_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple-non-manifold-halfedgetexcoord.writer-output.duplicatedvertex.obj.ref)
 add_test( Generic_writer_polyhedron_off_with_face-color
           test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off  polyhedron/test_generic_writer_off_with_face-color.off  ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off)
 add_test( Generic_writer_polyhedron_obj_with_face-normal
-          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  polyhedron/test_generic_writer_obj_with_face-normal.obj  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.writer-output.obj.ref)
+          test_generic_writer_polyhedron  ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj  polyhedron/test_generic_writer_obj_with_face-normal.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple_with_face_normals.writer-output.obj.ref)
 
 #####
 add_executable( test_compression_valence_polyhedron
@@ -274,7 +274,7 @@ add_test( Test_compression_valence_polyhedron_nefertiti_v100_qtz10_noQA
 		  test_compression_valence_polyhedron
 			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 			test_compression_valence_polyhedron_nefertiti_v100_qtz10_noQA.off
-			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
+			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.off
 			-withCompr
 			-maxV 100
 			-Qbits 10
@@ -286,7 +286,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -296,7 +296,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v100_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 12
@@ -306,7 +306,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v1000_qtz12_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 12
@@ -316,7 +316,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_polyhedron_monkey_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -326,7 +326,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_polyhedron_monkey_v500_qtz15_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.off
 				-withCompr
 				-maxV 500
 				-Qbits 15
@@ -336,7 +336,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_polyhedron_swirl_v100_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 100
 				-Qbits 10
@@ -346,7 +346,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_polyhedron_swirl_v1000_qtz10_noQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp2_polyhedron_v1000_qtz10_noQA.ref.off
 				-withCompr
 				-maxV 1000
 				-Qbits 10
@@ -357,7 +357,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -368,7 +368,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -379,7 +379,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v100_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -390,7 +390,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix.off
 				test_compression_valence_polyhedron_nefertiti_v1000_qtz12_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -401,7 +401,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_polyhedron_monkey_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -412,7 +412,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix.off
 				test_compression_valence_polyhedron_monkey_v500_qtz15_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 500
@@ -426,7 +426,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_polyhedron
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 	#            test_compression_valence_polyhedron_swirl_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -437,7 +437,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix.off
 				test_compression_valence_polyhedron_swirl_v1000_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_swirl_unix_mepp1_v1000_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 1000
@@ -449,7 +449,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  test_compression_valence_polyhedron
 				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor.off
 				test_compression_valence_polyhedron_swirl_nocolor_v100_qtz10_withQA.off
-				${TESTING_DATA_DIR}/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+				${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_nocolor_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 				-withCompr
 				-withQA
 				-maxV 100
@@ -462,7 +462,7 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	#          test_compression_valence_polyhedron
 	#		    ${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient.off
 	#            test_compression_valence_polyhedron_swirl_colorgradient_v100_qtz10_withQA.off
-	#			${TESTING_DATA_DIR}/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
+	#			${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/swirl_colorgradient_mepp2_polyhedron_v100_qtz10_withQA.ref.off
 	#			-withCompr
 	#			-withQA
 	#			-maxV 100
@@ -484,9 +484,9 @@ set(TEST_DECOMPRESSION_VALENCE_TOLERANCE 2e-5)
 # test decompression of rgb_nefertiti.off/Polyhedron/v100/qtz10/noQA from mepp1
 add_test( Test_decompression_valence_polyhedron_nefertiti_v100_qtz10_noQA
 		  test_decompression_valence_polyhedron
-		  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
+		  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d
 		  test_decompression_valence_polyhedron_nefertiti_v100_qtz10_noQA.off
-		  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+		  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 		  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 		  )
 
@@ -494,92 +494,92 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v1000/qtz10/noQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v1000_qtz10_noQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v1000_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v100/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v100_qtz12_noQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v100_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v1000/qtz12/noQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v1000_qtz12_noQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v1000_qtz12_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Polyhedron/v100/qtz10/noQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_polyhedron_monkey_v100_qtz10_noQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_noQA.ref.p3d
 			  test_decompression_valence_polyhedron_monkey_v100_qtz10_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Polyhedron/v500/qtz15/noQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_monkey_v500_qtz15_noQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d
 			  test_decompression_valence_polyhedron_monkey_v500_qtz15_noQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_noQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 
 	# test decompression of rgb_nefertiti.off/Polyhedron/v100/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v100_qtz10_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v1000/qtz10/withQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v1000_qtz10_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v1000_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v100/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v100_qtz12_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v100_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v100_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_nefertiti.off/Polyhedron/v1000/qtz12/withQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_nefertiti_v1000_qtz12_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_nefertiti_v1000_qtz12_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_nefertiti_unix_mepp1_v1000_qtz12_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Polyhedron/v100/qtz10/withQA p3d file from mepp_2_
 	#    compare with rgb_monkey.off compressed+decompressed by mepp_1_
 	add_test( Test_decompression_valence_polyhedron_monkey_v100_qtz10_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp2_polyhedron_v100_qtz10_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_monkey_v100_qtz10_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v100_qtz10_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 	# test decompression of rgb_monkey.off/Polyhedron/v500/qtz15/withQA from mepp1
 	add_test( Test_decompression_valence_polyhedron_monkey_v500_qtz15_withQA
 			  test_decompression_valence_polyhedron
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d
 			  test_decompression_valence_polyhedron_monkey_v500_qtz15_withQA.off
-			  ${TESTING_DATA_DIR}/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
+			  ${TESTING_REFOUTPUT_DIR}/Generic/Manifold/CompressionValenceExample/rgb_monkey_unix_mepp1_v500_qtz15_withQA.ref.p3d.uncompressed.off
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
@@ -597,7 +597,7 @@ add_test( Test_boolean_operations_polyhedron_union
           "union"
           "${TESTING_DATA_DIR}/CubeTriangleFaces.off"
           "${TESTING_DATA_DIR}/tetra.off"
-          "${TESTING_DATA_DIR}/boolean_operations/mepp1_cube_tetra_union.off"
+          "${TESTING_REFOUTPUT_DIR}/CGAL/boolean_operations/mepp1_cube_tetra_union.off"
           )
 # test INTERSECTION
 add_test( Test_boolean_operations_polyhedron_inter
@@ -605,7 +605,7 @@ add_test( Test_boolean_operations_polyhedron_inter
           "inter"
           "${TESTING_DATA_DIR}/CubeTriangleFaces.off"
           "${TESTING_DATA_DIR}/tetra.off"
-          "${TESTING_DATA_DIR}/boolean_operations/mepp1_cube_tetra_inter.off"
+          "${TESTING_REFOUTPUT_DIR}/CGAL/boolean_operations/mepp1_cube_tetra_inter.off"
           )
 # test SUBTRACTION
 add_test( Test_boolean_operations_polyhedron_minus
@@ -613,5 +613,5 @@ add_test( Test_boolean_operations_polyhedron_minus
           "minus"
           "${TESTING_DATA_DIR}/CubeTriangleFaces.off"
           "${TESTING_DATA_DIR}/tetra.off"
-          "${TESTING_DATA_DIR}/boolean_operations/mepp1_cube_tetra_minus.off"
+          "${TESTING_REFOUTPUT_DIR}/CGAL/boolean_operations/mepp1_cube_tetra_minus.off"
           )
