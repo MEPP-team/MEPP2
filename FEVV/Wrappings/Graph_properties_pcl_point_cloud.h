@@ -304,6 +304,7 @@ struct property_traits< FEVV::PCLPointCloudPointMap >
 namespace pcl {
 
 // kNN-search types
+//TODO-elo rename PCLPointCloudKNNSearch into PCLPointCloudNNSearch
 struct PCLPointCloudKNNSearch
 {
   typedef  pcl::KdTreeFLANN< FEVV::PCLEnrichedPoint >  KdTree;
@@ -375,6 +376,54 @@ kNN_search(
   //        std::vector <double > trigger a compilation error as of PCL 1.9.1
 
   // note : should launch an exception if nn_nbr != k ?
+
+  // convert ids and distances
+  std::vector< vertex_descriptor > nn_ids(nn_nbr);
+  std::vector< double > nn_distances(nn_nbr);
+  for(int i = 0; i < nn_nbr; i++)
+  {
+    nn_ids[i] = static_cast< vertex_descriptor >(nn_ids_tmp[i]);
+    nn_distances[i] = std::sqrt(nn_distances_tmp[i]);
+  }
+
+  // return pair (vector_of_ids, vector_of_distances)
+  return make_pair(nn_ids, nn_distances);
+}
+
+
+// MEPP2 PointCloud concept
+//!
+//! \brief   Search for the nearest neighbors of a geometric point in the
+//!          given radius.
+//! \return  A pair containing a vector of vertex descriptors
+//!          (the ids of the nearest neighbors) and a vector of distances
+//!          (the distance to each nearest neighbor) ; both vectors have
+//!          the same size.
+//!
+inline
+std::pair< std::vector< typename boost::graph_traits<
+               FEVV::PCLPointCloud >::vertex_descriptor >,
+           std::vector< double > >
+radius_search(
+    const PCLPointCloudKNNSearch::KdTree &kd_tree,
+    double radius,
+    const FEVV::PCLPoint &query,
+    const FEVV::PCLPointCloud &pc) // useless for PCL
+{
+  typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
+      vertex_descriptor;
+
+  // prepare query
+  FEVV::PCLEnrichedPoint search_point;
+  search_point.x = query.x;
+  search_point.y = query.y;
+  search_point.z = query.z;
+
+  // search nearest neighbours
+  std::vector< int > nn_ids_tmp;
+  std::vector< float > nn_distances_tmp; // squared distance
+  int nn_nbr =
+      kd_tree.radiusSearch(search_point, radius, nn_ids_tmp, nn_distances_tmp);
 
   // convert ids and distances
   std::vector< vertex_descriptor > nn_ids(nn_nbr);
