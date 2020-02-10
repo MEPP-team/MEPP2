@@ -51,22 +51,48 @@ check_point_cloud_kNN_search_concept(void)
   put(pm, v4, Point(0, 3, 0));
   put(pm, v5, Point(3, 0, 0));
 
-  // do kNN-search
-  unsigned int k = 3;
+  // init kd-tree
   auto kd_tree_ptr = create_kd_tree(cloud);
-  auto result = kNN_search(*kd_tree_ptr, k, Point(0.6, 0.6, 0.), cloud);
 
-  // check search result
-  auto nn_ids = result.first;
-  assert(nn_ids.size() == k);
-  assert(nn_ids[0] == static_cast< vertex_descriptor >(3));
-  assert(nn_ids[1] == static_cast< vertex_descriptor >(0));
-  assert(nn_ids[2] == static_cast< vertex_descriptor >(2));
-  auto nn_dists = result.second;
-  assert(nn_dists.size() == k);
-  assert(std::abs(nn_dists[0] - 0.565685) <= 0.0001);
-  assert(std::abs(nn_dists[1] - 0.848528) <= 0.0001);
-  assert(std::abs(nn_dists[2] - 1.45602) <= 0.0001);
+  // kNN-search
+  {
+    // do kNN-search
+    unsigned int k = 3;
+    auto result = kNN_search(*kd_tree_ptr, k, Point(0.6, 0.6, 0.), cloud);
+
+    // check search result
+    auto nn_ids = result.first;
+    assert(nn_ids.size() == k);
+    assert(nn_ids[0] == static_cast< vertex_descriptor >(3));
+    assert(nn_ids[1] == static_cast< vertex_descriptor >(0));
+    assert(nn_ids[2] == static_cast< vertex_descriptor >(2));
+    auto nn_dists = result.second;
+    assert(nn_dists.size() == k);
+    assert(std::abs(nn_dists[0] - 0.565685) <= 0.0001);
+    assert(std::abs(nn_dists[1] - 0.848528) <= 0.0001);
+    assert(std::abs(nn_dists[2] - 1.45602) <= 0.0001);
+  }
+
+  // radius search
+  {
+    // do radius-search
+    double r = 2.0;
+    auto result = radius_search(*kd_tree_ptr, r, Point(0.6, 0.6, 0.), cloud);
+
+    // check search result
+    auto nn_ids = result.first;
+    assert(nn_ids.size() == 4);
+    assert(nn_ids[0] == static_cast< vertex_descriptor >(3));
+    assert(nn_ids[1] == static_cast< vertex_descriptor >(0));
+    assert(nn_ids[2] == static_cast< vertex_descriptor >(2));
+    assert(nn_ids[3] == static_cast< vertex_descriptor >(1));
+    auto nn_dists = result.second;
+    assert(nn_dists.size() == 4);
+    assert(std::abs(nn_dists[0] - 0.565685) <= 0.0001);
+    assert(std::abs(nn_dists[1] - 0.848528) <= 0.0001);
+    assert(std::abs(nn_dists[2] - 1.456020) <= 0.0001);
+    assert(std::abs(nn_dists[3] - 1.979899) <= 0.0001);
+  }
 }
 
 } // namespace FEVV
