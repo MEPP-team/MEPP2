@@ -48,20 +48,19 @@ get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
   return ps.point_map();
 }
 
+// --------------- Nearest neighbors search ---------------
 
-// MEPP2 PointCloud kNN-search concept types
-//TODO-elo rename CGALPointSetKNNSearch into CGALPointSetNNSearch
-struct CGALPointSetKNNSearch
+struct CGALPointSetNNSearch
 {
   // k-d tree type
   using vertex_descriptor =
       boost::graph_traits< FEVV::CGALPointSet >::vertex_descriptor;
   using Traits_base = CGAL::Search_traits_3< FEVV::CGALPointSetKernel >;
-  using Traits = CGAL::Search_traits_adapter< vertex_descriptor,
+  using Traits      = CGAL::Search_traits_adapter< vertex_descriptor,
                                               FEVV::CGALPointSetPointMap,
                                               Traits_base >;
-  using KdTree = CGAL::Kd_tree< Traits >;
-  using KdTreePtr = std::unique_ptr< KdTree >;
+  using KdTree      = CGAL::Kd_tree< Traits >;
+  using KdTreePtr   = std::unique_ptr< KdTree >;
     // note : CGAL::Kd_Tree can not be returned by a function because its copy
     //        constructor is private ; a compilation error occurs even in case
     //        of copy elision ; so we use a smart pointer as a workaround
@@ -73,12 +72,12 @@ struct CGALPointSetKNNSearch
 //! \brief  Initialize a k-d tree with all cloud points.
 //!
 inline
-CGALPointSetKNNSearch::KdTreePtr
+CGALPointSetNNSearch::KdTreePtr
 create_kd_tree(const FEVV::CGALPointSet &pc)
 {
-  typedef  CGALPointSetKNNSearch::Traits     Traits;
-  typedef  CGALPointSetKNNSearch::KdTree     KdTree;
-  typedef  CGALPointSetKNNSearch::KdTreePtr  KdTreePtr;
+  typedef  CGALPointSetNNSearch::Traits     Traits;
+  typedef  CGALPointSetNNSearch::KdTree     KdTree;
+  typedef  CGALPointSetNNSearch::KdTreePtr  KdTreePtr;
 
   // retrieve Point map
   auto ppmap = pc.point_map();
@@ -102,23 +101,23 @@ create_kd_tree(const FEVV::CGALPointSet &pc)
 //!          (the distance to each nearest neighbor) ; both vectors have size k.
 //!
 inline
-std::pair< std::vector< CGALPointSetKNNSearch::vertex_descriptor >,
+std::pair< std::vector< CGALPointSetNNSearch::vertex_descriptor >,
            std::vector< double > >
 kNN_search(
-    const CGALPointSetKNNSearch::KdTree &kd_tree,
+    const CGALPointSetNNSearch::KdTree &kd_tree,
     unsigned int k,
     const FEVV::CGALPointSetPoint &query,
     const FEVV::CGALPointSet& pc)
 {
-  typedef CGALPointSetKNNSearch::vertex_descriptor      vertex_descriptor;
-  typedef CGALPointSetKNNSearch::Traits                 Traits;
+  typedef CGALPointSetNNSearch::vertex_descriptor       vertex_descriptor;
+  typedef CGALPointSetNNSearch::Traits                  Traits;
   typedef CGAL::Orthogonal_k_neighbor_search< Traits >  K_neighbor_search;
   typedef K_neighbor_search::Distance                   Distance;
 
   // retrieve Point map
   auto ppmap = pc.point_map();
 
-  // search K nearest neighbours
+  // search K nearest neighbors
   Distance sq_dist(ppmap); // squared distance
   K_neighbor_search search(kd_tree, query, k, 0, true, sq_dist);
 
@@ -146,16 +145,16 @@ kNN_search(
 //!          the same size.
 //!
 inline
-std::pair< std::vector< CGALPointSetKNNSearch::vertex_descriptor >,
+std::pair< std::vector< CGALPointSetNNSearch::vertex_descriptor >,
            std::vector< double > >
 radius_search(
-    const CGALPointSetKNNSearch::KdTree &kd_tree,
+    const CGALPointSetNNSearch::KdTree &kd_tree,
     double radius,
     const FEVV::CGALPointSetPoint &query,
     const FEVV::CGALPointSet& pc)
 {
-  typedef CGALPointSetKNNSearch::vertex_descriptor      vertex_descriptor;
-  typedef CGALPointSetKNNSearch::Traits                 Traits;
+  typedef CGALPointSetNNSearch::vertex_descriptor       vertex_descriptor;
+  typedef CGALPointSetNNSearch::Traits                  Traits;
   typedef CGAL::Orthogonal_incremental_neighbor_search< Traits >
                                                         NN_incremental_search;
   typedef NN_incremental_search::Distance               Distance;
@@ -163,11 +162,11 @@ radius_search(
   // retrieve Point map
   auto ppmap = pc.point_map();
 
-  // search nearest neighbours
+  // search nearest neighbors
   Distance sq_dist(ppmap); // squared distance
   NN_incremental_search search(kd_tree, query, 0.0, true, sq_dist);
 
-  // get nearest neighbours ids with distance < radius
+  // get nearest neighbors ids with distance < radius
   std::vector< vertex_descriptor > nn_ids;
   std::vector< double > nn_distances;
   for(auto it = search.begin(); it != search.end(); ++it)
