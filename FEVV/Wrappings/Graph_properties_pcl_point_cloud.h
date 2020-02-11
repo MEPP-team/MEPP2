@@ -299,13 +299,13 @@ struct property_traits< FEVV::PCLPointCloudPointMap >
 
 } // namespace boost
 
+// --------------- Nearest neighbors search ---------------
 
-// MEPP2 PointCloud kNN-search concept
 namespace pcl {
 
-// kNN-search types
+// NN-search types
 //TODO-elo rename PCLPointCloudKNNSearch into PCLPointCloudNNSearch
-struct PCLPointCloudKNNSearch
+struct PCLPointCloudNNSearch
 {
   typedef  pcl::KdTreeFLANN< FEVV::PCLEnrichedPoint >  KdTree;
   typedef  std::unique_ptr< KdTree >                   KdTreePtr;
@@ -317,11 +317,11 @@ struct PCLPointCloudKNNSearch
 //! \brief  Initialize a k-d tree with all cloud points.
 //!
 inline
-PCLPointCloudKNNSearch::KdTreePtr
+PCLPointCloudNNSearch::KdTreePtr
 create_kd_tree(const FEVV::PCLPointCloud &pc)
 {
-  typedef  PCLPointCloudKNNSearch::KdTree     KdTree;
-  typedef  PCLPointCloudKNNSearch::KdTreePtr  KdTreePtr;
+  typedef  PCLPointCloudNNSearch::KdTree     KdTree;
+  typedef  PCLPointCloudNNSearch::KdTreePtr  KdTreePtr;
 
   // create k-d tree
   KdTreePtr kd_tree(new KdTree);
@@ -351,7 +351,7 @@ std::pair< std::vector< typename boost::graph_traits<
                FEVV::PCLPointCloud >::vertex_descriptor >,
            std::vector< double > >
 kNN_search(
-    const PCLPointCloudKNNSearch::KdTree &kd_tree,
+    const PCLPointCloudNNSearch::KdTree &kd_tree,
     unsigned int k,
     const FEVV::PCLPoint &query,
     const FEVV::PCLPointCloud &pc) // useless for PCL
@@ -365,7 +365,7 @@ kNN_search(
   search_point.y = query.y;
   search_point.z = query.z;
 
-  // search K nearest neighbours
+  // search K nearest neighbors
   std::vector< int > nn_ids_tmp(k);
   std::vector< float > nn_distances_tmp(k); // squared distance
   int nn_nbr =
@@ -405,7 +405,7 @@ std::pair< std::vector< typename boost::graph_traits<
                FEVV::PCLPointCloud >::vertex_descriptor >,
            std::vector< double > >
 radius_search(
-    const PCLPointCloudKNNSearch::KdTree &kd_tree,
+    const PCLPointCloudNNSearch::KdTree &kd_tree,
     double radius,
     const FEVV::PCLPoint &query,
     const FEVV::PCLPointCloud &pc) // useless for PCL
@@ -419,7 +419,7 @@ radius_search(
   search_point.y = query.y;
   search_point.z = query.z;
 
-  // search nearest neighbours
+  // search nearest neighbors
   std::vector< int > nn_ids_tmp;
   std::vector< float > nn_distances_tmp; // squared distance
   int nn_nbr =
