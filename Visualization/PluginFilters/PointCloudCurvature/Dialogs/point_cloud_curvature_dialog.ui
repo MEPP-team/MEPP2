@@ -34,17 +34,29 @@
          <item>
           <widget class="QLabel" name="label_Process">
            <property name="text">
-            <string>Parameters:</string>
+            <string> Nearest neighbors search method: </string>
            </property>
           </widget>
          </item>
          <!-- 1st parameter -->
+         <!-- radio button -->
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_1st_param">
+          <widget class="QRadioButton" name="radioButton_knnsearch">
+           <property name="text">
+            <string>kNN search</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <!-- parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2nd_param">
            <item>
-            <widget class="QLabel" name="label_1st_param">
+            <widget class="QLabel" name="label_2nd_param">
              <property name="text">
-              <string>Number of neighbors k</string>
+              <string>Number of neighbors for kNN search:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeft | Qt::AlignVCenter</set>
@@ -53,6 +65,36 @@
            </item>
            <item>
             <widget class="QLineEdit" name="lineEdit_K"/>
+           </item>
+          </layout>
+         </item>
+         <!-- 2nd parameter -->
+         <!-- radio button -->
+         <item>
+          <widget class="QRadioButton" name="radioButton_radiussearch">
+           <property name="text">
+            <string>radius search</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <!-- parameter -->
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3rd_param">
+           <item>
+            <widget class="QLabel" name="label_3rd_param">
+             <property name="text">
+              <string>Radius for radius search:</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeft | Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_Radius"/>
            </item>
           </layout>
          </item>

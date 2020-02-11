@@ -76,7 +76,7 @@ test_point_cloud_curvature(int argc, const char **argv)
   put_property_map(FEVV::vertex_color, pc, pmaps_bag, v_cm);
 
   // apply Point Cloud Curvature filter
-  FEVV::Filters::point_cloud_curvature(pc, pm, k, v_curvm, v_cm);
+  FEVV::Filters::point_cloud_curvature(pc, pm, k, 0.0, v_curvm, v_cm);
 
   // save the point cloud
   std::cout << "saving point cloud with curvature to " << output_file_path
