@@ -30,6 +30,7 @@
 
 // A) include the header of the filter corresponding to your operation
 #include "FEVV/Filters/Generic/PointCloud/point_cloud_curvature.hpp"
+#include "FEVV/Filters/Generic/AABB/get_max_bb_size.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -72,7 +73,7 @@ public:
   void init() override
   {
     m_k = 15;
-    m_radius = 3.5;
+    m_radius = 0.001;
     m_knn_search = true;
   }
 
@@ -118,7 +119,9 @@ public:
     else
     {
       // use a radius-search
-      FEVV::Filters::point_cloud_curvature(*pc, pm, 0, m_radius, v_curvm, v_cm);
+      double max_bb_size = Filters::get_max_bb_size(*pc, pm);
+      double radius = m_radius * max_bb_size;
+      FEVV::Filters::point_cloud_curvature(*pc, pm, 0, radius, v_curvm, v_cm);
     }
 
     std::cout << "Running filter PointCloudCurvature... done." << std::endl;

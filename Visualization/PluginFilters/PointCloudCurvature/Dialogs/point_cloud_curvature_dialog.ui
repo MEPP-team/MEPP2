@@ -118,7 +118,7 @@
            <item>
             <widget class="QLabel" name="label_3rd_param">
              <property name="text">
-              <string>radius:</string>
+              <string>radius relative to BBox size:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeft | Qt::AlignVCenter</set>
