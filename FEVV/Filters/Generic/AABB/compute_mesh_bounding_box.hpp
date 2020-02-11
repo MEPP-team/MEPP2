@@ -43,13 +43,11 @@ compute_mesh_bounding_box(
     const GeometryTraits &gt)
 {
   typedef typename boost::property_traits< PointMap >::value_type Point;
-  typedef typename boost::property_traits< PointMap >::reference Reference;
 
   typedef boost::graph_traits< PropertyGraph > GraphTraits;
-  typedef typename GraphTraits::vertex_iterator vertex_iterator;
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair
-  vertex_iterator vi = iterator_pair.first;
-  vertex_iterator vi_end = iterator_pair.second;
+  auto vi = iterator_pair.first;
+  auto vi_end = iterator_pair.second;
   if(vi != vi_end)
   {
     Point p = get(pm, *vi);
