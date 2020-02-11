@@ -16,7 +16,7 @@
 #include <CGAL/Search_traits_3.h>
 #include <CGAL/Search_traits_adapter.h>
 #include <CGAL/Orthogonal_k_neighbor_search.h>
-#include <CGAL/Fuzzy_sphere.h>
+#include <CGAL/Orthogonal_incremental_neighbor_search.h>
 #include <CGAL/boost/iterator/counting_iterator.hpp>
 #include <memory> // for std::unique_ptr
 #include <utility> // for std::make_pair
@@ -60,8 +60,6 @@ struct CGALPointSetKNNSearch
   using Traits = CGAL::Search_traits_adapter< vertex_descriptor,
                                               FEVV::CGALPointSetPointMap,
                                               Traits_base >;
-  //TODO-elo-rm  using K_neighbor_search = CGAL::Orthogonal_k_neighbor_search< Traits >;
-  //TODO-elo-rm  using KdTree = K_neighbor_search::Tree;
   using KdTree = CGAL::Kd_tree< Traits >;
   using KdTreePtr = std::unique_ptr< KdTree >;
     // note : CGAL::Kd_Tree can not be returned by a function because its copy
@@ -113,7 +111,6 @@ kNN_search(
     const FEVV::CGALPointSet& pc)
 {
   typedef CGALPointSetKNNSearch::vertex_descriptor      vertex_descriptor;
-  //TODO-elo-rm  typedef CGALPointSetKNNSearch::K_neighbor_search  K_neighbor_search;
   typedef CGALPointSetKNNSearch::Traits                 Traits;
   typedef CGAL::Orthogonal_k_neighbor_search< Traits >  K_neighbor_search;
   typedef K_neighbor_search::Distance                   Distance;
@@ -157,30 +154,32 @@ radius_search(
     const FEVV::CGALPointSetPoint &query,
     const FEVV::CGALPointSet& pc)
 {
-  typedef CGALPointSetKNNSearch::vertex_descriptor  vertex_descriptor;
-  //TODO-elo-rm  typedef CGALPointSetKNNSearch::K_neighbor_search  K_neighbor_search;
-  //TODO-elo-rm  typedef K_neighbor_search::Distance               Distance;
-  typedef CGALPointSetKNNSearch::Traits  Traits;
-  typedef CGAL::Fuzzy_sphere< Traits > Fuzzy_sphere;
+  typedef CGALPointSetKNNSearch::vertex_descriptor      vertex_descriptor;
+  typedef CGALPointSetKNNSearch::Traits                 Traits;
+  typedef CGAL::Orthogonal_incremental_neighbor_search< Traits >
+                                                        NN_incremental_search;
+  typedef NN_incremental_search::Distance               Distance;
 
   // retrieve Point map
   auto ppmap = pc.point_map();
-  std::cout << "pc.number_of_points()=" << pc.number_of_points() << std::endl;
-  std::cout << "ppmap[0]=" << ppmap[0] << std::endl;
-  std::cout << "ppmap[1]=" << ppmap[1] << std::endl;
 
-  // search nearest neighbours in radius
+  // search nearest neighbours
+  Distance sq_dist(ppmap); // squared distance
+  NN_incremental_search search(kd_tree, query, 0.0, true, sq_dist);
+
+  // get nearest neighbours ids with distance < radius
   std::vector< vertex_descriptor > nn_ids;
-  Fuzzy_sphere sphere(query, radius, 0.0);
-  kd_tree.search(std::back_inserter(nn_ids), sphere);
-
-  // compute distances
   std::vector< double > nn_distances;
-  //TODO-elo-compute-distances
-  //for(auto it = search.begin(); it != search.end(); it++)
-  //{
-  //  nn_distances.push_back(sq_dist.inverse_of_transformed_distance(it->second));
-  //}
+  for(auto it = search.begin(); it != search.end(); ++it)
+  {
+    double distance = sq_dist.inverse_of_transformed_distance(it->second);
+    if(distance > radius)
+      break; // stop searching
+
+    // add current point to list
+    nn_ids.push_back(it->first);
+    nn_distances.push_back(distance);
+  }
 
   // return pair (vector_of_ids, vector_of_distances)
   return make_pair(nn_ids, nn_distances);
