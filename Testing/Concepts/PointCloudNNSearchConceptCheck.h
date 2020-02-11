@@ -21,7 +21,7 @@ namespace FEVV {
 // Needs Graph_traits, Geometry_traits and Graph_properties
 template<typename PointCloudT>
 void
-check_point_cloud_kNN_search_concept(void)
+check_point_cloud_NN_search_concept(void)
 {
   // types
   typedef  boost::graph_traits< PointCloudT >         GraphTraits;
@@ -54,7 +54,7 @@ check_point_cloud_kNN_search_concept(void)
   // init kd-tree
   auto kd_tree_ptr = create_kd_tree(cloud);
 
-  // kNN-search
+  // test kNN-search
   {
     // do kNN-search
     unsigned int k = 3;
@@ -73,7 +73,7 @@ check_point_cloud_kNN_search_concept(void)
     assert(std::abs(nn_dists[2] - 1.45602) <= 0.0001);
   }
 
-  // radius search
+  // test radius search
   {
     // do radius-search
     double r = 2.0;
