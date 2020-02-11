@@ -54,9 +54,25 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2nd_param">
            <item>
+            <spacer name="horizontalSpacer_1">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>25</width>
+               <height>15</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QLabel" name="label_2nd_param">
              <property name="text">
-              <string>Number of neighbors for kNN search:</string>
+              <string>number of neighbors:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeft | Qt::AlignVCenter</set>
@@ -84,9 +100,25 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_3rd_param">
            <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>25</width>
+               <height>15</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QLabel" name="label_3rd_param">
              <property name="text">
-              <string>Radius for radius search:</string>
+              <string>radius:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeft | Qt::AlignVCenter</set>
