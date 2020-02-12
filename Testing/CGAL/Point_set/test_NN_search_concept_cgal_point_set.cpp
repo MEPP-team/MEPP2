@@ -9,17 +9,17 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
-#include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
-#include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
-#include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
+#include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_cgal_point_set.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_properties_cgal_point_set.h"
 
-#include "Testing/Concepts/PointCloudKNNSearchConceptCheck.h"
+#include "Testing/Concepts/PointCloudNNSearchConceptCheck.h"
 
 
 int main(void)
 {
-  FEVV::check_point_cloud_kNN_search_concept< FEVV::PCLPointCloud >();
+  FEVV::check_point_cloud_NN_search_concept< FEVV::CGALPointSet >();
 
   return 0;
 }

@@ -140,6 +140,9 @@
             <property name="text">
              <string>Use MSDM2 as color map</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
          </layout>

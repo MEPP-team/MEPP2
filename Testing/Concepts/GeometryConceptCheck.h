@@ -106,11 +106,6 @@ struct Point_3Concept
     v1 = GeometryTraits::add_v< G >(v1, v2);
     p = GeometryTraits::add_p< G >(p, v1);
 
-    // Deprecated, not worth/nice using
-    x = g.template get< 0 >(p); // deprecated
-    y = g.template get< 1 >(p); // deprecated
-    z = g.template get< 2 >(p); // deprecated
-
 /////////////////////////////////////////////////////////////
 // Only working for some data structures and thus not generic
 #ifndef FEVV_USE_CGAL

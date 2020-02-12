@@ -133,7 +133,7 @@ color_descriptor_from_map(const Descriptor &d,
   }
   else
   {
-    put(color_pmap, d, Color(0.5, 0.5, 0.5));
+    put(color_pmap, d, Color(colors[0], colors[1], colors[2]));
   }
 }
 

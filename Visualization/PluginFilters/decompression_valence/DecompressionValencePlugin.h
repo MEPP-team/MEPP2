@@ -107,7 +107,7 @@ public:
               << p3dFilePath << "'!" << std::endl;
 
 #if 0
-        //TODO-elo DBG
+        //DBG
         std::cout << "Decompression Valence Plugin DBG infos" << std::endl;
         std::cout << " * p3dFilePath=" << p3dFilePath << std::endl;
         std::cout << " * write_info=" << write_info << std::endl;
@@ -252,7 +252,8 @@ public:
       intermediate_vertexColorMaps_void = nullptr;
     }
 
-    // TODO-elo-to-keep-parameters-between-calls   reset();
+    // comment next line to keep parameters value between calls
+    //reset();
 
     viewer->activate_time_mode();
 

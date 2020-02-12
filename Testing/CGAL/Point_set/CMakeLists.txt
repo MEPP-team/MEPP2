@@ -34,14 +34,14 @@ add_test( Test_property_maps_cgal_point_set
           )
 
 #####
-add_executable( test_kNN_search_concept_cgal_point_set
-                test_kNN_search_concept_cgal_point_set.cpp )
-target_link_libraries( test_kNN_search_concept_cgal_point_set
+add_executable( test_NN_search_concept_cgal_point_set
+                test_NN_search_concept_cgal_point_set.cpp )
+target_link_libraries( test_NN_search_concept_cgal_point_set
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )
-add_test( Test_kNN_search_concept_cgal_point_set
-          test_kNN_search_concept_cgal_point_set
+add_test( Test_NN_search_concept_cgal_point_set
+          test_NN_search_concept_cgal_point_set
           )
 
 #####

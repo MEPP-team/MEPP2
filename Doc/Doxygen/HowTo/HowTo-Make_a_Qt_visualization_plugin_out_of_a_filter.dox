@@ -5,31 +5,31 @@
 FEVV provides a reference Qt plugin directory to be used as scafolding tool.
 The following describes the step by step process you should follow in order to easily "wrap" an given existing filter
 
-<b>Caveat emptor</b> : in the following, mind the lowercase/uppercase difference between &nbsp;<small><i><Your_filter_name></i></small>&nbsp; (as for directory name and class name) and the corresponding &nbsp;<small><i><your_filter_name></i></small>&nbsp; for file name and function name.
+<b>Caveat emptor</b> : in the following, mind the lowercase/uppercase difference between &nbsp;<small><i><YourFilterName></i></small>&nbsp; (as for directory name and class name) and the corresponding &nbsp;<small><i><your_filter_name></i></small>&nbsp; for file name and function name.
 This distinction is due to respect the \ref DevelopersCodingStyleGeneralitiesPage "coding style".
 
 ### Directory/files creation
 
- - Copy the folder &nbsp;<small><i>Visualization/PluginFilters/Helloworld</i></small>&nbsp; to a new directory &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp;.
+ - Copy the folder &nbsp;<small><i>Visualization/PluginFilters/Helloworld</i></small>&nbsp; to a new directory &nbsp;<small><i>Visualization/PluginFilters/<YourFilterName></i></small>&nbsp;.
 
- - Within &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory rename the files &nbsp;<small><i>helloworld*</i></small>&nbsp; to &nbsp;<small><i><your_filter_name>*</i></small>&nbsp;
+ - Within &nbsp;<small><i>Visualization/PluginFilters/<YourFilterName></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory rename the files &nbsp;<small><i>helloworld*</i></small>&nbsp; to &nbsp;<small><i><your_filter_name>*</i></small>&nbsp;
 
 ### Editing files
 
 Reminder : <b>watch out case sensitivity</b>.
 
- - Edit all files in &nbsp;<small><i>Visualization/PluginFilters/<Your_filter_name></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory
-   - replace &nbsp;<small><i><Helloworld></i></small>&nbsp; by &nbsp;<small><i><Your_filter_name></i></small>&nbsp;
+ - Edit all files in &nbsp;<small><i>Visualization/PluginFilters/<YourFilterName></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory
+   - replace &nbsp;<small><i><Helloworld></i></small>&nbsp; by &nbsp;<small><i><YourFilterName></i></small>&nbsp;
    - replace &nbsp;<small><i><helloworld></i></small>&nbsp; by &nbsp;<small><i><your_filter_name></i></small>&nbsp;
 
 ### Modification of &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp;
 
  - add this line to the file (in alphabetical order please):<br>
-    &nbsp;<small><i>include( "${CMAKE_CURRENT_LIST_DIR}/<Your_filter_name>/<your_filter_name>.cmake" )</i></small>&nbsp;
+    &nbsp;<small><i>include( "${CMAKE_CURRENT_LIST_DIR}/<YourFilterName>/<your_filter_name>.cmake" )</i></small>&nbsp;
 
 ### Call your filter from the plugin
 
- - Within &nbsp;<small><i><Your_filter_name>/<your_filter_name>_plugin.h</i></small>&nbsp;
+ - Within &nbsp;<small><i><YourFilterName>/<your_filter_name>_plugin.h</i></small>&nbsp;
    - find the comment line<br>
  	   &nbsp;<small><i> // A) include the header of the filter corresponding to your operation</i></small>&nbsp; <br>
      and change the &nbsp;<small><i>#include</i></small>&nbsp; directive with the header of your filter

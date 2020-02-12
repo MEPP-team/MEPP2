@@ -65,14 +65,14 @@ add_test( Test_reader_writer_pcl
           )
 
 #####
-add_executable( test_kNN_search_concept_pcl
-                test_kNN_search_concept_pcl.cpp )
-target_link_libraries( test_kNN_search_concept_pcl
+add_executable( test_NN_search_concept_pcl
+                test_NN_search_concept_pcl.cpp )
+target_link_libraries( test_NN_search_concept_pcl
                        ${PCL_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )
-add_test( Test_kNN_search_concept_pcl
-          test_kNN_search_concept_pcl )
+add_test( Test_NN_search_concept_pcl
+          test_NN_search_concept_pcl )
 
 #####
 add_executable( test_point_cloud_curvature_pcl

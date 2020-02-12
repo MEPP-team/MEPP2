@@ -27,8 +27,8 @@ public:
   explicit PointCloudCurvatureDialog(QWidget *parent = 0);
   ~PointCloudCurvatureDialog();
 
-  void setParameters(unsigned int k);
-  void getParameters(unsigned int &k);
+  void setParameters(unsigned int k, double radius, bool knn_search);
+  void getParameters(unsigned int &k, double &radius, bool &knn_search);
 
 private:
   Ui::PointCloudCurvatureDialog *ui;

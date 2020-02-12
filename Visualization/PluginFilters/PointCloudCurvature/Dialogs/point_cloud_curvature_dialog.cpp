@@ -20,14 +20,21 @@ FEVV::PointCloudCurvatureDialog::PointCloudCurvatureDialog(QWidget *parent)
 FEVV::PointCloudCurvatureDialog::~PointCloudCurvatureDialog() { delete ui; }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::PointCloudCurvatureDialog::setParameters(unsigned int k)
+FEVV::PointCloudCurvatureDialog::setParameters(unsigned int k, double radius, bool knn_search)
 {
   ui->lineEdit_K->setText(QString::number(k));
+  ui->lineEdit_Radius->setText(QString::number(radius));
+  if(knn_search)
+    ui->radioButton_knnsearch->setChecked(true);
+  else
+    ui->radioButton_radiussearch->setChecked(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::PointCloudCurvatureDialog::getParameters(unsigned int &k)
+FEVV::PointCloudCurvatureDialog::getParameters(unsigned int &k, double &radius, bool &knn_search)
 {
   k = ui->lineEdit_K->text().toUInt();
+  radius = ui->lineEdit_Radius->text().toDouble();
+  knn_search = ui->radioButton_knnsearch->isChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////

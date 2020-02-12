@@ -3018,7 +3018,7 @@ FEVV::SimpleViewer::setNodeSelected(osg::Node *_geode,
 #endif
 
 #if 0
-  //TODO-elo-DEBUG
+  //DBG
   std::cout << "viewer " << this << "  v_meshIsSelected =";
   for(bool b: v_meshIsSelected)
     std::cout << " " << b;

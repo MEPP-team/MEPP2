@@ -30,6 +30,7 @@
 
 // A) include the header of the filter corresponding to your operation
 #include "FEVV/Filters/Generic/PointCloud/point_cloud_curvature.hpp"
+#include "FEVV/Filters/Generic/AABB/get_max_bb_size.hpp"
 
 #include "FEVV/Wrappings/properties.h"
 
@@ -69,7 +70,12 @@ public:
   ~PointCloudCurvaturePlugin() = default;
 
 public:
-  void init() override { m_k = 15; }
+  void init() override
+  {
+    m_k = 15;
+    m_radius = 0.001;
+    m_knn_search = true;
+  }
 
   void reset() override
   {
@@ -105,7 +111,18 @@ public:
     FEVV::put_property_map(FEVV::vertex_color, *pc, *pmaps_bag, v_cm);
 
     // apply Point Cloud Curvature filter
-    FEVV::Filters::point_cloud_curvature(*pc, pm, m_k, v_curvm, v_cm);
+    if(m_knn_search)
+    {
+      // use a kNN-search
+      FEVV::Filters::point_cloud_curvature(*pc, pm, m_k, 0.0, v_curvm, v_cm);
+    }
+    else
+    {
+      // use a radius-search
+      double max_bb_size = Filters::get_max_bb_size(*pc, pm);
+      double radius = m_radius * max_bb_size;
+      FEVV::Filters::point_cloud_curvature(*pc, pm, 0, radius, v_curvm, v_cm);
+    }
 
     std::cout << "Running filter PointCloudCurvature... done." << std::endl;
   }
@@ -118,9 +135,9 @@ public:
   {
     // get filter parameters from dialog window
     PointCloudCurvatureDialog dialog;
-    dialog.setParameters(m_k);
+    dialog.setParameters(m_k, m_radius, m_knn_search);
     if(dialog.exec() == QDialog::Accepted)
-      dialog.getParameters(m_k);
+      dialog.getParameters(m_k, m_radius, m_knn_search);
     else
       return; // abort applying filter
 
@@ -228,6 +245,8 @@ signals:
 protected:
   // filter parameters
   unsigned int m_k;
+  double m_radius;
+  bool m_knn_search;
 };
 
 } // namespace FEVV

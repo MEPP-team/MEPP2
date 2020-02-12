@@ -191,11 +191,13 @@ curvature_at_point(const Point &origin,
 
 /**
  * \brief Compute the curvature for each point of the point cloud using
- *        the k nearest neighbors.
+ *        the nearest neighbors.
  * 
  * \param  pc  the point cloud
  * \param  pm  the point map of the point cloud
- * \param  k   number of nearest neighbors
+ * \param  k   number of nearest neighbors to use for a kNN search ;
+ *             if k = 0, a radius search is done
+ * \param  radius   radius to use for the radius search ; ignored if k != 0
  * \param  v_curvm  a vertex property map to store the curvature value
  *                  (double) of each vertex
  * \param  v_cm     a vertex color map to store the curvature as a color
@@ -209,7 +211,8 @@ template< typename PointCloud,
 void
 point_cloud_curvature(const PointCloud &pc,
                       const PointMap &pm,
-                      unsigned int k, 
+                      unsigned int k,
+                      double radius,
                       VertexCurvatureMap &v_curvm,
                       VertexColorMap &v_cm,
                       const GeometryTraits &gt)
@@ -226,8 +229,18 @@ point_cloud_curvature(const PointCloud &pc,
     // retrieve current point
     auto point = get(pm, *vi);
 
-    // do kNN-search around current point
-    auto result = kNN_search(*kd_tree_ptr, k, point, pc);
+    // do NN-search around current point
+    decltype(kNN_search(*kd_tree_ptr, k, point, pc)) result;
+    if(k != 0)
+    {
+      //DBG std::cout << "kNN_search, k=" << k << std::endl;
+      result = kNN_search(*kd_tree_ptr, k, point, pc);
+    }
+    else
+    {
+      //DBG std::cout << "radius_search, radius=" << radius << std::endl;
+      result = radius_search(*kd_tree_ptr, radius, point, pc);
+    }
     auto neighbors_ids = result.first;
 
     // compute curvature
@@ -262,12 +275,13 @@ template< typename PointCloud,
 void
 point_cloud_curvature(const PointCloud &pc,
                       const PointMap &pm,
-                      unsigned int k, 
+                      unsigned int k,
+                      double radius,
                       VertexCurvatureMap &v_curvm,
                       VertexColorMap &v_cm)
 {
   GeometryTraits gt(pc);
-  point_cloud_curvature(pc, pm, k, v_curvm, v_cm, gt);
+  point_cloud_curvature(pc, pm, k, radius, v_curvm, v_cm, gt);
 }
 
 } // namespace Filters
