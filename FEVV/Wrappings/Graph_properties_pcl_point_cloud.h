@@ -304,7 +304,6 @@ struct property_traits< FEVV::PCLPointCloudPointMap >
 namespace pcl {
 
 // NN-search types
-//TODO-elo rename PCLPointCloudKNNSearch into PCLPointCloudNNSearch
 struct PCLPointCloudNNSearch
 {
   typedef  pcl::KdTreeFLANN< FEVV::PCLEnrichedPoint >  KdTree;
