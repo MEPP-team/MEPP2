@@ -16,6 +16,7 @@ import ConfigParser
 BuildConfig = collections.namedtuple('BuildConfig', 'buildtype, use_cgal, use_openmesh, use_aif, use_gui, use_qt5, use_pcl, use_vtk, build_examples')
 
 configurations = []
+win_lang = 'US' #TODO-make-a-config-parameter
 #
 # define build & test configurations
 #
@@ -78,9 +79,9 @@ def init(argv):
 		check_path(KIT_ROOT, 'KIT_ROOT dir')
 		MSBUILD_PATH = config.get('Windows', 'MSBUILD_PATH').strip('"')
 		check_path(MSBUILD_PATH, 'msbuild executable')
-		CMAKE_PATH = KIT_ROOT + '\\_utils_\\cmake-3.4.3-win32-x86\\bin\\cmake.exe'
+		CMAKE_PATH = config.get('Windows', 'CMAKE_PATH').strip('"')
 		check_path(CMAKE_PATH , 'cmake executable')
-		CTEST_PATH = KIT_ROOT + '\\_utils_\\cmake-3.4.3-win32-x86\\bin\\ctest.exe'
+		CTEST_PATH = config.get('Windows', 'CTEST_PATH').strip('"')
 		check_path(CTEST_PATH , 'ctest executable')
 	elif sys.platform == "darwin":
 		# OS X
@@ -166,7 +167,8 @@ def build_one_config(config, builddir, logfilename):
 		cmakecmd += ' -DCMAKE_BUILD_TYPE=' + config.buildtype
 	elif sys.platform == "win32":
 		cmakecmd = CMAKE_PATH
-		cmakecmd += ' -G"Visual Studio 14 2015 Win64"'
+		#cmakecmd += ' -G"Visual Studio 14 2015 Win64"'
+ 		cmakecmd += ' -G"Visual Studio 15 2017 Win64"'
 		cmakecmd += ' -DMSVC_KIT_ROOT="' + KIT_ROOT + '"'
 	elif sys.platform == "darwin":
 		pass
@@ -369,24 +371,22 @@ def build_all_configs():
 			report[-1]['duration'] = re.search(r'[0-9]+:[0-9]+:[0-9]+$', rep['durationstr']).group(0)
 		elif sys.platform == "win32":
 			try:
-				report[-1]['warningsstr'] = re.findall(r'[0-9]+ Avertissement\(s\)', summary)
+				if win_lang == 'FR':
+					report[-1]['warningsstr'] = re.findall(r'[0-9]+ Avertissement\(s\)', summary)
+				else:
+					report[-1]['warningsstr'] = re.findall(r'[0-9]+ Warning\(s\)', summary)
 				# returns a list
 			except:
-				try:
-					report[-1]['warningsstr'] = re.findall(r'[0-9]+ Warning\(s\)', summary)
-					# returns a list
-				except:
-					report[-1]['warningsstr'] = ['999 warnings info not available, look at the log file !!!']
+				report[-1]['warningsstr'] = ['999 warnings info not available, look at the log file !!!']
 
 			try:
-				report[-1]['errorsstr'] = re.findall(r'[0-9]+ Erreur\(s\)', summary)
+				if win_lang == 'FR':
+					report[-1]['errorsstr'] = re.findall(r'[0-9]+ Erreur\(s\)', summary)
+				else:
+					report[-1]['errorsstr'] = re.findall(r'[0-9]+ Error\(s\)', summary)
 				# returns a list
 			except:
-				try:
-					report[-1]['errorsstr'] = re.findall(r'[0-9]+ Error\(s\)', summary)
-					# returns a list
-				except:
-					report[-1]['errorsstr'] = ['999 errors info not available, look at the log file !!!']
+				report[-1]['errorsstr'] = ['999 errors info not available, look at the log file !!!']
 
 			try:
 				report[-1]['testsstr'] = re.search(r'[0-9]+% tests passed.*', summary).group(0)
