@@ -18,22 +18,40 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 
 <b>Notations</b>
  - `G` A type that is a model of `Geometry`.
- - `g` An object of type `G`.
+ - `gt` An object of type `G`.
  - `p`,`q`, `r`  Objects of type `Point`.
  - `x`, `y`, `z` Objects of type `Scalar`
- - `v` An object of type `Vector`
+ - `v`, `u` Objects of type `Vector`
 
 <b>Geometry related valid expressions</b> (ON GOING WORK: refer to `Geometry_traits`)
-| Expression         | Returns              | Description  |
-|--------------------|----------------------|--------------|
-| `q(p)`             | `Point`   | `Point` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
-| `Point(x, y, z)`   | `Point`   | Constructor of the `Point` defined its respective given coordinates. |
-| `g.get_x( p )`     | `Scalar`  | Returns the first coordinate of point `p`.|
-| `g.get_y( p )`     | `Scalar`  | Returns the second coordinate of point `p`.|
-| `g.get_z( p )`     | `Scalar`  | Returns the third coordinate of point `p`.|
-| `g.normal(p, q, r);`       | `Vector`   | Returns a vector that is normal to the plane passing through points `p`, `q` and `r`.|
-| `g.unit_normal(p, q, r);`  | `Vector`   | Returns a unit vector that is normal to the plane passing through points `p`, `q` and `r`.|
-| `g.length(v)`      | `Scalar`  | Returns the length of vector `v`.|
+|      Expression          | Returns  | Description           |
+|--------------------------|----------|-----------------------|
+| `Point(x, y, z)`         | `Point`  | Constructor of the `Point` defined its respective given coordinates.|
+| `q(p)`                   | `Point`  | `Point` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
+| `ORIGIN`                 | `Point`  | The point at the origin.                |
+| `gt.get_x(p)`            | `Scalar` | Returns the 1st coordinate of point `p`.|
+| `gt.get_y(p)`            | `Scalar` | Returns the 2nd coordinate of point `p`.|
+| `gt.get_z(p)`            | `Scalar` | Returns the 3rd coordinate of point `p`.|
+| `Vector(x, y, z)`        | `Vector` | Constructor of the `Vector` defined its respective given coordinates.|
+| `u(v)`                   | `Vector` | `Vector` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
+| `NULL_VECTOR`            | `Vector` | The zero length vector.                 |
+| `v[0]`                   | `Scalar` | Returns the 1st coordinate of vector `v` (read only).|
+| `v[1]`                   | `Scalar` | Returns the 2nd coordinate of vector `v` (read only).|
+| `v[2]`                   | `Scalar` | Returns the 3rd coordinate of vector `v` (read only).|
+| `gt.normalize(v)`        | `Vector` | Returns the normalization of vector 'v'.|
+| `gt.length2(v)`          | `Scalar` | Returns the square of the length of vector `v`.|
+| `gt.length(v)`           | `Scalar` | Returns the length of vector `v`.|
+| `gt.length(p, q)`        | `Scalar` | Returns the distance between points `p` and `q`.|
+| `gt.normal(p, q, r)`     | `Vector` | Returns a vector that is normal to the plane passing through points `p`, `q` and `r`.|
+| `gt.unit_normal(p, q, r)`| `Vector` | Returns a unit vector that is normal to the plane passing through points `p`, `q` and `r`.|
+| `gt.add(u, v)`           | `Vector` | Returns the sum of vectors `u` and `v`.|
+| `gt.add_p(p, v)`         | `Point`  | Returns the sum of point `p` and vector `v`.|
+| `gt.sub_p(p, v)`         | `Point`  | Returns the sum of point `p` and the opposite of vector `v`.|
+| `gt.sub(p, q)`           | `Vector` | Returns the vector from point `p` to point `q`.|
+| `gt.scalar_mult(v, s)`   | `Vector` | Returns the multiplication of vector `v` by scalar `s`.|
+| `gt.scalar_mult(s, v)`   | `Vector` | Returns the multiplication of vector `v` by scalar `s`.|
+| `gt.dot_product(u, v)`   | `Scalar` | Returns the dot product of vectors `u` and `v`.|
+| `gt.cross_product(u, v)` | `Vector` | Returns the cross product of vectors `u` and `v`.|
 
 Notes:
  - The concept checking tests \ref Testing/Concepts/GeometryConceptCheck.h
