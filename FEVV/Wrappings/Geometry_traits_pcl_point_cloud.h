@@ -66,6 +66,7 @@ class Geometry_traits< MeshT, PCLPointCloud_kernel_generator >
 {
 public:
   typedef MeshT Mesh;
+  typedef Geometry_traits< MeshT, PCLPointCloud_kernel_generator > Self;
   typedef typename RetrieveKernel< Mesh >::Kernel Kernel;
   typedef typename Kernel::Point  Point;
   typedef typename Kernel::Vector Vector;
@@ -96,7 +97,7 @@ public:
 
   static Vector unit_normal(const Point &p1, const Point &p2, const Point &p3)
   {
-    return normal(p1, p2, p3).normalize(); // Eigen
+    return normal(p1, p2, p3).normalized(); // Eigen
   }
 
   static Scalar dot_product(const Vector &v1, const Vector &v2)
@@ -136,20 +137,20 @@ public:
 
   // we need addP and add functions to have function names
   // consistent with those of OpenMesh geometry trait
-  static Point add_p( const Point &p, const Vector &v)
+  static Point add_p(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::add_p(p, v);
+    return FEVV::GeometryTraits::add_p< Self >(p, v);
   };
 
   // subP to be consistent with addP
   static Point sub_p(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::sub_p(p, v);
+    return FEVV::GeometryTraits::sub_p< Self >(p, v);
   };
 
   static Vector sub(const Point &p1, const Point &p2)
   {
-    return FEVV::GeometryTraits::sub(p1, p2);
+    return FEVV::GeometryTraits::sub< Self >(p1, p2);
   };
 
 
