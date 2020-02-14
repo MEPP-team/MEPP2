@@ -28,12 +28,14 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 |--------------------------|----------|-----------------------|
 | `Point(x, y, z)`         | `Point`  | Constructor of the `Point` defined its respective given coordinates.|
 | `q(p)`                   | `Point`  | `Point` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
+| `q = p`                  | `Point`  | `Point` assignement operator.|
 | `ORIGIN`                 | `Point`  | The point at the origin.                |
 | `gt.get_x(p)`            | `Scalar` | Returns the 1st coordinate of point `p`.|
 | `gt.get_y(p)`            | `Scalar` | Returns the 2nd coordinate of point `p`.|
 | `gt.get_z(p)`            | `Scalar` | Returns the 3rd coordinate of point `p`.|
 | `Vector(x, y, z)`        | `Vector` | Constructor of the `Vector` defined its respective given coordinates.|
 | `u(v)`                   | `Vector` | `Vector` [copy constructor](http://www.boost.org/doc/libs/1_58_0/libs/utility/CopyConstructible.html).|
+| `u = v`                  | `Vector` | `Vector` assignement operator.|
 | `NULL_VECTOR`            | `Vector` | The zero length vector.                 |
 | `v[0]`                   | `Scalar` | Returns the 1st coordinate of vector `v` (read only).|
 | `v[1]`                   | `Scalar` | Returns the 2nd coordinate of vector `v` (read only).|
