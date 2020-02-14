@@ -64,10 +64,12 @@ add_test( Calculate_scaling_surfacemesh
 
 #####
 ### Checking of concepts is done at build time (no add_test required)
-add_executable( test_geometry_traits_concept_surfacemesh
-                test_geometry_traits_concept_surfacemesh.cpp )
-target_link_libraries( test_geometry_traits_concept_surfacemesh
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+add_executable( test_geometry_concept_surfacemesh
+                test_geometry_concept_surfacemesh.cpp )
+target_link_libraries( test_geometry_concept_surfacemesh
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 add_executable( test_complying_concepts_surfacemesh
   test_complying_concepts_surfacemesh.cpp )

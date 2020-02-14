@@ -23,8 +23,7 @@ namespace FEVV {
  * (BCCL)
  */
 template< typename Mesh >
-struct Point_3Concept
-//  : boost::Assignable<X>
+struct GeometryConcept
 {
   typedef Geometry_traits< Mesh > Geometry;
   typedef Geometry G; // Syntactic shortcut for operators
@@ -32,7 +31,7 @@ struct Point_3Concept
   typedef typename Geometry::Vector Vector;
   typedef typename Geometry::Scalar Scalar;
 
-  BOOST_CONCEPT_USAGE(Point_3Concept)
+  BOOST_CONCEPT_USAGE(GeometryConcept)
   {
     Mesh mesh;
     Geometry gt(mesh);
