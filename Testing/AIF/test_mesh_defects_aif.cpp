@@ -116,10 +116,79 @@ static void replace(std::string& to_modify, const std::string& substring_to_sear
 		pos = to_modify.find(substring_to_search, pos + substring_to_use.size());
 	}
 }
+template< typename MutableFaceIncidentGraph >
+static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
+ typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor v, 
+ typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor replace,
+ typename boost::graph_traits<MutableFaceIncidentGraph >::face_descriptor current_f,
+	std::vector< typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor >
+	complex_edges // to forbid the update of edges that are incident to faces than are incident to complex edges (including current complex edge)
+	)
+{
+	typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
+
+	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+	typedef typename GraphTraits::edge_descriptor edge_descriptor;
+	typedef typename GraphTraits::face_descriptor face_descriptor;
+
+	int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		"f:2_manifold_component_seg", current_f->GetIndex());
+
+	std::set<face_descriptor> forbidden_faces;
+	forbidden_faces.insert(current_f);
+	std::set<edge_descriptor> forbidden_edges;
+	auto iter_ec = complex_edges.begin(), iter_ec_e = complex_edges.end();
+	forbidden_edges.insert(iter_ec, iter_ec_e);
+	for (; iter_ec != iter_ec_e; ++iter_ec)
+	{
+		auto faces_pair = in_edges(*iter_ec, g);
+		auto iter_fe = faces_pair.first;
+		for (; iter_fe != faces_pair.second; ++iter_fe)
+		{
+			//if (g.GetProperty< AIFMeshT::face_type::ptr, int >(
+			//	"f:2_manifold_component_seg", (*iter_fe)->GetIndex()) == current_face_id) // forbid for all ids
+			forbidden_faces.insert(*iter_fe);
+		}
+	}
+	auto iter_fs = forbidden_faces.begin(), iter_fs_e = forbidden_faces.end();
+	for (; iter_fs != iter_fs_e; ++iter_fs)
+	{
+		auto edges_pair = out_edges(*iter_fs, g);
+		forbidden_edges.insert(edges_pair.first, edges_pair.second);
+	}
+
+	// some incident edges of v vertex are put onto replace vertex
+	auto src_incident_faces_range = AIFHelpers::incident_faces(v);
+	auto iter_f = src_incident_faces_range.begin();
+	for (; iter_f != src_incident_faces_range.end(); ++iter_f)
+	{
+		if (forbidden_faces.find(*iter_f)!= forbidden_faces.end())
+			continue;
+
+		if (g.GetProperty< AIFMeshT::face_type::ptr, int >(
+			"f:2_manifold_component_seg", (*iter_f)->GetIndex()) == current_face_id)
+		{ // we only consider faces with the same labelling id
+			auto edges_pair = out_edges(*iter_f, g);
+			auto iter_e = edges_pair.first;
+			for (; iter_e != edges_pair.second; ++iter_e)
+			{
+				if (forbidden_edges.find(*iter_e) != forbidden_edges.end())
+					continue;
+
+				if (AIFHelpers::are_incident(v, *iter_e))
+				{
+					AIFHelpers::remove_edge(v, *iter_e);
+					AIFHelpers::add_vertex(*iter_e, replace, AIFHelpers::vertex_position(*iter_e, v));
+					AIFHelpers::add_edge(replace, *iter_e);
+				}
+			}
+		}
+	}
+}
 
 static int process_one_meshfile(	const std::string& input_file_path, 
 									const std::string& colorize_mesh, 
-									const std::string& remove_isolated_elements, 
+									const std::string& remove_isolated_elements, // except isolated faces for the time being
 									const std::string& resolve_vertices_with_similar_incident_edges,
 									const std::string& make_2_mani_not_2_mani)
 {
@@ -212,16 +281,14 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			auto vector_faces = AIFHelpers::adjacent_faces(current_f, true);
 			auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
 			for (; iter_f != iter_f_end; ++iter_f)
-				if ((all_faces.find(*iter_f) != all_faces.end()) &&
-					AIFHelpers::have_consistent_orientation(current_f, *iter_f))
+				if ((all_faces.find(*iter_f) != all_faces.end()) // not already processed
+					&& AIFHelpers::have_consistent_orientation(current_f, *iter_f)
+					)
 				{
 					edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
-					//edge_descriptor e_prev = AIFHelpers::get_edge_of_face_before_edge(*iter_f, e_tmp);
-					//edge_descriptor e_next = AIFHelpers::get_edge_of_face_after_edge(*iter_f, e_tmp);
 					if (AIFHelpers::is_surface_regular_edge(e_tmp)
-						/*&&
-						(AIFHelpers::is_regular_vertex(source(e_tmp, *ptr_mesh)) &&
-						AIFHelpers::is_regular_vertex(target(e_tmp, *ptr_mesh)))*/
+						//&& (AIFHelpers::is_regular_vertex(source(e_tmp, *ptr_mesh)) 
+						//&&  AIFHelpers::is_regular_vertex(target(e_tmp, *ptr_mesh)))
 						)
 					{
 						set_current_component.insert(*iter_f);
@@ -397,9 +464,9 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		  // Therefore, it is rather advised to preserved them, and use
 		  // a higher level algorithm to keep or remove them.
 			++nb_isolated_faces;
-			if (remove_isolated_elements == "y")
-				f_to_remeove.push_back(*fi);
-			else
+			//if (remove_isolated_elements == "y")
+			//	f_to_remeove.push_back(*fi);
+			//else
 			{
 				if (colorize_mesh == "y")
 					ptr_mesh->SetProperty< AIFMeshT::face_type::ptr, AIFMeshT::Vector >(
@@ -421,8 +488,10 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	std::string suffix = "";
 	if (remove_isolated_elements == "y")
 	{
-		if (nb_isolated_vertices != 0 || nb_isolated_edges != 0 ||
-			nb_isolated_faces != 0)
+		if (nb_isolated_vertices != 0 
+			|| nb_isolated_edges != 0 
+			//|| nb_isolated_faces != 0
+			)
 		{
 			AIFHelpers::remove_faces(
 				f_to_remeove.begin(), f_to_remeove.end(), ptr_mesh);
@@ -495,7 +564,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	{
 		{ // mesh file writing debug
 			auto res_mesh =
-				extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+			extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
 			writer_type my_writer;
 			try
 			{
@@ -526,7 +595,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			{ // the first component keep the initial complex edge
 				face_id_to_edge.insert(std::make_pair(current_id, *iter_e));
 			}
-			else
+			else if (face_id_to_edge.find(current_id) == face_id_to_edge.end())
 			{ // other components use a duplicate
 				std::cout << "create a new edge" << std::endl; // debug
 				edge_descriptor e_tmp = AIFHelpers::add_edge(*ptr_mesh);
@@ -545,7 +614,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					"f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
 					next_faces.insert(*iter_f);
 				else
-				{
+				{ // during the current step we process all faces with the same current_id
 					if (first)
 						continue;
 
@@ -553,13 +622,29 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					edge_descriptor pe = AIFHelpers::get_edge_of_face_before_edge(*iter_f, *iter_e);
 					edge_descriptor ae = AIFHelpers::get_edge_of_face_after_edge(*iter_f, *iter_e);
 
+					vertex_descriptor v_pe_old = AIFHelpers::common_vertex(pe, *iter_e);
+					if (v_pe_old == AIFHelpers::null_vertex())
+					{
+						if (degree(*iter_f, *ptr_mesh)==3)
+						{
+							vertex_descriptor tmp = AIFHelpers::common_vertex(pe, ae);
+							v_pe_old = AIFHelpers::opposite_vertex(pe, tmp);
+						}
+					}
+					vertex_descriptor v_ae_old = AIFHelpers::common_vertex(ae, *iter_e);
+					if (v_ae_old == AIFHelpers::null_vertex())
+					{
+						if (degree(*iter_f, *ptr_mesh) == 3)
+						{
+							vertex_descriptor tmp = AIFHelpers::common_vertex(pe, ae);
+							v_ae_old = AIFHelpers::opposite_vertex(ae, tmp);
+						}
+					}
+
 					AIFHelpers::remove_edge(*iter_f, *iter_e);
 					AIFHelpers::remove_face(*iter_e, *iter_f);
 					AIFHelpers::add_edge_to_face_after_edge(*iter_f, pe, face_id_to_edge[current_id]);
 					AIFHelpers::add_face(face_id_to_edge[current_id], *iter_f);
-
-					vertex_descriptor v_pe_old = AIFHelpers::common_vertex(pe, *iter_e);
-					vertex_descriptor v_ae_old = AIFHelpers::common_vertex(ae, *iter_e);
 
 					AIFHelpers::remove_edge(v_pe_old, pe);
 					AIFHelpers::remove_edge(v_ae_old, ae);
@@ -580,13 +665,29 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						v_old_to_v_new[v_pe_old] = source(face_id_to_edge[current_id], *ptr_mesh);
 						v_old_to_v_new[v_ae_old] = target(face_id_to_edge[current_id], *ptr_mesh);
 					}
-					else
-					{
-						AIFHelpers::add_edge(v_old_to_v_new[v_pe_old], pe);
-						AIFHelpers::add_vertex(pe, v_old_to_v_new[v_pe_old], AIFHelpers::vertex_position(pe, v_pe_old));
+					//else
+					//{ // this part should be no more necessary due to replace_vertex_in_incident_edges calls (to check)
+					//	AIFHelpers::add_edge(v_old_to_v_new[v_pe_old], pe);
+					//	AIFHelpers::add_vertex(pe, v_old_to_v_new[v_pe_old], AIFHelpers::vertex_position(pe, v_pe_old));
 
-						AIFHelpers::add_edge(v_old_to_v_new[v_ae_old], ae);
-						AIFHelpers::add_vertex(ae, v_old_to_v_new[v_ae_old], AIFHelpers::vertex_position(ae, v_ae_old));
+					//	AIFHelpers::add_edge(v_old_to_v_new[v_ae_old], ae);
+					//	AIFHelpers::add_vertex(ae, v_old_to_v_new[v_ae_old], AIFHelpers::vertex_position(ae, v_ae_old));
+					//}
+					bool is_the_last = true;
+					auto iter_f2 = iter_f;
+					++iter_f2;
+					for (; iter_f2 != iter_f_end; ++iter_f2)
+						if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+							"f:2_manifold_component_seg", (*iter_f2)->GetIndex()) == current_id)
+							{
+								is_the_last = false;
+								break;
+                            }
+					if (is_the_last)
+					{
+						// do this replacement for the last current face with the same id
+						replace_vertex_in_incident_edges(*ptr_mesh, v_pe_old, v_old_to_v_new[v_pe_old], *iter_f, complex_edges);
+						replace_vertex_in_incident_edges(*ptr_mesh, v_ae_old, v_old_to_v_new[v_ae_old], *iter_f, complex_edges);
 					}
 				}
 			}
@@ -820,7 +921,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		: "Number of isolated";
 	std::cout << prefix << " vertices: " << nb_isolated_vertices << std::endl;
 	std::cout << prefix << " edges: " << nb_isolated_edges << std::endl;
-	std::cout << prefix << " faces: " << nb_isolated_faces << std::endl;
+	std::cout << prefix << " faces (not removed yet): " << nb_isolated_faces << std::endl;
 	/////////////////////////////////////////////////////////////////////////////
 	prefix = (resolve_vertices_with_similar_incident_edges == "y")
 		? "Number of resolved vertices with similar incident edges: "
@@ -888,7 +989,7 @@ main(int narg, char **argv)
 			  {
 				  std::string dir_name_without_base = dir_itr->path().string();
 
-				  std::string command = "";
+				  std::string command = "\"";
 				  for (int i = 0; i < narg; ++i)
 				  {
 					  switch (i)
@@ -896,12 +997,12 @@ main(int narg, char **argv)
 					  case 0:
 					  {
 						  std::string cmd_tmp = argv[i];
-						  replace(cmd_tmp, " ", "\\ ");
+						  //replace(cmd_tmp, " ", "\\ ");
 						  command += "\"" + cmd_tmp + "\"";
 					  }
 						  break;
 					  case 1:
-						  replace(dir_name_without_base, " ", "\\ ");
+						  //replace(dir_name_without_base, " ", "\\ ");
 						  command += "\"" + dir_name_without_base + "\"";
 						  break;
 					  default:
@@ -911,7 +1012,7 @@ main(int narg, char **argv)
 					  if (i < narg - 1)
 						  command += std::string(" ");
 				  }
-
+				  command += "\"";
 				  int r = system(command.c_str());
                   if (r == -1)
                   {
@@ -946,5 +1047,6 @@ main(int narg, char **argv)
 	  }
   }
   /////////////////////////////////////////////////////////////////////////////
+  system("pause");
   return EXIT_SUCCESS;
 }
