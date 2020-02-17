@@ -117,6 +117,45 @@ static void replace(std::string& to_modify, const std::string& substring_to_sear
 	}
 }
 template< typename MutableFaceIncidentGraph >
+void remove_adjacent_edges(MutableFaceIncidentGraph &g,
+	std::vector< typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor >& selected_edges_to_make_independent,
+	std::vector< typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor>& removed_edges)
+{
+	typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
+
+	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+	typedef typename GraphTraits::edge_descriptor edge_descriptor;
+	typedef typename GraphTraits::face_descriptor face_descriptor;
+
+	removed_edges.clear();
+
+	auto iter_e = selected_edges_to_make_independent.begin();
+
+	while (iter_e != selected_edges_to_make_independent.end())
+	{
+		auto iter2_e = iter_e;
+		++iter2_e;
+		while (iter2_e != selected_edges_to_make_independent.end())
+		{
+			if (AIFHelpers::are_adjacent(*iter_e, *iter2_e))
+			{
+				removed_edges.push_back(*iter_e);
+			}
+			++iter2_e;
+		}
+
+		++iter_e;
+	}
+	iter_e = removed_edges.begin();
+	auto iter_e_e = removed_edges.end();
+	for (; iter_e != iter_e_e; ++iter_e)
+	{
+		auto iter_res = std::find(selected_edges_to_make_independent.begin(), selected_edges_to_make_independent.end(), *iter_e);
+		if(iter_res != selected_edges_to_make_independent.end())
+		  selected_edges_to_make_independent.erase(iter_res);
+	}
+}
+template< typename MutableFaceIncidentGraph >
 static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
  typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor v, 
  typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor replace,
@@ -559,24 +598,26 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	}
 
 	// decomplexify complex edges (+ update list of cut vertices)
+	std::vector< edge_descriptor > remaining_complex_edges;
+	remove_adjacent_edges(*ptr_mesh, complex_edges, remaining_complex_edges);
 	iter_e = complex_edges.begin(), iter_e_end = complex_edges.end();
 	while (iter_e != iter_e_end)
 	{
-		{ // mesh file writing debug
-			auto res_mesh =
-			extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
-			writer_type my_writer;
-			try
-			{
-				my_writer.write(res_mesh,
-					FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
-			}
-			catch (...)
-			{
-				std::cout << "writing failed";
-				exit(EXIT_FAILURE);
-			}
-		}
+		//{ // mesh file writing debug
+		//	auto res_mesh =
+		//	extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+		//	writer_type my_writer;
+		//	try
+		//	{
+		//		my_writer.write(res_mesh,
+		//			FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
+		//	}
+		//	catch (...)
+		//	{
+		//		std::cout << "writing failed";
+		//		exit(EXIT_FAILURE);
+		//	}
+		//}
 		// complex edges
 		std::cout << "degree of current complex edge: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
 		auto faces_range_pair = in_edges(*iter_e, *ptr_mesh); // get incident faces
@@ -931,7 +972,11 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	std::cout << "Number of T-junction vertices: " << nb_t_junction_vertices << std::endl;
 	std::cout << "Number of cut vertices: " << nb_cut_vertices << std::endl;
 	std::cout << "Number of dangling edges: " << nb_dangling_edges << std::endl;
-	std::cout << "Number of complex edges: " << nb_complex_edges << std::endl;
+	std::cout << "Number of complex edges: " << nb_complex_edges;
+	if(remaining_complex_edges.empty())
+		std::cout << std::endl;
+	else
+		std::cout << " (" << remaining_complex_edges.size() << " not resolved due to local dependency). You can rerun the program on the output mesh file to solved them." << std::endl;
 	std::cout << "Number of surface border edges: " << nb_border_edges << std::endl;
 	std::cout << "Number of degenerated faces: " << nb_degenerated_faces << std::endl;
 	/////////////////////////////////////////////////////////////////////////////
