@@ -21,6 +21,8 @@
 #include "FEVV/Operators/AIF/collapse_edge.hpp"
 #include "FEVV/DataStructures/AIF/AIFMeshHelpers.h"
 
+#include "FEVV/Operators/Generic/calculate_face_normal.hpp"
+
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 
 #include <vector>
@@ -270,6 +272,9 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		BOOST_ASSERT_MSG(false, "[AIF] Exception caught while reading input file.");
 	}
 	/////////////////////////////////////////////////////////////////////////////
+	GeometryTraits gt(*ptr_mesh);
+	auto pos_pm = get(boost::vertex_point, *ptr_mesh);
+	/////////////////////////////////////////////////////////////////////////////
 	const AIFMeshT::Vector red(255, 0, 0);
 	const AIFMeshT::Vector green(0, 255, 0);
 	const AIFMeshT::Vector blue(0, 0, 255);
@@ -306,9 +311,18 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		// compute the face segmentation
 		std::set<face_descriptor> set_current_component,
 			all_faces(faces(*ptr_mesh).first, faces(*ptr_mesh).second); // not yet processed
-		int current_id = 0;
-		set_current_component.insert(*all_faces.begin());
-		all_faces.erase(all_faces.begin());
+		bool first_phase = true // true when it still remains at least one face with no incident complex edge
+			, second_phase_first_subphase=true;
+		int current_id = 0, nb_used_id = 0;
+		auto iter_f_first = std::find_if(all_faces.begin(), all_faces.end(), AIFHelpers::has_no_incident_complex_edge);
+		if (iter_f_first == all_faces.end())
+		{
+			first_phase = false;
+			iter_f_first = all_faces.begin();
+		}
+		set_current_component.insert(*iter_f_first);
+		all_faces.erase(iter_f_first);
+
 		while (!set_current_component.empty())
 		{
 			face_descriptor current_f = *set_current_component.begin();
@@ -317,15 +331,18 @@ static int process_one_meshfile(	const std::string& input_file_path,
 
 			set_current_component.erase(set_current_component.begin());
 
-			auto vector_faces = AIFHelpers::adjacent_faces(current_f, true);
+     		auto vector_faces = AIFHelpers::adjacent_faces(current_f, true); 
 			auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
 			for (; iter_f != iter_f_end; ++iter_f)
+			{
+				assert(*iter_f != current_f);
 				if ((all_faces.find(*iter_f) != all_faces.end()) // not already processed
+					&& (!first_phase || AIFHelpers::has_no_incident_complex_edge(*iter_f))
 					&& AIFHelpers::have_consistent_orientation(current_f, *iter_f)
 					)
 				{
 					edge_descriptor e_tmp = AIFHelpers::common_edge(current_f, *iter_f);
-					if (AIFHelpers::is_surface_regular_edge(e_tmp)
+					if ((!first_phase || AIFHelpers::is_surface_regular_edge(e_tmp))
 						//&& (AIFHelpers::is_regular_vertex(source(e_tmp, *ptr_mesh)) 
 						//&&  AIFHelpers::is_regular_vertex(target(e_tmp, *ptr_mesh)))
 						)
@@ -334,15 +351,134 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						all_faces.erase(*iter_f);
 					}
 				}
+			}
+			if (!first_phase)
+			{
+				if (second_phase_first_subphase)
+				{
+					if ((set_current_component.size() > 1))
+					{ // second phase (segmentation of faces incident to at least one complex edge)
+						std::set<face_descriptor> new_face_set;
+						// only keep the face with closest normal to current_f (except current_f itself)
+						auto iter_f = set_current_component.begin(), iter_f_end = set_current_component.end();
+						auto current_n = FEVV::Operators::calculate_face_normal(current_f, *ptr_mesh, pos_pm, gt);
+						bool first = true;
+						double best_val = -1.1;
+						face_descriptor best_f, other_f1 = AIFHelpers::null_face(), other_f2 = AIFHelpers::null_face();
+						for (; iter_f != iter_f_end; ++iter_f)
+						{
+							if (*iter_f == current_f)
+								continue;
 
+							auto neighbor_n = FEVV::Operators::calculate_face_normal(*iter_f, *ptr_mesh, pos_pm, gt);
+							double tmp = gt.dot_product(current_n, neighbor_n);
+							if (first)
+							{
+								best_val = tmp;
+								best_f = *iter_f;
+								first = false;
+								other_f1 = *iter_f;
+							}
+							else
+							{
+								other_f2 = *iter_f;
+								if (tmp > best_val)
+								{
+									best_val = tmp;
+									best_f = *iter_f;
+								}
+							}
+						}
+
+						if (set_current_component.size() == 2)
+						{
+							current_n = FEVV::Operators::calculate_face_normal(other_f1, *ptr_mesh, pos_pm, gt);
+							auto neighbor_n = FEVV::Operators::calculate_face_normal(other_f2, *ptr_mesh, pos_pm, gt);
+							double tmp = gt.dot_product(current_n, neighbor_n);
+							if (tmp < best_val)
+								new_face_set.insert(best_f);
+						}
+						else
+							new_face_set.insert(best_f);
+						set_current_component.swap(new_face_set);
+					}
+					///////////////////////////////////////////////////////////////
+					second_phase_first_subphase = false;
+					if (set_current_component.size() > 0)
+					{
+						++nb_used_id;
+						current_id = nb_used_id;
+					}
+				}
+				else
+				{
+					std::set<face_descriptor> new_face_set;
+					set_current_component.swap(new_face_set);
+				}
+			}
 			if (set_current_component.empty() && !all_faces.empty())
 			{
-				set_current_component.insert(*all_faces.begin());
-				all_faces.erase(all_faces.begin());
-				++current_id;
+				iter_f_first = std::find_if(all_faces.begin(), all_faces.end(), AIFHelpers::has_no_incident_complex_edge);
+				if (iter_f_first == all_faces.end())
+				{ // we estimate the correct next face id by looking at its already processed neighbors
+					first_phase = false;
+					iter_f_first = all_faces.begin();
+					auto vector_faces = AIFHelpers::adjacent_faces(*iter_f_first, true);
+					auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
+					auto current_n = FEVV::Operators::calculate_face_normal(*iter_f_first, *ptr_mesh, pos_pm, gt);
+					int id_best_match = -1; // look for the face with a consistent orientation
+					                        // that has the closest normal correcpondance
+					double best_val = -1.1;
+					for (; iter_f != iter_f_end; ++iter_f)
+					{
+						if ((all_faces.find(*iter_f) == all_faces.end()) // already processed
+							//&& AIFHelpers::has_no_incident_complex_edge(*iter_f)
+							&& AIFHelpers::have_consistent_orientation(*iter_f_first, *iter_f)
+							)
+						{
+							int current_f_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+								"f:2_manifold_component_seg", (*iter_f)->GetIndex());
+
+							auto neighbor_n = FEVV::Operators::calculate_face_normal(*iter_f, *ptr_mesh, pos_pm, gt);
+							double tmp = gt.dot_product(current_n, neighbor_n);
+							if (id_best_match == -1)
+							{
+								id_best_match = current_f_id;
+								best_val = tmp;
+							}
+							else
+							{
+								if (tmp > best_val)
+								{
+									best_val = tmp;
+									id_best_match = current_f_id;
+								}
+							}
+						}
+					}
+					if (id_best_match == -1)
+					{ // no valid neighbord found => current_id must take the next available integer value
+						++nb_used_id;
+     					current_id = nb_used_id ;
+					}
+					else
+					{ // at least one valid neighbor => take the same id
+						current_id = id_best_match;
+					}
+
+					second_phase_first_subphase = true;
+				}
+				else
+				{
+					++current_id;
+					++nb_used_id;
+				}
+				set_current_component.insert(*iter_f_first);
+				all_faces.erase(iter_f_first);
+				
 			}
 		}
-		std::cout << "segmented into " << (current_id + 1) << " 2-manifold components." << std::endl;
+		std::cout << "segmented into " << (nb_used_id + 1) << " 2-manifold components." << std::endl;
 	}
 	/////////////////////////////////////////////////////////////////////////////
 	// 1 - Count number of isolated/complex/normal elements
@@ -356,7 +492,6 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	std::vector< vertex_descriptor > v_to_remeove;
 	std::vector< vertex_descriptor > cut_vertices;
 	std::vector< vertex_descriptor > t_junction_vertices;
-	GeometryTraits gt(*ptr_mesh);
 	for (; vi != vi_end; ++vi)
 	{
 		if (AIFHelpers::is_isolated_vertex(*vi))
@@ -472,7 +607,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		}
 		//else if (AIFHelpers::has_inconsistent_incident_face_orientation(*ei))
 		//{
-		//  // case not treated yet
+		//  // should be treated by resolving complex edges
 		//}
 		else if (AIFHelpers::is_surface_regular_edge(*ei))
 		{
@@ -558,7 +693,6 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		suffix = "_without_non_manifold_elm";
 	/////////////////////////////////////////////////////////////////////////////
 	// 3 - Process non-2-manifold elements
-	auto pos_pm = get(boost::vertex_point, *ptr_mesh);
 
 	// remove dangling edges (+ update list of cut vertices)
 	auto iter_e = dangling_edges.begin(), iter_e_end = dangling_edges.end();
@@ -603,21 +737,21 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	iter_e = complex_edges.begin(), iter_e_end = complex_edges.end();
 	while (iter_e != iter_e_end)
 	{
-		//{ // mesh file writing debug
-		//	auto res_mesh =
-		//	extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
-		//	writer_type my_writer;
-		//	try
-		//	{
-		//		my_writer.write(res_mesh,
-		//			FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
-		//	}
-		//	catch (...)
-		//	{
-		//		std::cout << "writing failed";
-		//		exit(EXIT_FAILURE);
-		//	}
-		//}
+		{ // mesh file writing debug
+			auto res_mesh =
+			extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+			writer_type my_writer;
+			try
+			{
+				my_writer.write(res_mesh,
+					FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
+			}
+			catch (...)
+			{
+				std::cout << "writing failed";
+				exit(EXIT_FAILURE);
+			}
+		}
 		// complex edges
 		std::cout << "degree of current complex edge: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
 		auto faces_range_pair = in_edges(*iter_e, *ptr_mesh); // get incident faces

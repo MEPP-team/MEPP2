@@ -1759,6 +1759,8 @@ public:
   */
   static bool have_consistent_orientation(face_descriptor face1, face_descriptor face2)
   {
+	  if (!are_adjacent(face1, face2))
+		  return false;
     auto vertices_range1 = incident_vertices(face1);
     auto vertices_range2 = incident_vertices(face2);
     auto it1 = vertices_range1.begin();
@@ -1805,9 +1807,26 @@ public:
   */
   static void reverse_face_orientation(face_descriptor face)
   {
-    auto edgeRange = incident_edges(face);
-    std::reverse(edgeRange.begin(), edgeRange.end());
+    auto edge_range = incident_edges(face);
+    std::reverse(edge_range.begin(), edge_range.end());
     face->clear_vertex_incidency();
+  }
+
+  /*!
+  * 			Function determining if face has no incident 
+  *       complex edge.
+  * \param	face	The involving face
+  * \return	true if the argument has no incident complex edge.
+  */
+  static bool has_no_incident_complex_edge(face_descriptor face)
+  {
+	  auto edge_range = incident_edges(face);
+	  auto iter_e = edge_range.begin(), iter_e_e = edge_range.end();
+	  for (; iter_e != iter_e_e; ++iter_e)
+		  if (is_complex_edge(*iter_e))
+			  return false;
+
+	  return true;
   }
 
   /*!
