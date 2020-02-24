@@ -23,8 +23,7 @@ namespace FEVV {
  * (BCCL)
  */
 template< typename Mesh >
-struct Point_3Concept
-//  : boost::Assignable<X>
+struct GeometryConcept
 {
   typedef Geometry_traits< Mesh > Geometry;
   typedef Geometry G; // Syntactic shortcut for operators
@@ -32,31 +31,47 @@ struct Point_3Concept
   typedef typename Geometry::Vector Vector;
   typedef typename Geometry::Scalar Scalar;
 
-  BOOST_CONCEPT_USAGE(Point_3Concept)
+  BOOST_CONCEPT_USAGE(GeometryConcept)
   {
     Mesh mesh;
-    Geometry g(mesh);
-
+    Geometry gt(mesh);
+    Vector v1;
+    Scalar s;
 
     //////////////////////// Point manipulations
+
+    // Point constructor
+    Point p(1.1, 2.2, 3.3);
 
     // Point copy construction
     Point q(p);
 
-    // Point copy assignement operator
+    // Point assignement operator
     q = p;
 
+    // Point at origin
+    p = G::ORIGIN;
+    p = gt.ORIGIN;
+
     // Point coordinate component access
-    Scalar x = g.get_x(p);
-    Scalar y = g.get_y(p);
-    Scalar z = g.get_z(p);
+    Scalar x = gt.get_x(p);
+    Scalar y = gt.get_y(p);
+    Scalar z = gt.get_z(p);
 
     //////////////////////// Vector manipulations
+
+    // Vector constructor
+    Vector v(4.4, 5.5, 6.6);
+
     // Vector copy construction
     Vector v2(v1);
 
-    // Vector copy assignement:
-    Vector v1 = Vector(1, 2, 3);
+    // Vector assignement operator:
+    v2 = v1;
+
+    // Null vector
+    v = G::NULL_VECTOR;
+    v = gt.NULL_VECTOR;
 
     // Vector/Scalar coordinate component access
     x = v1[0];
@@ -69,28 +84,28 @@ struct Point_3Concept
     // create a new Vector and reassign it:
     v1 = Vector(v1[0], v1[1], 999.0);
 
-    // Vector/Vector addition is generally provided natively by the
-    // implementations
-    Vector v3 = v1 + v2;
-    Vector v4 = v1 - v2;
-
-    g.dot_product(v1, v2);
-    g.cross_product(v1, v2);
+    // Misc vectors operations
+    v1 = gt.normalize(v);
+    s  = gt.length2(v);
+    s  = gt.length(v);
+    v = gt.add(v1, v2);
+    gt.dot_product(v1, v2);
+    gt.cross_product(v1, v2);
 
     // Scalar/Vector:
-    s = g.length(v1);
-    v2 = g.scalar_mult(v1, s);
+    v2 = gt.scalar_mult(v1, s);
+    v2 = gt.scalar_mult(s, v1);
 
     //////////////////////// Vector/Point and Point/Vector operators
-    v1 = g.normal(p, p, p);
-    v1 = g.unit_normal(p, p, p);
 
-    v3 = g.add(v1, v2);
-    p = g.add_p(p, v1);
-    p = g.sub_p(p, v1);
-    v1 = g.sub(p, p);
+    s  = gt.length(p, q);
+    v1 = gt.normal(p, p, p);
+    v1 = gt.unit_normal(p, p, p);
+    p = gt.add_p(p, v1);
+    p = gt.sub_p(p, v1);
+    v1 = gt.sub(p, p);
 
-
+#if 0
 ////////////////////////////////////////////////////////////////
 // The following is on debugging purposes, remains as traces
 // of various trials, is deprecated or not recommendable.
@@ -111,12 +126,8 @@ struct Point_3Concept
 #ifndef FEVV_USE_CGAL
 // Point r = p + q;
 #endif
+#endif
   }
-
-private:
-  Point p;
-  Vector v1;
-  Scalar s;
 };
 
 } // namespace FEVV

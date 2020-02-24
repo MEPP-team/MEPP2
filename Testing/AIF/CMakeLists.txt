@@ -26,10 +26,10 @@ target_link_libraries(test_AIF
                       )
 
 #####
-add_executable( test_geometry_traits_concept_aif
-                test_geometry_traits_concept_aif.cpp
+add_executable( test_geometry_concept_aif
+                test_geometry_concept_aif.cpp
                 )
-target_link_libraries(test_geometry_traits_concept_aif
+target_link_libraries(test_geometry_concept_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
 

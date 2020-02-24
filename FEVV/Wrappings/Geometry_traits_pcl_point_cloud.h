@@ -66,6 +66,7 @@ class Geometry_traits< MeshT, PCLPointCloud_kernel_generator >
 {
 public:
   typedef MeshT Mesh;
+  typedef Geometry_traits< MeshT, PCLPointCloud_kernel_generator > Self;
   typedef typename RetrieveKernel< Mesh >::Kernel Kernel;
   typedef typename Kernel::Point  Point;
   typedef typename Kernel::Vector Vector;
@@ -79,10 +80,112 @@ public:
 
   static Scalar get_z(const Point &p) { return p.z; }
 
+  static Vector normal(const Point &p1, const Point &p2, const Point &p3)
+  {
+    // store PCL Points as Eigen Vectors for forthcoming computation
+    Vector pt1(p1.x, p1.y, p1.z);
+    Vector pt2(p2.x, p2.y, p2.z);
+    Vector pt3(p3.x, p3.y, p3.z);
+
+    // calculate two vectors from the three points
+    Vector v1 = pt1 - pt2; // Eigen
+    Vector v2 = pt1 - pt3; // Eigen
+
+    // take the cross product of the two vectors to get the normal
+    return cross_product(v1, v2);
+  }
+
+  static Vector unit_normal(const Point &p1, const Point &p2, const Point &p3)
+  {
+    return normal(p1, p2, p3).normalized(); // Eigen
+  }
+
+  static Scalar dot_product(const Vector &v1, const Vector &v2)
+  {
+    return v1.dot(v2); // Eigen
+  }
+
+  static Vector cross_product(const Vector &v1, const Vector &v2)
+  {
+    return v1.cross(v2); // Eigen
+  }
+
+  static Scalar length2(const Vector &v) { return v.squaredNorm(); } // Eigen
+
+  static Scalar length(const Vector &v) { return v.norm(); } // Eigen
+
+  static Scalar length(const Point &p1, const Point &p2)
+  {
+    // store PCL Points as Eigen Vectors for forthcoming computation
+    Vector pt1(p1.x, p1.y, p1.z);
+    Vector pt2(p2.x, p2.y, p2.z);
+
+    Vector v = pt1 - pt2; // Eigen
+
+    return length(v);
+  }
+
+  static Vector normalize(const Vector &v)
+  {
+    return v.normalized(); // Eigen
+  }
+
+  static Vector add(const Vector &v1, const Vector &v2)
+  {
+    return v1 + v2; // Eigen
+  };
+
+  // we need addP and add functions to have function names
+  // consistent with those of OpenMesh geometry trait
+  static Point add_p(const Point &p, const Vector &v)
+  {
+    return FEVV::GeometryTraits::add_p< Self >(p, v);
+  };
+
+  // subP to be consistent with addP
+  static Point sub_p(const Point &p, const Vector &v)
+  {
+    return FEVV::GeometryTraits::sub_p< Self >(p, v);
+  };
+
+  static Vector sub(const Point &p1, const Point &p2)
+  {
+    return FEVV::GeometryTraits::sub< Self >(p1, p2);
+  };
+
+
+  static Vector scalar_mult(const Vector &v, Scalar s)
+  {
+    return s * v; // Eigen
+  }
+
+  static Vector scalar_mult(Scalar s, const Vector &v)
+  {
+    return scalar_mult(v, s);
+  }
+
+  static const Vector NULL_VECTOR;
+  static const Point ORIGIN;
+
 protected:
   Mesh &m_mesh;
 };
 
+/**
+ * \ingroup Geometry_traits_group
+ * \brief Initialisation of static member NULL_VECTOR
+ */
+template< typename MeshT >
+const typename Geometry_traits< MeshT, PCLPointCloud_kernel_generator >::Vector
+    Geometry_traits< MeshT, PCLPointCloud_kernel_generator >::NULL_VECTOR(0, 0, 0);
+
+/**
+ * \ingroup Geometry_traits_group
+ * \brief Initialisation of static member ORIGIN
+ */
+template< typename MeshT >
+const typename Geometry_traits< MeshT, PCLPointCloud_kernel_generator >::Point
+    Geometry_traits< MeshT, PCLPointCloud_kernel_generator >::ORIGIN(0, 0, 0);
 
 } // namespace FEVV
 

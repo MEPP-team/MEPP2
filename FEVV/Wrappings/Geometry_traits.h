@@ -118,6 +118,7 @@ struct RetrieveKernel
 {
 };
 
+
 /**
  * \ingroup Geometry_traits_group
  * \class  Geometry_traits
@@ -127,29 +128,34 @@ struct RetrieveKernel
  *         specialization). If you are trying to understand what this
  *         Geometry_traits class is about, just consider Geometry_traits as a
  *         generic definition whose only purpose is to provide an anchoring
- * point for a unified geometry interface. The Geometry_traits template class is
- * used through template specializations. \tparam Mesh The Mesh out of which to
- * build the Geometry_traits. This template is only needed for mesh data
- * structures that have a loose relationship with the underlying geometry
- * related types (e.g. OpenMesh). For data structures having a kernel, this is
- * where the geometry is located. Hence, technically the Mesh template argument
- * is only needed for data structures that embed their geometry related types
- * and algorithmes (e.g. like OpenMesh). \tparam Kernel The geometric kernel
- * when available. This is defaulted to the RetrieveKernel<> utility template
- * whose purpose is to re-extract the kernel from mesh data structures providing
- * one. \see    \link Geometry_traits_specialization_OpenMesh Geometry_traits<
- * Mesh, OpenMesh::PolyMesh_ArrayKernelT<>::AttribKernel > \endlink \see \link
+ *         point for a unified geometry interface. The Geometry_traits template
+ *         class is used through template specializations.
+ * \tparam Mesh The Mesh out of which to build the Geometry_traits. This
+ *         template is only needed for mesh data structures that have a loose
+ *         relationship with the underlying geometry related types (e.g.
+ *         OpenMesh). For data structures having a kernel, this is where the
+ *         geometry is located. Hence, technically the Mesh template argument
+ *         is only needed for data structures that embed their geometry related
+ *         types and algorithmes (e.g. like OpenMesh).
+ * \tparam Kernel The geometric kernel when available. This is defaulted to the
+ *         RetrieveKernel<> utility template whose purpose is to re-extract the
+ *         kernel from mesh data structures providing one.
+ * \see    \link Geometry_traits_specialization_OpenMesh Geometry_traits<
+ *           Mesh, OpenMesh::PolyMesh_ArrayKernelT<>::AttribKernel >
+ *         \endlink
+ * \see    \link
  *           Geometry_traits_specialization_SurfaceMesh
- *           Geometry_traits< Mesh, FEVV::Surface_mesh_kernel_generator< Point>
- * > \endlink \see    \link Geometry_traits_specialization_cgal_cartesian
+ *           Geometry_traits< Mesh, FEVV::Surface_mesh_kernel_generator<Point> >
+ *         \endlink
+ * \see    \link Geometry_traits_specialization_cgal_cartesian
  *           Geometry_traits< Mesh, CGAL::Cartesian<double> >
  *         \endlink
  * \see    \link
  *           Geometry_traits_specialization_cgal_exact_predicates_inexact
  *           Geometry_traits< Mesh,
- * CGAL::Exact_predicates_inexact_constructions_kernel > \endlink
+ *           CGAL::Exact_predicates_inexact_constructions_kernel >
+ *         \endlink
  */
-
 template< typename Mesh,
           typename Kernel = typename RetrieveKernel< Mesh >::Kernel >
 class Geometry_traits
@@ -183,38 +189,38 @@ public:
    *  function \endlink
    */
   Vector
-  unit_normal(const Mesh &m, const Point &p1, const Point &p2, const Point &p3);
+  unit_normal(const Point &p1, const Point &p2, const Point &p3);
 
   /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_normal normal() free function \endlink
    */
   Vector
-  normal(const Mesh &m, const Point &p1, const Point &p2, const Point &p3);
+  normal(const Point &p1, const Point &p2, const Point &p3);
 
   /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_get_x get_x() free function \endlink
    */
-  Scalar get_x(const Mesh &, const Point &p1);
+  Scalar get_x(const Point &p1);
 
   /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_get_y get_y() free function \endlink
    */
-  Scalar get_y(const Mesh &, const Point &p1);
+  Scalar get_y(const Point &p1);
 
   /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_get_z get_z() free function \endlink
    */
-  Scalar get_z(const Mesh &, const Point &p1);
+  Scalar get_z(const Point &p1);
 
   /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_length length() free function \endlink
    */
-  Scalar length(const Mesh &, Vector &v);
+  Scalar length(Vector &v);
 
   /**
    * \brief Returns the vector resulting from the addition of the two

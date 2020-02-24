@@ -87,9 +87,9 @@ add_test(Euler_add_center_vertex_openmesh
 
 #####
 # Checking of concepts is done at build time (no add_test required)
-add_executable( test_geometry_traits_concept_openmesh
-                test_geometry_traits_concept_openmesh.cpp )
-target_link_libraries( test_geometry_traits_concept_openmesh
+add_executable( test_geometry_concept_openmesh
+                test_geometry_concept_openmesh.cpp )
+target_link_libraries( test_geometry_concept_openmesh
                        ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
 
 add_executable( test_complying_concepts_openmesh
