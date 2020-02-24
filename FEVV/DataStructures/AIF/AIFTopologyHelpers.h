@@ -4067,7 +4067,7 @@ public:
 
   /*!
    * 			Add the edge to the face'incident edges after the prev_edge
-   * without any check. Update caching information for face' incident vertices.
+   * without any check. Empties caching information for face' incident vertices.
    * \param	face	The face for which incident edges are augmented.
    * \param	prev_edge	The edge after which the edge is added.
    * \param	edge	The edge to add.
@@ -4077,6 +4077,37 @@ public:
                                           edge_descriptor prev_edge,
                                           edge_descriptor edge)
   {
+	  // invalidate one-ring-vertices cache
+	  auto vRange = incident_vertices(face);
+	  for (auto vIt = vRange.begin(); vIt != vRange.end(); ++vIt)
+	  {
+		  if ((*vIt)->m_Is_One_Ring_Vertices_Computed)
+		  {
+			  (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
+			  (*vIt)->m_One_Ring_Vertices.clear(); // free memory
+			  (*vIt)->m_Incident_PtrFaces_Computed = false;
+			  (*vIt)->m_Incident_PtrFaces.clear(); // free memory
+		  }
+	  }
+	  face->clear_vertex_incidency(); // clear the caching incidency relation with
+									  // vertices
+
+	  if (edge->get_first_vertex()->m_Is_One_Ring_Vertices_Computed)
+	  {
+		  edge->get_first_vertex()->m_Is_One_Ring_Vertices_Computed = false;
+		  edge->get_first_vertex()->m_One_Ring_Vertices.clear(); // free memory
+		  edge->get_first_vertex()->m_Incident_PtrFaces_Computed = false;
+		  edge->get_first_vertex()->m_Incident_PtrFaces.clear(); // free memory
+	  }
+
+	  if (edge->get_second_vertex()->m_Is_One_Ring_Vertices_Computed)
+	  {
+		  edge->get_second_vertex()->m_Is_One_Ring_Vertices_Computed = false;
+		  edge->get_second_vertex()->m_One_Ring_Vertices.clear(); // free memory
+		  edge->get_second_vertex()->m_Incident_PtrFaces_Computed = false;
+		  edge->get_second_vertex()->m_Incident_PtrFaces.clear(); // free memory
+	  }
+	///////////////////////////////////////////////////////////////////////////
     std::vector< edge_descriptor >::iterator
         it = face->m_Incident_PtrEdges.begin(),
         ite = face->m_Incident_PtrEdges.end();
@@ -4092,22 +4123,6 @@ public:
       }
     }
     face->m_Incident_PtrEdges.insert(it, edge);
-
-    face->clear_vertex_incidency(); // clear the caching incidency relation with
-                                    // vertices
-
-    // invalidate one-ring-vertices cache
-    auto vRange = incident_vertices(face);
-    for(auto vIt = vRange.begin(); vIt != vRange.end(); ++vIt)
-    {
-      if((*vIt)->m_Is_One_Ring_Vertices_Computed)
-      {
-        (*vIt)->m_Is_One_Ring_Vertices_Computed = false;
-        (*vIt)->m_One_Ring_Vertices.clear(); // free memory
-        (*vIt)->m_Incident_PtrFaces_Computed = false;
-        (*vIt)->m_Incident_PtrFaces.clear(); // free memory
-      }
-    }
   }
 
 private:
