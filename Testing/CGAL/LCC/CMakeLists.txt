@@ -15,12 +15,14 @@ add_test(Test_not_2_manifold_linear_cell_complex
          )
 
 #####
-# Checking of concepts is done at build time (no add_test required)
 add_executable( test_geometry_concept_lcc
                 test_geometry_concept_lcc.cpp )
 target_link_libraries( test_geometry_concept_lcc
   ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+add_test( Test_geometry_concept_lcc
+          test_geometry_concept_lcc )
 
+### Checking of this concept is done at build time (no add_test required)
 add_executable( test_complying_concepts_linear_cell_complex
   test_complying_concepts_linear_cell_complex.cpp )
 target_link_libraries( test_complying_concepts_linear_cell_complex

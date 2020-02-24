@@ -32,6 +32,8 @@ add_executable( test_geometry_concept_aif
 target_link_libraries(test_geometry_concept_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                       )
+add_test( Test_geometry_concept_aif
+          test_geometry_concept_aif )
 
 #####
 add_executable( test_geometry_traits_unit_normal_aif

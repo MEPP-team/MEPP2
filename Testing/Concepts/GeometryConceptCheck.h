@@ -197,10 +197,18 @@ void check_operators_results(void)
   }
 
   {
-    Vector n = GeometryTraits::normal(p, q, r);
-    assert(almost_equal_v(n, Vector(-60.85, 33.64, -9.92), eps));
+    // these two function are not implemented with static method
+    // with OpenMesh, so we must create a mesh object and a geometry traits
+    // object
+    typename GeometryTraits::Mesh m;
+    GeometryTraits gt(m);
+
+    Vector n = gt.normal(p, q, r);
+    assert(almost_equal_v(n, Vector(-60.85, 33.64, -9.92), eps) ||
+           almost_equal_v(n, Vector(-0.866393, 0.478972, -0.141243), eps) );
+           // OpenMesh returns a normalized normal
     
-    n = GeometryTraits::unit_normal(p, q, r);
+    n = gt.unit_normal(p, q, r);
     assert(almost_equal_v(n, Vector(-0.866393, 0.478972, -0.141243), eps));
   }
 
