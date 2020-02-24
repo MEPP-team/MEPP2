@@ -184,21 +184,6 @@ public:
   typedef typename Kernel::Scalar Scalar;
 
   /**
-   * \brief Returns the unit normal of the three argument points (implemented as
-   *  \link GeometryTrait_free_function_unit_normal unit_normal() free
-   *  function \endlink
-   */
-  Vector
-  unit_normal(const Point &p1, const Point &p2, const Point &p3);
-
-  /**
-   * \brief Returns the normal of the three argument points (implemented as
-   *  \link GeometryTrait_free_function_normal normal() free function \endlink
-   */
-  Vector
-  normal(const Point &p1, const Point &p2, const Point &p3);
-
-  /**
    * \brief Returns the normal of the three argument points (implemented as
    *  \link GeometryTrait_free_function_get_x get_x() free function \endlink
    */
@@ -217,16 +202,86 @@ public:
   Scalar get_z(const Point &p1);
 
   /**
-   * \brief Returns the normal of the three argument points (implemented as
-   *  \link GeometryTrait_free_function_length length() free function \endlink
+   * \brief Returns the normalization of vector 'v'.
    */
-  Scalar length(Vector &v);
+  Vector normalize(const Vector &v);
 
   /**
-   * \brief Returns the vector resulting from the addition of the two
-   *        argument vectors.
+   * \brief Returns the square of the length of vector v.
    */
-  Vector add_v(const Vector &v1, const Vector &v2);
+  Scalar length2(const Vector &v);
+
+  /**
+   * \brief Returns the length of vector v.
+   */
+  Scalar length(const Vector &v);
+
+  /**
+   * \brief Returns the distance between points p and q.
+   */
+  Scalar length(const Point &p, const Point &q);
+
+  /**
+   * \brief Returns a vector that is normal to the plane passing through
+   *        points p, q and r.
+   */
+  Vector normal(const Point &p, const Point &q, const Point &r);
+
+  /**
+   * \brief Returns a unit vector that is normal to the plane passing
+   *        through points p, q and r.
+   */
+  Vector unit_normal(const Point &p, const Point &q, const Point &r);
+
+  /**
+   * \brief Returns the sum of vectors u and v.
+   */
+  Vector add(const Vector &u, const Vector &v);
+
+  /**
+   * \brief Returns the sum of point p and vector v.
+   */
+  Vector add_p(const Point &p, const Vector &v);
+
+  /**
+   * \brief Returns the subtraction of vector v from point p.
+   */
+  Vector sub_p(const Point &p, const Vector &v);
+
+  /**
+   * \brief Returns the vector from point q to point p.
+   */
+  Vector sub(const Point &p, const Point &q);
+
+  /**
+   * \brief Returns the multiplication of vector v by scalar s.
+   */
+  Vector scalar_mult(const Vector &v, Scalar s);
+
+  /**
+   * \brief Returns the multiplication of vector v by scalar s.
+   */
+  Vector scalar_mult(Scalar s, const Vector &v);
+
+  /**
+   * \brief Returns the dot product of vectors u and v.
+   */
+  Scalar dot_product(const Vector &u, const Vector &v);
+
+  /**
+   * \brief Returns the cross product of vectors u and v.
+   */
+  Vector cross_product(const Vector &u, const Vector &v);
+
+  /**
+   * \brief The point at the origin.
+   */
+  static const Point ORIGIN;
+
+  /**
+   * \brief The zero length vector.
+   */
+  static const Vector NULL_VECTOR;
 };
 
 } // namespace FEVV
