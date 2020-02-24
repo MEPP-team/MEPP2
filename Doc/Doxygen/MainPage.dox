@@ -8,6 +8,13 @@
  - \ref CategorizedExamplesPage    "A set of categorized examples"
  - \ref DevelopersInceptionPage    "Developers inception"
  - \ref ConceptsPage               "Concepts gateway page"
+ - Quick links for developers
+   - \ref CheatSheetConceptsPage "Mesh processing API"
+   - \ref PointCloudConceptPage "Point Cloud processing API"
+   - \ref GeometryConceptPage "Geometry processing API"
+   - \ref GenericPropertyMapConceptPage "Property maps management API"
+   - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a Qt visualization plugin out of an existing filter"
+   - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
  - [Nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
 
 \section GeneralIntroductionSection General introduction
