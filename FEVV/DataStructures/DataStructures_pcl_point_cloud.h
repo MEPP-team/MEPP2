@@ -22,60 +22,17 @@
 
 namespace FEVV {
 
-using PCLKernelType = float;
-using PCLColorType = uint8_t;
+using PCLKernelType    = float;
+using PCLColorType     = uint8_t;
 using PCLEnrichedPoint = pcl::PointXYZRGBNormal;
-using PCLPointCloud = pcl::PointCloud< PCLEnrichedPoint >;
+using PCLPointCloud    = pcl::PointCloud< PCLEnrichedPoint >;
 
+using PCLPoint  = Eigen::Vector3f;
 using PCLVector = Eigen::Vector3f;
 
 // Point, Normal, Color types with constructors are needed to write
 // 'put(pm, vd, Point(1, 2, 3))'
 
-struct PCLPoint
-{
-  // constructors
-  PCLPoint() { }
-
-  PCLPoint(PCLKernelType _x, PCLKernelType _y, PCLKernelType _z)
-  {
-    x = _x;
-    y = _y;
-    z = _z;
-  }
-
-  // convenient operator[] to mimic other data structures
-  PCLKernelType operator[](int i)	const
-  {
-    if(i == 0)
-      return x;
-    else if(i == 1)
-      return y;
-    else if(i == 2)
-      return z;
-    else
-    {
-      throw std::runtime_error("FEVV::PCLPoint: invalid index in operator[]");
-      return 0; // dummy return to avoid a warning
-    }
-  }
-
-
-  bool operator==(const FEVV::PCLPoint& rhs)
-  {
-    return (x == rhs.x  &&  y == rhs.y  &&  z == rhs.z);
-  }
-
-  friend std::ostream& operator<<(std::ostream& stream, const PCLPoint& p)
-  {
-    stream << p.x << " " << p.y << " " << p.z;
-    return stream;
-  }
-
-  PCLKernelType x;
-  PCLKernelType y;
-  PCLKernelType z;
-};
 
 
 struct PCLColor

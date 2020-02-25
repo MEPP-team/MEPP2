@@ -69,9 +69,9 @@ public:
     // 'points' attribute of pcl::PointCloud<>
     // is a std::vector<FEVV::PCLEnrichedPoint>
     FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-    enriched_point.x = point.x;
-    enriched_point.y = point.y;
-    enriched_point.z = point.z;
+    enriched_point.x = point[0];
+    enriched_point.y = point[1];
+    enriched_point.z = point[2];
   }
 
 private:
@@ -360,9 +360,9 @@ kNN_search(
 
   // prepare query
   FEVV::PCLEnrichedPoint search_point;
-  search_point.x = query.x;
-  search_point.y = query.y;
-  search_point.z = query.z;
+  search_point.x = query[0];
+  search_point.y = query[1];
+  search_point.z = query[2];
 
   // search K nearest neighbors
   std::vector< int > nn_ids_tmp(k);
@@ -414,9 +414,9 @@ radius_search(
 
   // prepare query
   FEVV::PCLEnrichedPoint search_point;
-  search_point.x = query.x;
-  search_point.y = query.y;
-  search_point.z = query.z;
+  search_point.x = query[0];
+  search_point.y = query[1];
+  search_point.z = query[2];
 
   // search nearest neighbors
   std::vector< int > nn_ids_tmp;
