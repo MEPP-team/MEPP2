@@ -12,7 +12,7 @@
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits.h"
-#include "FEVV/Wrappings/Geometry_traits_operators.h"
+//#include "FEVV/Wrappings/Geometry_traits_operators.h"
 
 namespace FEVV {
 
@@ -128,18 +128,18 @@ public:
   // consistent with those of OpenMesh geometry trait
   static Point add_p(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::add_p< Self >(p, v);
+    return p + v; // Eigen
   };
 
   // subP to be consistent with addP
   static Point sub_p(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::sub_p< Self >(p, v);
+    return p - v; // Eigen
   };
 
-  static Vector sub(const Point &p1, const Point &p2)
+  static Vector sub(const Point &p, const Point &q)
   {
-    return FEVV::GeometryTraits::sub< Self >(p1, p2);
+    return p - q; // Eigen
   };
 
 
