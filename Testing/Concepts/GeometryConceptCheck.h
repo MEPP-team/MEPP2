@@ -89,7 +89,7 @@ struct GeometryConcept
     v1 = gt.normalize(v);
     s  = gt.length2(v);
     s  = gt.length(v);
-    v = gt.add(v1, v2);
+    v = gt.add_v(v1, v2);
     gt.dot_product(v1, v2);
     gt.cross_product(v1, v2);
 
@@ -212,7 +212,7 @@ void check_operators_results(void)
   }
 
   {
-    Vector w = GeometryTraits::add(u, v);
+    Vector w = GeometryTraits::add_v(u, v);
     assert(almost_equal_v(w, Vector(9.5, -0.9, -0.4), eps));
 
     Scalar d = GeometryTraits::dot_product(u, v);

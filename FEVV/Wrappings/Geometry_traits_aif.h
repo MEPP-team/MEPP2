@@ -144,7 +144,7 @@ public:
     return res;
   }
 
-  static Vector add(const Vector &v1, const Vector &v2)
+  static Vector add_v(const Vector &v1, const Vector &v2)
   {
     Vector result(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]);
     return result;

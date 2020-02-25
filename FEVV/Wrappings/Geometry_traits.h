@@ -236,7 +236,7 @@ public:
   /**
    * \brief Returns the sum of vectors u and v.
    */
-  Vector add(const Vector &u, const Vector &v);
+  Vector add_v(const Vector &u, const Vector &v);
 
   /**
    * \brief Returns the sum of point p and vector v.

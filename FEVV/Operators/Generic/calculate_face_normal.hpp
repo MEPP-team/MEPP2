@@ -104,7 +104,7 @@ calculate_face_normal(
       p1 = get(pm, source(edg, g));
       p2 = get(pm, target(edg, g));
 
-      n = gt.add(n, gt.normal(p1, p2, p0));
+      n = gt.add_v(n, gt.normal(p1, p2, p0));
     } while(edg != edgb);
 
     return gt.normalize(n);

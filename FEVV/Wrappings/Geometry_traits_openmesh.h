@@ -150,7 +150,7 @@ public:
     return res;
   }
 
-  static Vector add(const Vector &v1, const Vector &v2) { return v1 + v2; };
+  static Vector add_v(const Vector &v1, const Vector &v2) { return v1 + v2; };
 
   static Point
   add_p(const Point &p,

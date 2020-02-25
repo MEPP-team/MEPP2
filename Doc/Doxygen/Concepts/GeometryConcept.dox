@@ -46,7 +46,7 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 | `gt.length(p, q)`        | `Scalar` | Returns the distance between points `p` and `q`.|
 | `gt.normal(p, q, r)`     | `Vector` | Returns a vector that is normal to the plane passing through points `p`, `q` and `r`.|
 | `gt.unit_normal(p, q, r)`| `Vector` | Returns a unit vector that is normal to the plane passing through points `p`, `q` and `r`.|
-| `gt.add(u, v)`           | `Vector` | Returns the sum of vectors `u` and `v`.|
+| `gt.add_v(u, v)`         | `Vector` | Returns the sum of vectors `u` and `v`.|
 | `gt.add_p(p, v)`         | `Point`  | Returns the sum of point `p` and vector `v`.|
 | `gt.sub_p(p, v)`         | `Point`  | Returns the sum of point `p` and the opposite of vector `v`.|
 | `gt.sub(p, q)`           | `Vector` | Returns the vector from point `q` to point `p`.|
