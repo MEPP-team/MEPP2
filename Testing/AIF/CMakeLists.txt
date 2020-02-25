@@ -36,15 +36,6 @@ add_test( Test_geometry_concept_aif
           test_geometry_concept_aif )
 
 #####
-add_executable( test_geometry_traits_unit_normal_aif
-                test_geometry_traits_unit_normal_aif.cpp)
-target_link_libraries(test_geometry_traits_unit_normal_aif
-                      ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
-                      )
-add_test( Geometry_traits_unit_normal_aif
-	test_geometry_traits_unit_normal_aif )
-
-#####
 add_executable( test_helpers_aif
                 test_helpers_aif.cpp)
 target_link_libraries(test_helpers_aif

@@ -161,14 +161,6 @@ add_test(Test_polyhedron
          )
 
 #####
-add_executable( test_geometry_traits_unit_normal_polyhedron
-                test_geometry_traits_unit_normal_polyhedron.cpp )
-target_link_libraries( test_geometry_traits_unit_normal_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
-add_test( Geometry_traits_unit_normal_polyhedron
-          test_geometry_traits_unit_normal_polyhedron )
-
-#####
 add_executable( test_euler_add_center_vertex_polyhedron
                 test_euler_add_center_vertex_polyhedron.cpp )
 target_link_libraries( test_euler_add_center_vertex_polyhedron

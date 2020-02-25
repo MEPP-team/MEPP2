@@ -36,14 +36,6 @@ add_test(Test_surface_mesh
          )
 
 #####
-add_executable( test_geometry_traits_unit_normal_surfacemesh
-                test_geometry_traits_unit_normal_surfacemesh.cpp )
-target_link_libraries( test_geometry_traits_unit_normal_surfacemesh
-                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES})
-add_test( Geometry_traits_unit_normal_surfacemesh
-          test_geometry_traits_unit_normal_surfacemesh )
-
-#####
 add_executable( test_euler_add_center_vertex_surfacemesh
                 test_euler_add_center_vertex_surfacemesh.cpp )
 target_link_libraries( test_euler_add_center_vertex_surfacemesh

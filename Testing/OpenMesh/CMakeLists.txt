@@ -67,13 +67,6 @@ target_link_libraries( test_calculate_scaling_openmesh
 add_test( Calculate_scaling_openmesh
          test_calculate_scaling_openmesh
          ${TESTING_DATA_DIR}/flat.off )
-####
-add_executable( test_geometry_traits_unit_normal_openmesh
-                test_geometry_traits_unit_normal_openmesh.cpp )
-target_link_libraries( test_geometry_traits_unit_normal_openmesh
-                       ${OPENMESH_LIBRARIES} )
-add_test( Geometry_traits_unit_normal_openmesh
-          test_geometry_traits_unit_normal_openmesh )
 
 #####
 add_executable( test_euler_add_center_vertex_openmesh
