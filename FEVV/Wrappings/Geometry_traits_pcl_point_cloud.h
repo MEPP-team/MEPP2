@@ -33,8 +33,7 @@ class PCLPointCloud_kernel_generator
 public:
   typedef PCLPointCloud_kernel_generator  Kernel;
   typedef FEVV::PCLPoint                  Point;
-  typedef Eigen::Vector3f                 Vector;
-    // see pcl-1.8.1/include/pcl-1.8/pcl/impl/point_types.hpp
+  typedef FEVV::PCLVector                 Vector;
   typedef FEVV::PCLKernelType             Scalar;
 };
 
