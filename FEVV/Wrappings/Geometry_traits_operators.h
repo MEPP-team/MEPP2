@@ -78,43 +78,6 @@ dot_product(const typename GeometryTraits::Vector &v1,
   return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
 };
 
-/**
- * \brief  Checks that geometry traits vectors have a size of 3.
- */
-template< typename GeometryTraits >
-int
-verify_assumption(GeometryTraits gt)
-{
-  typedef typename GeometryTraits::Vector Vector;
-  Vector v;
-
-  if(v.size() != 3)
-  {
-    std::cout << "Dimension of ambiant space vector is " << v.size()
-              << " instead of the expected 3" << std::endl;
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-
-template< typename GeometryTraits >
-int
-verify_operator_results(GeometryTraits gt)
-{
-  typedef typename GeometryTraits::Vector Vector;
-
-  if(gt.dot_product(Vector(5, 8, 4), Vector(10, -2, -3)) != 22)
-  {
-    std::cout << "Erroneous result for DotProduct. Expected " << 22
-              << " and instead got "
-              << gt.dot_product(Vector(5, 8, 4), Vector(10, -2, -3))
-              << std::endl;
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-
-
 } // namespace GeometryTraits
 } // namespace FEVV
 
