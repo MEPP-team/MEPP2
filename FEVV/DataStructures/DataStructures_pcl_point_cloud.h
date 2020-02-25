@@ -27,57 +27,11 @@ using PCLColorType     = uint8_t;
 using PCLEnrichedPoint = pcl::PointXYZRGBNormal;
 using PCLPointCloud    = pcl::PointCloud< PCLEnrichedPoint >;
 
+// Point, Normal, Color types with constructors are needed to write
+// code like 'put(pm, vd, Point(1, 2, 3))'
 using PCLPoint  = Eigen::Vector3f;
 using PCLVector = Eigen::Vector3f;
-
-// Point, Normal, Color types with constructors are needed to write
-// 'put(pm, vd, Point(1, 2, 3))'
-
-
-
-struct PCLColor
-{
-  // constructors
-  PCLColor() { }
-
-  PCLColor(PCLColorType _r, PCLColorType _g, PCLColorType _b)
-  {
-    r = _r;
-    g = _g;
-    b = _b;
-  }
-
-  // color must behave as a vector
-  PCLColorType operator[](int i)	const
-  {
-    if(i == 0)
-      return r;
-    else if(i == 1)
-      return g;
-    else if(i == 2)
-      return b;
-    else
-    {
-      throw std::runtime_error("FEVV::PCLColor: invalid index in operator[]");
-      return 0; // dummy return to avoid a warning
-    }
-  }
-
-  bool operator==(const FEVV::PCLColor& rhs)
-  {
-    return (r == rhs.r  &&  g == rhs.g  &&  b == rhs.b);
-  }
-
-  friend std::ostream& operator<<(std::ostream& stream, const PCLColor& c)
-  {
-    stream << (int) c.r << " " << (int) c.g << " " << (int) c.b;
-    return stream;
-  }
-
-  PCLColorType r;
-  PCLColorType g;
-  PCLColorType b;
-};
+using PCLColor  = Eigen::Matrix<PCLColorType, 3, 1>; // R,G,B
 
 } // namespace FEVV
 

@@ -252,9 +252,9 @@ public:
     if(m_pc)
     {
       FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-      enriched_point.r = color.r;
-      enriched_point.g = color.g;
-      enriched_point.b = color.b;
+      enriched_point.r = color[0];
+      enriched_point.g = color[1];
+      enriched_point.b = color[2];
     }
     else
     {
