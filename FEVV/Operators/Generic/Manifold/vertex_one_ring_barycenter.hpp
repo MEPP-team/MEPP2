@@ -75,11 +75,11 @@ vertex_one_ring_barycenter(
   if(cpt > 0)
   {
     return gt.add_p(get(pm, v),
-                    gt.scalar_mult(smoothing_factor,
-                                   gt.sub(Point(gt.get_x(center) / cpt,
+                    gt.scalar_mult(gt.sub(Point(gt.get_x(center) / cpt,
                                                 gt.get_y(center) / cpt,
                                                 gt.get_z(center) / cpt),
-                                          get(pm, v))));
+                                          get(pm, v)),
+                                   smoothing_factor));
   }
   else
     return get(pm, v);

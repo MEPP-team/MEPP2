@@ -51,7 +51,6 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 | `gt.sub_p(p, v)`         | `Point`  | Returns the sum of point `p` and the opposite of vector `v`.|
 | `gt.sub(p, q)`           | `Vector` | Returns the vector from point `q` to point `p`.|
 | `gt.scalar_mult(v, s)`   | `Vector` | Returns the multiplication of vector `v` by scalar `s`.|
-| `gt.scalar_mult(s, v)`   | `Vector` | Returns the multiplication of vector `v` by scalar `s`.|
 | `gt.dot_product(u, v)`   | `Scalar` | Returns the dot product of vectors `u` and `v`.|
 | `gt.cross_product(u, v)` | `Vector` | Returns the cross product of vectors `u` and `v`.|
 

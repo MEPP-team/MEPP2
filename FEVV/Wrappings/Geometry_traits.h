@@ -259,11 +259,6 @@ public:
   Vector scalar_mult(const Vector &v, Scalar s);
 
   /**
-   * \brief Returns the multiplication of vector v by scalar s.
-   */
-  Vector scalar_mult(Scalar s, const Vector &v);
-
-  /**
    * \brief Returns the dot product of vectors u and v.
    */
   Scalar dot_product(const Vector &u, const Vector &v);

@@ -95,7 +95,6 @@ struct GeometryConcept
 
     // Scalar/Vector:
     v2 = gt.scalar_mult(v1, s);
-    v2 = gt.scalar_mult(s, v1);
 
     //////////////////////// Vector/Point and Point/Vector operators
 
@@ -231,9 +230,6 @@ void check_operators_results(void)
     assert(almost_equal_p(a, Point(1.8, 10.2, -5.5), eps));
 
     Vector w = GeometryTraits::scalar_mult(v, -2.345);
-    assert(almost_equal_v(w, Vector(-2.814, -5.3935, -7.973), eps));
-
-    w = GeometryTraits::scalar_mult(-2.345, v);
     assert(almost_equal_v(w, Vector(-2.814, -5.3935, -7.973), eps));
   }
 }

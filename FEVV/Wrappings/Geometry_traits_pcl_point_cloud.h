@@ -148,11 +148,6 @@ public:
     return s * v; // Eigen
   }
 
-  static Vector scalar_mult(Scalar s, const Vector &v)
-  {
-    return scalar_mult(v, s);
-  }
-
   static const Vector NULL_VECTOR;
   static const Point ORIGIN;
 

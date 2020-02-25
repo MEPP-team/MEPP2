@@ -135,11 +135,6 @@ public:
 
   static Vector scalar_mult(const Vector &v, Scalar s) { return v * s; }
 
-  static Vector scalar_mult(Scalar s, const Vector &v)
-  {
-    return scalar_mult(v, s);
-  }
-
   static const Vector NULL_VECTOR;
   static const Point ORIGIN;
   
