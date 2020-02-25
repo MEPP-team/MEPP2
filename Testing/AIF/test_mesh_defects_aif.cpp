@@ -477,6 +477,14 @@ static int process_one_meshfile(	const std::string& input_file_path,
 								id_best_match = current_f_id;
 								best_val = tmp;
 							}
+							else if (FEVV::Operators::are_similar_faces(*iter_f_first, *iter_f, *ptr_mesh) // similar in topology 
+								     || (std::abs(tmp+1.)<1e-5) // similar in spirit, not in topology
+								    )
+							{ // they must be matched together
+								id_best_match = current_f_id;
+								best_val = tmp;
+								break;
+							}
 							else
 							{
 								if (tmp > best_val)
@@ -766,6 +774,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	std::vector< edge_descriptor > remaining_complex_edges;
 	remove_adjacent_edges(*ptr_mesh, complex_edges, remaining_complex_edges);
 	iter_e = complex_edges.begin(), iter_e_end = complex_edges.end();
+	int i = 0;
 	while (iter_e != iter_e_end)
 	{
 		{ // mesh file writing debug
@@ -784,7 +793,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			}
 		}
 		// complex edges
-		std::cout << "Information of current complex edge: " << std::endl;
+		std::cout << "Information of current complex edge (" << i << "/" << complex_edges.size() << "): " << std::endl;
 		std::cout << "\tsource vertex: " << get(vertex_idm, source(*iter_e, *ptr_mesh)) << std::endl;
 		std::cout << "\ttarget vertex: " << get(vertex_idm, target(*iter_e, *ptr_mesh)) << std::endl;
 		std::cout << "\tdegree: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
@@ -840,26 +849,33 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						else if(v_new_to_old.find(pe->get_second_vertex()) != v_new_to_old.end())
 							v_pe_old = v_new_to_old[pe->get_second_vertex()];
 					}
-					if (v_old_to_v_new.find(v_pe_old) == v_old_to_v_new.end())
+					else if (v_old_to_v_new.find(v_pe_old) == v_old_to_v_new.end())
 					{
 						if (v_new_to_old.find(v_pe_old) != v_new_to_old.end())
 							v_pe_old = v_new_to_old[v_pe_old];
+					}
+					if(v_pe_old == AIFHelpers::null_vertex())
+					{
+						std::cerr << "you may have a similar face with different face id" << std::endl;
 					}
 					vertex_descriptor v_ae_old = AIFHelpers::common_vertex(ae, *iter_e);
 					if (v_ae_old == AIFHelpers::null_vertex())
 					{
 						if (v_new_to_old.find(ae->get_first_vertex()) != v_new_to_old.end())
-							v_pe_old = v_new_to_old[ae->get_first_vertex()];
+							v_ae_old = v_new_to_old[ae->get_first_vertex()];
 						else if (v_new_to_old.find(ae->get_second_vertex()) != v_new_to_old.end())
-							v_pe_old = v_new_to_old[ae->get_second_vertex()];
+							v_ae_old = v_new_to_old[ae->get_second_vertex()];
 					}
-					if (v_old_to_v_new.find(v_ae_old) == v_old_to_v_new.end())
+					else if (v_old_to_v_new.find(v_ae_old) == v_old_to_v_new.end())
 					{
 						if (v_new_to_old.find(v_ae_old) != v_new_to_old.end())
 							v_ae_old = v_new_to_old[v_ae_old];
 					}
-
-					std::cout << "\torientation: " << get(vertex_idm, v_pe_old) << " -> " << get(vertex_idm, v_ae_old) << std::endl; // debug
+					if(v_ae_old == AIFHelpers::null_vertex())
+					{
+						std::cerr << "you may have a similar face with different face id" << std::endl;
+					}
+					std::cout << "\torientation: " << get(vertex_idm, v_pe_old) << " -> " << get(vertex_idm, v_ae_old) ; // debug
 
 					AIFHelpers::remove_edge(*iter_f, *iter_e);
 					AIFHelpers::remove_face(*iter_e, *iter_f);
@@ -886,6 +902,8 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						v_old_to_v_new[v_ae_old] = target(face_id_to_edge[current_id], *ptr_mesh);
 						v_new_to_old[source(face_id_to_edge[current_id], *ptr_mesh)] = v_pe_old;
 						v_new_to_old[target(face_id_to_edge[current_id], *ptr_mesh)] = v_ae_old;
+
+						std::cout << "\treplaced by: " << get(vertex_idm, v_old_to_v_new[v_pe_old]) << " -> " << get(vertex_idm, v_old_to_v_new[v_ae_old]) ; // debug
 					}
 					//else
 					//{ // this part should be no more necessary due to replace_vertex_in_incident_edges calls (to check)
@@ -895,6 +913,8 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					//	AIFHelpers::add_edge(v_old_to_v_new[v_ae_old], ae);
 					//	AIFHelpers::add_vertex(ae, v_old_to_v_new[v_ae_old], AIFHelpers::vertex_position(ae, v_ae_old));
 					//}
+
+					std::cout << std::endl; // debug
 
 					assert(!AIFHelpers::is_degenerated_face(*iter_f));
 					assert(has_different_vertex_indices(*ptr_mesh, vertex_idm, *iter_f));
@@ -951,6 +971,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		}
 
 		++iter_e;
+		++i;
 	}
 
 	// duplicate cut vertices [local partition and cutting]
