@@ -246,7 +246,7 @@ public:
   /**
    * \brief Returns the subtraction of vector v from point p.
    */
-  Vector sub_p(const Point &p, const Vector &v);
+  Vector sub_pv(const Point &p, const Vector &v);
 
   /**
    * \brief Returns the vector from point q to point p.

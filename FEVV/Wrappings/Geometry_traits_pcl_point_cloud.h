@@ -132,7 +132,7 @@ public:
   };
 
   // subP to be consistent with addP
-  static Point sub_p(const Point &p, const Vector &v)
+  static Point sub_pv(const Point &p, const Vector &v)
   {
     return p - v; // Eigen
   };

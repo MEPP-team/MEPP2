@@ -165,14 +165,15 @@ public:
 #endif
   }
 
-  static Point sub_p(const Point &p,
-                     const Vector &v) // sub_p to be consistent with add_p
-  { // here,  we have have native OpenMesh Points (VectorT) or native CGAL
+  static Point sub_pv(const Point &p,
+                      const Vector &v) // sub_pv to be consistent with add_pv
+  {
+    // here,  we have have native OpenMesh Points (VectorT) or native CGAL
     // Vector_3
 #if defined(CGAL_USE_OM_POINTS)
     return p - v;
 #else
-    return GeometryTraits::sub_p< Self >(p, v);
+    return GeometryTraits::sub_pv< Self >(p, v);
 #endif
   }
 

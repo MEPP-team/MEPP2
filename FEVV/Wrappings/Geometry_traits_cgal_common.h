@@ -118,8 +118,8 @@ public:
               // http://doc.cgal.org/latest/Kernel_23/classCGAL_1_1Point__3.html
   };
 
-  static Point sub_p(const Point &p,
-                     const Vector &v) // subP to be consistent with addP
+  static Point sub_pv(const Point &p,
+                      const Vector &v) // subP to be consistent with addP
   {
     /*Point result(p[0] - v[0],
                                  p[1] - v[1],

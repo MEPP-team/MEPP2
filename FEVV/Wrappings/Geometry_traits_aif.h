@@ -159,8 +159,8 @@ public:
     return result;
   };
 
-  static Point sub_p(const Point &p1,
-                     const Vector &v) // subP to be consistent with addP
+  static Point sub_pv(const Point &p1,
+                      const Vector &v) // subP to be consistent with addP
   {
     Point result(p1[0] - v[0], p1[1] - v[1], p1[2] - v[2]);
     return result;
