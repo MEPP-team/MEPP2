@@ -33,8 +33,8 @@ add_v(const typename GeometryTraits::Vector &v1,
  */
 template< typename GeometryTraits >
 typename GeometryTraits::Point
-add_p(const typename GeometryTraits::Point &p,
-      const typename GeometryTraits::Vector &v)
+add_pv(const typename GeometryTraits::Point &p,
+       const typename GeometryTraits::Vector &v)
 {
   typedef typename GeometryTraits::Point Point;
   Point result(p[0] + v[0], p[1] + v[1], p[2] + v[2]);

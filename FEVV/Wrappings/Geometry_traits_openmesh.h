@@ -150,20 +150,20 @@ public:
     return res;
   }
 
-  static Vector add_v(const Vector &v1, const Vector &v2) { return v1 + v2; };
+  static Vector add_v(const Vector &v1, const Vector &v2) { return v1 + v2; }
 
-  static Point
-  add_p(const Point &p,
-        const Vector &v) // we need add_p and add functions, beacuse in OpenMesh
-                         // Point and Vector have the same type
-  { // here,  we have have native OpenMesh Points (VectorT) or native CGAL
+  // we need add_pv and add_v functions, because in OpenMesh
+  // Point and Vector have the same type
+  static Point add_pv(const Point &p, const Vector &v)
+  {
+    // here,  we have have native OpenMesh Points (VectorT) or native CGAL
     // Vector_3
 #if defined(CGAL_USE_OM_POINTS)
     return p + v;
 #else
-    return GeometryTraits::add_p< Self >(p, v);
+    return GeometryTraits::add_pv< Self >(p, v);
 #endif
-  };
+  }
 
   static Point sub_p(const Point &p,
                      const Vector &v) // sub_p to be consistent with add_p
@@ -174,7 +174,7 @@ public:
 #else
     return GeometryTraits::sub_p< Self >(p, v);
 #endif
-  };
+  }
 
   static Vector sub(const Point &p1, const Point &p2)
   { // here,  we have have native OpenMesh Points (VectorT) or native CGAL
@@ -184,7 +184,7 @@ public:
 #else
     return GeometryTraits::sub< Self >(p1, p2);
 #endif
-  };
+  }
 
   static Vector scalar_mult(const Vector &v, Scalar s) { return v * s; }
 

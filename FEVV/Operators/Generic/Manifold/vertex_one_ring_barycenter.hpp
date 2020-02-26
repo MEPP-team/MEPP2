@@ -74,7 +74,7 @@ vertex_one_ring_barycenter(
   }
   if(cpt > 0)
   {
-    return gt.add_p(get(pm, v),
+    return gt.add_pv(get(pm, v),
                     gt.scalar_mult(gt.sub(Point(gt.get_x(center) / cpt,
                                                 gt.get_y(center) / cpt,
                                                 gt.get_z(center) / cpt),

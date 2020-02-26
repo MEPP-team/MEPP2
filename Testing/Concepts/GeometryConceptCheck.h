@@ -101,7 +101,7 @@ struct GeometryConcept
     s  = gt.length(p, q);
     v1 = gt.normal(p, p, p);
     v1 = gt.unit_normal(p, p, p);
-    p = gt.add_p(p, v1);
+    p = gt.add_pv(p, v1);
     p = gt.sub_p(p, v1);
     v1 = gt.sub(p, p);
 
@@ -223,7 +223,7 @@ void check_operators_results(void)
   }
 
   {
-    Point a = GeometryTraits::add_p(p, v);
+    Point a = GeometryTraits::add_pv(p, v);
     assert(almost_equal_p(a, Point(4.2, 14.8, 1.3), eps));
 
     a = GeometryTraits::sub_p(p, v);

@@ -126,7 +126,7 @@ public:
 
   // we need addP and add functions to have function names
   // consistent with those of OpenMesh geometry trait
-  static Point add_p(const Point &p, const Vector &v)
+  static Point add_pv(const Point &p, const Vector &v)
   {
     return p + v; // Eigen
   };

@@ -104,7 +104,7 @@ public:
 
   static Vector add_v(const Vector &v1, const Vector &v2) { return v1 + v2; };
 
-  static Point add_p(
+  static Point add_pv(
       const Point &p,
       const Vector &v) // we need addP and add functions to have function names
                        // consistent with those of OpenMesh geometry trait

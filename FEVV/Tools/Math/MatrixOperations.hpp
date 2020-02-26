@@ -579,7 +579,7 @@ add(const typename GeometryTraits::Point &p,
     const typename GeometryTraits::Vector &v,
     const GeometryTraits &gt)
 {
-  return gt.add_p(p, v);
+  return gt.add_pv(p, v);
 }
 
 /// Compute ||v1 - v2||_L2 norm (distance between v1 and v2)

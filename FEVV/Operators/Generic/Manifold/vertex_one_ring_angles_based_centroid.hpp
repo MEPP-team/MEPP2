@@ -117,7 +117,7 @@ vertex_one_ring_angles_based_centroid(
     if(gt.dot_product(c, c) > MACH_EPS_DOUBLE)
     {
       c = c * (1.0 / std::sqrt(gt.dot_product(c, c)));
-      Point new_ideal_point = gt.add_p(
+      Point new_ideal_point = gt.add_pv(
           get(pm, source(*cir_he, g)),
           c * std::sqrt(gt.dot_product(gt.sub(get(pm, target(*cir_he, g)),
                                               get(pm, source(*cir_he, g))),
@@ -157,7 +157,7 @@ vertex_one_ring_angles_based_centroid(
   vec = vec - gt.dot_product(vec, n) * n;
   // std::cout << "vec = (" << vec[0] << ", " << vec[1] << ", " << vec[2] << ")"
   // << std::endl;
-  return gt.add_p(get(pm, v), smoothing_factor * vec);
+  return gt.add_pv(get(pm, v), smoothing_factor * vec);
 }
 
 } // namespace Operators
