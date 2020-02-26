@@ -137,7 +137,7 @@ public:
     return p - v; // Eigen
   };
 
-  static Vector sub(const Point &p, const Point &q)
+  static Vector sub_p(const Point &p, const Point &q)
   {
     return p - q; // Eigen
   };

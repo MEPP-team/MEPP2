@@ -59,8 +59,8 @@ sub_pv(const typename GeometryTraits::Point &p,
  */
 template< typename GeometryTraits >
 typename GeometryTraits::Vector
-sub(const typename GeometryTraits::Point &p1,
-    const typename GeometryTraits::Point &p2)
+sub_p(const typename GeometryTraits::Point &p1,
+      const typename GeometryTraits::Point &p2)
 {
   typedef typename GeometryTraits::Vector Vector;
   Vector result(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);

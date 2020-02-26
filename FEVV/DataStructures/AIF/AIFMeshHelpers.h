@@ -99,8 +99,8 @@ public:
            // must be on both on the same side of v vertex for an adjacent T-junction
            // or on both side of v for a T-junction on v. However last case may be confused with
           // a classical border case.
-           (gt.dot_product(gt.sub(vPoint, itPoint),
-                           gt.sub(vPoint, it2Point)) < 0.)
+           (gt.dot_product(gt.sub_p(vPoint, itPoint),
+                           gt.sub_p(vPoint, it2Point)) < 0.)
           )
         {
           if(AIFTopologyHelpers::is_surface_border_edge(
@@ -210,8 +210,8 @@ public:
           // must be on both on the same side of v vertex for an adjacent T-junction
           // or on both side of v for a T-junction on v. However last case may be confused with
           // a classical border case.
-          (gt.dot_product(gt.sub(vPoint, itPoint),
-            gt.sub(vPoint, it2Point)) > 0.)
+          (gt.dot_product(gt.sub_p(vPoint, itPoint),
+            gt.sub_p(vPoint, it2Point)) > 0.)
           )
         {
           if (AIFTopologyHelpers::is_surface_border_edge(

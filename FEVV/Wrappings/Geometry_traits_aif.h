@@ -166,7 +166,7 @@ public:
     return result;
   };
 
-  static Vector sub(const Point &p1, const Point &p2)
+  static Vector sub_p(const Point &p1, const Point &p2)
   {
     Vector result(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
     return result;

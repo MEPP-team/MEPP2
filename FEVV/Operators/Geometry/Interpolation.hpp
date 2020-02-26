@@ -257,7 +257,7 @@ is_over_segment(const typename GeometryTraits::Point &a,
 {
   typedef typename GeometryTraits::Vector Vector;
   typedef typename GeometryTraits::Point Point;
-  Vector vab(gt.sub(b, a)), vaPos(gt.sub(Pos, a)), inter, N, Ntmp;
+  Vector vab(gt.sub_p(b, a)), vaPos(gt.sub_p(Pos, a)), inter, N, Ntmp;
   Point interp;
   inter = gt.cross_product(vab, vaPos);
   // std::cout << " inter: (" << inter[0] << " " << inter[1] << " " << inter[2]

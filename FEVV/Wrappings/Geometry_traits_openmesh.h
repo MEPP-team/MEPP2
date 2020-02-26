@@ -177,13 +177,14 @@ public:
 #endif
   }
 
-  static Vector sub(const Point &p1, const Point &p2)
-  { // here,  we have have native OpenMesh Points (VectorT) or native CGAL
+  static Vector sub_p(const Point &p1, const Point &p2)
+  {
+    // here,  we have have native OpenMesh Points (VectorT) or native CGAL
     // Vector_3 (and there is not automatic convertion from Vector_3 to Vector
 #if defined(CGAL_USE_OM_POINTS)
     return p1 - p2;
 #else
-    return GeometryTraits::sub< Self >(p1, p2);
+    return GeometryTraits::sub_p< Self >(p1, p2);
 #endif
   }
 

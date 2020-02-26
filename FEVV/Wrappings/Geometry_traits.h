@@ -251,7 +251,7 @@ public:
   /**
    * \brief Returns the vector from point q to point p.
    */
-  Vector sub(const Point &p, const Point &q);
+  Vector sub_p(const Point &p, const Point &q);
 
   /**
    * \brief Returns the multiplication of vector v by scalar s.

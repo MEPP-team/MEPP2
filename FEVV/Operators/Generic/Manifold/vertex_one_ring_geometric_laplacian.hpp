@@ -83,10 +83,10 @@ vertex_one_ring_geometric_laplacian(
   if(cpt > 0)
   {
     return gt.add_pv(center,
-                    gt.scalar_mult(gt.sub(Point(gt.get_x(geom_laplacian) / sum,
-                                                gt.get_y(geom_laplacian) / sum,
-                                                gt.get_z(geom_laplacian) / sum),
-                                          center),
+                    gt.scalar_mult(gt.sub_p(Point(gt.get_x(geom_laplacian) / sum,
+                                                  gt.get_y(geom_laplacian) / sum,
+                                                  gt.get_z(geom_laplacian) / sum),
+                                            center),
                                    smoothing_factor));
   }
   else

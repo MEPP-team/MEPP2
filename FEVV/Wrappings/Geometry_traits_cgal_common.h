@@ -130,7 +130,7 @@ public:
               // http://doc.cgal.org/latest/Kernel_23/classCGAL_1_1Point__3.html
   };
 
-  static Vector sub(const Point &p1, const Point &p2) { return p1 - p2; };
+  static Vector sub_p(const Point &p1, const Point &p2) { return p1 - p2; };
 
 
   static Vector scalar_mult(const Vector &v, Scalar s) { return v * s; }

@@ -539,7 +539,7 @@ sub(const typename GeometryTraits::Point &p1,
     const typename GeometryTraits::Point &p2,
     const GeometryTraits &gt)
 {
-  return gt.sub(p1, p2);
+  return gt.sub_p(p1, p2);
 }
 
 /// Compute v1 + v2 (addition)
