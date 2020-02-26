@@ -20,5 +20,7 @@ int main(void)
 {
   BOOST_CONCEPT_ASSERT((FEVV::GeometryConcept< FEVV::PCLPointCloud >));
 
+  FEVV::check_operators_results< FEVV::Geometry_traits< FEVV::PCLPointCloud > >();
+
   return 0;
 }

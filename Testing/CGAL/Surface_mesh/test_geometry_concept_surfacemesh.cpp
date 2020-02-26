@@ -19,5 +19,7 @@ int main(void)
 {
   BOOST_CONCEPT_ASSERT((FEVV::GeometryConcept< FEVV::MeshSurface >));
 
+  FEVV::check_operators_results< FEVV::Geometry_traits< FEVV::MeshSurface > >();
+
   return 0;
 }
