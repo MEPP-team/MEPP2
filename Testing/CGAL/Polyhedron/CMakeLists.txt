@@ -161,14 +161,6 @@ add_test(Test_polyhedron
          )
 
 #####
-add_executable( test_geometry_traits_unit_normal_polyhedron
-                test_geometry_traits_unit_normal_polyhedron.cpp )
-target_link_libraries( test_geometry_traits_unit_normal_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
-add_test( Geometry_traits_unit_normal_polyhedron
-          test_geometry_traits_unit_normal_polyhedron )
-
-#####
 add_executable( test_euler_add_center_vertex_polyhedron
                 test_euler_add_center_vertex_polyhedron.cpp )
 target_link_libraries( test_euler_add_center_vertex_polyhedron
@@ -188,12 +180,14 @@ add_test( Calculate_scaling_polyhedron
          ${TESTING_DATA_DIR}/flat.off )
 
 #####
-### Checking of concepts is done at build time (no add_test required)
-add_executable( test_geometry_traits_concept_polyhedron
-                test_geometry_traits_concept_polyhedron.cpp )
-target_link_libraries( test_geometry_traits_concept_polyhedron
+add_executable( test_geometry_concept_polyhedron
+                test_geometry_concept_polyhedron.cpp )
+target_link_libraries( test_geometry_concept_polyhedron
   ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+add_test( Test_geometry_concept_polyhedron
+          test_geometry_concept_polyhedron )
 
+### Checking of this concept is done at build time (no add_test required)
 add_executable( test_complying_concepts_polyhedron
   test_complying_concepts_polyhedron.cpp )
 target_link_libraries( test_complying_concepts_polyhedron

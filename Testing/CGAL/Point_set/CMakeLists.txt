@@ -58,3 +58,13 @@ add_test( Test_point_cloud_curvature_cgal_point_set
           15
           ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_monkey.ref.ply
           )
+
+#####
+add_executable( test_geometry_concept_cgal_point_set
+                test_geometry_concept_cgal_point_set.cpp )
+target_link_libraries( test_geometry_concept_cgal_point_set
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+add_test( Test_geometry_concept_cgal_point_set
+          test_geometry_concept_cgal_point_set )

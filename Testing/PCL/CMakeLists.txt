@@ -89,3 +89,13 @@ add_test( Test_point_cloud_curvature_pcl
           ${TESTING_REFOUTPUT_DIR}/PCL/test_point_cloud_curvature_pcl_monkey.ref.ply
           )
 
+#####
+add_executable( test_geometry_concept_pcl
+                test_geometry_concept_pcl.cpp )
+target_link_libraries( test_geometry_concept_pcl
+                       ${PCL_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+add_test( Test_geometry_concept_pcl
+          test_geometry_concept_pcl )
+
