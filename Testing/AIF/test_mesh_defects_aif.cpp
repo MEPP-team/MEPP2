@@ -920,6 +920,8 @@ static int process_one_meshfile(	const std::string& input_file_path,
 
 					AIFHelpers::remove_edge(v_pe_old, *iter_e);
 					AIFHelpers::remove_edge(v_ae_old, *iter_e);
+					AIFHelpers::add_edge(v_pe_old, face_id_to_edge[current_id]);
+					AIFHelpers::add_edge(v_ae_old, face_id_to_edge[current_id]);
 
 					if (degree(face_id_to_edge[current_id], *ptr_mesh) == 1)
 					{ // first processed face
