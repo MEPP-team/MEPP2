@@ -209,7 +209,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   if(_test)
   {
     connect(&timerQuit, SIGNAL(timeout()), this, SLOT(close()));
-    timerQuit.start(8000);
+    timerQuit.start(10000);
   }
   // --- JUST HERE FOR AUTOMATIC TEST ---
 

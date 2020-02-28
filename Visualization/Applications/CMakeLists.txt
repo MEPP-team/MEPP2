@@ -219,29 +219,30 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
         ${TESTING_DATA_DIR}/ism_test_cat.pcd false)
   else() # not PCL
     set( DATA_TEST
-        ${TESTING_DATA_DIR}/casting.off )
+         "${TESTING_DATA_DIR}/casting.off"
+         "${TESTING_DATA_DIR}/casting.xyz" )
   endif()
 
   if( APPLE )
     if( (NOT DEFINED ENV{TRAVIS}) AND (NOT DEFINED ENV{GITLAB_CI}) ) # OS X - random freeze under travis and GITLAB_CI (but only under OSX VMs)
-      add_test( ${FILE}
+      add_test( "Test_${FILE}"
                 ${FILE}.app/Contents/MacOS/${FILE}
                 ${DATA_TEST}
-                test )
+                -test )
     endif()
   elseif( MSVC )
     if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED ${DOCKER_RUN}) ) # temp
-        add_test( ${FILE}
+        add_test( "Test_${FILE}"
                   ${FILE}
                   ${DATA_TEST}
                   ${VTEST} )
     endif()
   else()
     # LINUX
-    add_test( ${FILE}
+    add_test( "Test_${FILE}"
               ${FILE}
               ${DATA_TEST}
-              test )
+              -test )
     # display backtrace in case of SEGFAULT ; GDB required
     # uncomment to activate
     #add_test( ${FILE}

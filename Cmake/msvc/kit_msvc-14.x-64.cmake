@@ -89,6 +89,6 @@ set(DRACO_DIR					${MSVC_KIT_ROOT}/draco-1.3.4)
 
 ### vtests
 
-set(VTEST						test)
+set(VTEST						  -test)
 
 ###

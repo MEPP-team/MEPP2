@@ -38,81 +38,104 @@
 // Qt
 #include <QDesktopWidget>
 
-enum Open_with {
+enum OpenWith {
   OPEN_WITH_NONE,
   OPEN_WITH_ALL,
   OPEN_WITH_POLYHEDRON,
   OPEN_WITH_SURFACEMESH,
   OPEN_WITH_LCC,
   OPEN_WITH_OPENMESH,
-  OPEN_WITH_AIF
+  OPEN_WITH_AIF,
+  OPEN_WITH_CGALPOINTSET,
+  OPEN_WITH_PCLPOINTCLOUD
 };
-Open_with open_with = OPEN_WITH_ALL;
 
 
 int
 main(int argc, char **argv)
 {
   bool test = false;
-  open_with = OPEN_WITH_NONE;
+  OpenWith mesh_open_with = OPEN_WITH_ALL;
+  OpenWith cloud_open_with = OPEN_WITH_ALL;
+  std::vector< std::string > mesh_filenames;
+  std::vector< std::string > cloud_filenames;
+  std::vector< std::string > mesh_extensions = { ".off", ".obj" };
+  std::vector< std::string > cloud_extensions = { ".xyz", ".ply", ".pcd" };
 
-  if((argc == 1) ||
-     (argv[1] &&
-      (strncmp("-psn", argv[1], 4) ==
-       0))) // very specific ".app/GUI" stuff from Apple... No comment... -
-            // https://discussions.apple.com/thread/1571921?tstart=0
+  if((argc == 1) || (argv[1] && (strncmp("-psn", argv[1], 4) == 0)))
+                    // very specific ".app/GUI" stuff from Apple...
+                    // https://discussions.apple.com/thread/1571921?tstart=0
   {
-    std::cout << "Usage: " << argv[0]
-              << " filename.off [test] "
-                 "[-all][-polyhedron][-surfacemesh][-lcc][-openmesh][-aif]"
+    std::cout << "Usage: " << std::endl
+              << "  " << argv[0]
+              << " [mesh_filename] [cloud_filename]"
+                 " [-test] [-emptytest] [-all|-polyhedron|-surfacemesh|-lcc|-openmesh|-aif|-cgalps|-pclpc]"
               << std::endl
-              << "- filename being an off file." << std::endl;
+              << "Examples:" << std::endl
+              << argv[0] << " casting.off" << std::endl
+              << argv[0] << " casting.off casting.xyz" << std::endl
+              << argv[0] << " casting.off -test" << std::endl
+              << argv[0] << " casting.off -polyhedron casting.xyz" << std::endl
+              << argv[0] << " casting.off -polyhedron casting.xyz -pclpc -test" << std::endl;
     // exit(EXIT_FAILURE);
   }
-  else if(argc == 2)
-  {
-    open_with = OPEN_WITH_ALL;
-  }
-  else if(argc >= 3)
+  else if(argc >= 2)
   {
     // parse arguments
-    for(int i = 2; i < argc; i++)
+    for(int i = 1; i < argc; i++)
     {
       std::string argvi(argv[i]);
 
-      if(argvi == "test")
+      if(argvi == "-test")
       {
         test = true;
-        open_with = OPEN_WITH_ALL;
       }
-      else if(argvi == "emptytest")
+      else if(argvi == "-emptytest")
       {
         test = true;
-        open_with = OPEN_WITH_NONE;
+        mesh_open_with = OPEN_WITH_NONE;
+        cloud_open_with = OPEN_WITH_NONE;
       }
       else if(argvi == "-polyhedron")
       {
-        open_with = OPEN_WITH_POLYHEDRON;
+        mesh_open_with = OPEN_WITH_POLYHEDRON;
       }
       else if(argvi == "-surfacemesh")
       {
-        open_with = OPEN_WITH_SURFACEMESH;
+        mesh_open_with = OPEN_WITH_SURFACEMESH;
       }
       else if(argvi == "-lcc")
       {
-        open_with = OPEN_WITH_LCC;
+        mesh_open_with = OPEN_WITH_LCC;
       }
       else if(argvi == "-openmesh")
       {
-        open_with = OPEN_WITH_OPENMESH;
+        mesh_open_with = OPEN_WITH_OPENMESH;
       }
       else if(argvi == "-aif")
       {
-        open_with = OPEN_WITH_AIF;
+        mesh_open_with = OPEN_WITH_AIF;
+      }
+      else if(argvi == "-cgalps")
+      {
+        cloud_open_with = OPEN_WITH_CGALPOINTSET;
+      }
+      else if(argvi == "-pclpc")
+      {
+        cloud_open_with = OPEN_WITH_PCLPOINTCLOUD;
       }
       else if(argvi == "-all")
       {
-        open_with = OPEN_WITH_ALL;
+        mesh_open_with = OPEN_WITH_ALL;
+        cloud_open_with = OPEN_WITH_ALL;
+      }
+      else
+      {
+        // this is a file name
+        if(FEVV::FileUtils::has_extension(argvi, mesh_extensions))
+          mesh_filenames.push_back(argvi);
+        else if(FEVV::FileUtils::has_extension(argvi, cloud_extensions))
+          cloud_filenames.push_back(argvi);
       }
     }
   }
@@ -172,80 +195,108 @@ main(int argc, char **argv)
   std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
 
-  // open mesh file provided on command line
-
-  std::vector< std::string > mesh_filenames;
-  if(open_with != OPEN_WITH_NONE)
-    mesh_filenames.push_back(std::string(argv[1]));
+  // open mesh file(s) provided on command line
 
 #ifdef DEBUG_VISU2
   std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
 
+  if(! mesh_filenames.empty())
+  {
 #ifdef FEVV_USE_CGAL
-  ///// Polyhedron
-  if(open_with == OPEN_WITH_POLYHEDRON || open_with == OPEN_WITH_ALL)
-  {
-    FEVV::Block::begin("loading-polyhedron", "Loading Polyhedron mesh.");
+    ///// Polyhedron
+    if(mesh_open_with == OPEN_WITH_POLYHEDRON || mesh_open_with == OPEN_WITH_ALL)
     {
-      gui.open_SPACE_TIME< FEVV::MeshPolyhedron >(nullptr, mesh_filenames);
+      FEVV::Block::begin("loading-polyhedron", "Loading Polyhedron mesh.");
+      {
+        gui.open_SPACE_TIME< FEVV::MeshPolyhedron >(nullptr, mesh_filenames);
+      }
+      FEVV::Block::end("loading-polyhedron");
     }
-    FEVV::Block::end("loading-polyhedron");
-  }
 
-  ///// Surface_mesh
-  if(open_with == OPEN_WITH_SURFACEMESH || open_with == OPEN_WITH_ALL)
-  {
-    FEVV::Block::begin("loading-surface", "Loading SurfaceMesh mesh.");
+    ///// Surface_mesh
+    if(mesh_open_with == OPEN_WITH_SURFACEMESH || mesh_open_with == OPEN_WITH_ALL)
     {
-      gui.open_SPACE_TIME< FEVV::MeshSurface >(nullptr, mesh_filenames);
+      FEVV::Block::begin("loading-surface", "Loading SurfaceMesh mesh.");
+      {
+        gui.open_SPACE_TIME< FEVV::MeshSurface >(nullptr, mesh_filenames);
+      }
+      FEVV::Block::end("loading-surface");
+      /// [Snippet Displaying Surface SurfaceMesh]
     }
-    FEVV::Block::end("loading-surface");
-    /// [Snippet Displaying Surface SurfaceMesh]
-  }
 
-  ///// Linear_cell_complex
-  if(open_with == OPEN_WITH_LCC || open_with == OPEN_WITH_ALL)
-  {
-    FEVV::Block::begin("loading-lcc", "Loading LCC mesh.");
+    ///// Linear_cell_complex
+    if(mesh_open_with == OPEN_WITH_LCC || mesh_open_with == OPEN_WITH_ALL)
     {
-      gui.open_SPACE_TIME< FEVV::MeshLCC >(nullptr, mesh_filenames);
+      FEVV::Block::begin("loading-lcc", "Loading LCC mesh.");
+      {
+        gui.open_SPACE_TIME< FEVV::MeshLCC >(nullptr, mesh_filenames);
+      }
+      FEVV::Block::end("loading-lcc");
     }
-    FEVV::Block::end("loading-lcc");
-  }
 #endif // FEVV_USE_CGAL
 
 #ifdef DEBUG_VISU2
-  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+    std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
 
 #ifdef FEVV_USE_OPENMESH
-  ///// OpenMesh
-  if(open_with == OPEN_WITH_OPENMESH || open_with == OPEN_WITH_ALL)
-  {
-    FEVV::Block::begin("loading-openmesh", "Loading OpenMesh mesh.");
+    ///// OpenMesh
+    if(mesh_open_with == OPEN_WITH_OPENMESH || mesh_open_with == OPEN_WITH_ALL)
     {
-      gui.open_SPACE_TIME< FEVV::MeshOpenMesh >(nullptr, mesh_filenames);
+      FEVV::Block::begin("loading-openmesh", "Loading OpenMesh mesh.");
+      {
+        gui.open_SPACE_TIME< FEVV::MeshOpenMesh >(nullptr, mesh_filenames);
+      }
+      FEVV::Block::end("loading-openmesh");
     }
-    FEVV::Block::end("loading-openmesh");
-  }
 #endif // FEVV_USE_OPENMESH
 
 #ifdef DEBUG_VISU2
-  std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
+    std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
 #endif
 
 #ifdef FEVV_USE_AIF
-  ///// AIF
-  if(open_with == OPEN_WITH_AIF || open_with == OPEN_WITH_ALL)
-  {
-    FEVV::Block::begin("loading-aif", "Loading AIF mesh.");
+    ///// AIF
+    if(mesh_open_with == OPEN_WITH_AIF || mesh_open_with == OPEN_WITH_ALL)
     {
-      gui.open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);
+      FEVV::Block::begin("loading-aif", "Loading AIF mesh.");
+      {
+        gui.open_SPACE_TIME< FEVV::MeshAIF >(nullptr, mesh_filenames);
+      }
+      FEVV::Block::end("loading-aif");
     }
-    FEVV::Block::end("loading-aif");
-  }
 #endif // FEVV_USE_AIF
+  }
+
+  // open point cloud file(s) provided on command line
+
+  if(! cloud_filenames.empty())
+  {
+#ifdef FEVV_USE_CGAL
+    // CGALPointSet
+    if(cloud_open_with == OPEN_WITH_CGALPOINTSET || cloud_open_with == OPEN_WITH_ALL)
+    {
+      FEVV::Block::begin("loading-CGALPointSet", "Loading CGALPointSet point cloud.");
+      {
+        gui.open_SPACE_TIME< FEVV::CGALPointSet >(nullptr, cloud_filenames);
+      }
+      FEVV::Block::end("loading-CGALPointSet");
+    }
+#endif // FEVV_USE_CGAL
+
+#ifdef FEVV_USE_PCL
+    // PCLPointCloud
+    if(cloud_open_with == OPEN_WITH_PCLPOINTCLOUD || cloud_open_with == OPEN_WITH_ALL)
+    {
+      FEVV::Block::begin("loading-PCLPointCloud", "Loading PCLPointCloud point cloud.");
+      {
+        gui.open_SPACE_TIME< FEVV::PCLPointCloud >(nullptr, cloud_filenames);
+      }
+      FEVV::Block::end("loading-PCLPointCloud");
+    }
+#endif // FEVV_USE_PCL
+  }
 
 #ifdef DEBUG_VISU2
   std::cout << "*** file " << __FILE__ << " line " << __LINE__ << std::endl;
