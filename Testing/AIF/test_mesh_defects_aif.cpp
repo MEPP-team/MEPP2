@@ -213,7 +213,7 @@ static size_t nb_different_incident_face_segment_indices(const MutableFaceIncide
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		segment_indices.insert(current_face_id);
@@ -230,7 +230,7 @@ static bool has_that_incident_face_segment_index(const MutableFaceIncidentGraph 
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		if (current_face_id == index)
@@ -248,7 +248,7 @@ static bool has_only_that_incident_face_segment_index(const MutableFaceIncidentG
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		if (current_face_id != index)
@@ -275,7 +275,7 @@ static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
 	assert(replace != AIFHelpers::null_vertex());
 	assert(current_f != AIFHelpers::null_face());
 
-	int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+	int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 		"f:2_manifold_component_seg", current_f->GetIndex());
 
 	std::set<vertex_descriptor> forbidden_vertices;
@@ -322,7 +322,7 @@ static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
 			auto iter_f = copy_incident_faces_for_removal.begin(), iter_f_e = copy_incident_faces_for_removal.end();
 			for (; iter_f != iter_f_e; ++iter_f)
 			{
-				if (g.GetProperty< AIFMeshT::face_type::ptr, int >(
+				if (g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 					"f:2_manifold_component_seg", (*iter_f)->GetIndex()) == current_face_id)
 				{
 					assert(AIFHelpers::are_incident(*iter_f, *iter_e));
@@ -409,7 +409,7 @@ static void replace_edge_by_new_one_and_update_incidency(
 
 	assert(!AIFHelpers::are_incident(f, replace));
 	///////////////////////////////////////////////////////////////////////////
-	int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+	int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 		"f:2_manifold_component_seg", f->GetIndex());
 	///////////////////////////////////////////////////////////////////////////
 	// for other components: update incidence relationships
@@ -698,7 +698,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 							&& AIFHelpers::have_consistent_orientation(*iter_f_first, *iter_f)
 							)
 						{
-							int current_f_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+							int current_f_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 								"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 							auto neighbor_n = FEVV::Operators::calculate_face_normal(*iter_f, *ptr_mesh, pos_pm, gt);
@@ -1045,7 +1045,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			while (!current_faces.empty())
 			{
 				face_descriptor current_f = *current_faces.begin();
-				int current_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+				int current_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 					"f:2_manifold_component_seg", current_f->GetIndex());
 				if (first)
 				{ // the first component keep the initial complex edge
@@ -1061,7 +1061,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 				auto iter_f = current_faces.begin(), iter_f_end = current_faces.end();
 				for (; iter_f != iter_f_end; ++iter_f)
 				{
-					if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+					if (ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 						"f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
 						next_faces.insert(*iter_f);
 					else
@@ -1093,7 +1093,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						auto iter_f2 = iter_f;
 						++iter_f2;
 						for (; iter_f2 != iter_f_end; ++iter_f2)
-							if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+							if (ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 								"f:2_manifold_component_seg", (*iter_f2)->GetIndex()) == current_id)
 							{
 								is_the_last = false;
@@ -1188,7 +1188,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		while (!current_faces.empty())
 		{
 			face_descriptor current_f = *current_faces.begin();
-			int current_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+			int current_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 				"f:2_manifold_component_seg", current_f->GetIndex());
 
 			if (first)
