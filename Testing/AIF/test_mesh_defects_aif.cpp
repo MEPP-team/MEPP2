@@ -119,7 +119,24 @@ static void replace(std::string& to_modify, const std::string& substring_to_sear
 	}
 }
 template< typename MutableFaceIncidentGraph >
-void remove_adjacent_edges(MutableFaceIncidentGraph &g,
+typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor
+create_new_edge_with_its_incident_vertices(MutableFaceIncidentGraph &g)
+{
+	typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
+
+	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+	typedef typename GraphTraits::edge_descriptor edge_descriptor;
+
+	edge_descriptor e_tmp = AIFHelpers::add_edge(g);
+	vertex_descriptor s_tmp = AIFHelpers::add_vertex(g), t_tmp = AIFHelpers::add_vertex(g);
+	AIFHelpers::link_vertex_and_edge(s_tmp, e_tmp, AIFHelpers::vertex_pos::FIRST);
+	AIFHelpers::link_vertex_and_edge(t_tmp, e_tmp, AIFHelpers::vertex_pos::SECOND);
+
+	return e_tmp;
+}
+
+template< typename MutableFaceIncidentGraph >
+static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 	std::vector< typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor >& selected_edges_to_make_independent,
 	std::vector< typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor>& removed_edges)
 {
@@ -131,11 +148,11 @@ void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 
 	removed_edges.clear();
 	std::set< edge_descriptor > set_removed_edges;
-	auto iter_e = selected_edges_to_make_independent.begin();
-	while (iter_e != selected_edges_to_make_independent.end())
+	auto iter_e = selected_edges_to_make_independent.begin(), iter_e_e = selected_edges_to_make_independent.end();
+	while (iter_e != iter_e_e)
 	{
 		vertex_descriptor s = source(*iter_e, g);
-		vertex_descriptor t = source(*iter_e, g);
+		vertex_descriptor t = target(*iter_e, g);
 
 		auto edges_pair = in_edges(s, g);
 		auto iter_e2 = edges_pair.first;
@@ -143,6 +160,13 @@ void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 		{
 			if (*iter_e2 == *iter_e)
 				continue;
+
+			//auto iter_res = std::find(selected_edges_to_make_independent.begin(), selected_edges_to_make_independent.end(), *iter_e2);
+			//if (iter_res != selected_edges_to_make_independent.end())
+			//{
+			//	removed_edges.push_back(*iter_res);
+			//	selected_edges_to_make_independent.erase(iter_res);
+			//}
 
 			set_removed_edges.insert(*iter_e2);
 		}
@@ -153,6 +177,13 @@ void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 		{
 			if (*iter_e2 == *iter_e)
 				continue;
+
+			//auto iter_res = std::find(selected_edges_to_make_independent.begin(), selected_edges_to_make_independent.end(), *iter_e2);
+			//if (iter_res != selected_edges_to_make_independent.end())
+			//{
+			//	removed_edges.push_back(*iter_res);
+			//	selected_edges_to_make_independent.erase(iter_res);
+			//}
 
 			set_removed_edges.insert(*iter_e2);
 		}
@@ -173,7 +204,7 @@ void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 }
 
 template< typename MutableFaceIncidentGraph >
-size_t nb_different_incident_face_segment_indices(const MutableFaceIncidentGraph &g,
+static size_t nb_different_incident_face_segment_indices(const MutableFaceIncidentGraph &g,
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e
 )
 {
@@ -182,7 +213,7 @@ size_t nb_different_incident_face_segment_indices(const MutableFaceIncidentGraph
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		segment_indices.insert(current_face_id);
@@ -190,7 +221,7 @@ size_t nb_different_incident_face_segment_indices(const MutableFaceIncidentGraph
 	return segment_indices.size();
 }
 template< typename MutableFaceIncidentGraph >
-bool has_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
+static bool has_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e,
 	int index
 )
@@ -199,7 +230,7 @@ bool has_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		if (current_face_id == index)
@@ -208,7 +239,7 @@ bool has_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
 	return false;
 }
 template< typename MutableFaceIncidentGraph >
-bool has_only_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
+static bool has_only_that_incident_face_segment_index(const MutableFaceIncidentGraph &g,
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e,
 	int index
 )
@@ -217,7 +248,7 @@ bool has_only_that_incident_face_segment_index(const MutableFaceIncidentGraph &g
 	auto iter_f = src_incident_faces_pair.first;
 	for (; iter_f != src_incident_faces_pair.second; ++iter_f)
 	{
-		int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+		int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 			"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 		if (current_face_id != index)
@@ -240,7 +271,11 @@ static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
 	typedef typename GraphTraits::edge_descriptor edge_descriptor;
 	typedef typename GraphTraits::face_descriptor face_descriptor;
 
-	int current_face_id = g.GetProperty< AIFMeshT::face_type::ptr, int >(
+	assert(v!= AIFHelpers::null_vertex());
+	assert(replace != AIFHelpers::null_vertex());
+	assert(current_f != AIFHelpers::null_face());
+
+	int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
 		"f:2_manifold_component_seg", current_f->GetIndex());
 
 	std::set<vertex_descriptor> forbidden_vertices;
@@ -260,17 +295,180 @@ static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
 		// here we know that *iter_e is not a complexe edge
 		// we thus update only edges that have one or two incident faces 
 		// with segment id = current_face_id
-		if (has_that_incident_face_segment_index(g, *iter_e, current_face_id))
+		if (has_only_that_incident_face_segment_index(g, *iter_e, current_face_id))
 		{ 
 			if (AIFHelpers::are_incident(v, *iter_e))
 			{
 				AIFHelpers::remove_edge(v, *iter_e);
 				if(AIFHelpers::are_incident(*iter_e, v))
 					AIFHelpers::add_vertex(*iter_e, replace, AIFHelpers::vertex_position(*iter_e, v));
-				AIFHelpers::add_edge(replace, *iter_e);
+				if (!AIFHelpers::are_incident(replace, *iter_e))
+					AIFHelpers::add_edge(replace, *iter_e);
 			}
 		}
+		else if (has_that_incident_face_segment_index(g, *iter_e, current_face_id))
+		{
+			if (!AIFHelpers::are_incident(v, *iter_e))
+				continue;
+
+			auto res_pair = AIFHelpers::add_edge(	AIFHelpers::opposite_vertex(*iter_e, v),
+				                                    replace, // the new edge will be added in its incident edges
+													g);
+			assert(res_pair.second); // the edge has been created (false when the edge was existing)
+			edge_descriptor new_e = res_pair.first;
+
+			auto face_range_pair = in_edges(*iter_e, g);
+			std::set<face_descriptor> copy_incident_faces_for_removal(face_range_pair.first, face_range_pair.second);
+			auto iter_f = copy_incident_faces_for_removal.begin(), iter_f_e = copy_incident_faces_for_removal.end();
+			for (; iter_f != iter_f_e; ++iter_f)
+			{
+				if (g.template GetProperty< AIFMeshT::face_type::ptr, int >(
+					"f:2_manifold_component_seg", (*iter_f)->GetIndex()) == current_face_id)
+				{
+					assert(AIFHelpers::are_incident(*iter_f, *iter_e));
+					edge_descriptor pe = AIFHelpers::get_edge_of_face_before_edge(*iter_f, *iter_e);
+					AIFHelpers::remove_edge(*iter_f, *iter_e);
+					AIFHelpers::remove_face(*iter_e, *iter_f);
+					AIFHelpers::add_edge_to_face_after_edge(*iter_f, pe, new_e);
+					AIFHelpers::add_face(new_e, *iter_f);
+				}
+			}                                              
+		}
 	}
+}
+template< typename MutableFaceIncidentGraph >
+static void calculate_previous_and_after_vertices(
+	MutableFaceIncidentGraph &g, 
+	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor pe,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor ae,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor& v_pe_old,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor&v_ae_old,
+	std::map<typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor>& v_old_to_v_new, // mapping v_old->v_new
+	std::map<typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor>& v_new_to_old    // mapping v_new->v_old
+)
+{
+	v_pe_old = AIFHelpers::common_vertex(pe, e);
+	if (v_pe_old == AIFHelpers::null_vertex())
+	{
+		if (v_new_to_old.find(pe->get_first_vertex()) != v_new_to_old.end())
+			v_pe_old = v_new_to_old[pe->get_first_vertex()];
+		else if (v_new_to_old.find(pe->get_second_vertex()) != v_new_to_old.end())
+			v_pe_old = v_new_to_old[pe->get_second_vertex()];
+	}
+	else if (v_old_to_v_new.find(v_pe_old) == v_old_to_v_new.end())
+	{
+		if (v_new_to_old.find(v_pe_old) != v_new_to_old.end())
+			v_pe_old = v_new_to_old[v_pe_old];
+	}
+	if (v_pe_old == AIFHelpers::null_vertex())
+	{
+		std::cerr << "you may have a similar face with different face id" << std::endl;
+	}
+	v_ae_old = AIFHelpers::common_vertex(ae, e);
+	if (v_ae_old == AIFHelpers::null_vertex())
+	{
+		if (v_new_to_old.find(ae->get_first_vertex()) != v_new_to_old.end())
+			v_ae_old = v_new_to_old[ae->get_first_vertex()];
+		else if (v_new_to_old.find(ae->get_second_vertex()) != v_new_to_old.end())
+			v_ae_old = v_new_to_old[ae->get_second_vertex()];
+	}
+	else if (v_old_to_v_new.find(v_ae_old) == v_old_to_v_new.end())
+	{
+		if (v_new_to_old.find(v_ae_old) != v_new_to_old.end())
+			v_ae_old = v_new_to_old[v_ae_old];
+	}
+	if (v_ae_old == AIFHelpers::null_vertex())
+	{
+		std::cerr << "you may have a similar face with different face id" << std::endl;
+	}
+}
+template< typename MutableFaceIncidentGraph, typename PointMap >
+static void replace_edge_by_new_one_and_update_incidency(
+	MutableFaceIncidentGraph &g,
+	PointMap& pm,
+	typename boost::graph_traits<MutableFaceIncidentGraph >::face_descriptor f, // current face in which e is replaced
+	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e, // current edge to replace
+	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor replace, // edge used to replace e
+	std::map<typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor, 
+	         typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor>& v_old_to_v_new, // mapping v_old->v_new
+	std::map<typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor, 
+	         typename boost::graph_traits<MutableFaceIncidentGraph >::vertex_descriptor>& v_new_to_old    // mapping v_new->v_old
+	 )
+{
+	typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
+
+	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+	typedef typename GraphTraits::edge_descriptor edge_descriptor;
+	typedef typename GraphTraits::face_descriptor face_descriptor;
+	///////////////////////////////////////////////////////////////////////////
+	if (!AIFHelpers::are_incident(f, e))
+		return;
+
+	assert(!AIFHelpers::are_incident(f, replace));
+	///////////////////////////////////////////////////////////////////////////
+	int current_face_id = g.template GetProperty< AIFMeshT::face_type::ptr, int >(
+		"f:2_manifold_component_seg", f->GetIndex());
+	///////////////////////////////////////////////////////////////////////////
+	// for other components: update incidence relationships
+	edge_descriptor pe = AIFHelpers::get_edge_of_face_before_edge(f, e);
+	edge_descriptor ae = AIFHelpers::get_edge_of_face_after_edge(f, e);
+
+	vertex_descriptor v_pe_old, v_ae_old; 
+	calculate_previous_and_after_vertices(g, e, pe, ae, v_pe_old, v_ae_old, v_old_to_v_new, v_new_to_old);
+	AIFHelpers::remove_edge(f, e);
+	AIFHelpers::remove_face(e, f);
+	AIFHelpers::add_edge_to_face_after_edge(f, pe, replace);
+	AIFHelpers::add_face(replace, f);
+
+	AIFHelpers::remove_edge(v_pe_old, e);
+	AIFHelpers::remove_edge(v_ae_old, e);
+	AIFHelpers::add_edge(v_pe_old, replace);
+	AIFHelpers::add_edge(v_ae_old, replace);
+
+	if (degree(replace, g) == 1)
+	{ // first time replace is added to a face
+		auto p = get(pm, v_pe_old); // to avoid some writing bugs
+		put(pm, source(replace, g), p);
+		p = get(pm, v_ae_old);
+		put(pm, target(replace, g), p);
+
+		AIFHelpers::add_edge(source(replace, g), pe);
+		if (has_only_that_incident_face_segment_index(g, pe, current_face_id))
+		{
+			AIFHelpers::add_vertex(pe, source(replace, g), AIFHelpers::vertex_position(pe, v_pe_old));
+		}
+		// else the update will be done in replace_vertex_in_incident_edges
+		AIFHelpers::add_edge(target(replace, g), ae);
+		if (has_only_that_incident_face_segment_index(g, ae, current_face_id))
+		{
+			AIFHelpers::add_vertex(ae, target(replace, g), AIFHelpers::vertex_position(ae, v_ae_old));
+		}
+		// else the update will be done in replace_vertex_in_incident_edges
+		v_old_to_v_new[v_pe_old] = source(replace, g);
+		v_old_to_v_new[v_ae_old] = target(replace, g);
+		v_new_to_old[source(replace, g)] = v_pe_old;
+		v_new_to_old[target(replace, g)] = v_ae_old;
+	}
+	//else
+	//{ 
+	//	AIFHelpers::add_edge(v_old_to_v_new[v_pe_old], pe);
+	//	if (has_only_that_incident_face_segment_index(g, pe, current_face_id))
+	//	{
+	//		if((v_old_to_v_new.find(v_pe_old) != v_old_to_v_new.end()) && !AIFHelpers::are_incident(pe, v_old_to_v_new[v_pe_old]))
+	//			AIFHelpers::add_vertex(pe, v_old_to_v_new[v_pe_old], AIFHelpers::vertex_position(pe, v_pe_old));
+	//	}
+	//	// else the update will be done in replace_vertex_in_incident_edges
+	//	AIFHelpers::add_edge(v_old_to_v_new[v_ae_old], ae);
+	//	if (has_only_that_incident_face_segment_index(g, ae, current_face_id))
+	//	{
+	//		if ((v_old_to_v_new.find(v_ae_old) != v_old_to_v_new.end()) && !AIFHelpers::are_incident(ae, v_old_to_v_new[v_ae_old]))
+	//			AIFHelpers::add_vertex(ae, v_old_to_v_new[v_ae_old], AIFHelpers::vertex_position(ae, v_ae_old));
+	//	}
+	//	// else the update will be done in replace_vertex_in_incident_edges
+	//}
 }
 
 template< typename MutableFaceIncidentGraph, typename PointIndexMap >
@@ -500,7 +698,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 							&& AIFHelpers::have_consistent_orientation(*iter_f_first, *iter_f)
 							)
 						{
-							int current_f_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+							int current_f_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 								"f:2_manifold_component_seg", (*iter_f)->GetIndex());
 
 							auto neighbor_n = FEVV::Operators::calculate_face_normal(*iter_f, *ptr_mesh, pos_pm, gt);
@@ -807,211 +1005,151 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	std::vector< edge_descriptor > selected_complex_edges(complex_edges.begin(), complex_edges.end()), 
 		                           remaining_complex_edges;
 	remove_adjacent_edges(*ptr_mesh, selected_complex_edges, remaining_complex_edges);
-	iter_e = selected_complex_edges.begin(), iter_e_end = selected_complex_edges.end();
-	int i = 0;
-	while (iter_e != iter_e_end)
+	while (!selected_complex_edges.empty())
 	{
-		{ // mesh file writing debug
-			auto res_mesh =
-			extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
-			writer_type my_writer;
-			try
-			{
-				my_writer.write(res_mesh,
-					FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
-			}
-			catch (...)
-			{
-				std::cout << "writing failed";
-				exit(EXIT_FAILURE);
-			}
-		}
-		// complex edges
-		std::cout << "Information of current complex edge (" << i << "/" << selected_complex_edges.size() << "): " << std::endl; // debug
-		std::cout << "\tedge id: " << get(edge_idm, *iter_e) << std::endl; // debug
-		std::cout << "\tsource vertex: " << get(vertex_idm, source(*iter_e, *ptr_mesh)) << std::endl; // debug
-		std::cout << "\ttarget vertex: " << get(vertex_idm, target(*iter_e, *ptr_mesh)) << std::endl; // debug
-		std::cout << "\tdegree: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
-		std::cout << "\tnb incident different segment: " << nb_different_incident_face_segment_indices(*ptr_mesh, *iter_e) << std::endl; // debug
-		vertex_descriptor v_pe_old = AIFHelpers::null_vertex();
-		vertex_descriptor v_ae_old = AIFHelpers::null_vertex();
-		auto faces_range_pair = in_edges(*iter_e, *ptr_mesh); // get incident faces
-		std::set<face_descriptor> current_faces(faces_range_pair.first, faces_range_pair.second),
-			next_faces;
-		std::map<int, edge_descriptor> face_id_to_edge;
-		std::map<vertex_descriptor, vertex_descriptor> v_old_to_v_new, v_new_to_old;
-		bool first = true;
-		while (!current_faces.empty())
+		std::cout << "New decomplexification step for an independent set of complex edges" << std::endl; 
+		iter_e = selected_complex_edges.begin(), iter_e_end = selected_complex_edges.end();
+		int i = 0;
+		while (iter_e != iter_e_end)
 		{
-			face_descriptor current_f = *current_faces.begin();
-			int current_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
-				"f:2_manifold_component_seg", current_f->GetIndex());
-			if (first)
-			{ // the first component keep the initial complex edge
-				face_id_to_edge.insert(std::make_pair(current_id, *iter_e));
+			{ // mesh file writing debug
+				auto res_mesh =
+					extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+				writer_type my_writer;
+				try
+				{
+					my_writer.write(res_mesh,
+						FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
+				}
+				catch (...)
+				{
+					std::cout << "writing failed";
+					exit(EXIT_FAILURE);
+				}
 			}
-			else if (face_id_to_edge.find(current_id) == face_id_to_edge.end())
-			{ // other components use a duplicate
-				std::cout << "create a new edge" << std::endl; // debug
-				edge_descriptor e_tmp = AIFHelpers::add_edge(*ptr_mesh);
-				vertex_descriptor s_tmp = AIFHelpers::add_vertex(*ptr_mesh),
-					t_tmp = AIFHelpers::add_vertex(*ptr_mesh);
-				AIFHelpers::link_vertex_and_edge(s_tmp, e_tmp, AIFHelpers::vertex_pos::FIRST);
-				AIFHelpers::link_vertex_and_edge(t_tmp, e_tmp, AIFHelpers::vertex_pos::SECOND);
-
-				face_id_to_edge.insert(std::make_pair(current_id, e_tmp));
-			}
-
-			auto iter_f = current_faces.begin(), iter_f_end = current_faces.end();
-			for (; iter_f != iter_f_end; ++iter_f)
+			// complex edges
+			std::cout << "Information of current complex edge (" << i << "/" << selected_complex_edges.size() << "): " << std::endl; // debug
+			std::cout << "\tedge id: " << get(edge_idm, *iter_e) << std::endl; // debug
+			std::cout << "\tsource vertex: " << get(vertex_idm, source(*iter_e, *ptr_mesh)) << std::endl; // debug
+			std::cout << "\ttarget vertex: " << get(vertex_idm, target(*iter_e, *ptr_mesh)) << std::endl; // debug
+			std::cout << "\tdegree: " << degree(*iter_e, *ptr_mesh) << std::endl; // debug
+			std::cout << "\tnb incident different segment: " << nb_different_incident_face_segment_indices(*ptr_mesh, *iter_e) << std::endl; // debug
+			vertex_descriptor v_pe_old = AIFHelpers::null_vertex();
+			vertex_descriptor v_ae_old = AIFHelpers::null_vertex();
+			auto faces_range_pair = in_edges(*iter_e, *ptr_mesh); // get incident faces
+			std::set<face_descriptor> current_faces(faces_range_pair.first, faces_range_pair.second),
+				next_faces;
+			std::map<int, edge_descriptor> face_id_to_edge;
+			std::map<vertex_descriptor, vertex_descriptor> v_old_to_v_new, v_new_to_old;
+			bool first = true;
+			while (!current_faces.empty())
 			{
-				if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
-					"f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
-					next_faces.insert(*iter_f);
-				else
-				{ // during the current step we process all faces with the same current_id
-					if (first)
-						continue;
+				face_descriptor current_f = *current_faces.begin();
+				int current_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
+					"f:2_manifold_component_seg", current_f->GetIndex());
+				if (first)
+				{ // the first component keep the initial complex edge
+					face_id_to_edge.insert(std::make_pair(current_id, *iter_e));
+				}
+				else if (face_id_to_edge.find(current_id) == face_id_to_edge.end())
+				{ // other components use a duplicate
+					std::cout << "create a new edge" << std::endl; // debug
+					edge_descriptor e_tmp = create_new_edge_with_its_incident_vertices(*ptr_mesh);
+					face_id_to_edge.insert(std::make_pair(current_id, e_tmp));
+				}
 
-					// for other components: update incidence relationships
-					edge_descriptor pe = AIFHelpers::get_edge_of_face_before_edge(*iter_f, *iter_e);
-					edge_descriptor ae = AIFHelpers::get_edge_of_face_after_edge(*iter_f, *iter_e);
+				auto iter_f = current_faces.begin(), iter_f_end = current_faces.end();
+				for (; iter_f != iter_f_end; ++iter_f)
+				{
+					if (ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
+						"f:2_manifold_component_seg", (*iter_f)->GetIndex()) != current_id)
+						next_faces.insert(*iter_f);
+					else
+					{ // during the current step we process all faces with the same current_id
+						if (first)
+							continue;
 
-					vertex_descriptor v_pe_old = AIFHelpers::common_vertex(pe, *iter_e);
-					if (v_pe_old == AIFHelpers::null_vertex())
-					{
-						if (v_new_to_old.find(pe->get_first_vertex()) != v_new_to_old.end())
-							v_pe_old = v_new_to_old[pe->get_first_vertex()];
-						else if(v_new_to_old.find(pe->get_second_vertex()) != v_new_to_old.end())
-							v_pe_old = v_new_to_old[pe->get_second_vertex()];
-					}
-					else if (v_old_to_v_new.find(v_pe_old) == v_old_to_v_new.end())
-					{
-						if (v_new_to_old.find(v_pe_old) != v_new_to_old.end())
-							v_pe_old = v_new_to_old[v_pe_old];
-					}
-					if(v_pe_old == AIFHelpers::null_vertex())
-					{
-						std::cerr << "you may have a similar face with different face id" << std::endl;
-					}
-					vertex_descriptor v_ae_old = AIFHelpers::common_vertex(ae, *iter_e);
-					if (v_ae_old == AIFHelpers::null_vertex())
-					{
-						if (v_new_to_old.find(ae->get_first_vertex()) != v_new_to_old.end())
-							v_ae_old = v_new_to_old[ae->get_first_vertex()];
-						else if (v_new_to_old.find(ae->get_second_vertex()) != v_new_to_old.end())
-							v_ae_old = v_new_to_old[ae->get_second_vertex()];
-					}
-					else if (v_old_to_v_new.find(v_ae_old) == v_old_to_v_new.end())
-					{
-						if (v_new_to_old.find(v_ae_old) != v_new_to_old.end())
-							v_ae_old = v_new_to_old[v_ae_old];
-					}
-					if(v_ae_old == AIFHelpers::null_vertex())
-					{
-						std::cerr << "you may have a similar face with different face id" << std::endl;
-					}
-					std::cout << "\torientation: " << get(vertex_idm, v_pe_old) << " -> " << get(vertex_idm, v_ae_old) ; // debug
+						// for other components: update incidence relationships
+						edge_descriptor pe = AIFHelpers::get_edge_of_face_before_edge(*iter_f, *iter_e);
+						edge_descriptor ae = AIFHelpers::get_edge_of_face_after_edge(*iter_f, *iter_e);
+						calculate_previous_and_after_vertices(*ptr_mesh, *iter_e, pe, ae, v_pe_old, v_ae_old, v_old_to_v_new, v_new_to_old);
 
-					AIFHelpers::remove_edge(*iter_f, *iter_e);
-					AIFHelpers::remove_face(*iter_e, *iter_f);
-					AIFHelpers::add_edge_to_face_after_edge(*iter_f, pe, face_id_to_edge[current_id]);
-					AIFHelpers::add_face(face_id_to_edge[current_id], *iter_f);
+						replace_edge_by_new_one_and_update_incidency(
+							*ptr_mesh,
+							pos_pm,
+							*iter_f,
+							*iter_e,
+							face_id_to_edge[current_id], // edge used to replace e
+							v_old_to_v_new,
+							v_new_to_old);
 
-					AIFHelpers::remove_edge(v_pe_old, *iter_e);
-					AIFHelpers::remove_edge(v_ae_old, *iter_e);
-					AIFHelpers::add_edge(v_pe_old, face_id_to_edge[current_id]);
-					AIFHelpers::add_edge(v_ae_old, face_id_to_edge[current_id]);
-
-					if (degree(face_id_to_edge[current_id], *ptr_mesh) == 1)
-					{ // first processed face
-						auto p = get(pos_pm, v_pe_old); // to avoid some writing bugs
-						put(pos_pm, source(face_id_to_edge[current_id], *ptr_mesh), p);
-						p = get(pos_pm, v_ae_old);
-						put(pos_pm, target(face_id_to_edge[current_id], *ptr_mesh), p);
-
-						AIFHelpers::add_edge(source(face_id_to_edge[current_id], *ptr_mesh), pe);
-						AIFHelpers::add_vertex(pe, source(face_id_to_edge[current_id], *ptr_mesh), AIFHelpers::vertex_position(pe, v_pe_old));
-
-						AIFHelpers::add_edge(target(face_id_to_edge[current_id], *ptr_mesh), ae);
-						AIFHelpers::add_vertex(ae, target(face_id_to_edge[current_id], *ptr_mesh), AIFHelpers::vertex_position(ae, v_ae_old));
-
-						v_old_to_v_new[v_pe_old] = source(face_id_to_edge[current_id], *ptr_mesh);
-						v_old_to_v_new[v_ae_old] = target(face_id_to_edge[current_id], *ptr_mesh);
-						v_new_to_old[source(face_id_to_edge[current_id], *ptr_mesh)] = v_pe_old;
-						v_new_to_old[target(face_id_to_edge[current_id], *ptr_mesh)] = v_ae_old;
-
+						std::cout << "\torientation: " << get(vertex_idm, v_pe_old) << " -> " << get(vertex_idm, v_ae_old); // debug
 						std::cout << "\treplaced by: " << get(vertex_idm, v_old_to_v_new[v_pe_old]) << " -> " << get(vertex_idm, v_old_to_v_new[v_ae_old]) << " with edge id: " << get(edge_idm, face_id_to_edge[current_id]); // debug
-					}
-					//else
-					//{ 
-					//	AIFHelpers::add_edge(v_old_to_v_new[v_pe_old], pe);
-					//	AIFHelpers::add_vertex(pe, v_old_to_v_new[v_pe_old], AIFHelpers::vertex_position(pe, v_pe_old));
+						std::cout << std::endl; // debug
 
-					//	AIFHelpers::add_edge(v_old_to_v_new[v_ae_old], ae);
-					//	AIFHelpers::add_vertex(ae, v_old_to_v_new[v_ae_old], AIFHelpers::vertex_position(ae, v_ae_old));
-					//}
+						assert(!AIFHelpers::is_degenerated_face(*iter_f));
 
-					std::cout << std::endl; // debug
-
-					assert(!AIFHelpers::is_degenerated_face(*iter_f));
-					assert(has_different_vertex_indices(*ptr_mesh, vertex_idm, *iter_f));
-
-					bool is_the_last = true;
-					auto iter_f2 = iter_f;
-					++iter_f2;
-					for (; iter_f2 != iter_f_end; ++iter_f2)
-						if (ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
-							"f:2_manifold_component_seg", (*iter_f2)->GetIndex()) == current_id)
+						bool is_the_last = true;
+						auto iter_f2 = iter_f;
+						++iter_f2;
+						for (; iter_f2 != iter_f_end; ++iter_f2)
+							if (ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
+								"f:2_manifold_component_seg", (*iter_f2)->GetIndex()) == current_id)
 							{
 								is_the_last = false;
 								break;
-                            }
-					if (is_the_last)
-					{
-						// do this replacement for the last current face with the same id
-						replace_vertex_in_incident_edges(*ptr_mesh, v_pe_old, v_old_to_v_new[v_pe_old], *iter_f, complex_edges);
-						replace_vertex_in_incident_edges(*ptr_mesh, v_ae_old, v_old_to_v_new[v_ae_old], *iter_f, complex_edges);
+							}
+						if (is_the_last)
+						{
+							// do this replacement for the last current face with the same id
+							replace_vertex_in_incident_edges(*ptr_mesh, v_pe_old, v_old_to_v_new[v_pe_old], *iter_f, complex_edges);
+							replace_vertex_in_incident_edges(*ptr_mesh, v_ae_old, v_old_to_v_new[v_ae_old], *iter_f, complex_edges);
+
+							assert(!AIFHelpers::are_incident(v_pe_old, face_id_to_edge[current_id]));
+							assert(!AIFHelpers::are_incident(v_ae_old, face_id_to_edge[current_id]));
+							assert(has_different_vertex_indices(*ptr_mesh, vertex_idm, *iter_f));
+						}
 					}
 				}
+				first = false;
+				current_faces.swap(next_faces);
+				next_faces.clear();
 			}
-			first = false;
-			current_faces.swap(next_faces);
-			next_faces.clear();
-		}
 
-		// update cut vertices
-		auto iter_map = face_id_to_edge.begin(), iter_map_e = face_id_to_edge.end();
-		for (; iter_map != iter_map_e; ++iter_map)
-		{
-			auto v_tmp = source(iter_map->second, *ptr_mesh);
-			if (AIFHelpers::is_cut_vertex(v_tmp))
+			// update cut vertices
+			auto iter_map = face_id_to_edge.begin(), iter_map_e = face_id_to_edge.end();
+			for (; iter_map != iter_map_e; ++iter_map)
 			{
-				++nb_cut_vertices;                                            // vertex...
-				if (make_2_mani_not_2_mani == "y")
-					cut_vertices.push_back(v_tmp);
-				else
-					if (colorize_mesh == "y")
-						ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
-							"v:color", v_tmp->GetIndex(), blue);
+				auto v_tmp = source(iter_map->second, *ptr_mesh);
+				if (AIFHelpers::is_cut_vertex(v_tmp))
+				{
+					++nb_cut_vertices;                                            // vertex...
+					if (make_2_mani_not_2_mani == "y")
+						cut_vertices.push_back(v_tmp);
+					else
+						if (colorize_mesh == "y")
+							ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+								"v:color", v_tmp->GetIndex(), blue);
+				}
+				v_tmp = target(iter_map->second, *ptr_mesh);
+				if (AIFHelpers::is_cut_vertex(v_tmp))
+				{
+					++nb_cut_vertices;                                            // vertex...
+					if (make_2_mani_not_2_mani == "y")
+						cut_vertices.push_back(v_tmp);
+					else
+						if (colorize_mesh == "y")
+							ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
+								"v:color", v_tmp->GetIndex(), blue);
+				}
 			}
-			v_tmp = target(iter_map->second, *ptr_mesh);
-			if (AIFHelpers::is_cut_vertex(v_tmp))
-			{
-				++nb_cut_vertices;                                            // vertex...
-				if (make_2_mani_not_2_mani == "y")
-					cut_vertices.push_back(v_tmp);
-				else
-					if (colorize_mesh == "y")
-						ptr_mesh->SetProperty< AIFMeshT::vertex_type::ptr, AIFMeshT::Vector >(
-							"v:color", v_tmp->GetIndex(), blue);
-			}
-		}
 
-		++iter_e;
-		++i;
+			++iter_e;
+			++i;
+		}
+		selected_complex_edges = remaining_complex_edges;
+		remove_adjacent_edges(*ptr_mesh, selected_complex_edges, remaining_complex_edges);
 	}
-
 	// duplicate cut vertices [local partition and cutting]
 	auto iter_v = cut_vertices.begin(), iter_v_end = cut_vertices.end();
 	while (iter_v != iter_v_end)
@@ -1050,7 +1188,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		while (!current_faces.empty())
 		{
 			face_descriptor current_f = *current_faces.begin();
-			int current_id = ptr_mesh->GetProperty< AIFMeshT::face_type::ptr, int >(
+			int current_id = ptr_mesh->template GetProperty< AIFMeshT::face_type::ptr, int >(
 				"f:2_manifold_component_seg", current_f->GetIndex());
 
 			if (first)
@@ -1222,7 +1360,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	if(remaining_complex_edges.empty())
 		std::cout << std::endl;
 	else
-		std::cout << " (" << remaining_complex_edges.size() << " not resolved due to local dependency). You can rerun the program on the output mesh file to solved them." << std::endl;
+		std::cout << " (" << remaining_complex_edges.size() << " not resolved due to local dependency). " << std::endl;
 	std::cout << "Number of surface border edges: " << nb_border_edges << std::endl;
 	std::cout << "Number of degenerated faces: " << nb_degenerated_faces << std::endl;
 	/////////////////////////////////////////////////////////////////////////////
