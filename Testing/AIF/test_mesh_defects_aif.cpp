@@ -1250,14 +1250,14 @@ main(int narg, char **argv)
   if(!argument_analysis(colorize_mesh, "colorizing output mesh", true))
 	  return EXIT_FAILURE;
   std::string remove_isolated_elements(((narg > 3) ? argv[3] : "n"));
-  if (!argument_analysis(remove_isolated_elements, "removing of not isolated element", true))
+  if (!argument_analysis(remove_isolated_elements, "removing of isolated elements", true))
 	  return EXIT_FAILURE;
   std::string resolve_vertices_with_similar_incident_edges(
       ((narg > 4) ? argv[4] : "n"));
   if (!argument_analysis(resolve_vertices_with_similar_incident_edges, "resolving similar/duplicate incident edges", true))
 	  return EXIT_FAILURE;
   std::string make_2_mani_not_2_mani(((narg > 5) ? argv[5] : "n"));
-  if (!argument_analysis(make_2_mani_not_2_mani, "resolving not 2 manifold elements", true))
+  if (!argument_analysis(make_2_mani_not_2_mani, "resolving not 2-manifold elements", true))
 	  return EXIT_FAILURE;
   /////////////////////////////////////////////////////////////////////////////
   if(!boost::filesystem::is_directory(input_path))
