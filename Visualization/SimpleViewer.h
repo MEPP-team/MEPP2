@@ -435,10 +435,12 @@ protected:
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -448,6 +450,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
       PointMap *_pm,
       std::string _mesh_file = std::string(""));
@@ -473,10 +476,12 @@ protected:
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -486,6 +491,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
       PointMap *_pm,
       std::string _mesh_file = std::string(""));
@@ -513,10 +519,12 @@ protected:
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
       std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+      std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectorss,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
       std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -526,6 +534,7 @@ protected:
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
       std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+      std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
       std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
       PointMap *_pm,
       std::string _mesh_file = std::string(""));
@@ -597,10 +606,12 @@ private:
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
+      const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_custom_vectors,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
+      const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_custom_vectors,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
@@ -610,6 +621,7 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
+      const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_custom_vectors,
       std::size_t _m_mm_size,
       VertexNormalMap *_vt_nm,
       VertexTangentMap *_vt_tm,
@@ -691,10 +703,12 @@ private:
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
       const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
+      const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_custom_vectors,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
+      const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_custom_vectors,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
@@ -703,6 +717,7 @@ private:
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
       const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
+      const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_custom_vectors,
       std::size_t _m_mm_size,
       int _texture_type,
       VertexNormalMap *_vt_nm,
@@ -726,14 +741,14 @@ protected:
   std::vector< osg::Geode * > v_geodes;
 
   std::vector< std::vector< osg::ref_ptr< osg::Geometry > > > v_geometries,
-      v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices, v_geometries_normals;
+      v_geometriesL, v_geometriesP, v_geometries_edges, v_geometries_vertices, v_geometries_normals, v_geometries_custom_vectors;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_vertexArrays,
-      v_vertexArrays_edges, v_vertexArrays_vertices, v_vertexArrays_normals;
+      v_vertexArrays_edges, v_vertexArrays_vertices, v_vertexArrays_normals, v_vertexArrays_custom_vectors;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_normalsArrays,
       v_normalsArraysF, v_normalsArrays_edges, v_normalsArrays_vertices;
   std::vector< std::vector< osg::ref_ptr< osg::Vec3Array > > > v_tangentsArrays;
   std::vector< std::vector< osg::ref_ptr< osg::Vec4Array > > > v_colorsArrays,
-      v_colorsArrays_edges, v_colorsArrays_vertices, v_colorsArrays_normals;
+      v_colorsArrays_edges, v_colorsArrays_vertices, v_colorsArrays_normals, v_colorsArrays_custom_vectors;
   std::vector< std::vector< osg::ref_ptr< osg::Vec2Array > > >
       v_texcoordsArrays;
 
