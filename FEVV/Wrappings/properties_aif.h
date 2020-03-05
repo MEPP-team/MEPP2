@@ -196,6 +196,62 @@ struct _PMap_traits< AIFMesh, FEVV::vertex_color_t >
   }
 };
 
+// specialize the property maps traits for vertex-custom_vector
+template<>
+struct _PMap_traits< AIFMesh, FEVV::vertex_custom_vector_t >
+{
+  typedef typename FEVV::Geometry_traits< AIFMesh >::Vector value_type;
+#ifdef USE_NATIVE_PM
+  typedef typename FEVV::DataStructures::AIF::PropertyMap< value_type >
+      pmap_type;
+#else
+  typedef
+      typename Vertex_pmap_traits< AIFMesh, value_type >::pmap_type pmap_type;
+#endif
+  static pmap_type create(const AIFMesh &m)
+  {
+#ifdef USE_NATIVE_PM
+    pmap_type *pmap =
+        (const_cast< AIFMesh * >(&m))
+            ->AddPropertyMap< AIFMesh::vertex_type::ptr, value_type >(
+                "v:custom_vector");
+    return *pmap;
+#else
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+#endif
+  }
+};
+
+// specialize the property maps traits for vertex-custom_vector_color
+template<>
+struct _PMap_traits< AIFMesh, FEVV::vertex_custom_vector_color_t >
+{
+  typedef typename FEVV::Geometry_traits< AIFMesh >::Vector value_type;
+#ifdef USE_NATIVE_PM
+  typedef typename FEVV::DataStructures::AIF::PropertyMap< value_type >
+      pmap_type;
+#else
+  typedef
+      typename Vertex_pmap_traits< AIFMesh, value_type >::pmap_type pmap_type;
+#endif
+  static pmap_type create(const AIFMesh &m)
+  {
+#ifdef USE_NATIVE_PM
+    pmap_type *pmap =
+        (const_cast< AIFMesh * >(&m))
+            ->AddPropertyMap< AIFMesh::vertex_type::ptr, value_type >(
+                "v:custom_vector_color");
+    return *pmap;
+#else
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+#endif
+  }
+};
+
 // specialize the property maps traits for edge-color
 template<>
 struct _PMap_traits< AIFMesh, FEVV::edge_color_t >

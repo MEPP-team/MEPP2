@@ -446,10 +446,12 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
+    const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_custom_vectors,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_custom_vectors,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
@@ -459,6 +461,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
+    const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_custom_vectors,
     std::size_t _m_mm_size,
     VertexNormalMap *_vt_nm,
     VertexTangentMap *_vt_tm,
@@ -590,7 +593,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         if(m_RenderSuperimposedEdges &&
            (nb_faces != 0)) // not to be done for 'only_pts' mode
         {
-          std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl;
+          std::cout << "[MeshLoading] Drawing superimposed edges" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
 
           // RM: disabled these calls, fixing loading time & FPS problems
           //_geometries_edges[unit_ii]->setUseVertexBufferObjects(true);
@@ -614,8 +617,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big ||
            (nb_faces == 0)) // last test for 'only_pts' mode
         {
-          std::cout << "[MeshLoading] Drawing superimposed vertices"
-                    << std::endl;
+          std::cout << "[MeshLoading] Drawing superimposed vertices" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
 
           // RM: disabled these calls, fixing loading time & FPS problems
           //_geometries_vertices[unit_ii]->setUseVertexBufferObjects(true);
@@ -648,8 +650,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         // [ normals
         if(m_Show_Vertex_Normals)
         {
-          std::cout << "[MeshLoading] Drawing normals"
-                    << std::endl;
+          std::cout << "[MeshLoading] Drawing normals" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
 
           // disabled these calls, fixing loading time & FPS problems
           //_geometries_normals[unit_ii]->setUseVertexBufferObjects(true);
@@ -667,6 +668,28 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
           _geode->addDrawable(_geometries_normals[unit_ii]);
         }
         // [ normals
+
+        // [ custom_vectors
+        if(0) // temp BUT important for later activation
+        {
+          std::cout << "[MeshLoading] Drawing custom_vectors" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
+
+          // disabled these calls, fixing loading time & FPS problems
+          //_geometries_custom_vectors[unit_ii]->setUseVertexBufferObjects(true);
+
+          _geometries_custom_vectors[unit_ii]->setVertexAttribArray(
+              0, _vertexArrays_custom_vectors[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_custom_vectors[unit_ii]->setVertexAttribArray(
+              1, _colorsArrays_custom_vectors[unit_ii], osg::Array::BIND_PER_VERTEX);
+          _geometries_custom_vectors[unit_ii]
+              ->getOrCreateStateSet()
+              ->setAttributeAndModes(superimpProgram.get(),
+                                     osg::StateAttribute::ON |
+                                         osg::StateAttribute::OVERRIDE);
+
+          _geode->addDrawable(_geometries_custom_vectors[unit_ii]);
+        }
+        // [ custom_vectors
       }
 
     ++unit_ii;
@@ -836,10 +859,12 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_edges,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_vertices,
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_normals,
+    const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries_custom_vectors,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_custom_vectors,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
@@ -848,6 +873,7 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_vertices,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_normals,
+    const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_custom_vectors,
     std::size_t _m_mm_size,
     int _texture_type,
     VertexNormalMap *_vt_nm,
@@ -1042,6 +1068,18 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
         _geode->addDrawable(_geometries_normals[unit_ii]);
       }
     // ] normals
+
+    // [ custom_vectors
+    if(unit_ii == 0) // MUST be done only one time
+      if(0) // temp BUT important for later activation
+      {
+        _geometries_custom_vectors[unit_ii]->setVertexArray(
+            _vertexArrays_custom_vectors[unit_ii]);
+        _geometries_custom_vectors[unit_ii]->setColorArray(
+            _colorsArrays_custom_vectors[unit_ii], osg::Array::BIND_PER_VERTEX);
+        _geode->addDrawable(_geometries_custom_vectors[unit_ii]);
+      }
+    // ] custom_vectors
 
     unit_ii++;
   } while(unit_ii < _m_mm_size);

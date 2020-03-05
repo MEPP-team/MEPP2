@@ -534,10 +534,12 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -547,6 +549,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -563,10 +566,12 @@ FEVV::SimpleViewer::internal_createMesh(
                       geometries_edges,
                       geometries_vertices,
                       geometries_normals,
+                      geometries_custom_vectors,
                       vertexArrays,
                       vertexArrays_edges,
                       vertexArrays_vertices,
                       vertexArrays_normals,
+                      vertexArrays_custom_vectors,
                       normalsArrays,
                       normalsArraysF,
                       normalsArrays_edges,
@@ -576,6 +581,7 @@ FEVV::SimpleViewer::internal_createMesh(
                       colorsArrays_edges,
                       colorsArrays_vertices,
                       colorsArrays_normals,
+                      colorsArrays_custom_vectors,
                       texcoordsArrays,
                       _pm,
                       _mesh_file);
@@ -595,10 +601,12 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -608,6 +616,7 @@ FEVV::SimpleViewer::internal_createMesh(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -652,6 +661,15 @@ FEVV::SimpleViewer::internal_createMesh(
   using MeshMaterialsMap =
       typename FEVV::PMap_traits< FEVV::mesh_materials_t,
                                   HalfedgeGraph >::pmap_type;
+
+  using VertexCustomVectorMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_t,
+                                  HalfedgeGraph >::pmap_type;
+
+  using VertexCustomVectorColorMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
+                                  HalfedgeGraph >::pmap_type;
+
   using MeshGuipropertiesMap =
       typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
                                   HalfedgeGraph >::pmap_type;
@@ -667,6 +685,10 @@ FEVV::SimpleViewer::internal_createMesh(
 
   FaceMaterialMap f_mm;
   MeshMaterialsMap m_mm;
+
+  VertexCustomVectorMap v_CVm;
+  VertexCustomVectorColorMap v_CVCm;
+
   MeshGuipropertiesMap m_gpm;
 
   VertexNormalMap *_vt_nm = nullptr;
@@ -680,13 +702,17 @@ FEVV::SimpleViewer::internal_createMesh(
 
   FaceMaterialMap *_f_mm = nullptr;
   MeshMaterialsMap *_m_mm = nullptr;
+
+  VertexCustomVectorMap *_vt_CVm = nullptr;
+  VertexCustomVectorColorMap *_vt_CVCm = nullptr;
+
   MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
 
   // textures stuff
   int _texture_type = NO_TEXCOORDS;
 
-  FEVV::Filters::translate(*_g, *_pm, m_step, 0., 0.); // TEMP for test
+  //FEVV::Filters::translate(*_g, *_pm, m_step, 0., 0.); // TEMP for test
 
   // retrieve or create mesh gui-properties property map
   if(has_map(*_pmaps, FEVV::mesh_guiproperties))
@@ -893,6 +919,78 @@ FEVV::SimpleViewer::internal_createMesh(
   }
   // --- texture
 
+  // --- vertex_custom_vector
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR" << std::endl;
+    v_CVm = get_property_map(FEVV::vertex_custom_vector, *_g, *_pmaps);
+    _vt_CVm = &v_CVm;
+  }
+  // TEMP for CUSTOM VECTOR
+  if(1) // temp
+  if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR missing, filling it with example values"
+                << std::endl;
+    v_CVm = make_property_map(FEVV::vertex_custom_vector, *_g);
+    _vt_CVm = &v_CVm;
+
+    // HERE WE FORCE a full v(1., 1., 1.) vertex-custom_vector map
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVm[*vi] = Vector(1., 1., 1.);
+    }
+    // HERE WE FORCE a full v(1., 1., 1.) vertex-custom_vector map
+
+    put_property_map(
+        FEVV::vertex_custom_vector, *_g, *_pmaps, v_CVm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR
+  // --- vertex_custom_vector
+
+  // --- vertex_custom_vector_color
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector_color))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR COLOR" << std::endl;
+    v_CVCm = get_property_map(FEVV::vertex_custom_vector_color, *_g, *_pmaps);
+    _vt_CVCm = &v_CVCm;
+  }
+  // TEMP for CUSTOM VECTOR COLOR
+  if(1) // temp
+  if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR COLOR missing, filling it with example values"
+                << std::endl;
+    v_CVCm = make_property_map(FEVV::vertex_custom_vector_color, *_g);
+    _vt_CVCm = &v_CVCm;
+
+    // HERE WE FORCE a full LightGreen vertex-custom_vector_color map
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVCm[*vi] = Vector(139/255.0f, 195/255.0f, 74/255.0f); // LightGreen
+    }
+    // HERE WE FORCE a full LightGreen vertex-custom_vector_color map
+
+    put_property_map(
+        FEVV::vertex_custom_vector_color, *_g, *_pmaps, v_CVCm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR COLOR
+  // --- vertex_custom_vector_color
+
   // TEMP - not used
   /*GeometryTraits gt(*_g);
 
@@ -931,20 +1029,19 @@ FEVV::SimpleViewer::internal_createMesh(
           }
           /*else
           {
-                  // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color
-          map for the REDRAW using Vector = typename GeometryTraits::Vector;
+	        // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color map for the REDRAW
+	        using Vector = typename GeometryTraits::Vector;
 
-                  auto iterator_pair = vertices(*_g); // vertices() returns a
-          vertex_iterator pair vertex_iterator vi = iterator_pair.first;
-                  vertex_iterator vi_end = iterator_pair.second;
-                  for (; vi != vi_end; ++vi)
-                  {
-                          v_cm[*vi] = Vector(1., 0., 0.); // RGB
-                  }
+	        auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+	        vertex_iterator vi = iterator_pair.first;
+	        vertex_iterator vi_end = iterator_pair.second;
+	        for (; vi != vi_end; ++vi)
+	        {
+	          v_cm[*vi] = Vector(1., 0., 0.); // RGB
+	        }
 
-                  _vt_cm = &v_cm;
-                  // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color
-          map for the REDRAW
+	        _vt_cm = &v_cm;
+	        // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color map for the REDRAW
           }*/
           else
           {
@@ -1084,6 +1181,14 @@ FEVV::SimpleViewer::internal_createMesh(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    geometries_custom_vectors.push_back(new osg::Geometry());
+    geometries_custom_vectors[0]->setSupportsDisplayList(true);
+    geometries_custom_vectors[0]->setUseDisplayList(true);
+    geometries_custom_vectors[0]->setUseVertexBufferObjects(
+        false); /*geometries_custom_vectors[0]->setUseVertexArrayObject(false);*/
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     vertexArrays.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1097,6 +1202,10 @@ FEVV::SimpleViewer::internal_createMesh(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     vertexArrays_normals.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    vertexArrays_custom_vectors.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -1133,6 +1242,10 @@ FEVV::SimpleViewer::internal_createMesh(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     colorsArrays_normals.push_back(new osg::Vec4Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    colorsArrays_custom_vectors.push_back(new osg::Vec4Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -1194,6 +1307,14 @@ FEVV::SimpleViewer::internal_createMesh(
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
+      geometries_custom_vectors.push_back(new osg::Geometry());
+      geometries_custom_vectors[mi]->setSupportsDisplayList(true);
+      geometries_custom_vectors[mi]->setUseDisplayList(true);
+      geometries_custom_vectors[mi]->setUseVertexBufferObjects(
+          false); /*geometries_custom_vectors[mi]->setUseVertexArrayObject(false);*/
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
       vertexArrays.push_back(new osg::Vec3Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -1207,6 +1328,10 @@ FEVV::SimpleViewer::internal_createMesh(
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
       vertexArrays_normals.push_back(new osg::Vec3Array);
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
+      vertexArrays_custom_vectors.push_back(new osg::Vec3Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
@@ -1243,6 +1368,10 @@ FEVV::SimpleViewer::internal_createMesh(
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
       colorsArrays_normals.push_back(new osg::Vec4Array);
+    }
+    if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+    {
+      colorsArrays_custom_vectors.push_back(new osg::Vec4Array);
     }
     if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
     {
@@ -1414,6 +1543,14 @@ FEVV::SimpleViewer::internal_createMesh(
       vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * MAGNITUDE_N ); // ok because _vt_nm always true
       // ] normals
 
+      // [ custom_vectors
+      if(_vt_CVm)
+      {
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * MAGNITUDE_N * 2. ); // * 2. is a sample
+      }
+      // ] custom_vectors
+
       sizeSPoints++;
 
       // color
@@ -1435,6 +1572,19 @@ FEVV::SimpleViewer::internal_createMesh(
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
       // ] normals
+
+      // [ custom_vectors
+      if(_vt_CVCm)
+      {
+        colorsArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorColorConverter< HalfedgeGraph >(get(v_CVCm, *v_it)) );
+        colorsArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorColorConverter< HalfedgeGraph >(get(v_CVCm, *v_it)) );
+      }
+      else // white by default
+      {
+        colorsArrays_custom_vectors[mtl_id]->push_back(Helpers::ColorConverter(Color::White()));
+        colorsArrays_custom_vectors[mtl_id]->push_back(Helpers::ColorConverter(Color::White()));
+      }
+      // ] custom_vectors
     }
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
@@ -1444,6 +1594,11 @@ FEVV::SimpleViewer::internal_createMesh(
     geometries_normals[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, vertexArrays_normals[mtl_id]->size()));
     // ] normals
+
+    // [ custom_vectors
+    geometries_custom_vectors[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
+        osg::PrimitiveSet::LINES, 0, vertexArrays_custom_vectors[mtl_id]->size()));
+    // ] custom_vectors
 
     // NEW_HERE-01 (DEL)
 #if 0
@@ -1504,6 +1659,22 @@ FEVV::SimpleViewer::internal_createMesh(
         osg::StateAttribute::OFF); // light always OFF for normals
   }
   // ] normals
+  // [ custom_vectors
+  geometries_custom_vectors[mtl_id]->setStateSet(NULL);
+  {
+    // set line width
+    osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+    linewidth->setWidth(1.5f);
+    geometries_custom_vectors[mtl_id]
+        ->getOrCreateStateSet()
+        ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)
+
+    // light
+    geometries_custom_vectors[mtl_id]->getOrCreateStateSet()->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF); // light always OFF for custom_vectors
+  }
+  // ] custom_vectors
 
   /// Adding faces
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
@@ -1625,8 +1796,7 @@ FEVV::SimpleViewer::internal_createMesh(
           num_vertices_in_face));
 
       // populate face normal array
-      if(_vt_nm !=
-         nullptr) // normal per vertex (see above) -> already calculated
+      if(_vt_nm != nullptr) // normal per vertex (see above) -> already calculated
       {
         // do nothing
         // std::cout << "---> normal per vertex - normal per vertex - normal per
@@ -1725,10 +1895,12 @@ FEVV::SimpleViewer::internal_createMesh(
                             geometries_edges,
                             geometries_vertices,
                             geometries_normals,
+                            geometries_custom_vectors,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
                             vertexArrays_normals,
+                            vertexArrays_custom_vectors,
                             *_normalsArrays,
                             normalsArrays_edges,
                             normalsArrays_vertices,
@@ -1738,6 +1910,7 @@ FEVV::SimpleViewer::internal_createMesh(
                             colorsArrays_edges,
                             colorsArrays_vertices,
                             colorsArrays_normals,
+                            colorsArrays_custom_vectors,
                             _m_mm_size,
                             _vt_nm,
                             v_tan_m,
@@ -1769,10 +1942,12 @@ FEVV::SimpleViewer::internal_createMesh(
                             geometries_edges,
                             geometries_vertices,
                             geometries_normals,
+                            geometries_custom_vectors,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
                             vertexArrays_normals,
+                            vertexArrays_custom_vectors,
                             *_normalsArrays,
                             normalsArrays_edges,
                             normalsArrays_vertices,
@@ -1781,6 +1956,7 @@ FEVV::SimpleViewer::internal_createMesh(
                             colorsArrays_edges,
                             colorsArrays_vertices,
                             colorsArrays_normals,
+                            colorsArrays_custom_vectors,
                             _m_mm_size,
                             _texture_type,
                             _vt_nm,
@@ -1829,10 +2005,12 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_edges,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_vertices,
     std::vector< osg::ref_ptr< osg::Geometry > > &geometries_normals,
+    std::vector< osg::ref_ptr< osg::Geometry > > &geometries_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec3Array > > &vertexArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArraysF,
     std::vector< osg::ref_ptr< osg::Vec3Array > > &normalsArrays_edges,
@@ -1842,6 +2020,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_edges,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_vertices,
     std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_normals,
+    std::vector< osg::ref_ptr< osg::Vec4Array > > &colorsArrays_custom_vectors,
     std::vector< osg::ref_ptr< osg::Vec2Array > > &texcoordsArrays,
     PointMap *_pm,
     std::string _mesh_file)
@@ -1860,6 +2039,14 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   using VertexColorMap = typename FEVV::PMap_traits< FEVV::vertex_color_t,
                                                      PointCloud >::pmap_type;
 
+  using VertexCustomVectorMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_t,
+                                  PointCloud >::pmap_type;
+
+  using VertexCustomVectorColorMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
+                                  PointCloud >::pmap_type;
+
   using MeshGuipropertiesMap =
       typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
                                   PointCloud >::pmap_type;
@@ -1867,10 +2054,16 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   VertexNormalMap v_nm;
   VertexColorMap v_cm;
 
+  VertexCustomVectorMap v_CVm;
+  VertexCustomVectorColorMap v_CVCm;
+
   MeshGuipropertiesMap m_gpm;
 
   VertexNormalMap *_vt_nm = nullptr;
   VertexColorMap *_vt_cm = nullptr;
+
+  VertexCustomVectorMap *_vt_CVm = nullptr;
+  VertexCustomVectorColorMap *_vt_CVCm = nullptr;
 
   MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
@@ -1911,8 +2104,8 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     put_property_map(
         FEVV::vertex_normal, *_g, *_pmaps, v_nm); // MT add (for later redraw)
   }
-  // --- vertex_normal
 #endif
+  // --- vertex_normal
 
   // --- vertex_color
   if(has_map(*_pmaps, FEVV::vertex_color))
@@ -1932,6 +2125,78 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   }
   // --- vertex_color
 
+  // --- vertex_custom_vector
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR" << std::endl;
+    v_CVm = get_property_map(FEVV::vertex_custom_vector, *_g, *_pmaps);
+    _vt_CVm = &v_CVm;
+  }
+  // TEMP for CUSTOM VECTOR
+  if(1) // temp
+  if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR missing, filling it with example values"
+                << std::endl;
+    v_CVm = make_property_map(FEVV::vertex_custom_vector, *_g);
+    _vt_CVm = &v_CVm;
+
+    // HERE WE FORCE a full v(-1., 1., 1.) vertex-custom_vector map
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVm[*vi] = Vector(-1., 1., 1.);
+    }
+    // HERE WE FORCE a full v(-1., 1., 1.) vertex-custom_vector map
+
+    put_property_map(
+        FEVV::vertex_custom_vector, *_g, *_pmaps, v_CVm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR
+  // --- vertex_custom_vector
+
+  // --- vertex_custom_vector_color
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector_color))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR COLOR" << std::endl;
+    v_CVCm = get_property_map(FEVV::vertex_custom_vector_color, *_g, *_pmaps);
+    _vt_CVCm = &v_CVCm;
+  }
+  // TEMP for CUSTOM VECTOR COLOR
+  if(1) // temp
+  if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR COLOR missing, filling it with example values"
+                << std::endl;
+    v_CVCm = make_property_map(FEVV::vertex_custom_vector_color, *_g);
+    _vt_CVCm = &v_CVCm;
+
+    // HERE WE FORCE a full GreenSea vertex-custom_vector_color map
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVCm[*vi] = Vector(22/255.0f, 160/255.0f, 133/255.0f); // GreenSea
+    }
+    // HERE WE FORCE a full GreenSea vertex-custom_vector_color map
+
+    put_property_map(
+        FEVV::vertex_custom_vector_color, *_g, *_pmaps, v_CVCm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR COLOR
+  // --- vertex_custom_vector_color
+
   if(m_redraw) // IMPORTANT -> ONLY IF REDRAW via GUI or CODE
   {
     if(m_UseVertexColor) // else automatic detection, as for a first DRAW
@@ -1948,20 +2213,19 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
           }
           /*else
           {
-                  // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color
-          map for the REDRAW using Vector = typename GeometryTraits::Vector;
+	        // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color map for the REDRAW
+	        using Vector = typename GeometryTraits::Vector;
 
-                  auto iterator_pair = vertices(*_g); // vertices() returns a
-          vertex_iterator pair vertex_iterator vi = iterator_pair.first;
-                  vertex_iterator vi_end = iterator_pair.second;
-                  for (; vi != vi_end; ++vi)
-                  {
-                          v_cm[*vi] = Vector(1., 0., 0.); // RGB
-                  }
+	        auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+	        vertex_iterator vi = iterator_pair.first;
+	        vertex_iterator vi_end = iterator_pair.second;
+	        for (; vi != vi_end; ++vi)
+	        {
+	          v_cm[*vi] = Vector(1., 0., 0.); // RGB
+	        }
 
-                  _vt_cm = &v_cm;
-                  // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color
-          map for the REDRAW
+	        _vt_cm = &v_cm;
+	        // -- TODO MT - TEMP - HERE WE FORCE a full RED vertex-color map for the REDRAW
           }*/
           else
           {
@@ -2046,6 +2310,14 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
+    geometries_custom_vectors.push_back(new osg::Geometry());
+    geometries_custom_vectors[0]->setSupportsDisplayList(true);
+    geometries_custom_vectors[0]->setUseDisplayList(true);
+    geometries_custom_vectors[0]->setUseVertexBufferObjects(
+        false); /*geometries_custom_vectors[0]->setUseVertexArrayObject(false);*/
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
     vertexArrays.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
@@ -2059,6 +2331,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     vertexArrays_normals.push_back(new osg::Vec3Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    vertexArrays_custom_vectors.push_back(new osg::Vec3Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -2095,6 +2371,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
     colorsArrays_normals.push_back(new osg::Vec4Array);
+  }
+  if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
+  {
+    colorsArrays_custom_vectors.push_back(new osg::Vec4Array);
   }
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw))
   {
@@ -2147,10 +2427,22 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
             Helpers::VectorConverter< PointCloud >(p0));
         vertexArrays_normals[mtl_id]->push_back(
             Helpers::VectorConverter< PointCloud >(p0) +
-            Helpers::VectorConverter< PointCloud >(get(*_vt_nm, *v_it)) *
+            Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) *
                 MAGNITUDE_N);
       }
       // ] normals
+
+      // [ custom_vectors
+      if(_vt_CVm)
+      {
+        vertexArrays_custom_vectors[mtl_id]->push_back(
+            Helpers::VectorConverter< PointCloud >(p0));
+        vertexArrays_custom_vectors[mtl_id]->push_back(
+            Helpers::VectorConverter< PointCloud >(p0) +
+            Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) *
+                MAGNITUDE_N * 2.); // * 2. is a sample
+      }
+      // ] custom_vectors
 
       sizeSPoints++;
 
@@ -2174,12 +2466,25 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       if(_vt_nm)
         normalsArrays_vertices[mtl_id]->push_back(
             Helpers::VectorConverter< PointCloud >(
-                get(*_vt_nm, *v_it)));
+                get(v_nm, *v_it)));
 
       // [ normals
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
       colorsArrays_normals[mtl_id]->push_back(Helpers::ColorConverter(Color::Red()));
       // ] normals
+
+      // [ custom_vectors
+      if(_vt_CVCm)
+      {
+        colorsArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorColorConverter< PointCloud >(get(v_CVCm, *v_it)) );
+        colorsArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorColorConverter< PointCloud >(get(v_CVCm, *v_it)) );
+      }
+      else // white by default
+      {
+        colorsArrays_custom_vectors[mtl_id]->push_back(Helpers::ColorConverter(Color::White()));
+        colorsArrays_custom_vectors[mtl_id]->push_back(Helpers::ColorConverter(Color::White()));
+      }
+      // ] custom_vectors
     }
 
     geometries_vertices[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
@@ -2189,6 +2494,11 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     geometries_normals[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, vertexArrays_normals[mtl_id]->size()));
     // ] normals
+
+    // [ custom_vectors
+    geometries_custom_vectors[mtl_id]->addPrimitiveSet(new osg::DrawArrays(
+        osg::PrimitiveSet::LINES, 0, vertexArrays_custom_vectors[mtl_id]->size()));
+    // ] custom_vectors
 
     _vt_cm = SAVE_vt_cm;
 
@@ -2231,6 +2541,23 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
         osg::StateAttribute::OFF); // light always OFF for normals
   }
   // ] normals
+
+  // [ custom_vectors
+  geometries_custom_vectors[mtl_id]->setStateSet(NULL);
+  {
+    // set line width
+    osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
+    linewidth->setWidth(1.5f);
+    geometries_custom_vectors[mtl_id]
+        ->getOrCreateStateSet()
+        ->setAttribute(linewidth, osg::StateAttribute::ON); // setAttributeAndModes (other function)
+
+    // light
+    geometries_custom_vectors[mtl_id]->getOrCreateStateSet()->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF); // light always OFF for custom_vectors
+  }
+  // ] custom_vectors
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
   QApplication::restoreOverrideCursor();
@@ -2282,10 +2609,12 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             geometries_edges,
                             geometries_vertices,
                             geometries_normals,
+                            geometries_custom_vectors,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
                             vertexArrays_normals,
+                            vertexArrays_custom_vectors,
                             *_normalsArrays,
                             normalsArrays_edges,
                             normalsArrays_vertices,
@@ -2295,6 +2624,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             colorsArrays_edges,
                             colorsArrays_vertices,
                             colorsArrays_normals,
+                            colorsArrays_custom_vectors,
                             _m_mm_size,
                             _vt_nm,
                             v_tan_m,
@@ -2345,10 +2675,12 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             geometries_edges,
                             geometries_vertices,
                             geometries_normals,
+                            geometries_custom_vectors,
                             vertexArrays,
                             vertexArrays_edges,
                             vertexArrays_vertices,
                             vertexArrays_normals,
+                            vertexArrays_custom_vectors,
                             *_normalsArrays,
                             normalsArrays_edges,
                             normalsArrays_vertices,
@@ -2357,6 +2689,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             colorsArrays_edges,
                             colorsArrays_vertices,
                             colorsArrays_normals,
+                            colorsArrays_custom_vectors,
                             _m_mm_size,
                             _texture_type,
                             _vt_nm,
@@ -2537,13 +2870,13 @@ FEVV::SimpleViewer::createMesh(
     osg::ref_ptr< osg::Group > _group)
 {
   std::vector< osg::ref_ptr< osg::Geometry > > l_geometries, l_geometriesL,
-      l_geometriesP, l_geometries_edges, l_geometries_vertices, l_geometries_normals;
+      l_geometriesP, l_geometries_edges, l_geometries_vertices, l_geometries_normals, l_geometries_custom_vectors;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_vertexArrays,
-      l_vertexArrays_edges, l_vertexArrays_vertices, l_vertexArrays_normals;
+      l_vertexArrays_edges, l_vertexArrays_vertices, l_vertexArrays_normals, l_vertexArrays_custom_vectors;
   std::vector< osg::ref_ptr< osg::Vec3Array > > l_normalsArrays,
       l_normalsArraysF, l_normalsArrays_edges, l_normalsArrays_vertices, l_tangentsArrays;
   std::vector< osg::ref_ptr< osg::Vec4Array > > l_colorsArrays,
-      l_colorsArrays_edges, l_colorsArrays_vertices, l_colorsArrays_normals;
+      l_colorsArrays_edges, l_colorsArrays_vertices, l_colorsArrays_normals, l_colorsArrays_custom_vectors;
   std::vector< osg::ref_ptr< osg::Vec2Array > > l_texcoordsArrays;
 
   osg::Geode *geode = internal_createMesh(_g,
@@ -2554,10 +2887,12 @@ FEVV::SimpleViewer::createMesh(
                                           l_geometries_edges,
                                           l_geometries_vertices,
                                           l_geometries_normals,
+                                          l_geometries_custom_vectors,
                                           l_vertexArrays,
                                           l_vertexArrays_edges,
                                           l_vertexArrays_vertices,
                                           l_vertexArrays_normals,
+                                          l_vertexArrays_custom_vectors,
                                           l_normalsArrays,
                                           l_normalsArraysF,
                                           l_normalsArrays_edges,
@@ -2567,6 +2902,7 @@ FEVV::SimpleViewer::createMesh(
                                           l_colorsArrays_edges,
                                           l_colorsArrays_vertices,
                                           l_colorsArrays_normals,
+                                          l_colorsArrays_custom_vectors,
                                           l_texcoordsArrays,
                                           _pm,
                                           _mesh_file);
@@ -2584,10 +2920,12 @@ FEVV::SimpleViewer::createMesh(
   v_geometries_edges.push_back(l_geometries_edges);
   v_geometries_vertices.push_back(l_geometries_vertices);
   v_geometries_normals.push_back(l_geometries_normals);
+  v_geometries_custom_vectors.push_back(l_geometries_custom_vectors);
   v_vertexArrays.push_back(l_vertexArrays);
   v_vertexArrays_edges.push_back(l_vertexArrays_edges);
   v_vertexArrays_vertices.push_back(l_vertexArrays_vertices);
   v_vertexArrays_normals.push_back(l_vertexArrays_normals);
+  v_vertexArrays_custom_vectors.push_back(l_vertexArrays_custom_vectors);
   v_normalsArrays.push_back(l_normalsArrays);
   v_normalsArraysF.push_back(l_normalsArraysF);
   v_normalsArrays_edges.push_back(l_normalsArrays_edges);
@@ -2597,6 +2935,7 @@ FEVV::SimpleViewer::createMesh(
   v_colorsArrays_edges.push_back(l_colorsArrays_edges);
   v_colorsArrays_vertices.push_back(l_colorsArrays_vertices);
   v_colorsArrays_normals.push_back(l_colorsArrays_normals);
+  v_colorsArrays_custom_vectors.push_back(l_colorsArrays_custom_vectors);
   v_texcoordsArrays.push_back(l_texcoordsArrays);
 
   v_mixed_meshes.push_back(_g);
@@ -2716,12 +3055,15 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
     v_geometries_edges[position].clear();
     v_geometries_vertices[position].clear();
     v_geometries_normals[position].clear();
+    v_geometries_custom_vectors[position].clear();
     v_vertexArrays_edges[position].clear();
     v_vertexArrays_vertices[position].clear();
     v_vertexArrays_normals[position].clear();
+    v_vertexArrays_custom_vectors[position].clear();
     v_colorsArrays_edges[position].clear();
     v_colorsArrays_vertices[position].clear();
     v_colorsArrays_normals[position].clear();
+    v_colorsArrays_custom_vectors[position].clear();
 
     v_normalsArrays_edges[position].clear();
     v_normalsArrays_vertices[position].clear();
@@ -2736,10 +3078,12 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                       v_geometries_edges[position],
                       v_geometries_vertices[position],
                       v_geometries_normals[position],
+                      v_geometries_custom_vectors[position],
                       v_vertexArrays[position],
                       v_vertexArrays_edges[position],
                       v_vertexArrays_vertices[position],
                       v_vertexArrays_normals[position],
+                      v_vertexArrays_custom_vectors[position],
                       v_normalsArrays[position],
                       v_normalsArraysF[position],
                       v_normalsArrays_edges[position],
@@ -2749,6 +3093,7 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
                       v_colorsArrays_edges[position],
                       v_colorsArrays_vertices[position],
                       v_colorsArrays_normals[position],
+                      v_colorsArrays_custom_vectors[position],
                       v_texcoordsArrays[position],
                       _pm,
                       v_meshes_names[position]);
