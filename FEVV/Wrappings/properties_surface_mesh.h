@@ -168,6 +168,40 @@ struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_color_t >
   }
 };
 
+// specialize the property maps traits for vertex-custom_vector
+template< typename PointT >
+struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_custom_vector_t >
+{
+  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
+      value_type;
+  typedef typename Vertex_pmap_traits< CGAL::Surface_mesh< PointT >,
+                                       value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
+  {
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+  }
+};
+
+// specialize the property maps traits for vertex-custom_vector_color
+template< typename PointT >
+struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::vertex_custom_vector_color_t >
+{
+  typedef typename FEVV::Geometry_traits< CGAL::Surface_mesh< PointT > >::Vector
+      value_type;
+  typedef typename Vertex_pmap_traits< CGAL::Surface_mesh< PointT >,
+                                       value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const CGAL::Surface_mesh< PointT > &m)
+  {
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+  }
+};
+
 // specialize the property maps traits for halfedge-normal
 template< typename PointT >
 struct _PMap_traits< CGAL::Surface_mesh< PointT >, FEVV::halfedge_normal_t >

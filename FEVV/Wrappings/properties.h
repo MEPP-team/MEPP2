@@ -48,6 +48,14 @@ enum vertex_color_t { vertex_color };
 // warning: boost::vertex_color_t is already
 // defined in /usr/include/boost/graph/properties.hpp
 
+/// the *custom_vector* property of a vertex
+/// (refer to \ref GenericPropertyMapConceptPage)
+enum vertex_custom_vector_t { vertex_custom_vector };
+
+/// the *custom_vector_color* property of a vertex
+/// (refer to \ref GenericPropertyMapConceptPage)
+enum vertex_custom_vector_color_t { vertex_custom_vector_color };
+
 /// the *normal* property of a halfedge (aka normal by corner)
 /// (refer to \ref GenericPropertyMapConceptPage)
 enum halfedge_normal_t { halfedge_normal };
@@ -128,6 +136,18 @@ inline std::string get_property_map_name(FEVV::vertex_texcoord_t)
 inline std::string get_property_map_name(FEVV::vertex_color_t)
 {
   return std::string("v:color");
+}
+
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline std::string get_property_map_name(FEVV::vertex_custom_vector_t)
+{
+  return std::string("v:custom_vector");
+}
+
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline std::string get_property_map_name(FEVV::vertex_custom_vector_color_t)
+{
+  return std::string("v:custom_vector_color");
 }
 
 /// (refer to \ref GenericPropertyMapConceptPage)
@@ -389,6 +409,34 @@ struct _PMap_traits< MeshT, FEVV::vertex_texcoord_t >
 // specialize the standard property map for vertex-color
 template< typename MeshT >
 struct _PMap_traits< MeshT, FEVV::vertex_color_t >
+{
+  typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
+  typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const MeshT &m)
+  {
+    pmap_type pmap;
+    return pmap;
+  }
+};
+
+// specialize the property maps traits for vertex-custom_vector
+template< typename MeshT >
+struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_t >
+{
+  typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
+  typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const MeshT &m)
+  {
+    pmap_type pmap;
+    return pmap;
+  }
+};
+
+// specialize the property maps traits for vertex-custom_vector_color
+template< typename MeshT >
+struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_color_t >
 {
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
