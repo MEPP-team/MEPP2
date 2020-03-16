@@ -73,7 +73,7 @@ template< typename HalfedgeGraph,
       typename GeometryTraits::Vector face_normal, face_normal_after_collapse;
       // get the normal of the current face
       // check if the current face is not null
-      bool b = FEVV::Math::Vector::are_collinear<GeometryTraits>(gt.sub(p0, p1), gt.sub(get(pm, v), p1));
+      bool b = FEVV::Math::Vector::are_collinear<GeometryTraits>(gt.sub_p(p0, p1), gt.sub_p(get(pm, v), p1));
       if (!b)
         face_normal = gt.normal(p0, p1, get(pm, v));
       else

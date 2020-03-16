@@ -42,7 +42,7 @@ struct GeometryConcept
     //////////////////////// Point manipulations
 
     // Point constructor
-    Point p(1.1, 2.2, 3.3);
+    Point p(1.1f, 2.2f, 3.3f);
 
     // Point copy construction
     Point q(p);
@@ -62,7 +62,7 @@ struct GeometryConcept
     //////////////////////// Vector manipulations
 
     // Vector constructor
-    Vector v(4.4, 5.5, 6.6);
+    Vector v(4.4f, 5.5f, 6.6f);
 
     // Vector copy construction
     Vector v2(v1);
@@ -83,28 +83,27 @@ struct GeometryConcept
     // v[0] = 1; will fail (refer below for the details).
     // In order to alter one or many coordinate component of a Vector one must
     // create a new Vector and reassign it:
-    v1 = Vector(v1[0], v1[1], 999.0);
+    v1 = Vector(v1[0], v1[1], 999.0f);
 
     // Misc vectors operations
     v1 = gt.normalize(v);
     s  = gt.length2(v);
     s  = gt.length(v);
-    v = gt.add(v1, v2);
+    v = gt.add_v(v1, v2);
     gt.dot_product(v1, v2);
     gt.cross_product(v1, v2);
 
     // Scalar/Vector:
     v2 = gt.scalar_mult(v1, s);
-    v2 = gt.scalar_mult(s, v1);
 
     //////////////////////// Vector/Point and Point/Vector operators
 
     s  = gt.length(p, q);
     v1 = gt.normal(p, p, p);
     v1 = gt.unit_normal(p, p, p);
-    p = gt.add_p(p, v1);
-    p = gt.sub_p(p, v1);
-    v1 = gt.sub(p, p);
+    p = gt.add_pv(p, v1);
+    p = gt.sub_pv(p, v1);
+    v1 = gt.sub_p(p, p);
 
 #if 0
 ////////////////////////////////////////////////////////////////
@@ -170,30 +169,30 @@ void check_operators_results(void)
            almost_equal_s(v1[2], v2[2], epsilon);
   };
 
-  Scalar eps = 1e-5;
-  Vector u(8.3, -3.2, -3.8);
-  Vector v(1.2, 2.3, 3.4);
-  Point p(3.0, 12.5, -2.1);
-  Point q(-1.4, 4.6, -1.9);
-  Point r(-2.6, 4.7, 5.8);
+  Scalar eps = 1e-5f;
+  Vector u(8.3f, -3.2f, -3.8f);
+  Vector v(1.2f, 2.3f, 3.4f);
+  Point p(3.0f, 12.5f, -2.1f);
+  Point q(-1.4f, 4.6f, -1.9f);
+  Point r(-2.6f, 4.7f, 5.8f);
 
   {
     Scalar l2 = GeometryTraits::length2(v);
-    assert(almost_equal_s(l2, 18.29, eps));
+    assert(almost_equal_s(l2, 18.29f, eps));
 
     Scalar l = GeometryTraits::length(v);
-    assert(almost_equal_s(l, 4.276681, eps));
+    assert(almost_equal_s(l, 4.276681f, eps));
 
     Vector n = GeometryTraits::normalize(v);
-    assert(almost_equal_v(n, Vector(0.280591, 0.537800, 0.795009), eps));
+    assert(almost_equal_v(n, Vector(0.280591f, 0.537800f, 0.795009f), eps));
   }
 
   {
-    Vector w = GeometryTraits::sub(p, q);
-    assert(almost_equal_v(w, Vector(4.4, 7.9, -0.2), eps));
+    Vector w = GeometryTraits::sub_p(p, q);
+    assert(almost_equal_v(w, Vector(4.4f, 7.9f, -0.2f), eps));
 
     Scalar l = GeometryTraits::length(p, q);
-    assert(almost_equal_s(l, 9.044888, eps));
+    assert(almost_equal_s(l, 9.044888f, eps));
   }
 
   {
@@ -204,37 +203,34 @@ void check_operators_results(void)
     GeometryTraits gt(m);
 
     Vector n = gt.normal(p, q, r);
-    assert(almost_equal_v(n, Vector(-60.85, 33.64, -9.92), eps) ||
-           almost_equal_v(n, Vector(-0.866393, 0.478972, -0.141243), eps) );
+    assert(almost_equal_v(n, Vector(-60.85f, 33.64f, -9.92f), eps) ||
+           almost_equal_v(n, Vector(-0.866393f, 0.478972f, -0.141243f), eps) );
            // OpenMesh returns a normalized normal
     
     n = gt.unit_normal(p, q, r);
-    assert(almost_equal_v(n, Vector(-0.866393, 0.478972, -0.141243), eps));
+    assert(almost_equal_v(n, Vector(-0.866393f, 0.478972f, -0.141243f), eps));
   }
 
   {
-    Vector w = GeometryTraits::add(u, v);
-    assert(almost_equal_v(w, Vector(9.5, -0.9, -0.4), eps));
+    Vector w = GeometryTraits::add_v(u, v);
+    assert(almost_equal_v(w, Vector(9.5f, -0.9f, -0.4f), eps));
 
     Scalar d = GeometryTraits::dot_product(u, v);
-    assert(almost_equal_s(d, -10.32, eps));
+    assert(almost_equal_s(d, -10.32f, eps));
 
     w = GeometryTraits::cross_product(u, v);
-    assert(almost_equal_v(w, Vector(-2.14, -32.78, 22.93), eps));
+    assert(almost_equal_v(w, Vector(-2.14f, -32.78f, 22.93f), eps));
   }
 
   {
-    Point a = GeometryTraits::add_p(p, v);
-    assert(almost_equal_p(a, Point(4.2, 14.8, 1.3), eps));
+    Point a = GeometryTraits::add_pv(p, v);
+    assert(almost_equal_p(a, Point(4.2f, 14.8f, 1.3f), eps));
 
-    a = GeometryTraits::sub_p(p, v);
-    assert(almost_equal_p(a, Point(1.8, 10.2, -5.5), eps));
+    a = GeometryTraits::sub_pv(p, v);
+    assert(almost_equal_p(a, Point(1.8f, 10.2f, -5.5f), eps));
 
-    Vector w = GeometryTraits::scalar_mult(v, -2.345);
-    assert(almost_equal_v(w, Vector(-2.814, -5.3935, -7.973), eps));
-
-    w = GeometryTraits::scalar_mult(-2.345, v);
-    assert(almost_equal_v(w, Vector(-2.814, -5.3935, -7.973), eps));
+    Vector w = GeometryTraits::scalar_mult(v, -2.345f);
+    assert(almost_equal_v(w, Vector(-2.814f, -5.3935f, -7.973f), eps));
   }
 }
 

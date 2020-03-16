@@ -55,11 +55,11 @@ is_geometrical_fold(
                          right_dir = gt.NULL_VECTOR, vh;
   //////////////////////////////////////////////////////////////////
   next_h1 =
-      gt.sub(get(pm, target(h1, g)),
-             get(pm,
-                 target(next(h1, g),
-                        g))); // target(next(h1, g),g) instead of
-                              // source(prev(h1, g) to handle polygonal cases
+      gt.sub_p(get(pm, target(h1, g)),
+               get(pm,
+                   target(next(h1, g),
+                          g))); // target(next(h1, g),g) instead of
+                                // source(prev(h1, g) to handle polygonal cases
 
   // Compute unit normal
   nnext = FEVV::Operators::
@@ -71,7 +71,7 @@ is_geometrical_fold(
   else
     return true;
   //////////////////////////////////////////////////////////////////
-  next_h2 = gt.sub(get(pm, target(h2, g)), get(pm, source(prev(h2, g), g)));
+  next_h2 = gt.sub_p(get(pm, target(h2, g)), get(pm, source(prev(h2, g), g)));
 
   // Compute unit normal
   nnext = FEVV::Operators::
@@ -83,8 +83,8 @@ is_geometrical_fold(
   else
     return true;
 
-  vg = gt.sub(get(pm, target(h2, g)), get(pm, target(next(h1, g), g)));
-  vh = gt.sub(get(pm, target(h1, g)), get(pm, source(prev(h2, g), g)));
+  vg = gt.sub_p(get(pm, target(h2, g)), get(pm, target(next(h1, g), g)));
+  vh = gt.sub_p(get(pm, target(h1, g)), get(pm, source(prev(h2, g), g)));
 
   // fold to the right     fold to the left
   return ((gt.dot_product(left_dir, vg) <= 0.0) ||

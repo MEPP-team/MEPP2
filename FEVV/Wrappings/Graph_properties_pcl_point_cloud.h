@@ -69,9 +69,9 @@ public:
     // 'points' attribute of pcl::PointCloud<>
     // is a std::vector<FEVV::PCLEnrichedPoint>
     FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-    enriched_point.x = point.x;
-    enriched_point.y = point.y;
-    enriched_point.z = point.z;
+    enriched_point.x = point[0];
+    enriched_point.y = point[1];
+    enriched_point.z = point[2];
   }
 
 private:
@@ -130,8 +130,8 @@ put(FEVV::PCLPointCloudPointMap &pm,
 class PCLPointCloudNormalMap
 {
 public:
-  typedef FEVV::PCLNormal                      value_type;
-  typedef FEVV::PCLNormal&                     reference;
+  typedef FEVV::PCLVector                      value_type;
+  typedef FEVV::PCLVector&                     reference;
   typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
       key_type;
   typedef boost::read_write_property_map_tag   category;
@@ -152,7 +152,7 @@ public:
     if(m_pc)
     {
       const FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-      return FEVV::PCLNormal(enriched_point.normal_x,
+      return FEVV::PCLVector(enriched_point.normal_x,
                              enriched_point.normal_y,
                              enriched_point.normal_z);
     }
@@ -160,20 +160,20 @@ public:
     {
       throw std::runtime_error(
           "FEVV::PCLPointCloudNormalMap: invalid use of un-initialized map");
-      return FEVV::PCLNormal(0, 0, 0); // dummy return to avoid a warning
+      return FEVV::PCLVector(0, 0, 0); // dummy return to avoid a warning
     }
   }
 
-  void set(key_type k, const FEVV::PCLNormal &normal)
+  void set(key_type k, const FEVV::PCLVector &normal)
   {
     // 'points' attribute of pcl::PointCloud<>
     // is a std::vector<FEVV::PCLEnrichedPoint>
     if(m_pc)
     {
       FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-      enriched_point.normal_x = normal.x;
-      enriched_point.normal_y = normal.y;
-      enriched_point.normal_z = normal.z;
+      enriched_point.normal_x = normal[0];
+      enriched_point.normal_y = normal[1];
+      enriched_point.normal_z = normal[2];
     }
     else
     {
@@ -252,9 +252,9 @@ public:
     if(m_pc)
     {
       FEVV::PCLEnrichedPoint &enriched_point = m_pc->points[k];
-      enriched_point.r = color.r;
-      enriched_point.g = color.g;
-      enriched_point.b = color.b;
+      enriched_point.r = color[0];
+      enriched_point.g = color[1];
+      enriched_point.b = color[2];
     }
     else
     {
@@ -360,9 +360,9 @@ kNN_search(
 
   // prepare query
   FEVV::PCLEnrichedPoint search_point;
-  search_point.x = query.x;
-  search_point.y = query.y;
-  search_point.z = query.z;
+  search_point.x = query[0];
+  search_point.y = query[1];
+  search_point.z = query[2];
 
   // search K nearest neighbors
   std::vector< int > nn_ids_tmp(k);
@@ -414,9 +414,9 @@ radius_search(
 
   // prepare query
   FEVV::PCLEnrichedPoint search_point;
-  search_point.x = query.x;
-  search_point.y = query.y;
-  search_point.z = query.z;
+  search_point.x = query[0];
+  search_point.y = query[1];
+  search_point.z = query[2];
 
   // search nearest neighbors
   std::vector< int > nn_ids_tmp;

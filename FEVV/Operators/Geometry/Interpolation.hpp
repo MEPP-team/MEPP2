@@ -257,7 +257,7 @@ is_over_segment(const typename GeometryTraits::Point &a,
 {
   typedef typename GeometryTraits::Vector Vector;
   typedef typename GeometryTraits::Point Point;
-  Vector vab(gt.sub(b, a)), vaPos(gt.sub(Pos, a)), inter, N, Ntmp;
+  Vector vab(gt.sub_p(b, a)), vaPos(gt.sub_p(Pos, a)), inter, N, Ntmp;
   Point interp;
   inter = gt.cross_product(vab, vaPos);
   // std::cout << " inter: (" << inter[0] << " " << inter[1] << " " << inter[2]
@@ -268,8 +268,9 @@ is_over_segment(const typename GeometryTraits::Point &a,
   N = gt.normalize(Ntmp);
   // std::cout << " N: (" << N[0] << " " << N[1] << " " << N[2] << ")" <<
   // std::endl;
-  diff = gt.scalar_mult(-gt.dot_product(vaPos, N),
-                        N); // "-" to go towards the surface!!
+  diff = gt.scalar_mult(N,
+                        -gt.dot_product(vaPos, N));
+                        // "-" to go towards the surface!!
 
   interp = Point(Pos[0] + diff[0], Pos[1] + diff[1], Pos[2] + diff[2]);
   // std::cout << " interp: (" << interp[0] << " " << interp[1] << " " <<

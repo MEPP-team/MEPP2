@@ -267,6 +267,10 @@ When some code is bound to a dimension then respect CGAL's rule to explicitly **
 ### Avoid using macros
 Nevertheless if you have a _really_ good reason (code cosmetics is clearly not sufficient) to define some macro then **prefix the macro name with `FEVV_`**.
 
+### Filters should explictly mention all read/written properties they use in their signature
+
+See @ref DevelopersCodingStyleSpecificitiesPage for a complete explanation.
+
 ## File/directory layout
 
 ### Layout of a given filter subdirectory

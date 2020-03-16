@@ -236,32 +236,27 @@ public:
   /**
    * \brief Returns the sum of vectors u and v.
    */
-  Vector add(const Vector &u, const Vector &v);
+  Vector add_v(const Vector &u, const Vector &v);
 
   /**
    * \brief Returns the sum of point p and vector v.
    */
-  Vector add_p(const Point &p, const Vector &v);
+  Vector add_pv(const Point &p, const Vector &v);
 
   /**
    * \brief Returns the subtraction of vector v from point p.
    */
-  Vector sub_p(const Point &p, const Vector &v);
+  Vector sub_pv(const Point &p, const Vector &v);
 
   /**
    * \brief Returns the vector from point q to point p.
    */
-  Vector sub(const Point &p, const Point &q);
+  Vector sub_p(const Point &p, const Point &q);
 
   /**
    * \brief Returns the multiplication of vector v by scalar s.
    */
   Vector scalar_mult(const Vector &v, Scalar s);
-
-  /**
-   * \brief Returns the multiplication of vector v by scalar s.
-   */
-  Vector scalar_mult(Scalar s, const Vector &v);
 
   /**
    * \brief Returns the dot product of vectors u and v.
