@@ -1,21 +1,22 @@
 /**
 
-\mainpage FEVV documentation Home Page
+\mainpage MEPP2 documentation home page
 
 \section TableOfContent  Table of content
- - \ref GeneralIntroductionPage    "General introduction"
- - \ref InstallWrapperPage         "Installation instructions"
- - Ressources for developers
-   - \ref DevelopersInceptionPage    "How to write your own mesh processing filter"
-   - \ref CategorizedExamplesPage    "A mesh processing example (TODO contenu obsolete a revoir)"
-   - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a Qt visualization plugin out of an existing filter"
+ - For the user
+   - \ref GeneralIntroductionPage    "General introduction"
+   - \ref InstallWrapperPage         "Installation instructions"
+ - For the developer
+   - \ref DevelopersInceptionPage    "How to write a mesh processing filter"
+   - \ref CategorizedExamplesPage    "A mesh processing filter example (TODO contenu obsolete a revoir)"
+   - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a visualization plugin for the GUI out of an existing filter"
    - API reference
      - \ref CheatSheetConceptsPage "Mesh processing API"
      - \ref PointCloudConceptPage  "Point Cloud processing API"
      - \ref GeometryConceptPage    "Geometry processing API"
      - \ref PropertyMapPage        "Property maps API (TODO ou intégrer dans page suivante)"
      - \ref GenericPropertyMapConceptPage "Property maps management API"
-   - Contributing to the project
+ - For the contributor
      - \ref TODO                   "Forking/Cloning"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
  - Design notes
