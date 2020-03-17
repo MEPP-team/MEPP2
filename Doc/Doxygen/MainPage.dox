@@ -2,30 +2,35 @@
 
 \mainpage FEVV documentation Home Page
 
-\section Shortcuts
+\section TableOfContent  Table of content
  - \ref GeneralIntroductionSection "General introduction"
  - \ref InstallWrapperPage         "Installation instructions"
- - \ref CategorizedExamplesPage    "A set of categorized examples"
- - \ref DevelopersInceptionPage    "Developers inception"
- - \ref ConceptsPage               "Concepts gateway page"
- - Quick links for developers
-   - \ref CheatSheetConceptsPage "Mesh processing API"
-   - \ref PointCloudConceptPage "Point Cloud processing API"
-   - \ref GeometryConceptPage "Geometry processing API"
-   - \ref GenericPropertyMapConceptPage "Property maps management API"
+ - Ressources for developers
+   - \ref DevelopersInceptionPage    "How to write your own mesh processing filter"
+   - \ref CategorizedExamplesPage    "A mesh processing example (TODO contenu obsolete a revoir)"
    - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a Qt visualization plugin out of an existing filter"
-   - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
+   - API reference
+     - \ref CheatSheetConceptsPage "Mesh processing API"
+     - \ref PointCloudConceptPage  "Point Cloud processing API"
+     - \ref GeometryConceptPage    "Geometry processing API"
+     - \ref PropertyMapPage        "Property maps API (TODO ou intégrer dans page suivante)"
+     - \ref GenericPropertyMapConceptPage "Property maps management API"
+   - Contributing to the project
+     - \ref TODO                   "Forking/Cloning"
+     - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
+ - Design notes
+   - \ref ConceptsPage               "Concepts gateway page"
  - [Nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
 
-\section GeneralIntroductionSection General introduction
+\section GeneralIntroductionSection  General introduction
 
 FEVV is a C++ written (
 [generic programming](https://en.wikipedia.org/wiki/Generic_programming) oriented)
 [SDK](https://en.wikipedia.org/wiki/Software_development_kit)
 aiming at developing **portable algorithms** working on
  - [polygonal mesh](https://en.wikipedia.org/wiki/Polygon_mesh) (in 3D),
- - [volumic mesh](https://en.wikipedia.org/wiki/Volume_mesh),
- - [point cloud](https://en.wikipedia.org/wiki/Point_cloud) (someday hopefully).
+ - [volumic mesh](https://en.wikipedia.org/wiki/Volume_mesh) (future work),
+ - [point cloud](https://en.wikipedia.org/wiki/Point_cloud).
 
 In addition to cross-platform, portability should be understood
 as **interoperability over third party data structure** implementations like
@@ -48,7 +53,7 @@ implementations.
    - [CLI oriented](https://en.wikipedia.org/wiki/Command-line_interface):
      - examples and demos of filters
      - scripting tools allowing for quick macro-filters authoring as well as
-       filter execution and [batch processing](https://en.wikipedia.org/wiki/Batch_processing)
+       filter execution and [batch processing](https://en.wikipedia.org/wiki/Batch_processing) (future work)
    - [GUI oriented](https://en.wikipedia.org/wiki/Graphical_user_interface) applications like a [QT based](https://www.qt.io/) mesh "debugger".
 
 FEVV mainly **targets**
