@@ -8,7 +8,7 @@
    - \ref InstallWrapperPage         "Installation instructions"
  - For the developer
    - \ref DevelopersInceptionPage    "Add a new mesh processing filter"
-   - \ref CategorizedExamplesPage    "A mesh processing filter example (TODO contenu obsolete a revoir)"
+   - \ref CategorizedExamplesPage    "A mesh processing filter example (TODO contenu a revoir)"
    - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a visualization plugin for the GUI out of an existing filter"
    - API reference
      - \ref CheatSheetConceptsPage "Mesh processing API"

@@ -1,46 +1,37 @@
 /**
 
-@page CategorizedExamplesPage Categorized examples
+@page CategorizedExamplesPage  A mesh processing filter example
 
-Other user related documentation
- - \ref CheatSheetConceptsPage "Cheat sheet for concepts used in FEVV"
- - A set of <a href="examples.html">example files</a>
-
-*****************************************
 \section ExampleComprehensive A comprehensive example
-This example introduces how to define and use a \ref GenericDefinition "generic"
+The [Helloworld example](https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/Helloworld) 
+introduces how to define and use a \ref GenericDefinition "generic"
 filter on a mesh.
-This example might seem quite heavy at first, since it gathers (within a single
-self contained file) all the aspects of the code a FEVV user might need to
-define.
 
-In particular, this tutorial filter illustrates the following FEVV features :
+In particular, this tutorial filter illustrates the following features :
  - reading a mesh from a file
  - looping on the loaded mesh vertices and
     - reading existing \ref GenericPropertyMapConceptPage "property maps"
       (that are attached to the vertices) like the vertices geometry
     - modifying existing \ref GenericPropertyMapConceptPage "property maps"
       (still attached to the vertices)
-    - displaying progress on the command line (hence the "hello world" name
-      of this tutorial filter)
  - creating a new \ref GenericPropertyMapConceptPage "property map" this
    time attached to the mesh faces
- - looping on the faces in order populate this newly created property map
+ - looping on the faces in order to populate this newly created property map
  - writing the resulting mesh to a file
 
 Then this also illustrates
  - definition of a filter (aka a mesh processing)
  - application of a filter to a mesh
 
-Trying out FEVV can thus be simply achieved by copying the code of this
+Trying out MEPP2 can thus be simply achieved by copying the code of this
 example and start experiencing/hacking with it.
 
 This generic example is instantiated for the following mesh data structures:
-  - an \ref AIF/HelloWorld/helloworld_filter_aif.cpp "AIF version"
-  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_linear_cell_complex.cpp "CGAL::Linear Cell Complex version"
-  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_polyhedron_3.cpp "CGAL::Polyhedron_3 version"
-  - a \ref CGAL/HelloWorld/helloworld_filter_cgal_surface_mesh.cpp "CGAL::SurfaceMesh version"
-  - an \ref OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp "OpenMesh version"
+  - an [AIF version](helloworld__filter__aif_8cpp_source.html)
+  - a [CGAL::Linear Cell Complex version](helloworld__filter__cgal__linear__cell__complex_8cpp_source.html)
+  - a [CGAL::Polyhedron_3 version](helloworld__filter__cgal__polyhedron__3_8cpp_source.html)
+  - a [CGAL::SurfaceMesh version](helloworld__filter__cgal__surface__mesh_8cpp_source.html)
+  - an [OpenMesh version](helloworld__filter__openmesh_8cpp_source.html)
 
 Notice that all the above versions only differ by the respective data
 structures (AIF, OpenMesh, CGAL::Surface_mesh, CGAL::Polyhedron...)
@@ -69,9 +60,9 @@ and readeable code (as opposed to using global wrapping templated function
 instantiated with the Geometry type):
 \code{.cpp}
 Mesh mesh;
-Geometry g(mesh);
+Geometry gt(mesh);
 \endcode
-Notice that the `g` object must be bound to some mesh instance.
+Notice that the `gt` object must be bound to some mesh instance.
 
 Using points is done as follows
 \code{.cpp}
@@ -80,9 +71,9 @@ Point q(p);   // Point copy construction
 q = p;        // Point copy assignement operator
 
 // Point coordinate component access
-Scalar x = g.get_x( p );
-Scalar y = g.get_y( p );
-Scalar z = g.get_z( p );
+Scalar x = gt.get_x( p );
+Scalar y = gt.get_y( p );
+Scalar z = gt.get_z( p );
 \endcode
 
 The basic manipulations of Vectors are as follows
@@ -108,33 +99,29 @@ v1 = Vector( v1[0], v1[1], 999.0 );
 Operations on Vectors are as follows
 \code{.cpp}
 // Vector length:
-s = g.length( v1 );
+s = gt.length( v1 );
 
-// Vector addition is generally provided natively by the implementations
-Vector v3 = v1 + v2;
-Vector v4 = v1 - v2;
+// Vector addition
+Vector v3 = gt.add_v(v1, v2);
 \endcode
 
 Operations blending the usage of Vectors and Points
 \code{.cpp}
-v1 = g.normal( p, p, p );
-v1 = g.unit_normal( p, p, p );
+v1 = gt.normal( p, p, p );
+v1 = gt.unit_normal( p, p, p );
 \endcode
 
 Eventually addition and substractions of Vectors and Points
 \code{.cpp}
 #include "FEVV/Wrappings/Geometry_traits_operators.h"
-v3 = g.AddV( v1, v2 );
- p = g.AddP(  p, v1 );
- p = g.SubP(  p, v1 );
-v1 = g.Sub (  p, p  );
+v3 = gt.add_v ( v1, v2 );
+ p = gt.add_pv(  p, v1 );
+ p = gt.sub_pv(  p, v1 );
+v1 = gt.sub_p (  p, p  );
 \endcode
-where the `g.addV` is equivalent to using the operator + and is only provided as eye candy for preserving symetries in long formulas.
 
-The above snippets are extracted from the definition of concept check of
-geometry traits used on testing purposes within FEVV: refer to
-<a href=_geometry_concept_check_8h_source.html>GeometryConceptCheck.h</a>
-for further details.
+Refer to [GeometryConceptCheck.h](_geometry_concept_check_8h_source.html) for
+further examples of geometry traits usage.
 
 *****************************************
 \section ExampleFromMeshToGeometry Accessing the geometry of a given mesh
@@ -142,66 +129,5 @@ The following code snippet (refer to
 <a href=accessing__geometry_8cpp_source.html>Examples/OpenMesh/accessing_geometry.cpp</a>) illustrates how to "walk" on the vertices geometries of a given
 mesh :
 \snippet OpenMesh/accessing_geometry.cpp Snippet Accessing Geometry
-
-*****************************************
-\section ExampleDisplay Displaying a mesh
-The following code snippet (taken from to
-<a href=mepp_8cpp_source.html>Visualization/Applications/mepp-gui.cpp</a>) illustrates how to open a visualization sub-window :
-\snippet Visualization/Applications/mepp-gui.cpp Snippet Displaying Surface SurfaceMesh
-
-Note that this code is not self sufficient and placing it in your `main()` and hoping for a visualization window to show up won't suffice.
-
-******************************************************
-\section ExampleIntegratingFilterToGUI Incorporating a filter within the GUI
-
-The incorporation process is decribed
-\ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "on this HowTo separate page".
-******************************************************
-\section ExampleCtestOnFilter Filter testing with ctest
-
-Testing is realized with the help of the <a href=https://cmake.org/Wiki/CMake/Testing_With_CTest>Ctest tool.</a>
-The following snippet (taken from
-<a href=test__split__edge__polyhedron_8cpp.html>Testing/CGAL/test_split_edge_polyhedron.cpp</a>)
-illustrates how to define a simple filter test:
-\snippet Testing/CGAL/test_split_edge_polyhedron.cpp Snippet Ctest Example
-
-******************************************************
-\section ExampleTopologicalChanges Realizing topological changes
-\todo
-
-************************************
-\example AIF/HelloWorld/helloworld_filter_aif.cpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example CGAL/HelloWorld/helloworld_filter_cgal_linear_cell_complex.cpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example CGAL/HelloWorld/helloworld_filter_cgal_polyhedron_3.cpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example CGAL/HelloWorld/helloworld_filter_cgal_surface_mesh.cpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example Generic/HelloWorld/helloworld_filter.hpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example Generic/HelloWorld/helloworld_main.hpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
-
-************************************
-\example OpenMesh/HelloWorld/helloworld_filter_openmesh.cpp
-Refer \ref ExampleComprehensive "here" for a presentation of what the
-self contained and comprehensive following example code does.
 
 **/
