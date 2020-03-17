@@ -7,7 +7,7 @@
    - \ref GeneralIntroductionPage    "General introduction"
    - \ref InstallWrapperPage         "Installation instructions"
  - For the developer
-   - \ref DevelopersInceptionPage    "How to write a mesh processing filter"
+   - \ref DevelopersInceptionPage    "Add a new mesh processing filter"
    - \ref CategorizedExamplesPage    "A mesh processing filter example (TODO contenu obsolete a revoir)"
    - \ref HowToMakeAQtVisualizationPluginOutOfAFilterPage "How to make a visualization plugin for the GUI out of an existing filter"
    - API reference
@@ -17,7 +17,7 @@
      - \ref PropertyMapPage        "Property maps API (TODO ou intégrer dans page suivante)"
      - \ref GenericPropertyMapConceptPage "Property maps management API"
  - For the contributor
-     - \ref TODO                   "Forking/Cloning"
+     - \ref ForkingCloningContributingPage  "Forking/Cloning/Contributing"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
  - Design notes
    - \ref ConceptsPage               "Concepts gateway page"
