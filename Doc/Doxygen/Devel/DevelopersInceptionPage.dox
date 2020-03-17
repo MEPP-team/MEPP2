@@ -5,7 +5,7 @@
 
 
 ### The HelloWorld example
-The recommended way for getting acquainted with MEPP2 is to mimic the [generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
+The recommended way for adding a new mesh processing filter is to duplicate the [generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
 Because the HelloWorld example is \ref GenericDefinition "generic", notice
 that the `Examples/Generic/HelloWorld` only holds [templated code](https://en.wikipedia.org/wiki/Template_%28C%2B%2B%29).
 
