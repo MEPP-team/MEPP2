@@ -16,6 +16,7 @@
      - \ref GeometryConceptPage    "Geometry processing API"
      - \ref PropertyMapPage        "Property maps API (TODO ou intégrer dans page suivante)"
      - \ref GenericPropertyMapConceptPage "Property maps management API"
+   - \ref DatastructureSpecificFilterAndPlugin "Datastructure-specific filter and plugin"
  - For the contributor
      - \ref ForkingCloningContributingPage  "Forking/Cloning/Contributing"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
