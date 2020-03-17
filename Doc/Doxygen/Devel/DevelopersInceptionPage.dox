@@ -1,11 +1,11 @@
 /**
 
-@page DevelopersInceptionPage Developers inception
+@page DevelopersInceptionPage  Add a new mesh processing filter
 
 
 
 ### The HelloWorld example
-FEVV doesn't provide (yet) any [scaffolding tool](https://en.wikipedia.org/wiki/Scaffold_(programming)#Project_generation). For the time being the recommended way for getting acquainted with FEVV is to mimic the ([generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition)) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
+The recommended way for getting acquainted with MEPP2 is to mimic the [generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
 Because the HelloWorld example is \ref GenericDefinition "generic", notice
 that the `Examples/Generic/HelloWorld` only holds [templated code](https://en.wikipedia.org/wiki/Template_%28C%2B%2B%29).
 
@@ -38,7 +38,7 @@ needs.
 For example, in addition to complying with some \ref CheatSheetConceptsPage "surface oriented concepts", your algorithm might also impose some (algorithmic) complexity constraints or the usage of some specific \ref FilterDefinition "filter" (mesh treatment) implementation that are only available for a specific implementation (i.e. some mesh data structure).
 
 Hence you thus first need to collect your specific requirements in order to
-make the ad-hoc choice among the FEVV compatible mesh data structures.
+make the ad-hoc choice among the MEPP2 compatible mesh data structures.
 You thus get to choose among
  - [OpenMesh](http://www.openmesh.org/),
  - [CGAL's Surface Mesh](http://doc.cgal.org/latest/Surface_mesh/index.html),
@@ -48,7 +48,7 @@ You thus get to choose among
 
 ### Duplicate the concrete HelloWorld example
 For the purpose `MyExample` (that has no known specific need) we are free to
-choose whatever mesh data structure available within FEVV.
+choose whatever mesh data structure available within MEPP2.
 We here (arbitrarily) choose to use the "Linear Cell Complex" implementation
 (a.k.a. CGAL-LCC).
 
@@ -73,7 +73,7 @@ target_link_libraries( myexample_filter_cgal_linear_cell_complex
 ```
 
 ### Build your example
-Your can now fold back to the build stage of the \ref InstallWrapperPage "FEVV installation instructions". Because you want to build the CGAL-LCC example you will need to set cmake's `BUILD_USE_CGAL` build flag to `ON`.
+Your can now fold back to the build stage of the \ref InstallWrapperPage "MEPP2 installation instructions". Because you want to build the CGAL-LCC example you will need to set cmake's `BUILD_USE_CGAL` build flag to `ON`.
 
 ### Run the example
 When working on Linux or OSX, you should find the binary that you build within the `Bin/Examples/CGAL/HelloWorld/` sub-directory of your building directory (here taken as being `Bin`). In order to run it try something like
