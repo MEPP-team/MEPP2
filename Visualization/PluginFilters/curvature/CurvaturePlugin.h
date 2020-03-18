@@ -67,7 +67,7 @@ public:
   ~CurvaturePlugin() = default;
 
 public:
-  void init() override { init(true, false, 0.001, 2, false, false); }
+  void init() override { init(true, false, 0.001, 2, true, false); }
 
   void init(bool _forceCompute,
             bool _isGeod,
@@ -1014,6 +1014,7 @@ public:
     // color
 
     // ---
+
     const std::pair< BaseAdapterVisu *, HalfedgeGraph * > p =
         std::make_pair(_adapter, _mesh);
 
@@ -1070,6 +1071,53 @@ public:
                       std::get< 1 >(map_v_cmHG[p])[2],
                       std::get< 1 >(map_v_cmHG[p])[3],
                       (*value_colorField)); // 1 : min, 2 : max
+
+    // --- vertex_custom_vector and vertex_custom_vector_color
+    if( (*value_displayMinDirections) || (*value_displayMaxDirections) )
+    {
+        using VertexCustomVectorMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_t,
+                                      HalfedgeGraph >::pmap_type;
+
+        using VertexCustomVectorColorMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
+                                      HalfedgeGraph >::pmap_type;
+
+        using vertex_iterator = typename GraphTraits::vertex_iterator;
+
+        VertexCustomVectorMap v_CVm;
+        v_CVm = make_property_map(FEVV::vertex_custom_vector, *_mesh);
+
+        VertexCustomVectorColorMap v_CVCm;
+        v_CVCm = make_property_map(FEVV::vertex_custom_vector_color, *_mesh);
+
+        VertexCurvatureMapHG curvMap = std::get< 0 >(map_v_cmHG[p]);
+
+        auto iterator_pair = vertices(*_mesh); // vertices() returns a vertex_iterator pair
+        vertex_iterator vi = iterator_pair.first;
+        vertex_iterator vi_end = iterator_pair.second;
+        for (; vi != vi_end; ++vi)
+        {
+          auto curvData = get(curvMap, *vi);
+
+          if (*value_displayMinDirections)
+          {
+            v_CVm[*vi] = VectorHG(curvData.VKminCurv[0], curvData.VKminCurv[1], curvData.VKminCurv[2]);
+            v_CVCm[*vi] = VectorHG(205/255.0f, 220/255.0f, 57/255.0f); // Lime
+          }
+          else if (*value_displayMaxDirections)
+          {
+            v_CVm[*vi] = VectorHG(curvData.VKmaxCurv[0], curvData.VKmaxCurv[1], curvData.VKmaxCurv[2]);
+            v_CVCm[*vi] = VectorHG(243/255.0f, 156/255.0f, 18/255.0f); // Orange
+          }
+        }
+
+        put_property_map(FEVV::vertex_custom_vector, *_mesh, *pmaps_bag, v_CVm);
+
+        put_property_map(FEVV::vertex_custom_vector_color, *_mesh, *pmaps_bag, v_CVCm);
+    }
+    // --- vertex_custom_vector and vertex_custom_vector_color
+
     // ---
 
     auto viewer = dynamic_cast< SimpleViewer * >(_adapter->getViewer());

@@ -670,7 +670,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         // [ normals
 
         // [ custom_vectors
-        if(0) // temp BUT important for later activation
+        if(1) // temp BUT important for later activation
         {
           std::cout << "[MeshLoading] Drawing custom_vectors" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
 
@@ -1071,7 +1071,7 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
 
     // [ custom_vectors
     if(unit_ii == 0) // MUST be done only one time
-      if(0) // temp BUT important for later activation
+      if(1) // temp BUT important for later activation
       {
         _geometries_custom_vectors[unit_ii]->setVertexArray(
             _vertexArrays_custom_vectors[unit_ii]);

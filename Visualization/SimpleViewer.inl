@@ -1546,8 +1546,8 @@ FEVV::SimpleViewer::internal_createMesh(
       // [ custom_vectors
       if(_vt_CVm)
       {
-        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
-        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * MAGNITUDE_N * 2. ); // * 2. is a sample
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) - Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * MAGNITUDE_N * 0.4 ); // * 0.4 is a sample
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * MAGNITUDE_N * 0.4 ); // * 0.4 is a sample
       }
       // ] custom_vectors
 
