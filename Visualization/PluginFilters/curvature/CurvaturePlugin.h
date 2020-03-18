@@ -1072,7 +1072,7 @@ public:
                       std::get< 1 >(map_v_cmHG[p])[3],
                       (*value_colorField)); // 1 : min, 2 : max
 
-    // --- vertex_custom_vector and vertex_custom_vector_color
+    // --- vertex_custom_vector, vertex_custom_vector_color and vertex_custom_vector_param
     if( (*value_displayMinDirections) || (*value_displayMaxDirections) )
     {
         using VertexCustomVectorMap =
@@ -1083,6 +1083,10 @@ public:
           typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
                                       HalfedgeGraph >::pmap_type;
 
+        using VertexCustomVectorParamMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_param_t,
+                                      HalfedgeGraph >::pmap_type;
+
         using vertex_iterator = typename GraphTraits::vertex_iterator;
 
         VertexCustomVectorMap v_CVm;
@@ -1090,6 +1094,9 @@ public:
 
         VertexCustomVectorColorMap v_CVCm;
         v_CVCm = make_property_map(FEVV::vertex_custom_vector_color, *_mesh);
+
+        VertexCustomVectorParamMap v_CVPm;
+        v_CVPm = make_property_map(FEVV::vertex_custom_vector_param, *_mesh);
 
         VertexCurvatureMapHG curvMap = std::get< 0 >(map_v_cmHG[p]);
 
@@ -1103,20 +1110,24 @@ public:
           if (*value_displayMinDirections)
           {
             v_CVm[*vi] = VectorHG(curvData.VKminCurv[0], curvData.VKminCurv[1], curvData.VKminCurv[2]);
-            v_CVCm[*vi] = VectorHG(205/255.0f, 220/255.0f, 57/255.0f); // Lime
+            v_CVCm[*vi] = VectorHG(139/255.0f, 195/255.0f, 74/255.0f); // LightGreen
           }
           else if (*value_displayMaxDirections)
           {
             v_CVm[*vi] = VectorHG(curvData.VKmaxCurv[0], curvData.VKmaxCurv[1], curvData.VKmaxCurv[2]);
             v_CVCm[*vi] = VectorHG(243/255.0f, 156/255.0f, 18/255.0f); // Orange
           }
+
+          v_CVPm[*vi] = VectorHG(0.5f, 0.5f, 0.08f); // B_CV, E_CV, M_CV
         }
 
         put_property_map(FEVV::vertex_custom_vector, *_mesh, *pmaps_bag, v_CVm);
 
         put_property_map(FEVV::vertex_custom_vector_color, *_mesh, *pmaps_bag, v_CVCm);
+
+        put_property_map(FEVV::vertex_custom_vector_param, *_mesh, *pmaps_bag, v_CVPm);
     }
-    // --- vertex_custom_vector and vertex_custom_vector_color
+    // --- vertex_custom_vector, vertex_custom_vector_color and vertex_custom_vector_param
 
     // ---
 

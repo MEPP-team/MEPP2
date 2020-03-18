@@ -220,6 +220,25 @@ struct _PMap_traits< OpenMesh::PolyMesh_ArrayKernelT< OMTraits >,
   }
 };
 
+// specialize the property maps traits for vertex-custom_vector_param
+template< typename OMTraits >
+struct _PMap_traits< OpenMesh::PolyMesh_ArrayKernelT< OMTraits >,
+                     FEVV::vertex_custom_vector_param_t >
+{
+  typedef typename FEVV::Geometry_traits<
+      OpenMesh::PolyMesh_ArrayKernelT< OMTraits > >::Vector value_type;
+  typedef
+      typename Vertex_pmap_traits< OpenMesh::PolyMesh_ArrayKernelT< OMTraits >,
+                                   value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const OpenMesh::PolyMesh_ArrayKernelT< OMTraits > &m)
+  {
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+  }
+};
+
 // specialize the property maps traits for halfedge-normal
 template< typename OMTraits >
 struct _PMap_traits< OpenMesh::PolyMesh_ArrayKernelT< OMTraits >,
