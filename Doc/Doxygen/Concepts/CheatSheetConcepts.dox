@@ -1,24 +1,29 @@
 /**
 
-@page CheatSheetConceptsPage Cheat sheet for concepts used in FEVV
+@page CheatSheetConceptsPage Mesh processing API
 
-Refer to
+The mesh processing API is provided by the
+\ref CheatSheetSurfaceCoreConceptsSection "Surface oriented concepts" detailed
+below.
+
+See also:
  - \ref ConceptsPage for a general picture on FEVV concepts
  - \ref ConceptCGALApproachSection for a general diagram of the concepts.
 
- @section CheatSheetSurfaceCoreConceptsSection Surface oriented concepts
+<br>
 
+@section CheatSheetSurfaceCoreConceptsSection Surface oriented concepts
 
 @subsection CheatSheetSurfaceCoreConceptsNotationsSection Notations
- - `G` A type that is a model of desired concept
- - `g` An object of type `G`.
- - `u`, `v`  Objects of type `boost::graph_traits<G>::vertex_descriptor`
- - `e` An object of type `boost::graph_traits<G>::edge_descriptor`.
- - `f` An object of type `boost::graph_traits<G>::face_descriptor`.
- - `h`, `h1`, `h2` Halfedge descriptors.
- - `vr` An set of vertices represented as a `VertexRange`.
- - `iter` is an object of type `boost::graph_traits<G>::out_edge_iterator`.
- - `p` is an object of a type that models [Predicate](http://www.sgi.com/tech/stl/Predicate.html) and whose argument type matches the `edge_descriptor` type.
+ - `G` &nbsp;&nbsp; A type that is a model of desired concept.
+ - `g` &nbsp;&nbsp; An object of type `G`.
+ - `u`, `v` &nbsp;&nbsp; Objects of type `boost::graph_traits<G>::vertex_descriptor`.
+ - `e` &nbsp;&nbsp; An object of type `boost::graph_traits<G>::edge_descriptor`.
+ - `f` &nbsp;&nbsp; An object of type `boost::graph_traits<G>::face_descriptor`.
+ - `h`, `h1`, `h2` &nbsp;&nbsp; Halfedge descriptors.
+ - `vr` &nbsp;&nbsp; A set of vertices represented as a `VertexRange`.
+ - `iter` &nbsp;&nbsp; An object of type `boost::graph_traits<G>::out_edge_iterator`.
+ - `p` &nbsp;&nbsp; An object of a type that models [Predicate](http://www.sgi.com/tech/stl/Predicate.html) and whose argument type matches the `edge_descriptor` type.
 
 @subsection CheatSheetSurfaceCoreConceptsReadingWalkingSection Walking on/reading a mesh
 
