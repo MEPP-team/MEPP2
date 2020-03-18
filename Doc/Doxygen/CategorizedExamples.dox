@@ -39,6 +39,7 @@ that they respectively instantiate. Yet they share the exact same
 \ref GenericDefinition "generic" filter code.
 
 *****************************************
+
 \section ExampleGeometryAccess Retrieving and using the geometry
 
 The following code snippets assume that `Mesh` is a given type for a mesh.
@@ -120,14 +121,45 @@ v3 = gt.add_v ( v1, v2 );
 v1 = gt.sub_p (  p, p  );
 \endcode
 
-Refer to [GeometryConceptCheck.h](_geometry_concept_check_8h_source.html) for
-further examples of geometry traits usage.
+Refer to \ref GeometryConceptPage "the Geometry processing API page" for the
+complete list of authorized expressions related to the geometry.
 
 *****************************************
-\section ExampleFromMeshToGeometry Accessing the geometry of a given mesh
-The following code snippet (refer to
-<a href=accessing__geometry_8cpp_source.html>Examples/OpenMesh/accessing_geometry.cpp</a>) illustrates how to "walk" on the vertices geometries of a given
-mesh :
-\snippet OpenMesh/accessing_geometry.cpp Snippet Accessing Geometry
+
+\section ExampleFromMeshToGeometry Accessing the geometry of a mesh
+
+The following code snippet illustrates how to "walk" on the vertices geometries
+of a given mesh:
+
+\code{.cpp}
+// note: g is a mesh object of type Mesh
+
+// create the geometry traits object
+FEVV::Geometry_traits< Mesh > gt(g);
+
+// retrieve the geometry property map
+auto pm = get(boost::vertex_point, g);
+
+// loop over the vertices
+auto iterator_pair = vertices(g);
+  // vertices() returns a vertex_iterator pair ;
+  // the same for faces(g) and edges(g)
+vertex_iterator vi = iterator_pair.first;
+vertex_iterator vi_end = iterator_pair.second;
+for(; vi != vi_end; ++vi)
+{
+  // get the vertex geometry
+  Point p = get(pm, *vi);
+
+  // do something with the geometry
+  std::cout << "x = " << gt.get_x(p) << std::endl;
+  std::cout << "y = " << gt.get_y(p) << std::endl;
+  std::cout << "z = " << gt.get_z(p) << std::endl;
+}
+\endcode
+
+See also
+[Examples/Generic/Helloworld/helloworld_filter.hpp](helloworld__filter_8hpp_source.html)
+for a complete example.
 
 **/
