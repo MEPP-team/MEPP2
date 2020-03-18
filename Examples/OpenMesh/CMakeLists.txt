@@ -23,12 +23,6 @@ add_definitions( -DCGAL_NDEBUG )
 #####################################################################
 
 #####
-add_executable( example_accessing_geometry
-                accessing_geometry.cpp )
-target_link_libraries( example_accessing_geometry
-                       ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} )
-
-#####
 add_executable( helloworld_filter_openmesh
                 helloworld_filter_openmesh.cpp )
 target_link_libraries( helloworld_filter_openmesh
