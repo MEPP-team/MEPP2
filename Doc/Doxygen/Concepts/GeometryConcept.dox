@@ -1,14 +1,39 @@
 /**
 
-@page GeometryConceptPage Geometry concept
+@page GeometryConceptPage Geometry API
 
+The Geometry API is provided by the
+\ref GeometryConceptSection "Geometry concept" detailed below.
 
-<b>Introduction</b>
-The Geometry concept can be thought as capturing the notions
-of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
-(including its [associated vector space](https://en.wikipedia.org/wiki/Affine_space#Definition)).
+See also:
+ - \ref ConceptsPage for a general picture on FEVV concepts.
 
-<b>Associated types</b>
+<br>
+
+@section GeometryConceptSection Geometry concept
+
+@subsection Introduction
+
+The Geometry concept provides an abstraction layer to manipulate the geometry
+of the real datastructures. For example the Point type of the CGAL Surface_mesh
+datastructure is different from the Point type of the AIF datastructure. So we
+need this abstraction layer to define a common interface that is supported by
+all datastructures. This allow to write an algorithm in a generic way.
+
+The interface implementing the Geometry concept for a datastructure is defined
+by the specialization of the `FEVV::Geometry_traits< >` class for this
+ datastructure. The various `Geometry_traits` specializations are
+defined in the `Wrappings/Geometry_traits_....h` files.
+
+@subsection Notations
+
+ - `G` &nbsp;&nbsp; A FEVV::Geometry_traits< > type.
+ - `gt` &nbsp;&nbsp; An object of type `G`.
+ - `p`,`q`, `r` &nbsp;&nbsp; Objects of type `Point`.
+ - `x`, `y`, `z` &nbsp;&nbsp; Objects of type `Scalar`.
+ - `v`, `u` &nbsp;&nbsp; Objects of type `Vector`.
+
+@subsection AssociatedTypes Associated types
 
 | Type               | Reference         | Description          |
 |--------------------|-------------------|----------------------|
@@ -16,14 +41,8 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 | `G::Point`         | [Point of affine space](https://en.wikipedia.org/wiki/Affine_space#Definition)  | The type "aggregating" `Scalar` coordinates. |
 | `G::Vector`        | [Affine "substraction"](https://en.wikipedia.org/wiki/Affine_space#Subtraction_and_Weyl.27s_axioms) | The type of an element of the associated vector space. |
 
-<b>Notations</b>
- - `G` A type that is a model of `Geometry`.
- - `gt` An object of type `G`.
- - `p`,`q`, `r`  Objects of type `Point`.
- - `x`, `y`, `z` Objects of type `Scalar`
- - `v`, `u` Objects of type `Vector`
+@subsection ValidExpressions Valid expressions
 
-<b>Geometry related valid expressions</b> (ON GOING WORK: refer to `Geometry_traits`)
 |      Expression          | Returns  | Description           |
 |--------------------------|----------|-----------------------|
 | `Point(x, y, z)`         | `Point`  | Constructor of the `Point` defined its respective given coordinates.|
@@ -54,37 +73,17 @@ of an [affine space](https://en.wikipedia.org/wiki/Affine_space)
 | `gt.dot_product(u, v)`   | `Scalar` | Returns the dot product of vectors `u` and `v`.|
 | `gt.cross_product(u, v)` | `Vector` | Returns the cross product of vectors `u` and `v`.|
 
+<br>
+
 Notes:
- - The concept checking tests \ref Testing/Concepts/GeometryConceptCheck.h
-   (you need to follow the link to the source on that page)
-   of the \ref Geometry_traits illustrate all above expressions.
- - Refer to \ref Geometry_traits_documentation_dummy for implementation details
- - The current implementation misses to enable the following expressions
-   - `p + q` which returns a Point (because it is hard to implement as CGAL wrappers ?)
+ - the concept checking test [GeometryConceptCheck.h](_geometry_concept_check_8h_source.html)
+   illustrate all above expressions
+ - the current implementation misses to enable the following expressions
+   - `p + q` which returns a Point
    - `p - q` which returns a Vector
    - `p + v` which returns a Point
 
-<b>Relating meshes with "their" geometry</b>
-
-The following code snippet (refer to
-<a href=accessing__geometry_8cpp_source.html>Examples/OpenMesh/accessing_geometry.cpp</a>) illustrates how to "walk" on the vertices geometries of a given
-mesh :
-\snippet OpenMesh/accessing_geometry.cpp Snippet Accessing Geometry
-
-<b>Design notes</b>:
- - Although foreseen at some point, the `next(v, e, g)` and `prev(v, e, g)`
-   expresssions were eventually disregarded since their result can be obtained
-   through other means.
- - `remove_out_edge_if(u, p, g)` and `remove_out_edge_if(u, p, g)` (mutability)
-   were droped because edges are non oriented.
-
-\todo
-  The expression `Point( Scale, Scale, Scale)` is missing from
-  \ref Testing/Concepts/GeometryConceptCheck.h. Yet it is illustrated
-  \ref FEVV/Filters/Generic/translation.hpp (in `translate()` free
-  templated function).
-
-
-This documentation generated from GeometryConcept.dox file.
+   because they are not supported by the Point and Vector types of all
+   datastructures.
 
 */
