@@ -4,7 +4,6 @@
 
  - @subpage DevelopersInceptionPage
  - @subpage DevelopersCodingStyleGeneralitiesPage
- - @subpage DevelopersCodingStyleSpecificitiesPage
  - @subpage DatastructureSpecificFilterAndPlugin
  - Design notes
    - @subpage DevelopersDesignCMakeFilesPage
