@@ -1,0 +1,11 @@
+/**
+
+@page DesignNotesPage Design notes
+
+@subpage DevelopersDesignCMakeFilesPage
+@subpage DevelopersDesignTheSocietyOfTypesPage
+@subpage DevelopersDesignGenericPropertyMapsPage
+@subpage DevelopersDesignWhyPartiallyCopyingSomeCGALHeadersPage
+@subpage DevelopersAIFCellsAndPropertyMapsPage
+@subpage UseCaseChoosingTheTypeWithinGUIPage
+*/
