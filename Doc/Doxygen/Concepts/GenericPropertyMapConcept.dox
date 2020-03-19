@@ -52,51 +52,45 @@ design.
 
 @subsection Definitions
 
-`FEVV::PMap_traits< PropertyTag, MeshT>`
-is the traits class that produces the type for a
-[property map](http://www.boost.org/libs/property_map/doc/property_map.html)
-object for a particular mesh type `MeshT`.
+<b>The Property Maps Traits for standard property maps</b>
 
-The property is specified by the `PropertyTag` template parameter.
-By convention (in fact by construction) each `PropertyTag` (type) is
-associated with a corresponding property enumerator (of type `PropertyTag`).
-For convenience, and also by convention, a property name of
-`<mesh_element>_<property_nature>` is associated with a the
-`<mesh_element>_<property_nature>_t` `PropertyTag` (constructed by postponing a trailing `_t` as a short for type) where:
-  - `<mesh_element>` is to be chosen among `vertex`, `halfedge` and `face`
-  - `<property_nature>` is typically `normal`, `color`, `texcoord` (short
-    for texture coordinate)...
-
-For example the `PropertyTag` named `vertex_normal_t` is associated with
-the property-type name of `"vertex_normal"` (see below for usage examples).
+The Property Maps Traits `FEVV::PMap_traits<PropertyTag, MeshT>`
+is the traits class that produces the right property map type for a standard
+property associated to a particular mesh type `MeshT`.
 
 The most usual property tags are pre-defined in \ref FEVV/Wrappings/properties.h
- e.g.
-  - `FEVV::vertex_normal_t` (associated to the `FEVV::vertex_normal` name)
-  - `FEVV::vertex_texcoord_t` (associated to the `FEVV::vertex_texcoord` name)
-  - `FEVV::vertex_color_t` (associated to the `FEVV::vertex_color` name)
-  - `FEVV::halfedge_normal_t` (...)
-  - `FEVV::halfedge_texcoord_t`
-  - `FEVV::face_normal_t`
-  - `FEVV::face_color_t`
-  - `FEVV::texture_filename_t`
-  - ...
+e.g.:
+  - `FEVV::vertex_normal`
+  - `FEVV::vertex_color`
+  - `FEVV::vertex_texcoord`
+  - `FEVV::face_normal`
+  - `FEVV::face_color`
+  - `FEVV::halfedge_texcoord`
+  - `FEVV::edge_color`
 
-Notes:
-  - The `FEVV::PMap_traits` traits class can be seen as a direct use case
-    (specialisation) of the
-    [boost property map library](http://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/property_map.html)
-    on top of which is based.
-  - the implementation of `PMap_traits` doesn't rely on the native (proper
-    to each datastructure) property maps of the mesh datastructures.
+<b>Non-standard property maps</b>
 
-`FEVV::PMapsContainer` is a type of container dedicated to the storage
-of mesh property maps.
-\ref FEVV/Wrappings/properties.h defines `FEVV::PMapsContainer` as
+A mechanism is provided to extend the FEVV defined standard property maps (the
+property tags that are defined in \ref FEVV/Wrappings/properties.h).
+It allows to create new "non-standard" property maps, to store user defined
+properties, in a generic way.
+For example, a property map may be needed inside a filter to temporary
+store some value attached to the vertices.
+
+<b>A container for property maps</b>
+
+It is handy to gather all property maps associated to one mesh in a unique
+container, to manipulate them as a whole.
+
+`FEVV::PMapsContainer` is the type of the container dedicated to the storage
+of one mesh property maps.
+
+\ref FEVV/Wrappings/properties.h defines `FEVV::PMapsContainer` as:
 \code{.cpp}
 typedef std::map<std::string, boost::any> PMapsContainer;
 \endcode
 
+<br>
 
 @section PropertyMapAPI Property Map API
 
@@ -116,45 +110,47 @@ typedef std::map<std::string, boost::any> PMapsContainer;
 
 @subsection AssociatedTypes Associated types
 
-| Type               | Reference         | Description          |
-|--------------------|-------------------|----------------------|
-| Key Type   | boost::property_traits<PMap>::key_type   | The type of the property map key (e.g. vertex_descriptor, face_descriptor...) |
-| Value Type | boost::property_traits<PMap>::value_type | The type of the data stored in the property map. |
+| Type               | Description          |
+|--------------------|----------------------|
+| boost::property_traits<PMap>::key_type   | The type of the property map key (e.g. vertex_descriptor, face_descriptor...) |
+| boost::property_traits<PMap>::value_type | The type of the data stored in the property map. |
+| FEVV::PMapsContainer | A container for property maps. |
 
 
 @subsection ValidExpressions Valid expressions
 
+<b>Store/retrieve data in a property map ([Boost Read/Write Property Map concept](https://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/ReadWritePropertyMap.html))</b>
+
 | Expression | Returns | Description  |
 |------------|---------|--------------|
-| Storing/retrieving data in a property map ([Boost Read/Write Property Map concept](https://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/ReadWritePropertyMap.html)) |
 | get(pmap, key) | value_type | Get the value associated with the key. |
-| put(pmap, key, val) | void | Assign val to the property associated with key. |
+| put(pmap, key, val) | void | Assign val to the property associated with the key. |
 
-
-TODO TODO TODO TODO
-
-
-
-
-
-<b>Associated types</b>
-
-| Type               | Reference         | Description          |
-|--------------------|-------------------|----------------------|
-| `PM::pmap_type`    | e.g. \ref _PMap_traits::pmap_type | The type stored within the property map of type PM. |
-
-
-
-<b>Property maps related valid expressions</b>
+<b>Create, store, retrieve standard property maps</b>
 
 | Expression         | Returns              | Description  |
 |--------------------|----------------------|--------------|
-| `make_property_map(pmap_name, m)`            | `PM`     | Constructs and return a property map named `pmap_name` associated to the `m` mesh instance. |
-| `has_map(pmaps_bag, pmap_name)`              | `bool`   | Returns `true` when the `pmaps_bag` property map bag holds a property map named `pmap_name` (e.g. `vertex_normal`, `face_color`...), `false` otherwise |
-| `put_property_map(pmap_name, m, pmaps_bag, pm)`  | `void` | Stores a weak reference to property map `pm` (that is associated to `m` mesh instance) within the `pmaps_bag` property map bag. |
-| `get_property_map(pmap_name, m, pmaps_bag)`  | `PM`     | Returns the property map named `pmap_name` associated to the `m` mesh instance and held within `pmaps_bag` property maps bag. |
+| `make_property_map(pmap_tag, m)`            | `PM`     | Constructs and returns the `pmap_tag` standard property map associated to the `m` mesh instance. |
+| `has_map(pmaps_bag, pmap_tag)`              | `bool`   | Returns `true` when the `pmaps_bag` property map bag holds the property map `pmap_tag`, `false` otherwise |
+| `put_property_map(pmap_tag, m, pmaps_bag, pm)`  | `void` | Stores the `pmap_tag` property map `pm` (associated to `m` mesh instance) within the `pmaps_bag` property map bag. |
+| `get_property_map(pmap_tag, m, pmaps_bag)`  | `PM`     | Returns the property map `pmap_tag` associated to the `m` mesh instance from the `pmaps_bag` property maps bag. |
+| `remove_property_map(pmap_tag, pmaps_bag)`  | `PM`     | Remove the property map `pmap_tag` from the `pmaps_bag` property maps bag. |
 
-#### Create, store and retrieve a standard generic property map
+<b>Create, store, retrieve non-standard property maps</b>
+
+| Expression         | Returns              | Description  |
+|--------------------|----------------------|--------------|
+| FEVV::make_vertex_property_map<M, value_type>(m) | `PM` | Constructs and returns a custom property map storing `value_type` data associated with `m` mesh vertices. |
+| FEVV::make_edge_property_map<M, value_type>(m) | `PM` | Constructs and returns a custom property map storing `value_type` data associated with `m` mesh edges. |
+| FEVV::make_halfedge_property_map<M, value_type>(m) | `PM` | Constructs and returns a custom property map storing `value_type` data associated with `m` mesh halfedges. |
+| FEVV::make_face_property_map<M, value_type>(m) | `PM` | Constructs and returns a custom property map storing `value_type` data associated with `m` mesh faces. |
+
+Note: at the moment there is no easy way to store/retrieve a non-standard
+property map in a property maps container. See example below.
+
+@subsection Examples
+
+<b>Create, store and retrieve a standard generic property map</b>
 
 \code{.cpp}
 // example: create a standard property map to store a color per vertex
@@ -173,12 +169,7 @@ put_property_map(FEVV::vertex_color, g, pmaps_bag, vertex_color_pm);
 auto vertex_color_pm = get_property_map(FEVV::vertex_color, g, pmaps_bag);
 \endcode
 
-#### Create, store and retrieve a non standard property map
-A mechanism is provided to extend the FEVV defined standard property maps (the
-property tags that are defined in \ref FEVV/Wrappings/properties.h).
-It allows to create new "non-standard" property maps, to store user defined properties, in a generic way.
-For example, a property map may be needed inside a filter to temporary
-store some value attached to the vertices.
+<b>Create, store and retrieve a non standard property map</b>
 
 \code{.cpp}
 // example: create a user defined property map to store a label per face
