@@ -1,13 +1,30 @@
 /**
 
-@page GenericPropertyMapConceptPage Generic property map concept
+@page GenericPropertyMapConceptPage Property Maps API 
 
-Quick links:
- - an \ref OpenMesh/helloworld_filter.cpp "OpenMesh based example"
- - a \ref CGAL/helloworld_filter.cpp "CGAL::Surface_mesh (or CGAL::Polyhedron) based example"
+The Property Maps API is provided by the
+[Boost Property Map Library](https://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/property_map.html)
+and by the MEPP2 Generic Property Map Concept.
+
+The Boost Property Map Library and its Property Map Concepts defines an
+interface to store/retrieve data in a property map whose key is a mesh item
+(vertex descriptor, halfedge descriptor, face descriptor...).
+
+The MEPP2 Generic Property Map Concept provides:
+- the pre-definition of standard property maps (vertex-color, face-normal...)
+- a way to define non-standard property maps
+- a container to store/retrieve all the property maps associated with a
+  mesh
+
+See also:
+ - \ref ConceptsPage for a general picture on FEVV concepts
  - \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes"
 
-<b>Introduction</b>
+<br>
+
+@section GenericPropertyMapConcept Generic Property Map Concept
+
+@subsection Introduction
 
 The original need for what FEVV refers to as "generic" property maps arises
 from contexts where one needs to have the warranty that storing/accessing
@@ -27,13 +44,13 @@ stored natively in the mesh datastructure (and thus is NOT a "generic"
 property map).
 The property map holding the geometry of a mesh can always be retrieved within
 \code{.cpp}
-auto pm = get(boost::vertex_point, m);
+auto pm = get(boost::vertex_point, mesh);
 \endcode
 
 Refer to the \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes" for more concerning the motivation and the implementation
 design.
 
-<b>Definitions</b>
+@subsection Definitions
 
 `FEVV::PMap_traits< PropertyTag, MeshT>`
 is the traits class that produces the type for a
@@ -80,21 +97,52 @@ of mesh property maps.
 typedef std::map<std::string, boost::any> PMapsContainer;
 \endcode
 
+
+@section PropertyMapAPI Property Map API
+
+@subsection Notations
+
+ - `PM` &nbsp;&nbsp; A type that is a model of `FEVV::PMap_traits`.
+ - `pm` &nbsp;&nbsp; An object of type `PM`.
+ - `pmaps_bag` &nbsp;&nbsp; An object of type `FEVV::PMapsContainer`.
+ - `pmap_tag` &nbsp;&nbsp; A standard property map tag (e.g. `FEVV::vertex_normal`, `FEVV::face_color`...)
+ - `PMap` &nbsp;&nbsp; A type that is a model of Boost Read/Write Property Map.
+ - `pmap` &nbsp;&nbsp; An object of type PMap.
+ - `key` &nbsp;&nbsp; An object of type boost::property_traits<PMap>::key_type.
+ - `val` &nbsp;&nbsp; An object of type boost::property_traits<PMap>::value_type.
+ - `M` &nbsp;&nbsp; A type that is a model of mesh (e.g. `CGAL::Surface_mesh< >`,
+   `CGAL::Polyhedron_3< , >`, `OpenMesh::PolyMesh_ArrayKernelT< >;`).
+ - m &nbsp;&nbsp; An object of type `M`.
+
+@subsection AssociatedTypes Associated types
+
+| Type               | Reference         | Description          |
+|--------------------|-------------------|----------------------|
+| Key Type   | boost::property_traits<PMap>::key_type   | The type of the property map key (e.g. vertex_descriptor, face_descriptor...) |
+| Value Type | boost::property_traits<PMap>::value_type | The type of the data stored in the property map. |
+
+
+@subsection ValidExpressions Valid expressions
+
+| Expression | Returns | Description  |
+|------------|---------|--------------|
+| Storing/retrieving data in a property map ([Boost Read/Write Property Map concept](https://www.boost.org/doc/libs/1_66_0/libs/property_map/doc/ReadWritePropertyMap.html)) |
+| get(pmap, key) | value_type | Get the value associated with the key. |
+| put(pmap, key, val) | void | Assign val to the property associated with key. |
+
+
+TODO TODO TODO TODO
+
+
+
+
+
 <b>Associated types</b>
 
 | Type               | Reference         | Description          |
 |--------------------|-------------------|----------------------|
 | `PM::pmap_type`    | e.g. \ref _PMap_traits::pmap_type | The type stored within the property map of type PM. |
 
-
-<b>Notations</b>
- - `PM` A type that is a model of `FEVV::PMap_traits`.
- - `pm` An object of type `PM`.
- - `pmaps_bag` An object of type `FEVV::PMapsContainer`.
- - `pmap_name` An object of type `PropertyTag` holding the name of a property map (e.g. `FEVV::vertex_normal`, `FEVV::halfedge_texcoord`, `FEVV::face_color`...)
- - `M` A type that is a model of mesh (e.g. `CGAL::Surface_mesh< >`,
-   `CGAL::Polyhedron_3< , >`, `OpenMesh::PolyMesh_ArrayKernelT< >;`).
- - m An object of type `M`.
 
 
 <b>Property maps related valid expressions</b>
@@ -151,8 +199,5 @@ pmaps_bag["f:label"] = face_label_pmap;
 // explicit cast needed here
 face_label_pmap_type pm = boost::any_cast<face_label_pmap_type>(pmaps_bag.at("f:label"));
 \endcode
-
-
-This documentation is generated from the GenericPropertyMapConcept.dox file.
 
 */
