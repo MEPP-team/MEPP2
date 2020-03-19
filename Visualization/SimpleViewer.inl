@@ -1582,25 +1582,25 @@ FEVV::SimpleViewer::internal_createMesh(
 
       // [ normals
       vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
-      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * MAGNITUDE_N ); // ok because _vt_nm always true
+      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * 0.5 * MAGNITUDE_N ); // ok because _vt_nm always true
       // ] normals
 
       // [ custom_vectors
       if(_vt_CVm)
       {
-		float MAGNITUDE_CV = 0.08;
-		float B_CV = 0.;
-		float E_CV = 1.;
+        float MAGNITUDE_CV = 0.08;
+        float B_CV = 0.;
+        float E_CV = 1.;
 
-		if(_vt_CVPm)
-		{
-			using Vector = typename GeometryTraits::Vector;
-			Vector _vector = get(v_CVPm, *v_it);
+        if(_vt_CVPm)
+        {
+          using Vector = typename GeometryTraits::Vector;
+          Vector _vector = get(v_CVPm, *v_it);
 
-			B_CV = _vector[0];
-			E_CV = _vector[1];
-			MAGNITUDE_CV = _vector[2];
-		}
+          B_CV = _vector[0];
+          E_CV = _vector[1];
+          MAGNITUDE_CV = _vector[2];
+        }
 
         vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) - Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * B_CV * MAGNITUDE_CV );
         vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * E_CV * MAGNITUDE_CV );
@@ -2522,26 +2522,26 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       if(_vt_nm)
       {
         vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) );
-        vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) * MAGNITUDE_N );
+        vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) * 0.5 * MAGNITUDE_N );
       }
       // ] normals
 
       // [ custom_vectors
       if(_vt_CVm)
       {
-		float MAGNITUDE_CV = 0.08;
-		float B_CV = 0.;
-		float E_CV = 1.;
+        float MAGNITUDE_CV = 0.08;
+        float B_CV = 0.;
+        float E_CV = 1.;
 
-		if(_vt_CVPm)
-		{
-			using Vector = typename GeometryTraits::Vector;
-			Vector _vector = get(v_CVPm, *v_it);
+        if(_vt_CVPm)
+        {
+          using Vector = typename GeometryTraits::Vector;
+          Vector _vector = get(v_CVPm, *v_it);
 
-			B_CV = _vector[0];
-			E_CV = _vector[1];
-			MAGNITUDE_CV = _vector[2];
-		}
+          B_CV = _vector[0];
+          E_CV = _vector[1];
+          MAGNITUDE_CV = _vector[2];
+        }
 
         vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) - Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) * B_CV * MAGNITUDE_CV );
         vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) * E_CV * MAGNITUDE_CV );
