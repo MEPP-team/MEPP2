@@ -198,4 +198,19 @@ struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_custom_vector_color_t >
   }
 };
 
+// specialize the standard property map for vertex-custom_vector_param
+template<>
+struct _PMap_traits< FEVV::CGALPointSet, FEVV::vertex_custom_vector_param_t >
+{
+  typedef FEVV::CGALPointSet::Vector_map   pmap_type;
+  typedef FEVV::CGALPointSet::Vector_3     Vector_3;
+
+  static pmap_type create(const FEVV::CGALPointSet &m)
+  {
+    return const_cast< FEVV::CGALPointSet & >(m)
+        .add_property_map< Vector_3 >("vertex_custom_vector_param")
+        .first;
+  }
+};
+
 } // namespace FEVV

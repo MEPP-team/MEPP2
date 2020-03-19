@@ -214,6 +214,22 @@ struct _PMap_traits< CGAL_LCC_TYPE, FEVV::vertex_custom_vector_color_t >
   }
 };
 
+// specialize the property maps traits for vertex-custom_vector_param
+template< CGAL_LCC_TEMPLATE_ARGS >
+struct _PMap_traits< CGAL_LCC_TYPE, FEVV::vertex_custom_vector_param_t >
+{
+  typedef typename FEVV::Geometry_traits< CGAL_LCC_TYPE >::Vector value_type;
+  typedef typename Vertex_pmap_traits< CGAL_LCC_TYPE, value_type >::pmap_type
+      pmap_type;
+
+  static pmap_type create(const CGAL_LCC_TYPE &m)
+  {
+    auto index_map = get(boost::vertex_index, m);
+    pmap_type pmap(index_map);
+    return pmap;
+  }
+};
+
 // specialize the property maps traits for halfedge-normal
 template< CGAL_LCC_TEMPLATE_ARGS >
 struct _PMap_traits< CGAL_LCC_TYPE, FEVV::halfedge_normal_t >

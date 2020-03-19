@@ -56,6 +56,10 @@ enum vertex_custom_vector_t { vertex_custom_vector };
 /// (refer to \ref GenericPropertyMapConceptPage)
 enum vertex_custom_vector_color_t { vertex_custom_vector_color };
 
+/// the *custom_vector_param* property of a vertex
+/// (refer to \ref GenericPropertyMapConceptPage)
+enum vertex_custom_vector_param_t { vertex_custom_vector_param };
+
 /// the *normal* property of a halfedge (aka normal by corner)
 /// (refer to \ref GenericPropertyMapConceptPage)
 enum halfedge_normal_t { halfedge_normal };
@@ -148,6 +152,12 @@ inline std::string get_property_map_name(FEVV::vertex_custom_vector_t)
 inline std::string get_property_map_name(FEVV::vertex_custom_vector_color_t)
 {
   return std::string("v:custom_vector_color");
+}
+
+/// (refer to \ref GenericPropertyMapConceptPage)
+inline std::string get_property_map_name(FEVV::vertex_custom_vector_param_t)
+{
+  return std::string("v:custom_vector_param");
 }
 
 /// (refer to \ref GenericPropertyMapConceptPage)
@@ -437,6 +447,20 @@ struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_t >
 // specialize the property maps traits for vertex-custom_vector_color
 template< typename MeshT >
 struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_color_t >
+{
+  typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
+  typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
+
+  static pmap_type create(const MeshT &m)
+  {
+    pmap_type pmap;
+    return pmap;
+  }
+};
+
+// specialize the property maps traits for vertex-custom_vector_param
+template< typename MeshT >
+struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_param_t >
 {
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;

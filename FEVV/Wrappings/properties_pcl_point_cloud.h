@@ -143,4 +143,16 @@ struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_custom_vector_color_t >
   }
 };*/
 
+// specialize the property maps traits for vertex-custom_vector_param
+/*template<>
+struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_custom_vector_param_t >
+{
+  typedef FEVV::PCLPointCloudNormalMap   pmap_type; // ask ELO
+
+  static pmap_type create(const FEVV::PCLPointCloud &pc)
+  {
+    return pmap_type(const_cast< FEVV::PCLPointCloud& >(pc));
+  }
+};*/
+
 } // namespace FEVV
