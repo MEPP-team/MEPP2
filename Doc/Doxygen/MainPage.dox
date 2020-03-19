@@ -14,8 +14,7 @@
      - \ref CheatSheetConceptsPage "Mesh processing API"
      - \ref PointCloudConceptPage  "Point Cloud processing API"
      - \ref GeometryConceptPage    "Geometry API"
-     - \ref PropertyMapPage        "Property maps API (TODO merge into next page?)"
-     - \ref GenericPropertyMapConceptPage "Property maps management API"
+     - \ref GenericPropertyMapConceptPage "Property maps API"
    - \ref DatastructureSpecificFilterAndPlugin "Datastructure-specific filter and plugin"
  - For the contributor
      - \ref ForkingCloningContributingPage  "Forking/Cloning/Contributing"
