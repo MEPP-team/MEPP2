@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>160</height>
+    <width>848</width>
+    <height>130</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,7 @@
            <item>
             <widget class="QLabel" name="label_Curvature">
              <property name="text">
-              <string> Curvature : </string>
+              <string> Curvature: </string>
              </property>
             </widget>
            </item>
@@ -43,7 +43,7 @@
              <item>
               <widget class="QLabel" name="label_geod">
                <property name="text">
-                <string>Neighborhood (false: 1-ring / true: geodesic)</string>
+                <string>Neighborhood: (false: 1-ring / true: geodesic)</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -69,6 +69,40 @@
              </item>
              <item>
               <widget class="QLineEdit" name="lineEdit_radius"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_Cmin-max">
+             <item>
+              <widget class="QLabel" name="label_Cmin-max">
+               <property name="text">
+                <string>Curvature colormap: (false: min / true: max)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_Cmin-max"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_Dmin-max">
+             <item>
+              <widget class="QLabel" name="label_Dmin-max">
+               <property name="text">
+                <string>Curvature direction: (false: min / true: max)</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_Dmin-max"/>
              </item>
             </layout>
            </item>
