@@ -556,7 +556,7 @@
      <normaloff>:/icons/resources/Icons/_CV-Vertices.png</normaloff>:/icons/resources/Icons/_CV-Vertices.png</iconset>
    </property>
    <property name="text">
-    <string>Show CustomVectors (Vertices)</string>
+    <string>Show CustomVectors (vertices)</string>
    </property>
   </action>
  </widget>
