@@ -67,7 +67,7 @@ public:
   ~CurvaturePlugin() = default;
 
 public:
-  void init() override { init(true, false, 0.001, 2, true, false); }
+  void init() override { init(true, false, 0.001, 2, false, true); }
 
   void init(bool _forceCompute,
             bool _isGeod,
@@ -1118,7 +1118,7 @@ public:
             v_CVCm[*vi] = VectorHG(243/255.0f, 156/255.0f, 18/255.0f); // Orange
           }
 
-          v_CVPm[*vi] = VectorHG(0.5f, 0.5f, 0.08f); // B_CV, E_CV, M_CV
+          v_CVPm[*vi] = VectorHG(0.25f, 0.25f, 0.08f); // B_CV, E_CV, M_CV
         }
 
         put_property_map(FEVV::vertex_custom_vector, *_mesh, *pmaps_bag, v_CVm);

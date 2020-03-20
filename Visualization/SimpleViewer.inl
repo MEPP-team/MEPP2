@@ -934,7 +934,7 @@ FEVV::SimpleViewer::internal_createMesh(
     _vt_CVm = &v_CVm;
   }
   // TEMP for CUSTOM VECTOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -970,7 +970,7 @@ FEVV::SimpleViewer::internal_createMesh(
     _vt_CVCm = &v_CVCm;
   }
   // TEMP for CUSTOM VECTOR COLOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -1006,7 +1006,7 @@ FEVV::SimpleViewer::internal_createMesh(
     _vt_CVPm = &v_CVPm;
   }
   // TEMP for CUSTOM VECTOR PARAM
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVPm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -2196,7 +2196,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     _vt_CVm = &v_CVm;
   }
   // TEMP for CUSTOM VECTOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -2232,7 +2232,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     _vt_CVCm = &v_CVCm;
   }
   // TEMP for CUSTOM VECTOR COLOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -2268,7 +2268,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     _vt_CVPm = &v_CVPm;
   }
   // TEMP for CUSTOM VECTOR PARAM
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVPm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)

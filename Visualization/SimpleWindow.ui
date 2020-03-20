@@ -229,6 +229,7 @@
    <addaction name="actionShow_Grid"/>
    <addaction name="separator"/>
    <addaction name="actionShow_Vertex_Normals"/>
+   <addaction name="actionShow_CustomVectors_Vertices"/>
    <addaction name="actionShow_Selected"/>
    <addaction name="separator"/>
    <addaction name="actionShow_Translation_Draggers"/>
@@ -547,6 +548,15 @@
    </property>
    <property name="text">
     <string>Show Vertex Normals</string>
+   </property>
+  </action>
+  <action name="actionShow_CustomVectors_Vertices">
+   <property name="icon">
+    <iconset resource="Applications/mepp-gui.qrc">
+     <normaloff>:/icons/resources/Icons/_CV-Vertices.png</normaloff>:/icons/resources/Icons/_CV-Vertices.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show CustomVectors (Vertices)</string>
    </property>
   </action>
  </widget>

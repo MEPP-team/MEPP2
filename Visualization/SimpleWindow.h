@@ -287,6 +287,7 @@ protected slots:
   void on_actionShow_Axis_triggered();
   void on_actionShow_Grid_triggered();
   void on_actionShow_Vertex_Normals_triggered();
+  void on_actionShow_CustomVectors_Vertices_triggered();
 #if 0 //TODO-elo-rm-?-ask_MTO
   void on_actionShow_Selected_triggered();
 #endif
