@@ -72,7 +72,7 @@ public:
   void init(bool _forceCompute,
             bool _isGeod,
             double _radius,
-            int _colorField,
+            int _colorField, // 0 : rien, 1 : min, 2 : max
             bool _displayMinDirections,
             bool _displayMaxDirections)
   {
@@ -81,7 +81,7 @@ public:
     *value_isGeod = _isGeod;
     *value_radius = _radius;
 
-    *value_colorField = _colorField; // 0 : rien, 1 : min, 2 : max
+    *value_colorField = _colorField;
 
     *value_displayMinDirections = _displayMinDirections;
     *value_displayMaxDirections = _displayMaxDirections;
@@ -978,13 +978,50 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    // get filter parameters from dialog window
-    DialogCurvature1 dial1;
-    dial1.setCurvature(*value_isGeod, *value_radius);
-    if(dial1.exec() == QDialog::Accepted)
-      dial1.getCurvature(*value_isGeod, *value_radius);
+    bool *Cmin_max = new bool(false);
+    bool *Dmin_max = new bool(false);
+
+    if ( (*value_colorField) == 2 ) // 0 : rien, 1 : min, 2 : max
+        *Cmin_max = true;
     else
+        *Cmin_max = false;
+    if ( (*value_displayMaxDirections) )
+        *Dmin_max = true;
+    else
+        *Dmin_max = false;
+
+    // set/get filter parameters from dialog window
+    DialogCurvature1 dial1;
+    dial1.setCurvature(*value_isGeod, *value_radius, *Cmin_max, *Dmin_max);
+    if(dial1.exec() == QDialog::Accepted)
+    {
+      dial1.getCurvature(*value_isGeod, *value_radius, *Cmin_max, *Dmin_max);
+
+      if ( (*Cmin_max) )
+        *value_colorField = 2; // 1 : min, 2 : max
+      else
+        *value_colorField = 1; // 1 : min, 2 : max
+      if ( (*Dmin_max) )
+      {
+        *value_displayMinDirections = false;
+        *value_displayMaxDirections = true;
+      }
+      else
+      {
+        *value_displayMinDirections = true;
+        *value_displayMaxDirections = false;
+      }
+
+      delete Cmin_max;
+      delete Dmin_max;
+    }
+    else
+    {
+      delete Cmin_max;
+      delete Dmin_max;
+
       return; // abort applying filter
+    }
 
     using VertexCurvatureMapHG =
         FEVV::Vertex_pmap< HalfedgeGraph, Filters::v_Curv< HalfedgeGraph > >;
@@ -1060,7 +1097,7 @@ public:
       }
 #endif
 
-      QMessageBox::information(0, "", QObject::tr("Curvature calculated."));
+      //QMessageBox::information(0, "", QObject::tr("Curvature calculated."));
     }
 
     constructColorMap(*_mesh,
@@ -1070,7 +1107,7 @@ public:
                       std::get< 1 >(map_v_cmHG[p])[1],
                       std::get< 1 >(map_v_cmHG[p])[2],
                       std::get< 1 >(map_v_cmHG[p])[3],
-                      (*value_colorField)); // 1 : min, 2 : max
+                      (*value_colorField)); // 0 : rien, 1 : min, 2 : max
 
     // --- vertex_custom_vector, vertex_custom_vector_color and vertex_custom_vector_param
     if( (*value_displayMinDirections) || (*value_displayMaxDirections) )
@@ -1135,7 +1172,7 @@ public:
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
-    reset();
+    //reset();
 
     viewer->frame();
   }

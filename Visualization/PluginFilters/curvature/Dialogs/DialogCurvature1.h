@@ -27,8 +27,8 @@ public:
   explicit DialogCurvature1(QWidget *parent = 0);
   ~DialogCurvature1();
 
-  void setCurvature(bool geod, double radius);
-  void getCurvature(bool &geod, double &radius);
+  void setCurvature(bool geod, double radius, bool Cmin_max, bool Dmin_max);
+  void getCurvature(bool &geod, double &radius, bool &Cmin_max, bool &Dmin_max);
 
 private:
   Ui::DialogCurvature1 *ui;
