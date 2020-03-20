@@ -19,8 +19,6 @@
  - For the contributor
      - \ref ForkingCloningContributingPage  "Forking/Cloning/Contributing"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
- - Design notes
-   - \ref ConceptsPage               "Concepts gateway page"
- - [Nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
+ - [Latest nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
 
 */
