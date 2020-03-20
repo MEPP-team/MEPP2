@@ -1,8 +1,8 @@
 /**
 
-@page ForkingCloningContributingExternalPage  Forking, cloning, contributing
+@page ForkingCloningContributingExternalPage  Forking, cloning, contributing for externals
 
-## Forking and cloning MEPP2
+## Forking and cloning MEPP2 from GitHub
 
 In order to become a MEPP2 contributor, you should be at ease with the following usages of [git (version control system)](https://en.wikipedia.org/wiki/Git)):
  - [git for beginners](https://www.atlassian.com/git/tutorials/what-is-version-control) (that refers to a [git install how-to](https://www.atlassian.com/git/tutorials/install-git) and also provides an interactive tutorial)
@@ -18,7 +18,7 @@ Then you can proceed with
   git clone https://github.com/YourLogin/MEPP2
   ```
 
-## Contributing to MEPP2
+## Contributing to MEPP2 on GitHub
 
 To submit your own code for integration into the MEPP2 main repository, proceed
 as usually in a [GitHub forking workflow](https://guides.github.com/activities/forking/):

@@ -17,7 +17,7 @@
      - \ref GenericPropertyMapConceptPage "Property maps API"
    - \ref DatastructureSpecificFilterAndPlugin "Datastructure-specific filter and plugin"
  - For the contributor
-     - \ref ForkingCloningContributingExternalPage  "Forking/Cloning/Contributing"
+     - \ref ForkingCloningContributingExternalPage  "Forking/Cloning/Contributing for externals"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
  - [Latest nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
 
