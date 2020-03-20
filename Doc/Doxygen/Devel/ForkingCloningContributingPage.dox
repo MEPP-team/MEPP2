@@ -20,6 +20,14 @@ Then you can proceed with
 
 ## Contributing to MEPP2
 
-TODO
+To submit your own code for integration into the MEPP2 main repository, proceed
+as usually in a [GitHub forking workflow](https://guides.github.com/activities/forking/):
+- commit your code to your local clone of MEPP2
+- push your local commits to your fork of MEPP2 on GitHub
+- open a Pull Request from your fork of MEPP2 on GitHub
+- check the continuous integration results: if one build fail, fix the issue
+  then try again until all builds pass without error
+- when the continuous integration succeeds, a MEPP2 maintainer will integrate
+  your code into the main repository.
 
 */
