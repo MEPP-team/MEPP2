@@ -3,7 +3,7 @@
 @page GeneralIntroductionPage General introduction
 
 
-FEVV is a C++ written (
+MEPP2 is a C++ written (
 [generic programming](https://en.wikipedia.org/wiki/Generic_programming) oriented)
 [SDK](https://en.wikipedia.org/wiki/Software_development_kit)
 aiming at developing **portable algorithms** working on
@@ -17,7 +17,7 @@ as **interoperability over third party data structure** implementations like
  - [CGAL's Surface Mesh](http://doc.cgal.org/latest/Surface_mesh/index.html) or
  - [CGAL's Polyhedral Surface](http://doc.cgal.org/latest/Polyhedron/index.html).
 
-FEVV offers:
+MEPP2 offers:
  - **Abstraction layers** (aka [wrappers](https://en.wikipedia.org/wiki/Wrapper_library)) allowing to indifferently use the considered third party
 implementations.
  - **[Data structures](https://en.wikipedia.org/wiki/Data_structure)** implementations like
@@ -35,7 +35,7 @@ implementations.
        filter execution and [batch processing](https://en.wikipedia.org/wiki/Batch_processing) (future work)
    - [GUI oriented](https://en.wikipedia.org/wiki/Graphical_user_interface) applications like a [QT based](https://www.qt.io/) mesh "debugger".
 
-FEVV mainly **targets**
+MEPP2 mainly **targets**
  - **researchers** and/or **Phd students**, looking for **portable tools**
    allowing them to
    - develop mesh implementation independent (on top of various mesh concrete representations), portable (across platforms), robust and [re-usable](https://en.wikipedia.org/wiki/Code_reuse) mesh treatments,

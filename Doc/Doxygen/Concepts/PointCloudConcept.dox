@@ -6,7 +6,7 @@ The Point Cloud processing API is provided by the
 \ref PointCloudConceptSection "Point Cloud concept" detailed below.
 
 See also:
- - \ref ConceptsPage for a general picture on FEVV concepts.
+ - \ref ConceptsPage for a general picture on MEPP2 concepts.
 
 <br>
 
@@ -74,7 +74,7 @@ specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 |--------------------|-----------------------|----------------------|--------------|
 | **Traversals**     | | | |
 | `vertices(pc)`     | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the points in the point cloud `pc`.|
-| `size_of_vertices(pc)`  | \ref ListGraphExtensionsConceptPage "ListGraphExtensions (FEVV)" | `vertices_size_type`                         | Returns the exact number of vertices in the point cloud `pc`, as opposed to `'num_vertices(pc)'` which returns an upper bound.|
+| `size_of_vertices(pc)`  | \ref ListGraphExtensionsConceptPage "ListGraphExtensions (MEPP2)" | `vertices_size_type`                         | Returns the exact number of vertices in the point cloud `pc`, as opposed to `'num_vertices(pc)'` which returns an upper bound.|
 | `num_vertices(pc)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns an upper bound of the number of vertices in the point cloud `pc`. Provided only for compatibility with base concepts. Its usage is highly discouraged in favor of `'size_of_vertices(pc)'`. |
 | **Mutability**        | | | |
 | `add_vertex(pc)`       | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `vertex_descriptor`                | Add a new vertex to the point cloud. The vertex_descriptor for the new vertex is returned. |

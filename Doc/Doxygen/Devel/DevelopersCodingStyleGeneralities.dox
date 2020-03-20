@@ -211,7 +211,11 @@ Encoding must be done in [ASCII](https://en.wikipedia.org/wiki/ASCII) (the plain
 
 ### Comments
 
-**Comments should be in English.** This avoids french (or Japanese, or Arabic...) non-ascii characters and will provide useful when diffusing the code outside our organization.
+Comments should be in English. This avoids french (or Japanese, or Arabic...) non-ascii characters and will provide useful when diffusing the code outside our organization.
+
+### Include guards
+
+Use <i>`#pragma once`</i> as include guards in all header files.
 
 ### Text file line endings
 
@@ -233,7 +237,7 @@ References: [Mind the end of your line](http://adaptivepatchwork.com/2012/03/01/
 
 <br>
 
-## Naming variables
+## Naming variables, functions...
 
 Names follow [CGAL coding style](http://doc.cgal.org/latest/Manual/devman_code_format.html) rules, among which
  - **Words in the names of everything except concepts should be separated by underscores**
@@ -250,13 +254,6 @@ Names follow [CGAL coding style](http://doc.cgal.org/latest/Manual/devman_code_f
  - **Function names are in lowercase** (e.g., `is_zero`)
  - **Boolean function names should begin with a verb**. For example, use `is_empty()` instead of simply `empty()`
  - **Names of class data members should be prepended with `m_`**. In order to distinguish arguments flowing in, out or in/ouy **respect [const correcteness](https://en.wikipedia.org/wiki/Const_(computer_programming))**.
- - [Preprocessor include guard names](https://en.wikipedia.org/wiki/Include_guard) should be build by prepending `FEVV_` to the considered filename. For example for a file named `DataStructures_cgal.h` the include guard lines should be
-```
-    #ifndef FEVV_DATASTRUCTURES_CGAL_H
-    #define FEVV_DATASTRUCTURES_CGAL_H
-    ...
-    #endif //FEVV_DATASTRUCTURES_CGAL_H
-```
 
 <br>
 

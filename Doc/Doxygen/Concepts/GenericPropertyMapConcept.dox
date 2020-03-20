@@ -17,7 +17,7 @@ The MEPP2 Generic Property Map Concept provides:
   mesh
 
 See also:
- - \ref ConceptsPage for a general picture on FEVV concepts
+ - \ref ConceptsPage for a general picture on MEPP2 concepts
  - \ref DevelopersDesignGenericPropertyMapsPage "Generic property maps design notes"
 
 <br>
@@ -26,7 +26,7 @@ See also:
 
 @subsection Introduction
 
-The original need for what FEVV refers to as "generic" property maps arises
+The original need for what MEPP2 refers to as "generic" property maps arises
 from contexts where one needs to have the warranty that storing/accessing
 a property map associated to some mesh will function even if such property
 map is not natively supported by the native mesh datastructure.
@@ -70,7 +70,7 @@ e.g.:
 
 <b>Non-standard property maps</b>
 
-A mechanism is provided to extend the FEVV defined standard property maps (the
+A mechanism is provided to extend the MEPP2 defined standard property maps (the
 property tags that are defined in \ref FEVV/Wrappings/properties.h).
 It allows to create new "non-standard" property maps, to store user defined
 properties, in a generic way.
