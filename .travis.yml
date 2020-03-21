@@ -53,7 +53,7 @@ env:
 - BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
 
 # doc
-- GENDOC="true" # ---> https://liris.cnrs.fr/mepp/doc/nightly/ <---
+#- GENDOC="true" # ---> https://liris.cnrs.fr/mepp/doc/nightly/ <---
 
 #-------------------------------------------------------------------------
 # matrix details :
