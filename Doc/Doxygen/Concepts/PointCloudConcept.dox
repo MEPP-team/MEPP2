@@ -1,6 +1,16 @@
 /**
 
-@page PointCloudConceptPage Point Cloud concept
+@page PointCloudConceptPage Point Cloud processing API
+
+The Point Cloud processing API is provided by the
+\ref PointCloudConceptSection "Point Cloud concept" detailed below.
+
+See also:
+ - \ref ConceptsPage for a general picture on MEPP2 concepts.
+
+<br>
+
+@section PointCloudConceptSection Point Cloud concept
 
 @dot
 digraph example {
@@ -34,7 +44,7 @@ subgraph cluster_fevv {
 }
 @enddot
 
-<b>Introduction</b>
+@subsection Introduction
 
 The objective of the PointCloud concept is to enable the manipulation
 of Point Cloud (PC) objects within the geometrical context of mesh
@@ -44,12 +54,13 @@ offers the ability to manipulate such point clouds independently from such
 other concepts for example when working on point cloud data coming from
 specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 
-<b>Notations</b>
- - `PC` A type that is a model of `PointCloud`.
- - `pc` An object of type `PC`.
- - `u`,`v`, `w` Vertex descriptors.
+@subsection Notations
 
-<b>Associated types</b>
+ - `PC` &nbsp;&nbsp; A type that is a model of `PointCloud`.
+ - `pc` &nbsp;&nbsp; An object of type `PC`.
+ - `u`,`v`, `w` &nbsp;&nbsp; Vertex descriptors.
+
+@subsection AssociatedTypes Associated types
 
 | Type               | Reference         | Description          |
 |--------------------|-------------------|----------------------|
@@ -57,13 +68,13 @@ specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 | `vertex_descriptor` | [Graph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/Graph.html) | A vertex descriptor corresponds to a unique node in a Point Cloud instance. A vertex descriptor must be Default Constructible, Assignable, and Equality Comparable. |
 | `vertex_iterator`   | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | A vertex iterator (obtained via `vertices(g)`) provides access to all of the vertices in a point cloud. A vertex iterator type must meet the requirements of [MultiPassInputIterator](http://www.boost.org/doc/libs/1_60_0/libs/utility/MultiPassInputIterator.html). The value type of the vertex iterator must be the vertex descriptor of the point cloud. |
 
-<b>Valid expressions</b>
+@subsection ValidExpressions Valid expressions
 
 | Expression         | Reference             | Returns              | Description  |
 |--------------------|-----------------------|----------------------|--------------|
 | **Traversals**     | | | |
 | `vertices(pc)`     | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `std::pair<vertex_iterator, vertex_iterator>`| Returns an iterator-range providing access to all the points in the point cloud `pc`.|
-| `size_of_vertices(pc)`  | \ref ListGraphExtensionsConceptPage "ListGraphExtensions (FEVV)" | `vertices_size_type`                         | Returns the exact number of vertices in the point cloud `pc`, as opposed to `'num_vertices(pc)'` which returns an upper bound.|
+| `size_of_vertices(pc)`  | \ref ListGraphExtensionsConceptPage "ListGraphExtensions (MEPP2)" | `vertices_size_type`                         | Returns the exact number of vertices in the point cloud `pc`, as opposed to `'num_vertices(pc)'` which returns an upper bound.|
 | `num_vertices(pc)`  | [VertexListGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/VertexListGraph.html) | `vertices_size_type`                         | Returns an upper bound of the number of vertices in the point cloud `pc`. Provided only for compatibility with base concepts. Its usage is highly discouraged in favor of `'size_of_vertices(pc)'`. |
 | **Mutability**        | | | |
 | `add_vertex(pc)`       | [MutableGraph (boost)](http://www.boost.org/doc/libs/1_60_0/libs/graph/doc/MutableGraph.html) | `vertex_descriptor`                | Add a new vertex to the point cloud. The vertex_descriptor for the new vertex is returned. |
@@ -74,27 +85,5 @@ specialized sources (e.g. [LIDAR data](https://en.wikipedia.org/wiki/Lidar)).
 | `create_kd_tree(pc)`| | Smart pointer to a k-d tree | Returns a smart pointer to a k-d tree that can be later used for nearest neighbor searches. The smart pointer must NOT be manually deleted. |
 | `kNN_search(kd_tree, k, query, pc)`| | std::pair<\n &nbsp;&nbsp;std::vector<vertex_descriptor>,  &nbsp;&nbsp;std::vector<double>\n > | Looks for the 'k' nearest neighbors of the point 'query' in the point cloud 'pc' using the previously created k-d tree 'kd_tree'. Returns a pair of vectors: the first vector contains the vertex descriptors of the k nearest neighbors, the second vector contains the distance of each nearest neighbor to the 'query' point. The 'query' point is given by its geometry and do not need to be an existing point of the point cloud. |
 | `radius_search(kd_tree, radius, query, pc)`| | std::pair<\n &nbsp;&nbsp;std::vector<vertex_descriptor>,  &nbsp;&nbsp;std::vector<double>\n > | Looks for the neighbors of the point 'query' in the given 'radius' in the point cloud 'pc' using the previously created k-d tree 'kd_tree'. Returns a pair of vectors: the first vector contains the vertex descriptors of the neighbors, the second vector contains the distance of each neighbor to the 'query' point. The 'query' point is given by its geometry and do not need to be an existing point of the point cloud. |
-
-OPEN QUESTIONS:
- - Should other FEVV concepts be defined as refining this PointCLoud concept ? If not please do provide a clear reason not to do so !
- - Should we avoid the vertex word in favor of point in order
-   - for the concept to be closer to the one of a **point** cloud
-   - to be compatible with the associated/underlying Geometry concept ? (there will be awkward pieces of code where will will walk on vertices and use them as points when accessing their geometry (BTW this way of naming things is already like that in FEVV).
-   Or should we stick with vertex in order to make it closer to other mesh related FEVV concepts which use the vertex terminology for their geometry ?
- - Concerning the Geometry (refer to \ref GeometryConceptPage "Geometry concept"):
-   - Concerning the <b>form</b> (syntax of usage) of the geometrical information we have three possibilites:
-     1. Keep it as an "external" trait (with a "Geometry_Traits< PC >" syntax) just as it is done for meshes. Choosing this possibility would be a bit strange for PC since point clounds have no topology (as opposed to meshes). Hence separating the notion of vertex from the notion of geometry of that vertex looks a bit awkward/artificial when considering the PC concept in isolation from other FEVV concepts. Keeping a "Geometry_Traits< PC >" pulls the semantics towards a notational unification of meshes and point clouds conceived as degenerated meshes with no topology. When choosing this option, a big caveat emptor should be placed in the documentation in order to users not to remain baffled with such a notation.
-     2. Integrate, with a nested approach, the Geometry_Traits within the PointCloud concept. The exposed geometry related types would here be defined in the form"PC::Geometry::Point".
-     3. Integrate, with a flatening out approach, the Geometry_Traits within the PointCloud concept. The exposed geometry related types would here be defined in the form "PC::Point" or "PC::Scalar".
-   - Concerning the <b>content</b> of the geometrical information
-     - We have to offer the types "Point"  and  "Scalar" (this is the base) as well as "pc.get_x( p a)" and the corresponding y and z declination that all return a "Scalar".
-     - But should we offer the full Geometry concept i.e. also offer the "Vector" type and the expressions "unit_normal( p1, p2, p3)", "normal( p1, p2, p3)" and "length( v )" as well ?
-     - Note that for geometricians (mathematicians) the notion of the normal of a point of a set of points is a valid notion (that may have many definitions e.g. the normal is as null vector for vertices lying inside the convex hull and the normal to the conver hull for vertices lying on it) (a unit normal of a degenerated normal might be harder though). But the offered operator are for computing a normal starting out of three point which is a different concern...
-
-Design notes:
- - They are three sources of influence for this PointCloud concept:
-   - higher level FEVV concepts like \ref CellIncidenceGraphConceptPage "Cell Incidence Graph concept" or the \ref CellIncidenceGraphHelpersConceptPage "Cell Incidence Graph Helpers concept",
-   - FEVV's geometry concept (refer to \ref GeometryConceptPage "Geometry concept",
-   - the [Point Cloud Library]([Point Clouds](http://www.pointclouds.org/) (see also [PCL](https://github.com/PointCloudLibrary)). Although PCL is a specific implementation, its dominance (are they some alternatives?) makes it a relevant source of inspiration on condition to to be cautious not to introduce a too strong flavor of PCL (or even dependency towards PCL implementation).
 
 */

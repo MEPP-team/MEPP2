@@ -1,0 +1,33 @@
+/**
+
+@page ForkingCloningContributingExternalPage  Forking, cloning, contributing for externals
+
+## Forking and cloning MEPP2 from GitHub
+
+In order to become a MEPP2 contributor, you should be at ease with the following usages of [git (version control system)](https://en.wikipedia.org/wiki/Git)):
+ - [git for beginners](https://www.atlassian.com/git/tutorials/what-is-version-control) (that refers to a [git install how-to](https://www.atlassian.com/git/tutorials/install-git) and also provides an interactive tutorial)
+ - [Collaborating with git](https://www.atlassian.com/git/tutorials/syncing) (that mainly introduces the `git remote`, `git fetch`, `git push` and `git pull` commands)
+ - Working within a [forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow), that is the recommended workflow for MEPP2 (as opposed to using e.g. a [centralized workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#centralized-workflow) )
+
+Then you can proceed with
+ - [Creating your own github account](https://help.github.com/articles/signing-up-for-a-new-github-account/) (if not already done). In doing so, please do choose a login that is unambiguous and straightforward to identify you: this will ease the burden of [IP](https://en.wikipedia.org/wiki/Intellectual_property) tracking. For example use something like `FirstnameLastname` or `FirstnameLastnameOrganisationname` where the "Organisation Name" is the one you will be using while contributing code to MEPP2.
+ For the rest of this inception description we shall assume that you signed in as `YourLogin`.
+ - Once signed in, you should [fork](https://help.github.com/articles/fork-a-repo/) the [MEPP2 repository](https://github.com/MEPP-team/MEPP2) ([Github](https://github.com/MEPP-team/MEPP2) web interface provides a single button method for this: look in the upper right section of the [MEPP2 repository](https://github.com/MEPP-team/MEPP2) home page)
+ - On your desktop machine, you can now [(git) clone](https://git-scm.com/docs/git-clone) your fork. When doing so on a [CLI](https://en.wikipedia.org/wiki/Command-line_interface) you could use [something similar](https://en.wikipedia.org/wiki/Mutatis_mutandis) to the  following command :
+  ```
+  git clone https://github.com/YourLogin/MEPP2
+  ```
+
+## Contributing to MEPP2 on GitHub
+
+To submit your own code for integration into the MEPP2 main repository, proceed
+as usually in a [GitHub forking workflow](https://guides.github.com/activities/forking/):
+- commit your code to your local clone of MEPP2
+- push your local commits to your fork of MEPP2 on GitHub
+- open a Pull Request from your fork of MEPP2 on GitHub
+- check the continuous integration results: if one build fail, fix the issue
+  then try again until all builds pass without error
+- when the continuous integration succeeds, a MEPP2 maintainer will integrate
+  your code into the main repository.
+
+*/

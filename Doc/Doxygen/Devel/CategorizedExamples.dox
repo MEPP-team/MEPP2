@@ -1,0 +1,165 @@
+/**
+
+@page CategorizedExamplesPage  A mesh processing filter example
+
+\section ExampleComprehensive A comprehensive example
+The [Helloworld example](https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/Helloworld) 
+introduces how to define and use a \ref GenericDefinition "generic"
+filter on a mesh.
+
+In particular, this tutorial filter illustrates the following features :
+ - reading a mesh from a file
+ - looping on the loaded mesh vertices and
+    - reading existing \ref GenericPropertyMapConceptPage "property maps"
+      (that are attached to the vertices) like the vertices geometry
+    - modifying existing \ref GenericPropertyMapConceptPage "property maps"
+      (still attached to the vertices)
+ - creating a new \ref GenericPropertyMapConceptPage "property map" this
+   time attached to the mesh faces
+ - looping on the faces in order to populate this newly created property map
+ - writing the resulting mesh to a file
+
+Then this also illustrates
+ - definition of a filter (aka a mesh processing)
+ - application of a filter to a mesh
+
+Trying out MEPP2 can thus be simply achieved by copying the code of this
+example and start experiencing/hacking with it.
+
+This generic example is instantiated for the following mesh data structures:
+  - an [AIF version](helloworld__filter__aif_8cpp_source.html)
+  - a [CGAL::Linear Cell Complex version](helloworld__filter__cgal__linear__cell__complex_8cpp_source.html)
+  - a [CGAL::Polyhedron_3 version](helloworld__filter__cgal__polyhedron__3_8cpp_source.html)
+  - a [CGAL::SurfaceMesh version](helloworld__filter__cgal__surface__mesh_8cpp_source.html)
+  - an [OpenMesh version](helloworld__filter__openmesh_8cpp_source.html)
+
+Notice that all the above versions only differ by the respective data
+structures (AIF, OpenMesh, CGAL::Surface_mesh, CGAL::Polyhedron...)
+that they respectively instantiate. Yet they share the exact same
+\ref GenericDefinition "generic" filter code.
+
+*****************************************
+
+\section ExampleGeometryAccess Retrieving and using the geometry
+
+The following code snippets assume that `Mesh` is a given type for a mesh.
+
+The definition of the Geometry Traits type is obtained by instantiating it
+with the considere `Mesh` type. For convenience in the following code
+the geometry related types are then extracted from the obtained traits.
+\code{.cpp}
+#include "FEVV/Wrappings/Geometry_traits.h"
+[...]
+typedef Geometry_traits< Mesh >    Geometry;
+typedef typename Geometry::Point   Point;
+typedef typename Geometry::Vector  Vector;
+typedef typename Geometry::Scalar  Scalar;
+\endcode
+
+Having at hand an instance of the geometry proves to produce more compact
+and readeable code (as opposed to using global wrapping templated function
+instantiated with the Geometry type):
+\code{.cpp}
+Mesh mesh;
+Geometry gt(mesh);
+\endcode
+Notice that the `gt` object must be bound to some mesh instance.
+
+Using points is done as follows
+\code{.cpp}
+Point p;      // Point definition
+Point q(p);   // Point copy construction
+q = p;        // Point copy assignement operator
+
+// Point coordinate component access
+Scalar x = gt.get_x( p );
+Scalar y = gt.get_y( p );
+Scalar z = gt.get_z( p );
+\endcode
+
+The basic manipulations of Vectors are as follows
+\code{.cpp}
+// Vector copy assignement:
+Vector v1 = Vector( 1, 2, 3 );
+
+// Vector copy construction
+Vector v2( v1 );
+
+// Vector coordinate component access
+x = v1[0];
+y = v1[1];
+z = v1[2];
+
+// One can NOT overwrite a single vector coordinate component that is
+//    v[0] = 1;
+// will fail. In order to alter one or many coordinate component of a
+// Vector one must thus create a new Vector and reassign it:
+v1 = Vector( v1[0], v1[1], 999.0 );
+\endcode
+
+Operations on Vectors are as follows
+\code{.cpp}
+// Vector length:
+s = gt.length( v1 );
+
+// Vector addition
+Vector v3 = gt.add_v(v1, v2);
+\endcode
+
+Operations blending the usage of Vectors and Points
+\code{.cpp}
+v1 = gt.normal( p, p, p );
+v1 = gt.unit_normal( p, p, p );
+\endcode
+
+Eventually addition and substractions of Vectors and Points
+\code{.cpp}
+#include "FEVV/Wrappings/Geometry_traits_operators.h"
+v3 = gt.add_v ( v1, v2 );
+ p = gt.add_pv(  p, v1 );
+ p = gt.sub_pv(  p, v1 );
+v1 = gt.sub_p (  p, p  );
+\endcode
+
+Refer to \ref GeometryConceptPage "the Geometry processing API page" for the
+complete list of authorized expressions related to the geometry.
+
+*****************************************
+
+\section ExampleFromMeshToGeometry Accessing the geometry of a mesh
+
+The following code snippet illustrates how to "walk" on the vertices geometries
+of a given mesh:
+
+\code{.cpp}
+// note: g is a mesh object of type Mesh
+
+// create the geometry traits object
+FEVV::Geometry_traits< Mesh > gt(g);
+
+// retrieve the geometry property map
+auto pm = get(boost::vertex_point, g);
+
+// loop over the vertices
+auto iterator_pair = vertices(g);
+  // vertices() returns a vertex_iterator pair ;
+  // the same for faces(g) and edges(g)
+vertex_iterator vi = iterator_pair.first;
+vertex_iterator vi_end = iterator_pair.second;
+for(; vi != vi_end; ++vi)
+{
+  // get the vertex geometry
+  Point p = get(pm, *vi);
+
+  // do something with the geometry
+  std::cout << "x = " << gt.get_x(p) << std::endl;
+  std::cout << "y = " << gt.get_y(p) << std::endl;
+  std::cout << "z = " << gt.get_z(p) << std::endl;
+}
+\endcode
+
+See also
+[Examples/Generic/Helloworld/helloworld_filter.hpp](helloworld__filter_8hpp_source.html)
+for a complete example.
+
+**/
