@@ -3,7 +3,7 @@
 @page LexiconPage Lexicon
 
 This page gathers informal definitions of the terms (and jargon) used within
-FEVV code and documentation
+MEPP2 code and documentation
 
 \anchor ConceptDefinition
  - **Concept**: a concept (as defined by [BCCL](http://www.boost.org/doc/libs/1_66_0/libs/concept_check/concept_check.htm#introduction)) is a set of requirements (valid expressions, associated types, semantic invariants, complexity guarantees, etc.) that a type must fulfil to be correctly used as arguments in a call to a [generic algorithm](https://en.wikipedia.org/wiki/Generic_programming). A concept can be thought as a form of [API](https://en.wikipedia.org/wiki/Application_programming_interface)
@@ -20,7 +20,7 @@ FEVV code and documentation
    from <a href="https://github.com/Kitware/VTK/">VTK</a>.
 
 \anchor GenericDefinition
- - **Generic**: within FEVV, generic code (e.g. function, helpers) is code that is independent from any mesh data structure.
+ - **Generic**: within MEPP2, generic code (e.g. function, helpers) is code that is independent from any mesh data structure.
 
 \anchor OperatorDefinition
  - **Operator**: an Operator is a software component that acts on
@@ -32,6 +32,6 @@ FEVV code and documentation
     information (area) out of the vertices geometry.
 
 \anchor WrapperDefinition
- - **Wrapper**: a [wrapper](https://en.wikipedia.org/wiki/Wrapper_library) of a (software) component is an abstraction layer that enables to promote the component in order to be used in compliance with a given (third party) interface (i.e. a collection of operations). FEVV main objective is to offer a (\ref ConceptsPage "concept based") abstraction layer to allow mesh developers to produce algorithm/filters that can be used (instantiated) over a variety of mesh implementations. For another example of wrappers, within the context of mesh data structures, refer to [CGAL's BGL wrappers documentation](https://doc.cgal.org/latest/BGL/index.html).
+ - **Wrapper**: a [wrapper](https://en.wikipedia.org/wiki/Wrapper_library) of a (software) component is an abstraction layer that enables to promote the component in order to be used in compliance with a given (third party) interface (i.e. a collection of operations). MEPP2 main objective is to offer a (\ref ConceptsPage "concept based") abstraction layer to allow mesh developers to produce algorithm/filters that can be used (instantiated) over a variety of mesh implementations. For another example of wrappers, within the context of mesh data structures, refer to [CGAL's BGL wrappers documentation](https://doc.cgal.org/latest/BGL/index.html).
 
 **/
