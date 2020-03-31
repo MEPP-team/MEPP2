@@ -66,19 +66,19 @@ if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "5.0" )
   # CGAL < 5.0
   add_test( Test_point_cloud_curvature_cgal_point_set
             test_point_cloud_curvature_cgal_point_set
-            ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
-            test_point_cloud_curvature_cgal_point_set_monkey.ply
+            ${TESTING_DATA_DIR}/casting_with_normals.ply
+            test_point_cloud_curvature_cgal_point_set_casting.ply
             15
-            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_monkey.ref.ply
+            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_casting.ref.ply
             )
 else()
   # CGAL >= 5.0
   add_test( Test_point_cloud_curvature_cgal_point_set
             test_point_cloud_curvature_cgal_point_set
-            ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
-            test_point_cloud_curvature_cgal_point_set_monkey.ply
+            ${TESTING_DATA_DIR}/casting_with_normals.ply
+            test_point_cloud_curvature_cgal_point_set_casting.ply
             15
-            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_monkey.cgal-5.0.2.ref.ply
+            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_point_cloud_curvature_cgal_point_set_casting.cgal-5.0.2.ref.ply
             )
 endif()
 
