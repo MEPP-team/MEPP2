@@ -190,8 +190,6 @@ public:
 
   void centerHG(FEVV::SimpleViewer *viewer);
 
-  static std::string chooseDatastructureMsgBox(void);
-
 #if 0 //TODO-elo-rm-?-ask_MTO
   template< typename HalfedgeGraph >
   void showSelectedHG(FEVV::SimpleViewer *viewer);
