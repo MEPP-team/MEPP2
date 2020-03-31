@@ -19,10 +19,11 @@
 
 #include <algorithm>
 
-#if defined(BOOST_MSVC)
-#pragma warning(push)
-#pragma warning(disable : 4267)
-#endif
+
+//#if defined _MSC_VER
+//#pragma warning(push)
+//#pragma warning(disable : 4267)
+//#endif
 
 
 // shortcut for mesh type
@@ -1200,7 +1201,6 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
 } // namespace CGAL
 
 
-#if defined(BOOST_MSVC)
-#pragma warning(pop)
-#endif
-
+//#if defined _MSC_VER
+//#pragma warning(pop)
+//#endif

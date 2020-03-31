@@ -14,16 +14,16 @@
 #include <boost/graph/properties.hpp>
 
 #include <iterator> // for std::distance
-#include<boost/iterator/counting_iterator.hpp>
+#include <boost/iterator/counting_iterator.hpp>
 
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 
 
-#if defined(BOOST_MSVC)
-#pragma warning(push)
-#pragma warning(disable : 4267)
-#endif
+//#if defined _MSC_VER
+//#pragma warning(push)
+//#pragma warning(disable : 4267)
+//#endif
 
 
 namespace boost {

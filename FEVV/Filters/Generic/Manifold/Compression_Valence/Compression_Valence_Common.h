@@ -10,12 +10,14 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
-#ifdef _MSC_VER
+
+//#if defined _MSC_VER
 // disable some warnings on Windows
-#pragma warning(push)
-#pragma warning(disable : 4244)
+//#pragma warning(push)
+//#pragma warning(disable : 4244)
 // 4244: converting type A to type B, possible data loss
-#endif
+//#endif
+
 
 #include <CGAL/boost/graph/internal/helpers.h>
 #include <CGAL/boost/graph/iterator.h>
@@ -283,6 +285,7 @@ fixed_CGAL_Euler_add_vertex_and_face_to_border(
   return ohe2;
 }
 
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+
+//#if defined _MSC_VER
+//#pragma warning(pop)
+//#endif

@@ -33,22 +33,22 @@
 using namespace std;
 
 //Constants with effect on result
-const float mu_max2 = 0.35;         // initial mu when starting the optimization for selection 2
+const float mu_max2 = 0.35f;         // initial mu when starting the optimization for selection 2
                                     // increase if too many normals stuck in medium position/ decrease if too many face confusions when sampling anisotropy
-const float div_fact = 1.01;
+const float div_fact = 1.01f;
 
 //Usual constants DO NOT MODIFY
-const float epsilon = 1e-10;        // small value for initializations of comparisons
-const float lim_error = 1e-5;       // to stop optimize when not moving
-const float lim_diff = 1e-7;        // to stop optimize when not moving
+const float epsilon = 1e-10f;        // small value for initializations of comparisons
+const float lim_error = 1e-5f;       // to stop optimize when not moving
+const float lim_diff = 1e-7f;        // to stop optimize when not moving
 
 //Detail constants
 const int itr_min = 5;                      // minimum number of iterations to perform
 const float mu_max = 1.0;                   // coefficient to compute the initial mu when starting optimize for the first time (emax = er_max*mu_max)
 const int itr_per_mu = 1;                   // number of iterations to perform for each mu
-const float noise_min = 0.000001;           // minimum noise to make it not infinite
-const float likelihood_threshold = 0.95;    // value for evaluation/comparison between vectors
-const float min_points_fact = 0.1;          // limit number of points of the neighborhood which must have an impact on the normal computation
+const float noise_min = 0.000001f;           // minimum noise to make it not infinite
+const float likelihood_threshold = 0.95f;    // value for evaluation/comparison between vectors
+const float min_points_fact = 0.1f;          // limit number of points of the neighborhood which must have an impact on the normal computation
 const float thresh_weight = 0.25;           // threshold to select neighbors
 
 

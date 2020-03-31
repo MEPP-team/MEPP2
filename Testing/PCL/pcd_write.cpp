@@ -10,9 +10,11 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #include <iostream>
 
-#if defined _MSC_VER
-#pragma warning(disable : 4996) // MT
-#endif
+
+//#if defined _MSC_VER
+//#pragma warning(disable : 4996) // MT
+//#endif
+
 
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>

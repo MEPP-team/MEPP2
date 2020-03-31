@@ -30,10 +30,11 @@
 
 #include "FEVV/Filters/Generic/generic_writer.hpp" // for FEVV::Filters::write_mesh()
 
-#ifdef _MSC_VER
+
+#if defined _MSC_VER
 // disable some warnings on Windows
 #pragma warning(push)
-#pragma warning(disable : 4244)
+//#pragma warning(disable : 4244)
 #pragma warning(disable : 4267)
 // 4244 & 4267: converting type A to type B, possible data loss
 #endif
@@ -9871,6 +9872,6 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
 }
 
 
-#ifdef _MSC_VER
+#if defined _MSC_VER
 #pragma warning(pop)
 #endif
