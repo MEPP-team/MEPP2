@@ -29,7 +29,7 @@ if (BUILD_USE_GUI_BooleanOperationsPlugin)
     )
   add_dependencies(BooleanOperationsPlugin mepp-gui)
   if( MSVC )
-    set_target_properties(BooleanOperationsPlugin PROPERTIES LINK_FLAGS "/FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088")
+    #set_target_properties(BooleanOperationsPlugin PROPERTIES LINK_FLAGS "/FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088")
   endif( MSVC )
 endif (BUILD_USE_GUI_BooleanOperationsPlugin)
 # --> BooleanOperationsPlugin : QtPlugin [END]
