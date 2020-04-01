@@ -61,10 +61,10 @@ set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.6.4)
 
 ### addon 03 : PCL, FLANN
 
-set(PCL_DIR						${MSVC_KIT_ROOT}/PCL/pcl-1.7.2/cmake)
+set(PCL_DIR						${MSVC_KIT_ROOT}/PCL/pcl-1.9.1/cmake)
 
-set(FLANN_INCLUDE_DIR			${MSVC_KIT_ROOT}/PCL/flann-1.8.4/include)
-set(FLANN_LIBRARY				${MSVC_KIT_ROOT}/PCL/flann-1.8.4/lib/flann.lib)
+set(FLANN_INCLUDE_DIR			${MSVC_KIT_ROOT}/PCL/flann-1.9.1/include)
+set(FLANN_LIBRARY				${MSVC_KIT_ROOT}/PCL/flann-1.9.1/lib/flann_cpp_s.lib) # static version
 
 ### addon 04 : VTK
 

@@ -76,7 +76,7 @@ init:
 #  - echo %QT5_DIR%
   - dir C:\Qt
 #
-  - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\CGAL-4.11-bug-patched\auxiliary\gmp\lib;%KIT_ROOT%\gmp\lib;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin\osgPlugins-3.6.4;%KIT_ROOT%\PCL\pcl-1.7.2\bin;%KIT_ROOT%\PCL\flann-1.8.4\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
+  - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\CGAL-4.11-bug-patched\auxiliary\gmp\lib;%KIT_ROOT%\gmp\lib;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin\osgPlugins-3.6.4;%KIT_ROOT%\PCL\pcl-1.9.1\bin;%KIT_ROOT%\PCL\flann-1.9.1\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
 #  - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin # for vs_2015 dumpbin (todo: check path for vs_2017 dumpbin)
   - set APPVEYOR=TRUE
   - set CACHE=FALSE
@@ -173,11 +173,10 @@ before_build:
   - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/ibSGyso5bX2fSgf/download -O eigen-3.2.8.rar 2> nul
   - IF %CACHE%==FALSE 7z x eigen-3.2.8.rar > nul
 # PCL, flann, qhull
-  - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.7.2.7z # TODO 1.9.1 !
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1JYliMDB6oiTiG0DG-0URR-8cY0LKAOEC" -O PCL-1.7.2.7z 2> nul
-  #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://www.dropbox.com/s/gpacri5co33pbw4/PCL-1.7.2.7z 2> nul
+  - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.9.1.7z
+
   - IF %FTP_MYCORE%==TRUE IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/hQsCduXmtXJjsnt/download -O PCL-1.7.2.7z 2> nul # TODO 1.9.1 !
-  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.7.2.7z > nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.9.1.7z > nul
 # VTK
   - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
   #- IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1dyNslEtQrkf2I1YwVvXDZNOezZoh7YDi" -O kitware-VTK-7.0.0.7z 2> nul
