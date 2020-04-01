@@ -10,8 +10,8 @@
 
 # Operating system (build VM template)
 image:
-- Visual Studio 2015
-#- Visual Studio 2017
+#- Visual Studio 2015
+- Visual Studio 2017
 
 # environment variables
 environment:
