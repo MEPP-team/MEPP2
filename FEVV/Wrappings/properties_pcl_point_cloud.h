@@ -10,6 +10,14 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+
+#if defined _MSC_VER
+// DON'T PUSH the '#pragma warning' here
+// AND SO, DON'T POP too !!!
+#pragma warning(disable : 4267) // MANDATORY when PCL is ON !!!
+#endif
+
+
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
