@@ -10,6 +10,13 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4267) // MANDATORY when PCL is ON !!!
+#endif
+
+
 #include <QTimer>
 #include <QMainWindow>
 #include <QLabel>
@@ -336,3 +343,8 @@ protected:
 #ifndef Q_MOC_RUN
 #include "Visualization/SimpleWindow.inl"
 #endif // Q_MOC_RUN
+
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
