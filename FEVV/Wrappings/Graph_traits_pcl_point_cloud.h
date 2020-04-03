@@ -20,12 +20,6 @@
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 
 
-//#if defined _MSC_VER
-//#pragma warning(push)
-//#pragma warning(disable : 4267)
-//#endif
-
-
 namespace boost {
 
 template<>

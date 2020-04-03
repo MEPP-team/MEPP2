@@ -14,7 +14,7 @@
 #if defined _MSC_VER
 // CAN'T PUSH the '#pragma warning' here because we are in an interface !!!
 // AND SO, CAN'T POP too !!!
-#pragma warning(disable : 4267) // MANDATORY when PCL is ON !!!
+#pragma warning(disable : 4267) // for VS-2015 // MANDATORY when PCL is ON !!!
 #endif
 
 

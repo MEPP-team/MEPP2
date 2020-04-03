@@ -18,12 +18,6 @@
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 
 
-//#if defined _MSC_VER
-//#pragma warning(push)
-//#pragma warning(disable : 4267)
-//#endif
-
-
 namespace boost {
 
 template<>
