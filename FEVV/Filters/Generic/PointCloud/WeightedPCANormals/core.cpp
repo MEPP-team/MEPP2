@@ -19,6 +19,12 @@
 // --------------------------------------------------------------------------------------
 
 
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4267 4244)
+#endif
+
+
 #include "core.h"
 
 //Extract neighbors
@@ -444,3 +450,8 @@ void CApp::select_normal()
         finalPos_  = *pointSecond_;
     }
 }
+
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif

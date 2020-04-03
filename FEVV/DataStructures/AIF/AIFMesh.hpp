@@ -10,10 +10,6 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
-#if defined _MSC_VER
-#pragma warning(disable : 4251)
-#endif
-
 #include <iostream>
 #include <vector>
 #include <set>

@@ -15,11 +15,8 @@
 
 #include <stdexcept> // for std::runtime_error
 
-
-#if defined _MSC_VER
-#pragma warning(disable : 4334) // warning C4334 in FLANN
-#endif
 #include <pcl/kdtree/kdtree_flann.h>
+
 #include <utility> // for std::make_pair
 #include <memory>  // for std::unique_ptr
 #include <cmath>   // for std::sqrt

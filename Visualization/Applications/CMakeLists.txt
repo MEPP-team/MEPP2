@@ -20,7 +20,7 @@ endif()
 if( MSVC )
   # /FORCE:MULTIPLE for osgDB ifstream / ofstream conflict
   # -> here, really no choice... (because of OSG and OpenMesh already compiled libraries)
-  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
+  #set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
   #set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
   # (Note that MSVC apparently considers 4088 too important to allow us to ignore it; I'm nevertheless leaving this here to document that we don't care about it.)
 

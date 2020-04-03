@@ -24,7 +24,7 @@ if (BUILD_USE_GUI_DecompressionValencePlugin)
     )
   add_dependencies(DecompressionValencePlugin mepp-gui)
   if( MSVC )
-    set_target_properties(DecompressionValencePlugin PROPERTIES LINK_FLAGS "/FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088")
+    #set_target_properties(DecompressionValencePlugin PROPERTIES LINK_FLAGS "/FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088")
   endif( MSVC )
 endif (BUILD_USE_GUI_DecompressionValencePlugin)
 # --> DecompressionValencePlugin : QtPlugin [END]

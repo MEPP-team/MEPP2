@@ -19,12 +19,6 @@
 
 #include <algorithm>
 
-#if defined(BOOST_MSVC)
-#pragma warning(push)
-#pragma warning(disable : 4267)
-#endif
-
-
 // shortcut for mesh type
 typedef FEVV::DataStructures::AIF::AIFMesh AIFMeshT;
 typedef FEVV::DataStructures::AIF::AIFTopologyHelpers AIFHelpers;
@@ -1198,9 +1192,3 @@ add_face(const VertexRange &vr, FEVV::DataStructures::AIF::AIFMesh &g)
 
 } // namespace Euler
 } // namespace CGAL
-
-
-#if defined(BOOST_MSVC)
-#pragma warning(pop)
-#endif
-
