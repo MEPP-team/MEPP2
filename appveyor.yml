@@ -158,7 +158,7 @@ before_build:
   - IF %CACHE%==FALSE 7z x qt-4.8.7-x64-msvc2015-moc_patched.7z > nul
 # OSG
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/osg-3.6.4.7z
-  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CW6VrwTfIDu2EKM/download -O osg-3.4.0.7z 2> nul # TODO osg-3.6.4.7z !
+  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/lXhAPU0mRm5rPsK/download -O osg-3.6.4.7z 2> nul
   - IF %CACHE%==FALSE 7z x osg-3.6.4.7z > nul
 # osg-3rdparty-runtime (libpng - zlib)
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/osg-3rdparty-runtime.rar
@@ -175,7 +175,7 @@ before_build:
 # PCL, flann, qhull
   - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.9.1.7z
 
-  - IF %FTP_MYCORE%==TRUE IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/hQsCduXmtXJjsnt/download -O PCL-1.7.2.7z 2> nul # TODO 1.9.1 !
+  - IF %FTP_MYCORE%==TRUE IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CXDvf7G3MoLXpRI/download -O PCL-1.9.1.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.9.1.7z > nul
 # VTK
   - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
@@ -193,7 +193,7 @@ before_build:
   - IF %CACHE%==FALSE 7z x img-3rdparty.rar > nul
 # Draco
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/draco-1.3.4.rar
-  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/lpwLsr20bK33hYJ/download -O draco-1.3.4.rar 2> nul # TODO new version !
+  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/6qy0vFJWnrHlS1c/download -O draco-1.3.4.rar 2> nul
   - IF %CACHE%==FALSE 7z x draco-1.3.4.rar > nul
 #
   - cd %APPVEYOR_BUILD_FOLDER%
