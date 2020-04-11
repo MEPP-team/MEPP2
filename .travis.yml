@@ -7,8 +7,8 @@ os:
 sudo: required
 dist: xenial # Ubuntu 16.04 LTS
 
-#osx_image: xcode11.3 # Xcode 11.3.1 under Mojave (OS X 10.14)
-osx_image: xcode11.2 # Xcode 11.2.1 under Mojave (OS X 10.14)
+osx_image: xcode11.3 # Xcode 11.3.1 under Mojave (OS X 10.14)
+#osx_image: xcode11.2 # Xcode 11.2.1 under Mojave (OS X 10.14)
 #osx_image: xcode11 # Xcode 11.0 under Mojave (OS X 10.14)
 #osx_image: xcode10.3 # Xcode 10.3 under Mojave (OS X 10.14.4)
 #osx_image: xcode10.2 # Xcode 10.2.1 under Mojave (OS X 10.14)
@@ -41,7 +41,7 @@ env:
 # [Debug] all
 - BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Debug"
 
-# [Release] : VTK and PCL set to ON in Release configuration, except for 'all' where only PCL is set to ON
+# [Release] : VTK and PCL set to ON in Release configuration, except for 'all'
 
 # [Release] only cgal
 - BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
@@ -51,7 +51,7 @@ env:
 - BTYPE="-DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
 #
 # [Release] all
-- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
+- BTYPE="-DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release"
 
 # doc
 #- GENDOC="true" # ---> https://liris.cnrs.fr/mepp/doc/nightly/ <---
@@ -192,11 +192,11 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink boost; fi # ---> unlink boost 1.71
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv boost.rb boost.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/boost170/boost.rb; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install boost; fi # ---> install boost 1.70
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink boost; fi # ---> unlink boost 1.71
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv boost.rb boost.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/boost170/boost.rb; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install boost; fi # ---> install boost 1.70
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade cgal; fi # to install cgal 4.12 (for test)
@@ -235,7 +235,8 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-science; mv pcl.rb pcl.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/pcl180_7/pcl.rb; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install homebrew/science/pcl --without-vtk --without-apps; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install pcl; fi # -> pcl is now in homebrew-core and no more in homebrew/science
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install pcl; fi # -> pcl is now in homebrew-core and no more in homebrew/science
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install draco; fi
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake --version; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cmake; fi
@@ -253,7 +254,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. $BTYPE; fi; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then /tmp/cmake-3.4.3-Darwin-x86_64/CMake.app/Contents/bin/cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE; fi; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then cmake .. $BTYPE -DBUILD_USE_DRACO=ON; fi; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "true" ]]; then cmake .. -DBUILD_DOCUMENTATION=ON -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release; fi; fi
 #
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j 2; fi # BEFORE it was '-j 3' here but NOW we get "virtual memory exhausted: Cannot allocate memory" for Travis job number 9 !!!
