@@ -192,11 +192,11 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink boost; fi # ---> unlink boost 1.71
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv boost.rb boost.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/boost170/boost.rb; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install boost; fi # ---> install boost 1.70
-#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink boost; fi # ---> unlink boost 1.71
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv boost.rb boost.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/boost170/boost.rb; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install boost; fi # ---> install boost 1.70
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew upgrade cgal; fi # to install cgal 4.12 (for test)
