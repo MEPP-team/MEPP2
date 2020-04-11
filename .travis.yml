@@ -230,13 +230,13 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula; mv vtk.rb vtk.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/vtk800/vtk.rb; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then rm '/usr/local/include/c++'; fi # -> because PB with gcc...
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install vtk; fi # -> after more than 4 years vtk is now BACK from homebrew/science to homebrew-core !!!???
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install vtk; fi # -> after more than 4 years vtk is now BACK from homebrew/science to homebrew-core !!!???
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # important to avoid yet another possible homebrew auto-update since the first 'brew update' above
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-science; mv pcl.rb pcl.rb.old; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/Formula/pcl180_7/pcl.rb; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install homebrew/science/pcl --without-vtk --without-apps; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install pcl; fi # -> pcl is now in homebrew-core and no more in homebrew/science
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install draco; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install pcl; fi # -> pcl is now in homebrew-core and no more in homebrew/science
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install draco; fi
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake --version; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cmake; fi
