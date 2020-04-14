@@ -5,6 +5,10 @@ if( NOT BUILD_USE_PCL )
   return()
 endif()
 
+if( MSVC )
+  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /IGNORE:4098" )
+endif()
+
 # --> WeightedPCAPlugin : QtPlugin [BEGIN]
 OPTION( BUILD_USE_GUI_WeightedPCAPlugin "BUILD WeightedPCAPlugin " ON )
 if (BUILD_USE_GUI_WeightedPCAPlugin)
