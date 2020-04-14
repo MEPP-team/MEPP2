@@ -43,7 +43,8 @@ set(JPEG_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/jpeg.lib)
 
 # for PNG
 set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/zlib)
-set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+#set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+set(ZLIB_LIBRARY                optimized ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/zlibd.lib)
 
 set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/libpng)
 set(PNG_LIBRARY                 optimized ${IMG_DIR_3rdParty}/build/lib/Release/libpng.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/libpngd.lib)
