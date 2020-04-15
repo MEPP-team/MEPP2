@@ -207,3 +207,18 @@ if( BUILD_USE_DRACO )
              "Draco not found. Please set DRACO_DIR or turn BUILD_USE_DRACO to OFF.")
   endif ()
 endif ()
+
+##### Boost.Beast and OpenSSL - Early support ! Need Boost >= 1.70
+if( BUILD_USE_BOOST_BEAST AND BUILD_USE_OPENSSL )
+  find_package(OpenSSL REQUIRED)
+  if ( OpenSSL_FOUND )
+    include_directories( ${OPENSSL_INCLUDE_DIR} )
+    add_definitions( -DFEVV_USE_OPENSSL )
+
+    message( "---> OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}" )
+    message( "---> OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}" )
+  else()
+    message( FATAL_ERROR
+             "OpenSSL not found. Please set OPENSSL_ROOT_DIR or turn BUILD_USE_OPENSSL to OFF.")
+  endif ()
+endif ()

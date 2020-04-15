@@ -49,6 +49,9 @@ endif()
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
+	add_definitions(-DWIN32_LEAN_AND_MEAN) # 'include <winsock2.h>' before 'include <Windows.h>' or set that line (for Boost.Beast)
+	add_definitions(-D_WIN32_WINNT=0x0601) # Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target) for Boost.Beast
+
 	set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS 
 		_CRT_SECURE_NO_WARNINGS
 		_SCL_SECURE_NO_WARNINGS
