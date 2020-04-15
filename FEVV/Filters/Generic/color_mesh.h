@@ -126,14 +126,16 @@ color_descriptor_from_map(const Descriptor &d,
     int indice_lut = static_cast< int >(std::floor((number_of_colors - 1) * id));
 
     // convert value to color
-    Color newcolor((unsigned char)colors[3 * indice_lut],
-                   (unsigned char)colors[3 * indice_lut + 1],
-                   (unsigned char)colors[3 * indice_lut + 2]);
+    // to ELO : the cast fix the warning under Windows but 2 tests failed after that -> Test_MSDM2_Cow and Test_Just_Noticeable_Distortion_Cow
+    Color newcolor(/*(unsigned char)*/colors[3 * indice_lut],
+                   /*(unsigned char)*/colors[3 * indice_lut + 1],
+                   /*(unsigned char)*/colors[3 * indice_lut + 2]);
     put(color_pmap, d, newcolor);
   }
   else
   {
-    put(color_pmap, d, Color((unsigned char)colors[0], (unsigned char)colors[1], (unsigned char)colors[2]));
+    // to ELO : the cast fix the warning under Windows but 2 tests failed after that -> Test_MSDM2_Cow and Test_Just_Noticeable_Distortion_Cow
+    put(color_pmap, d, Color(/*(unsigned char)*/colors[0], /*(unsigned char)*/colors[1], /*(unsigned char)*/colors[2]));
   }
 }
 
