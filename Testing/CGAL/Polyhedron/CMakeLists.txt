@@ -609,3 +609,17 @@ add_test( Test_boolean_operations_polyhedron_minus
           "${TESTING_DATA_DIR}/tetra.off"
           "${TESTING_REFOUTPUT_DIR}/CGAL/boolean_operations/mepp1_cube_tetra_minus.off"
           )
+
+#####
+add_executable( test_copy_graph_polyhedron
+                test_copy_graph_polyhedron.cpp
+				)
+target_link_libraries( test_copy_graph_polyhedron
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_copy_graph_polyhedron_off_with_face-color
+          test_copy_graph_polyhedron
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          test_copy_graph_off_with_face-color.off
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          )
