@@ -126,14 +126,14 @@ color_descriptor_from_map(const Descriptor &d,
     int indice_lut = static_cast< int >(std::floor((number_of_colors - 1) * id));
 
     // convert value to color
-    Color newcolor(colors[3 * indice_lut],
-                   colors[3 * indice_lut + 1],
-                   colors[3 * indice_lut + 2]);
+    Color newcolor((unsigned char)colors[3 * indice_lut],
+                   (unsigned char)colors[3 * indice_lut + 1],
+                   (unsigned char)colors[3 * indice_lut + 2]);
     put(color_pmap, d, newcolor);
   }
   else
   {
-    put(color_pmap, d, Color(colors[0], colors[1], colors[2]));
+    put(color_pmap, d, Color((unsigned char)colors[0], (unsigned char)colors[1], (unsigned char)colors[2]));
   }
 }
 
