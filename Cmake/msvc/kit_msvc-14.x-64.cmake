@@ -89,7 +89,7 @@ set(FBX_DIR						${MSVC_KIT_ROOT}/FBX_SDK/2019.0)
 
 set(DRACO_DIR					${MSVC_KIT_ROOT}/draco-1.3.4)
 
-### Boost.Beast and OpenSSL - Early support ! Need Boost >= 1.70
+### Boost.Beast and OpenSSL - Early support ! Need Boost >= 1.70 (so first, change BOOST_ROOT at the top of the file: you need VS2017 or VS2019)
 
 set(BUILD_USE_BOOST_BEAST		FALSE)
 set(BUILD_USE_OPENSSL			TRUE)
