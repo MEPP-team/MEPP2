@@ -87,15 +87,15 @@ if( BUILD_USE_IMG-3RDPARTY )
 
     set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${JPEG_LIBRARIES} )
 
-    #message( STATUS "---> JPEG_INCLUDE_DIR: ${JPEG_INCLUDE_DIR}" )
-    #message( STATUS "---> JPEG_LIBRARIES: ${JPEG_LIBRARIES}" )
+    #message( "---> JPEG_INCLUDE_DIR: ${JPEG_INCLUDE_DIR}" )
+    #message( "---> JPEG_LIBRARIES: ${JPEG_LIBRARIES}" )
   else()
-    #message ( "Unfound Jpeg library." )
+    message ( "Unfound Jpeg library." )
   endif ()
 
   FIND_PACKAGE(PNG) # and ZLIB
   if ( PNG_FOUND )
-	  if ( ZLIB_FOUND AND EXISTS ${ZLIB_LIBRARIES} )
+	  if ( ZLIB_FOUND ) # AND EXISTS ${ZLIB_LIBRARIES} )
 	    set(FEVV_HAS_ONE_IMG_LIBRARY 1)
 
 	    add_definitions( -DFEVV_USE_PNG )
@@ -103,15 +103,17 @@ if( BUILD_USE_IMG-3RDPARTY )
 
 	    set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${PNG_LIBRARIES} )
 
-	    #message( STATUS "---> PNG_PNG_INCLUDE_DIR: ${PNG_PNG_INCLUDE_DIR}" )
-	    #message( STATUS "---> PNG_LIBRARIES: ${PNG_LIBRARIES}" )
+      #message( "---> PNG_PNG_INCLUDE_DIR: ${PNG_PNG_INCLUDE_DIR}" )
+      #message( "---> PNG_LIBRARIES: ${PNG_LIBRARIES}" )
+      #message( "---> ZLIB_INCLUDE_DIR: ${ZLIB_INCLUDE_DIR}" )
+      #message( "---> ZLIB_LIBRARIES: ${ZLIB_LIBRARIES}" )
 	  else()
-	    #message ( "Unfound Png library." )
+	    message ( "Unfound Png library." )
 	  endif ()
   endif ()
 
   FIND_PACKAGE(TIFF)
-  if ( TIFF_FOUND AND EXISTS "${TIFF_LIBRARIES}" )
+  if ( TIFF_FOUND AND EXISTS ${TIFF_LIBRARIES} )
     set(FEVV_HAS_ONE_IMG_LIBRARY 1)
 
     add_definitions( -DFEVV_USE_TIFF )
@@ -119,10 +121,10 @@ if( BUILD_USE_IMG-3RDPARTY )
 
     set( IMG-3RDPARTY_LIBRARIES ${IMG-3RDPARTY_LIBRARIES} ${TIFF_LIBRARIES} )
 
-    #message( STATUS "---> TIFF_INCLUDE_DIR: ${TIFF_INCLUDE_DIR}" )
-    #message( STATUS "---> TIFF_LIBRARIES: ${TIFF_LIBRARIES}" )
+    #message( "---> TIFF_INCLUDE_DIR: ${TIFF_INCLUDE_DIR}" )
+    #message( "---> TIFF_LIBRARIES: ${TIFF_LIBRARIES}" )
   else()
-    #message ( "Unfound Tiff library." )
+    message ( "Unfound Tiff library." )
   endif ()
 
   if ( NOT FEVV_HAS_ONE_IMG_LIBRARY )
@@ -203,5 +205,20 @@ if( BUILD_USE_DRACO )
   else()
     message( FATAL_ERROR
              "Draco not found. Please set DRACO_DIR or turn BUILD_USE_DRACO to OFF.")
+  endif ()
+endif ()
+
+##### Boost.Beast and OpenSSL - Early support ! Need Boost >= 1.70
+if( BUILD_USE_BOOST_BEAST AND BUILD_USE_OPENSSL )
+  find_package(OpenSSL REQUIRED)
+  if ( OpenSSL_FOUND )
+    include_directories( ${OPENSSL_INCLUDE_DIR} )
+    add_definitions( -DFEVV_USE_OPENSSL )
+
+    message( "---> OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}" )
+    message( "---> OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}" )
+  else()
+    message( FATAL_ERROR
+             "OpenSSL not found. Please set OPENSSL_ROOT_DIR or turn BUILD_USE_OPENSSL to OFF.")
   endif ()
 endif ()

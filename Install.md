@@ -292,14 +292,13 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
 ### Prerequisites
 
- - Update Windows 7/8/8.1/10 (services packs and Windows Update)
+ - Update Windows 10 (with Windows Update)
 
- - Download and install [Visual Studio Express 2015 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/Visual%20Studio%20Express%202015/Visual%20Studio%20Express%202015%20pour%20Windows%20Desktop.rar)
-   (download size 7.4 GB, installation size ~12 GB). If you want you can now also use [Visual Studio Community 2017 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or [Visual Studio Community 2019 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
+ - Download and install [Visual Studio Community 2017 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or [Visual Studio Community 2019 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
 
 ### Installing dependencies
 
- 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff) for `VS2015_64` (download size 529 MB, installation size ~6.0 GB)
+ 1. Download (mandatory) the ['core' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64-b171_V141_and_V142.7z) that delivers CMake, Doxygen, Graphviz, Boost, CGAL, OpenMesh, Eigen 3 and Img-3rdparty support (jpeg, zlib, png, tiff): download size 876 MB, installation size ~10.9 GB.
 
  2. Optionally download the ['addon_01' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_01.7z) for Qt4 and OpenSceneGraph
    (download size 396 MB, installation size ~2.9 GB)
@@ -308,7 +307,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
    (download size 314 MB, installation size ~1.6 GB)
 
  4. Optionally download the ['addon_03' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_03.7z) for PCL
-   (download size 31 MB, installation size ~417 MB)
+   (download size 33 MB, installation size ~459 MB)
 
  5. Optionally download the ['addon_04' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_04.7z) for VTK
    (download size 247 MB, installation size ~2.9 GB)
@@ -317,11 +316,11 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
    (download size 54 MB, installation size 679 MB)
 
  7. Optionally download the ['addon_06' binary kit (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/kits/MEPP2_local_vs2015_64_addon_06.7z) for Draco
-   (download size 35 MB, installation size 467 MB)
+   (download size 37 MB, installation size 495 MB)
 
  8. Extract the 'core' ('MEPP2_local_vs2015_64.7z') binary kit; ensure that the absolute path to the 'local_vs2015_64' directory is short (less than 50 characters) and does NOT contain any whitespace (troubles have been encountered with 'Mes Documents' for example)
 
- 9. Extract CMake 3.15.3 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.15.3-win64-x64.zip'
+ 9. Extract CMake 3.16.5 from 'path_to\local_vs2015_64\\\_utils_\cmake-3.16.5-win64-x64.zip'
 
  10. Set a new user environment variable 'MSVC_KIT_ROOT' to 'path_to/local_vs2015_64' (beware of the directory separator, it must be '/' here)
 
@@ -345,7 +344,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  - Run cmake-gui.exe
 
- - Choose 'Visual Studio 14 2015 Win64/x64' as the compiler version (or 'Visual Studio 15 2017 Win64/x64' or 'Visual Studio 16 2019 Win64/x64')
+ - Choose 'Visual Studio 15 2017 Win64/x64' as the compiler version (or 'Visual Studio 16 2019 Win64/x64')
 
  - Where is the source code = ".../MEPP2"
 

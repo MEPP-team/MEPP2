@@ -1,3 +1,7 @@
+if( MSVC )
+  set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /IGNORE:4098" )
+endif()
+
 # --> PointCloudCurvaturePlugin : QtPlugin [BEGIN]
 OPTION( BUILD_USE_GUI_PointCloudCurvaturePlugin "BUILD PointCloudCurvaturePlugin " ON )
 if (BUILD_USE_GUI_PointCloudCurvaturePlugin)

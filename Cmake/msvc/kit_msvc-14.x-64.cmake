@@ -15,6 +15,7 @@ if(MSVC_VERSION GREATER_EQUAL 1920)
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V142) 	# VS2019 x64
 elseif(MSVC_VERSION GREATER_EQUAL 1910)
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V141) 	# VS2017 x64
 else()
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
@@ -43,7 +44,8 @@ set(JPEG_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/jpeg.lib)
 
 # for PNG
 set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/zlib)
-set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+#set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+set(ZLIB_LIBRARY                optimized ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/zlibd.lib)
 
 set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/libpng)
 set(PNG_LIBRARY                 optimized ${IMG_DIR_3rdParty}/build/lib/Release/libpng.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/libpngd.lib)
@@ -86,6 +88,12 @@ set(FBX_DIR						${MSVC_KIT_ROOT}/FBX_SDK/2019.0)
 ### addon 06 : Draco
 
 set(DRACO_DIR					${MSVC_KIT_ROOT}/draco-1.3.4)
+
+### Boost.Beast and OpenSSL - Early support ! Need Boost >= 1.70 (so first, change BOOST_ROOT at the top of the file: you need VS2017 or VS2019)
+
+set(BUILD_USE_BOOST_BEAST		FALSE)
+set(BUILD_USE_OPENSSL			TRUE)
+set(OPENSSL_ROOT_DIR			${MSVC_KIT_ROOT}/OpenSSL-1.1.1d)
 
 ### vtests
 
