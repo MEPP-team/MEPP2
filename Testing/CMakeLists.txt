@@ -16,3 +16,5 @@ add_subdirectory( Draco )
 add_subdirectory( OpenMesh )
 add_subdirectory( PCL )
 add_subdirectory( Utils )
+
+add_subdirectory( boost )

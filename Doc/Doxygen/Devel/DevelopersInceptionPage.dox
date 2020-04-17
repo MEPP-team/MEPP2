@@ -1,34 +1,11 @@
 /**
 
-@page DevelopersInceptionPage Developers inception
+@page DevelopersInceptionPage  Add a new mesh processing filter
 
-Welcome to FEVV developers inception page.
 
-Before delving into the details of the development process, you might find useful to give a glance at some of the following introductory material of the documentation
- - the "General introduction" section of the \ref index "main page"
- - the \ref LexiconPage "lexicon"
- - the \ref ConceptsPage "introduction to concepts" (as practiced within FEVV)
-
-You can then proceed with reading the following documentation that adopts a "hands on" approach of the FEVV development process.
-
-### Forking and cloning FEVV
-
-In order to become a FEVV developer, you should be at ease with the following usages of [git (version control system)](https://en.wikipedia.org/wiki/Git)):
- - [git for beginners](https://www.atlassian.com/git/tutorials/what-is-version-control) (that refers to a [git install how-to](https://www.atlassian.com/git/tutorials/install-git) and also provides an interactive tutorial)
- - [Collaborating with git](https://www.atlassian.com/git/tutorials/syncing) (that mainly introduces the `git remote`, `git fetch`, `git push` and `git pull` commands)
- - Working within a [forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow), that is the recommended workflow for FEVV (as opposed to using e.g. a [centralized workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#centralized-workflow) )
-
-Then you can proceed with
- - [Creating your own github account](https://help.github.com/articles/signing-up-for-a-new-github-account/) (if not already done). In doing so, please do choose a login that is unambiguous and straightforward to identify you: this will ease the burden of [IP](https://en.wikipedia.org/wiki/Intellectual_property) tracking. For example use something like `FirstnameLastname` or `FirstnameLastnameOrganisationname` where the "Organisation Name" is the one you will be using while contributing code to FEVV.
- For the rest of this inception description we shall assume that you signed in as `YourLogin`.
- - Once signed in, you should [fork](https://help.github.com/articles/fork-a-repo/) the [MEPP2 repository](https://github.com/MEPP-team/MEPP2) ([Github](https://github.com/MEPP-team/MEPP2) web interface provides a single button method for this: look in the upper right section of the [MEPP2 repository](https://github.com/MEPP-team/MEPP2) home page)
- - On your desktop machine, you can now [(git) clone](https://git-scm.com/docs/git-clone) your fork. When doing so on a [CLI](https://en.wikipedia.org/wiki/Command-line_interface) you could use [something similar](https://en.wikipedia.org/wiki/Mutatis_mutandis) to the  following command :
-  ```
-  git clone https://github.com/YourLogin/MEPP2
-  ```
 
 ### The HelloWorld example
-FEVV doesn't provide (yet) any [scaffolding tool](https://en.wikipedia.org/wiki/Scaffold_(programming)#Project_generation). For the time being the recommended way for getting acquainted with FEVV is to mimic the ([generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition)) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
+The recommended way for adding a new mesh processing filter is to duplicate the [generic](https://projet.liris.cnrs.fr/mepp/doc/nightly/_lexicon_page.html#GenericDefinition) "HelloWorld" example that is located in the [Examples/Generic/HelloWorld] (https://github.com/MEPP-team/MEPP2/tree/master/Examples/Generic/HelloWorld) subdirectory.
 Because the HelloWorld example is \ref GenericDefinition "generic", notice
 that the `Examples/Generic/HelloWorld` only holds [templated code](https://en.wikipedia.org/wiki/Template_%28C%2B%2B%29).
 
@@ -61,7 +38,7 @@ needs.
 For example, in addition to complying with some \ref CheatSheetConceptsPage "surface oriented concepts", your algorithm might also impose some (algorithmic) complexity constraints or the usage of some specific \ref FilterDefinition "filter" (mesh treatment) implementation that are only available for a specific implementation (i.e. some mesh data structure).
 
 Hence you thus first need to collect your specific requirements in order to
-make the ad-hoc choice among the FEVV compatible mesh data structures.
+make the ad-hoc choice among the MEPP2 compatible mesh data structures.
 You thus get to choose among
  - [OpenMesh](http://www.openmesh.org/),
  - [CGAL's Surface Mesh](http://doc.cgal.org/latest/Surface_mesh/index.html),
@@ -71,7 +48,7 @@ You thus get to choose among
 
 ### Duplicate the concrete HelloWorld example
 For the purpose `MyExample` (that has no known specific need) we are free to
-choose whatever mesh data structure available within FEVV.
+choose whatever mesh data structure available within MEPP2.
 We here (arbitrarily) choose to use the "Linear Cell Complex" implementation
 (a.k.a. CGAL-LCC).
 
@@ -96,7 +73,7 @@ target_link_libraries( myexample_filter_cgal_linear_cell_complex
 ```
 
 ### Build your example
-Your can now fold back to the build stage of the \ref InstallWrapperPage "FEVV installation instructions". Because you want to build the CGAL-LCC example you will need to set cmake's `BUILD_USE_CGAL` build flag to `ON`.
+Your can now fold back to the build stage of the \ref InstallWrapperPage "MEPP2 installation instructions". Because you want to build the CGAL-LCC example you will need to set cmake's `BUILD_USE_CGAL` build flag to `ON`.
 
 ### Run the example
 When working on Linux or OSX, you should find the binary that you build within the `Bin/Examples/CGAL/HelloWorld/` sub-directory of your building directory (here taken as being `Bin`). In order to run it try something like

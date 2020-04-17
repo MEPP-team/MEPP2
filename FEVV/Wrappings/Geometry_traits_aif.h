@@ -144,13 +144,13 @@ public:
     return res;
   }
 
-  static Vector add(const Vector &v1, const Vector &v2)
+  static Vector add_v(const Vector &v1, const Vector &v2)
   {
     Vector result(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]);
     return result;
   };
 
-  static Point add_p(
+  static Point add_pv(
       const Point &p,
       const Vector &v) // we need addP and add functions to have function names
                        // consistent with those of OpenMesh geometry trait
@@ -159,14 +159,14 @@ public:
     return result;
   };
 
-  static Point sub_p(const Point &p1,
-                     const Vector &v) // subP to be consistent with addP
+  static Point sub_pv(const Point &p1,
+                      const Vector &v) // subP to be consistent with addP
   {
     Point result(p1[0] - v[0], p1[1] - v[1], p1[2] - v[2]);
     return result;
   };
 
-  static Vector sub(const Point &p1, const Point &p2)
+  static Vector sub_p(const Point &p1, const Point &p2)
   {
     Vector result(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
     return result;
@@ -176,11 +176,6 @@ public:
   {
     Vector result(v[0] * s, v[1] * s, v[2] * s);
     return result;
-  }
-
-  static Vector scalar_mult(Scalar s, const Vector &v)
-  {
-    return scalar_mult(v, s);
   }
 
   static const Vector NULL_VECTOR;

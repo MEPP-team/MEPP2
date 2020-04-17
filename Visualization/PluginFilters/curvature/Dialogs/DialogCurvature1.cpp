@@ -20,18 +20,32 @@ FEVV::DialogCurvature1::DialogCurvature1(QWidget *parent)
 FEVV::DialogCurvature1::~DialogCurvature1() { delete ui; }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::DialogCurvature1::setCurvature(bool geod, double radius)
+FEVV::DialogCurvature1::setCurvature(bool geod, double radius, bool Cmin_max, bool Dmin_max)
 {
-  Qt::CheckState state =
+  Qt::CheckState state_geod =
       geod ? Qt::CheckState::Checked : Qt::CheckState::Unchecked;
-  ui->checkBox_geod->setCheckState(state);
+  ui->checkBox_geod->setCheckState(state_geod);
+
   ui->lineEdit_radius->setText(QString::number(radius));
+
+  Qt::CheckState state_Cmin_max =
+      Cmin_max ? Qt::CheckState::Checked : Qt::CheckState::Unchecked;
+  ui->checkBox_Cmin_max->setCheckState(state_Cmin_max);
+
+  Qt::CheckState state_Dmin_max =
+      Dmin_max ? Qt::CheckState::Checked : Qt::CheckState::Unchecked;
+  ui->checkBox_Dmin_max->setCheckState(state_Dmin_max);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void
-FEVV::DialogCurvature1::getCurvature(bool &geod, double &radius)
+FEVV::DialogCurvature1::getCurvature(bool &geod, double &radius, bool &Cmin_max, bool &Dmin_max)
 {
   geod = ui->checkBox_geod->isChecked();
+
   radius = ui->lineEdit_radius->text().toDouble();
+
+  Cmin_max = ui->checkBox_Cmin_max->isChecked();
+
+  Dmin_max = ui->checkBox_Dmin_max->isChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////

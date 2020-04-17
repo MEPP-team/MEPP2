@@ -25,5 +25,5 @@
  *  Although the AIF filters are most often written in a generic manner (i.e.
  *  they do not refer to the AIF specific implementation) they can only be
  *  applied to non-manifold data structures (of which AIF is presently the
- *  only available instance within FEVV).
+ *  only available instance within MEPP2).
  */

@@ -670,6 +670,10 @@ FEVV::SimpleViewer::internal_createMesh(
       typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
                                   HalfedgeGraph >::pmap_type;
 
+  using VertexCustomVectorParamMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_param_t,
+                                  HalfedgeGraph >::pmap_type;
+
   using MeshGuipropertiesMap =
       typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
                                   HalfedgeGraph >::pmap_type;
@@ -688,6 +692,7 @@ FEVV::SimpleViewer::internal_createMesh(
 
   VertexCustomVectorMap v_CVm;
   VertexCustomVectorColorMap v_CVCm;
+  VertexCustomVectorParamMap v_CVPm;
 
   MeshGuipropertiesMap m_gpm;
 
@@ -705,6 +710,7 @@ FEVV::SimpleViewer::internal_createMesh(
 
   VertexCustomVectorMap *_vt_CVm = nullptr;
   VertexCustomVectorColorMap *_vt_CVCm = nullptr;
+  VertexCustomVectorParamMap *_vt_CVPm = nullptr;
 
   MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
@@ -928,7 +934,7 @@ FEVV::SimpleViewer::internal_createMesh(
     _vt_CVm = &v_CVm;
   }
   // TEMP for CUSTOM VECTOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -964,7 +970,7 @@ FEVV::SimpleViewer::internal_createMesh(
     _vt_CVCm = &v_CVCm;
   }
   // TEMP for CUSTOM VECTOR COLOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -990,6 +996,42 @@ FEVV::SimpleViewer::internal_createMesh(
   }
   // TEMP for CUSTOM VECTOR COLOR
   // --- vertex_custom_vector_color
+
+  // --- vertex_custom_vector_param
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector_param))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR PARAM" << std::endl;
+    v_CVPm = get_property_map(FEVV::vertex_custom_vector_param, *_g, *_pmaps);
+    _vt_CVPm = &v_CVPm;
+  }
+  // TEMP for CUSTOM VECTOR PARAM
+  if(0) // OFF, but it is normal so don't delete please...
+  if(_vt_CVPm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR PARAM missing, filling it with example values"
+                << std::endl;
+    v_CVPm = make_property_map(FEVV::vertex_custom_vector_param, *_g);
+    _vt_CVPm = &v_CVPm;
+
+    // HERE WE FORCE a full B_CV, E_CV, M_CV vertex-custom_vector_param map with default values
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVPm[*vi] = Vector(0.1f, 0.1f, 0.08f); // B_CV, E_CV, M_CV
+    }
+    // HERE WE FORCE a full B_CV, E_CV, M_CV vertex-custom_vector_param map with default values
+
+    put_property_map(
+        FEVV::vertex_custom_vector_param, *_g, *_pmaps, v_CVPm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR PARAM
+  // --- vertex_custom_vector_param
 
   // TEMP - not used
   /*GeometryTraits gt(*_g);
@@ -1540,14 +1582,28 @@ FEVV::SimpleViewer::internal_createMesh(
 
       // [ normals
       vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
-      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * MAGNITUDE_N ); // ok because _vt_nm always true
+      vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_nm, *v_it)) * 0.5 * MAGNITUDE_N ); // ok because _vt_nm always true
       // ] normals
 
       // [ custom_vectors
       if(_vt_CVm)
       {
-        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) );
-        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * MAGNITUDE_N * 2. ); // * 2. is a sample
+        float MAGNITUDE_CV = 0.08;
+        float B_CV = 0.;
+        float E_CV = 1.;
+
+        if(_vt_CVPm)
+        {
+          using Vector = typename GeometryTraits::Vector;
+          Vector _vector = get(v_CVPm, *v_it);
+
+          B_CV = _vector[0];
+          E_CV = _vector[1];
+          MAGNITUDE_CV = _vector[2];
+        }
+
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) - Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * B_CV * MAGNITUDE_CV );
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< HalfedgeGraph >(p0) + Helpers::VectorConverter< HalfedgeGraph >(get(v_CVm, *v_it)) * E_CV * MAGNITUDE_CV );
       }
       // ] custom_vectors
 
@@ -2047,6 +2103,10 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
                                   PointCloud >::pmap_type;
 
+  using VertexCustomVectorParamMap =
+      typename FEVV::PMap_traits< FEVV::vertex_custom_vector_param_t,
+                                  PointCloud >::pmap_type;
+
   using MeshGuipropertiesMap =
       typename FEVV::PMap_traits< FEVV::mesh_guiproperties_t,
                                   PointCloud >::pmap_type;
@@ -2056,6 +2116,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
 
   VertexCustomVectorMap v_CVm;
   VertexCustomVectorColorMap v_CVCm;
+  VertexCustomVectorParamMap v_CVPm;
 
   MeshGuipropertiesMap m_gpm;
 
@@ -2064,6 +2125,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
 
   VertexCustomVectorMap *_vt_CVm = nullptr;
   VertexCustomVectorColorMap *_vt_CVCm = nullptr;
+  VertexCustomVectorParamMap *_vt_CVPm = nullptr;
 
   MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
@@ -2134,7 +2196,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     _vt_CVm = &v_CVm;
   }
   // TEMP for CUSTOM VECTOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -2170,7 +2232,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     _vt_CVCm = &v_CVCm;
   }
   // TEMP for CUSTOM VECTOR COLOR
-  if(1) // temp
+  if(0) // OFF, but it is normal so don't delete please...
   if(_vt_CVCm == nullptr || m_recomputeNT_if_redraw)
   {
     if(!m_redraw)
@@ -2196,6 +2258,42 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   }
   // TEMP for CUSTOM VECTOR COLOR
   // --- vertex_custom_vector_color
+
+  // --- vertex_custom_vector_param
+  if(has_map(*_pmaps, FEVV::vertex_custom_vector_param))
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] using vertex CUSTOM VECTOR PARAM" << std::endl;
+    v_CVPm = get_property_map(FEVV::vertex_custom_vector_param, *_g, *_pmaps);
+    _vt_CVPm = &v_CVPm;
+  }
+  // TEMP for CUSTOM VECTOR PARAM
+  if(0) // OFF, but it is normal so don't delete please...
+  if(_vt_CVPm == nullptr || m_recomputeNT_if_redraw)
+  {
+    if(!m_redraw)
+      std::cout << "[SimpleViewer] vertex CUSTOM VECTOR PARAM missing, filling it with example values"
+                << std::endl;
+    v_CVPm = make_property_map(FEVV::vertex_custom_vector_param, *_g);
+    _vt_CVPm = &v_CVPm;
+
+    // HERE WE FORCE a full B_CV, E_CV, M_CV vertex-custom_vector_param map with default values
+    using Vector = typename GeometryTraits::Vector;
+
+    auto iterator_pair = vertices(*_g); // vertices() returns a vertex_iterator pair
+    vertex_iterator vi = iterator_pair.first;
+    vertex_iterator vi_end = iterator_pair.second;
+    for (; vi != vi_end; ++vi)
+    {
+      v_CVPm[*vi] = Vector(0.1f, 0.1f, 0.08f); // B_CV, E_CV, M_CV
+    }
+    // HERE WE FORCE a full B_CV, E_CV, M_CV vertex-custom_vector_param map with default values
+
+    put_property_map(
+        FEVV::vertex_custom_vector_param, *_g, *_pmaps, v_CVPm); // MT add (for later redraw)
+  }
+  // TEMP for CUSTOM VECTOR PARAM
+  // --- vertex_custom_vector_param
 
   if(m_redraw) // IMPORTANT -> ONLY IF REDRAW via GUI or CODE
   {
@@ -2423,24 +2521,30 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
       // [ normals
       if(_vt_nm)
       {
-        vertexArrays_normals[mtl_id]->push_back(
-            Helpers::VectorConverter< PointCloud >(p0));
-        vertexArrays_normals[mtl_id]->push_back(
-            Helpers::VectorConverter< PointCloud >(p0) +
-            Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) *
-                MAGNITUDE_N);
+        vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) );
+        vertexArrays_normals[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_nm, *v_it)) * 0.5 * MAGNITUDE_N );
       }
       // ] normals
 
       // [ custom_vectors
       if(_vt_CVm)
       {
-        vertexArrays_custom_vectors[mtl_id]->push_back(
-            Helpers::VectorConverter< PointCloud >(p0));
-        vertexArrays_custom_vectors[mtl_id]->push_back(
-            Helpers::VectorConverter< PointCloud >(p0) +
-            Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) *
-                MAGNITUDE_N * 2.); // * 2. is a sample
+        float MAGNITUDE_CV = 0.08;
+        float B_CV = 0.;
+        float E_CV = 1.;
+
+        if(_vt_CVPm)
+        {
+          using Vector = typename GeometryTraits::Vector;
+          Vector _vector = get(v_CVPm, *v_it);
+
+          B_CV = _vector[0];
+          E_CV = _vector[1];
+          MAGNITUDE_CV = _vector[2];
+        }
+
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) - Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) * B_CV * MAGNITUDE_CV );
+        vertexArrays_custom_vectors[mtl_id]->push_back( Helpers::VectorConverter< PointCloud >(p0) + Helpers::VectorConverter< PointCloud >(get(v_CVm, *v_it)) * E_CV * MAGNITUDE_CV );
       }
       // ] custom_vectors
 

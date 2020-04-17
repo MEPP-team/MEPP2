@@ -19,7 +19,14 @@
 // --------------------------------------------------------------------------------------
 
 
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4267 4244)
+#endif
+
+
 #include "cloud.h"
+
 #include <pcl/search/impl/search.hpp>
 #include <pcl/features/normal_3d.h>
 #include <pcl/kdtree/kdtree_flann.h>
@@ -166,3 +173,8 @@ void RawCloud::SearchFLANNTree(flann::Index<flann::L2<float>>* index,
 
     index->knnSearch(query_mat, indices_mat, dists_mat, nn, flann::SearchParams(128));
 }
+
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif

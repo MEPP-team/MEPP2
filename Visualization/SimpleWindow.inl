@@ -209,7 +209,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   if(_test)
   {
     connect(&timerQuit, SIGNAL(timeout()), this, SLOT(close()));
-    timerQuit.start(8000);
+    timerQuit.start(10000);
   }
   // --- JUST HERE FOR AUTOMATIC TEST ---
 
@@ -1875,6 +1875,22 @@ FEVV::SimpleWindow::on_actionShow_Vertex_Normals_triggered()
 
     bavQt->getViewer()->m_Show_Vertex_Normals =
         !bavQt->getViewer()->m_Show_Vertex_Normals;
+    bavQt->getViewer()->m_space_time_changeColorMode = false;
+    pre_actionHG(bavQt->getViewer());
+    bavQt->getViewer()->m_space_time_changeColorMode = true;
+  }
+}
+
+inline void
+FEVV::SimpleWindow::on_actionShow_CustomVectors_Vertices_triggered()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    bavQt->getViewer()->m_Show_CustomVectors_Vertices =
+        !bavQt->getViewer()->m_Show_CustomVectors_Vertices;
     bavQt->getViewer()->m_space_time_changeColorMode = false;
     pre_actionHG(bavQt->getViewer());
     bavQt->getViewer()->m_space_time_changeColorMode = true;

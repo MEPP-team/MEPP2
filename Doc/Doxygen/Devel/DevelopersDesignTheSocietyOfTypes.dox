@@ -14,7 +14,7 @@ Single concept minded [treatments](https://github.com/MEPP-team/MEPP2/wiki/Vocab
 Treatments can thus be conceived as relating concepts in order to form a [society of concepts](https://en.wikipedia.org/wiki/Society_of_Mind). We just need to understand such relationships in order for example to design the how to flow concepts within the implementation.
 
 ## Feeding on the SimpleViewer example
-In order to understand how to organize such concept relationships, one can consider the evolution of design of FEVV graphical viewers that we describe in the following.
+In order to understand how to organize such concept relationships, one can consider the evolution of design of MEPP2 graphical viewers that we describe in the following.
 
 #### The initial design
 The initial design was flowing the type just where needed that is only to the template member requiring it:
@@ -58,8 +58,8 @@ class SimpleViewer {
 ```
 
 #### Additionnal use case: simulatenous usage of (different) concepts
-At this stage the following (undocumented) **additionnal use cases** were introduced within FEVV:
- 1. **PC use case**: FEVV should deal properly with the PointCloud concept (and the types complying to it)
+At this stage the following (undocumented) **additionnal use cases** were introduced within MEPP2:
+ 1. **PC use case**: MEPP2 should deal properly with the PointCloud concept (and the types complying to it)
  2. **HEG/PC use case**: it shoud be possible to realize **simultaneously displays of objects complying to heterogeneous concepts** (simultaneous means inside a single viewer). For example one should be able to display a point could with some associated graph reconstruction (in some kind of overlay fashion).
 
 #### Dealing with the newcoming PointCloud concept

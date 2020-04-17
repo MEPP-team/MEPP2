@@ -4,7 +4,9 @@ endif()
 
 #####################################################################
 
-if( WIN32 )
+if( MSVC )
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /IGNORE:4098" )
+
   # AUTOLINK is used for CGAL on Windows. Disable it for AIF tests in
   # order to prevent false link error.
   add_definitions( -DCGAL_NO_AUTOLINK_CGAL )

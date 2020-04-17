@@ -110,7 +110,7 @@ principal_curvature_per_vert(const HalfedgeGraph &g,
     Point3d p1 = get(pm, target(*p_halfedge, g));
     Point3d p2 = get(pm, source(*p_halfedge, g));
 #if 1 // WAITING for AIF stuff - TODO : REMOVE THIS BLOC LATER...
-    Vector edge = gt.sub(p1, p2);
+    Vector edge = gt.sub_p(p1, p2);
 #else
     Vector edge(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
 #endif
@@ -197,8 +197,8 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
 
       // ---
 #if 1 // WAITING for AIF stuff - TODO : REMOVE THIS BLOC LATER...
-      Vector vec = gt.sub(p2, p1);
-      Vector pm_o = gt.sub(p, o);
+      Vector vec = gt.sub_p(p2, p1);
+      Vector pm_o = gt.sub_p(p, o);
 #else
       Vector vec(p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]);
       Vector PmO(P[0] - O[0], P[1] - O[1], P[2] - O[2]);

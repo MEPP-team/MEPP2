@@ -4,6 +4,10 @@ endif()
 
 include_directories( "${PROJECT_SOURCE_DIR}/External/CImg/CImg-2.4.2" )
 
+if( MSVC )
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /IGNORE:4098" )
+endif()
+
 add_executable(cimg_tests cimg_tests.cpp)
 target_link_libraries(cimg_tests ${IMG-3RDPARTY_LIBRARIES})
 

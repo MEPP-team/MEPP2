@@ -102,9 +102,9 @@ public:
     return res;
   }
 
-  static Vector add(const Vector &v1, const Vector &v2) { return v1 + v2; };
+  static Vector add_v(const Vector &v1, const Vector &v2) { return v1 + v2; };
 
-  static Point add_p(
+  static Point add_pv(
       const Point &p,
       const Vector &v) // we need addP and add functions to have function names
                        // consistent with those of OpenMesh geometry trait
@@ -118,8 +118,8 @@ public:
               // http://doc.cgal.org/latest/Kernel_23/classCGAL_1_1Point__3.html
   };
 
-  static Point sub_p(const Point &p,
-                     const Vector &v) // subP to be consistent with addP
+  static Point sub_pv(const Point &p,
+                      const Vector &v) // subP to be consistent with addP
   {
     /*Point result(p[0] - v[0],
                                  p[1] - v[1],
@@ -130,15 +130,10 @@ public:
               // http://doc.cgal.org/latest/Kernel_23/classCGAL_1_1Point__3.html
   };
 
-  static Vector sub(const Point &p1, const Point &p2) { return p1 - p2; };
+  static Vector sub_p(const Point &p1, const Point &p2) { return p1 - p2; };
 
 
   static Vector scalar_mult(const Vector &v, Scalar s) { return v * s; }
-
-  static Vector scalar_mult(Scalar s, const Vector &v)
-  {
-    return scalar_mult(v, s);
-  }
 
   static const Vector NULL_VECTOR;
   static const Point ORIGIN;

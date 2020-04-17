@@ -24,7 +24,7 @@ main(int argc, const char **argv)
   FEVV::PCLPointCloud pc;
   test_property_maps_point_cloud< FEVV::PCLPointCloud,
                                   FEVV::PCLPoint,
-                                  FEVV::PCLNormal,
+                                  FEVV::PCLVector,
                                   FEVV::PCLColor >(pc);
 
   return 0;

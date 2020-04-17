@@ -71,6 +71,7 @@ public:
     m_ShowAxis = false;
     m_ShowGrid = false;
     m_Show_Vertex_Normals = false;
+    m_Show_CustomVectors_Vertices = false;
     m_ShowSelected = true;
 
     //
@@ -186,6 +187,7 @@ public:
   bool m_ShowAxis;
   bool m_ShowGrid;
   bool m_Show_Vertex_Normals;
+  bool m_Show_CustomVectors_Vertices;
   bool m_ShowSelected;
 
   //

@@ -70,7 +70,7 @@ try{
       Vector n = FEVV::Operators::
           calculate_face_normal< HalfedgeGraph, PointMap, GeometryTraits >(
               face(he, g), g, pm, gt);
-      normal = gt.add(normal, n);
+      normal = gt.add_v(normal, n);
 #ifndef NDEBUG
       ++cpt;
 #endif
@@ -137,7 +137,7 @@ try{
   {
     if(!CGAL::is_border(he, g))
     {
-      normal = gt.add(normal, get(fnm, face(he, g)));
+      normal = gt.add_v(normal, get(fnm, face(he, g)));
 #ifndef NDEBUG
       ++cpt;
 #endif

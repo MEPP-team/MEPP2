@@ -557,7 +557,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
 
     if(unit_ii == 0) // MUST be done only one time
       if(m_RenderSuperimposedEdges || m_RenderSuperimposedVertices ||
-         m_RenderSuperimposedVertices_Big || m_Show_Vertex_Normals ||
+         m_RenderSuperimposedVertices_Big || m_Show_Vertex_Normals || m_Show_CustomVectors_Vertices ||
          (nb_faces == 0)) // last test for 'only_pts' mode
       {
         // RM: adding predefined basic shaders to display superimposed features
@@ -670,7 +670,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
         // [ normals
 
         // [ custom_vectors
-        if(0) // temp BUT important for later activation
+        if(m_Show_CustomVectors_Vertices)
         {
           std::cout << "[MeshLoading] Drawing custom_vectors" << std::endl; // ADD THIS std::cout IN LEGACY mode too !!!
 
@@ -1071,7 +1071,7 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
 
     // [ custom_vectors
     if(unit_ii == 0) // MUST be done only one time
-      if(0) // temp BUT important for later activation
+      if(m_Show_CustomVectors_Vertices)
       {
         _geometries_custom_vectors[unit_ii]->setVertexArray(
             _vertexArrays_custom_vectors[unit_ii]);

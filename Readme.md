@@ -31,7 +31,7 @@ texture information.
 an abstraction layer that provides interoperability over several third party data structures: OpenMesh, CGAL Surface Mesh, CGAL Polyhedral Surface, CGAL Linear Cell Complex, AIF (Adjacency and Incidence Framework).
 
 
-**Installation and developer documentation is [available on the Wiki](https://github.com/MEPP-team/MEPP2/wiki)**
+**Installation and developer documentation is [available here](http://liris.cnrs.fr/mepp/doc/nightly/)**.
 
 
 ![MEPP-GUI](https://projet.liris.cnrs.fr/mepp/images/mepp2/MEPP2-GUI-V2.PNG)

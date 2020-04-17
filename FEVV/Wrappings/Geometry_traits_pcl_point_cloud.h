@@ -12,7 +12,7 @@
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits.h"
-#include "FEVV/Wrappings/Geometry_traits_operators.h"
+//#include "FEVV/Wrappings/Geometry_traits_operators.h"
 
 namespace FEVV {
 
@@ -33,8 +33,7 @@ class PCLPointCloud_kernel_generator
 public:
   typedef PCLPointCloud_kernel_generator  Kernel;
   typedef FEVV::PCLPoint                  Point;
-  typedef Eigen::Vector3f                 Vector;
-    // see pcl-1.8.1/include/pcl-1.8/pcl/impl/point_types.hpp
+  typedef FEVV::PCLVector                 Vector;
   typedef FEVV::PCLKernelType             Scalar;
 };
 
@@ -74,22 +73,17 @@ public:
 
   Geometry_traits(const Mesh &m) : m_mesh(const_cast< Mesh & >(m)) {}
 
-  static Scalar get_x(const Point &p) { return p.x; }
+  static Scalar get_x(const Point &p) { return p[0]; }
 
-  static Scalar get_y(const Point &p) { return p.y; }
+  static Scalar get_y(const Point &p) { return p[1]; }
 
-  static Scalar get_z(const Point &p) { return p.z; }
+  static Scalar get_z(const Point &p) { return p[2]; }
 
   static Vector normal(const Point &p1, const Point &p2, const Point &p3)
   {
-    // store PCL Points as Eigen Vectors for forthcoming computation
-    Vector pt1(p1.x, p1.y, p1.z);
-    Vector pt2(p2.x, p2.y, p2.z);
-    Vector pt3(p3.x, p3.y, p3.z);
-
     // calculate two vectors from the three points
-    Vector v1 = pt1 - pt2; // Eigen
-    Vector v2 = pt1 - pt3; // Eigen
+    Vector v1 = p1 - p2; // Eigen
+    Vector v2 = p1 - p3; // Eigen
 
     // take the cross product of the two vectors to get the normal
     return cross_product(v1, v2);
@@ -116,12 +110,7 @@ public:
 
   static Scalar length(const Point &p1, const Point &p2)
   {
-    // store PCL Points as Eigen Vectors for forthcoming computation
-    Vector pt1(p1.x, p1.y, p1.z);
-    Vector pt2(p2.x, p2.y, p2.z);
-
-    Vector v = pt1 - pt2; // Eigen
-
+    Vector v = p1 - p2; // Eigen
     return length(v);
   }
 
@@ -130,38 +119,33 @@ public:
     return v.normalized(); // Eigen
   }
 
-  static Vector add(const Vector &v1, const Vector &v2)
+  static Vector add_v(const Vector &v1, const Vector &v2)
   {
     return v1 + v2; // Eigen
   };
 
   // we need addP and add functions to have function names
   // consistent with those of OpenMesh geometry trait
-  static Point add_p(const Point &p, const Vector &v)
+  static Point add_pv(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::add_p< Self >(p, v);
+    return p + v; // Eigen
   };
 
   // subP to be consistent with addP
-  static Point sub_p(const Point &p, const Vector &v)
+  static Point sub_pv(const Point &p, const Vector &v)
   {
-    return FEVV::GeometryTraits::sub_p< Self >(p, v);
+    return p - v; // Eigen
   };
 
-  static Vector sub(const Point &p1, const Point &p2)
+  static Vector sub_p(const Point &p, const Point &q)
   {
-    return FEVV::GeometryTraits::sub< Self >(p1, p2);
+    return p - q; // Eigen
   };
 
 
   static Vector scalar_mult(const Vector &v, Scalar s)
   {
     return s * v; // Eigen
-  }
-
-  static Vector scalar_mult(Scalar s, const Vector &v)
-  {
-    return scalar_mult(v, s);
   }
 
   static const Vector NULL_VECTOR;

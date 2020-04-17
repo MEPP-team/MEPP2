@@ -10,6 +10,14 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+
+#if defined _MSC_VER
+// DON'T PUSH the '#pragma warning' here
+// AND SO, DON'T POP too !!!
+#pragma warning(disable : 4267) // for VS-2015 // MANDATORY when PCL is ON !!!
+#endif
+
+
 #include "FEVV/Wrappings/properties.h"
 #include "FEVV/Wrappings/Wrappings_pcl_point_cloud.h"
 #include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
@@ -136,6 +144,18 @@ struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_custom_vector_t >
 struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_custom_vector_color_t >
 {
   typedef FEVV::PCLPointCloudColorMap   pmap_type; // ask ELO
+
+  static pmap_type create(const FEVV::PCLPointCloud &pc)
+  {
+    return pmap_type(const_cast< FEVV::PCLPointCloud& >(pc));
+  }
+};*/
+
+// specialize the property maps traits for vertex-custom_vector_param
+/*template<>
+struct _PMap_traits< FEVV::PCLPointCloud, FEVV::vertex_custom_vector_param_t >
+{
+  typedef FEVV::PCLPointCloudNormalMap   pmap_type; // ask ELO
 
   static pmap_type create(const FEVV::PCLPointCloud &pc)
   {

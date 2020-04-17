@@ -25,8 +25,8 @@ A concept can be thought as a form of
 Concepts can take the informal form of a convention i.e.
 something concerning template parameters that is collectively known within a
 community of programmers (and shared through e.g. documentation).
-It is thus the responsibility of the programmer (both for FEVV users and
-FEVV developers) to assert and guarantee that the provided code complies
+It is thus the responsibility of the programmer (both for MEPP2 users and
+MEPP2 developers) to assert and guarantee that the provided code complies
 to such informal concepts.
 But within the context of C++, concepts can also take the precise form of
 [formal concepts (definitions)](https://en.wikipedia.org/wiki/Concepts_(C%2B%2B))
@@ -40,11 +40,11 @@ purposes (e.g. CGAL's
 or
 [graph_concept_Polyhedron_3.cpp](https://github.com/CGAL/cgal/blob/master/BGL/test/BGL/graph_concept_Polyhedron_3.cpp)).
 
-Within FEVV the concepts, to which the considered set of
+Within MEPP2 the concepts, to which the considered set of
 \ref CGALHalfedgeDataStructuresConceptCompliancePage "implementations are complying",
 are informally defined through the present documentation.
 Nevertheless concept checking (formal concepts) is internally used within
-FEVV for the limited usage of expressing regression tests.
+MEPP2 for the limited usage of expressing regression tests.
 
 @subsection ConceptIntroductionGeometrySection Concept for vertex access and vertex manipulation
 
@@ -202,10 +202,10 @@ low level pointer manipulations (e.g. building on
 [`MutableHalfedgeGraph::remove_edge(e, g)`](https://doc.cgal.org/latest/BGL/classMutableHalfedgeGraph.html)
 at the cost of loosing cross data structure (e.g. OpenMesh) portability...
 
-@subsection ConceptFEVVApproachSection FEVV recommended concept usage for polygon mesh
+@subsection ConceptFEVVApproachSection MEPP2 recommended concept usage for polygon mesh
 
-FEVV concept usage recommendation boils down to
-  - use FEVV proper concepts
+MEPP2 concept usage recommendation boils down to
+  - use MEPP2 proper concepts
   - use CGAL concepts
   - use BGL concepts when in the specific graph context which includes using a BGL algorithm
   - avoid BGL mutability related concepts (whenever if possible)
@@ -220,7 +220,7 @@ digraph example {
   rankdir=BT
 
 subgraph cluster_not_for_fevv {
-  label = "Concepts not recommended for FEVV usage";
+  label = "Concepts not recommended for MEPP2 usage";
 
   "boost::AdjacencyGraph"
     [ URL="http://www.boost.org/libs/graph/doc/AdjacencyGraph.html",
@@ -245,7 +245,7 @@ subgraph cluster_not_for_fevv {
 }
 
 subgraph cluster_boost {
-  label = "FEVV usable graph context concepts (Boost)";
+  label = "MEPP2 usable graph context concepts (Boost)";
   "boost::BidirectionalGraph"
     [ URL="http://www.boost.org/libs/graph/doc/BidirectionalGraph.html",
       color=cyan]
@@ -393,7 +393,7 @@ algorithm) possibly use
   -  [boost::VertexAndEdgeListGraph](http://www.boost.org/libs/graph/doc/VertexAndEdgeListGraph.html) is "purely conceptual" (doesn't offer types nor expressions)
 
 Eventually, and unless some BGL algorithm that you need requires
-it, **avoid writing** FEVV generic code using the following concepts:
+it, **avoid writing** MEPP2 generic code using the following concepts:
   - [boost::AdjacencyGraph concept](http://www.boost.org/libs/graph/doc/AdjacencyGraph.html)
   -
   [boost::VertexMutableGraph concept](http://www.boost.org/libs/graph/doc/VertexMutableGraph.html)

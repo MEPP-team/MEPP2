@@ -67,12 +67,12 @@ public:
   ~CurvaturePlugin() = default;
 
 public:
-  void init() override { init(true, false, 0.001, 2, false, false); }
+  void init() override { init(true, false, 0.001, 2, false, true); }
 
   void init(bool _forceCompute,
             bool _isGeod,
             double _radius,
-            int _colorField,
+            int _colorField, // 0 : rien, 1 : min, 2 : max
             bool _displayMinDirections,
             bool _displayMaxDirections)
   {
@@ -81,7 +81,7 @@ public:
     *value_isGeod = _isGeod;
     *value_radius = _radius;
 
-    *value_colorField = _colorField; // 0 : rien, 1 : min, 2 : max
+    *value_colorField = _colorField;
 
     *value_displayMinDirections = _displayMinDirections;
     *value_displayMaxDirections = _displayMaxDirections;
@@ -978,13 +978,50 @@ public:
                HalfedgeGraph *_mesh,
                FEVV::PMapsContainer *pmaps_bag)
   {
-    // get filter parameters from dialog window
-    DialogCurvature1 dial1;
-    dial1.setCurvature(*value_isGeod, *value_radius);
-    if(dial1.exec() == QDialog::Accepted)
-      dial1.getCurvature(*value_isGeod, *value_radius);
+    bool *Cmin_max = new bool(false);
+    bool *Dmin_max = new bool(false);
+
+    if ( (*value_colorField) == 2 ) // 0 : rien, 1 : min, 2 : max
+        *Cmin_max = true;
     else
+        *Cmin_max = false;
+    if ( (*value_displayMaxDirections) )
+        *Dmin_max = true;
+    else
+        *Dmin_max = false;
+
+    // set/get filter parameters from dialog window
+    DialogCurvature1 dial1;
+    dial1.setCurvature(*value_isGeod, *value_radius, *Cmin_max, *Dmin_max);
+    if(dial1.exec() == QDialog::Accepted)
+    {
+      dial1.getCurvature(*value_isGeod, *value_radius, *Cmin_max, *Dmin_max);
+
+      if ( (*Cmin_max) )
+        *value_colorField = 2; // 1 : min, 2 : max
+      else
+        *value_colorField = 1; // 1 : min, 2 : max
+      if ( (*Dmin_max) )
+      {
+        *value_displayMinDirections = false;
+        *value_displayMaxDirections = true;
+      }
+      else
+      {
+        *value_displayMinDirections = true;
+        *value_displayMaxDirections = false;
+      }
+
+      delete Cmin_max;
+      delete Dmin_max;
+    }
+    else
+    {
+      delete Cmin_max;
+      delete Dmin_max;
+
       return; // abort applying filter
+    }
 
     using VertexCurvatureMapHG =
         FEVV::Vertex_pmap< HalfedgeGraph, Filters::v_Curv< HalfedgeGraph > >;
@@ -1014,6 +1051,7 @@ public:
     // color
 
     // ---
+
     const std::pair< BaseAdapterVisu *, HalfedgeGraph * > p =
         std::make_pair(_adapter, _mesh);
 
@@ -1059,7 +1097,7 @@ public:
       }
 #endif
 
-      QMessageBox::information(0, "", QObject::tr("Curvature calculated."));
+      //QMessageBox::information(0, "", QObject::tr("Curvature calculated."));
     }
 
     constructColorMap(*_mesh,
@@ -1069,14 +1107,72 @@ public:
                       std::get< 1 >(map_v_cmHG[p])[1],
                       std::get< 1 >(map_v_cmHG[p])[2],
                       std::get< 1 >(map_v_cmHG[p])[3],
-                      (*value_colorField)); // 1 : min, 2 : max
+                      (*value_colorField)); // 0 : rien, 1 : min, 2 : max
+
+    // --- vertex_custom_vector, vertex_custom_vector_color and vertex_custom_vector_param
+    if( (*value_displayMinDirections) || (*value_displayMaxDirections) )
+    {
+        using VertexCustomVectorMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_t,
+                                      HalfedgeGraph >::pmap_type;
+
+        using VertexCustomVectorColorMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_color_t,
+                                      HalfedgeGraph >::pmap_type;
+
+        using VertexCustomVectorParamMap =
+          typename FEVV::PMap_traits< FEVV::vertex_custom_vector_param_t,
+                                      HalfedgeGraph >::pmap_type;
+
+        using vertex_iterator = typename GraphTraits::vertex_iterator;
+
+        VertexCustomVectorMap v_CVm;
+        v_CVm = make_property_map(FEVV::vertex_custom_vector, *_mesh);
+
+        VertexCustomVectorColorMap v_CVCm;
+        v_CVCm = make_property_map(FEVV::vertex_custom_vector_color, *_mesh);
+
+        VertexCustomVectorParamMap v_CVPm;
+        v_CVPm = make_property_map(FEVV::vertex_custom_vector_param, *_mesh);
+
+        VertexCurvatureMapHG curvMap = std::get< 0 >(map_v_cmHG[p]);
+
+        auto iterator_pair = vertices(*_mesh); // vertices() returns a vertex_iterator pair
+        vertex_iterator vi = iterator_pair.first;
+        vertex_iterator vi_end = iterator_pair.second;
+        for (; vi != vi_end; ++vi)
+        {
+          auto curvData = get(curvMap, *vi);
+
+          if (*value_displayMinDirections)
+          {
+            v_CVm[*vi] = VectorHG(curvData.VKminCurv[0], curvData.VKminCurv[1], curvData.VKminCurv[2]);
+            v_CVCm[*vi] = VectorHG(139/255.0f, 195/255.0f, 74/255.0f); // LightGreen
+          }
+          else if (*value_displayMaxDirections)
+          {
+            v_CVm[*vi] = VectorHG(curvData.VKmaxCurv[0], curvData.VKmaxCurv[1], curvData.VKmaxCurv[2]);
+            v_CVCm[*vi] = VectorHG(243/255.0f, 156/255.0f, 18/255.0f); // Orange
+          }
+
+          v_CVPm[*vi] = VectorHG(0.25f, 0.25f, 0.08f); // B_CV, E_CV, M_CV
+        }
+
+        put_property_map(FEVV::vertex_custom_vector, *_mesh, *pmaps_bag, v_CVm);
+
+        put_property_map(FEVV::vertex_custom_vector_color, *_mesh, *pmaps_bag, v_CVCm);
+
+        put_property_map(FEVV::vertex_custom_vector_param, *_mesh, *pmaps_bag, v_CVPm);
+    }
+    // --- vertex_custom_vector, vertex_custom_vector_color and vertex_custom_vector_param
+
     // ---
 
     auto viewer = dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
-    reset();
+    //reset();
 
     viewer->frame();
   }

@@ -47,7 +47,7 @@ sphere_clip_vector(
   if(r < 0)
     r = -r; // the radius cannot be negative
 
-  Vector w = gt.sub(p, center); // direction towards P from the sphere center
+  Vector w = gt.sub_p(p, center); // direction towards P from the sphere center
   double a = gt.dot_product(v, v);
 
   if(fabs(a) < std::numeric_limits< double >::epsilon())

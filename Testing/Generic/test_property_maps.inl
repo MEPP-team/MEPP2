@@ -41,9 +41,9 @@ test_property_maps_point_cloud(PointCloud& pc)
   //
   {
     Point p1; // ctor with no parameter
-    Point p2(1., 2., 3.); // ctor with 3 parameters
-    auto tmp = p1[0]; // operator[] as RValue
-    std::ostringstream ss;
+    Point p2(1.f, 2.f, 3.f); // ctor with 3 parameters
+    auto tmp = p1[0]; // operator[] as RValue, not in Geometry traits
+    std::ostringstream ss; // not in Geometry traits
     ss << p2; // operator<<
   }
 
@@ -101,7 +101,7 @@ test_property_maps_point_cloud(PointCloud& pc)
     Normal n1; // ctor with no parameter
     Normal n2(1., 2., 3.); // ctor with 3 parameters
     auto tmp = n1[0]; // operator[] as RValue
-    std::ostringstream ss;
+    std::ostringstream ss; // not in Geometry traits
     ss << n2; // operator<<
   }
 
@@ -165,8 +165,9 @@ test_property_maps_point_cloud(PointCloud& pc)
   //--------------------------------------------------------------------------
   //
   {
+    // Color type is not in the Geometry traits
     Color c1; // ctor with no parameter
-    Color c2(1., 2., 3.); // ctor with 3 parameters
+    Color c2(1, 2, 3); // ctor with 3 parameters
     auto tmp = c1[0]; // operator[] as RValue
     std::ostringstream ss;
     ss << c2; // operator<<
@@ -217,14 +218,14 @@ test_property_maps_point_cloud(PointCloud& pc)
     for(; vi != vi_end; ++vi)
     {
       auto c = get(v_cm, *vi);
-      Color c2(c[0]/10, c[1]/10, c[2]/10);
+      Color c2(c[0]-100, c[1]-100, c[2]-100);
       put(v_cm, *vi, c2);
     }
 
-    assert(get(v_cm, 0) == Color(21.0, 21.1, 21.2));
-    assert(get(v_cm, 1) == Color(21.3, 21.4, 21.5));
-    assert(get(v_cm, 2) == Color(21.6, 21.7, 21.8));
-    assert(get(v_cm, 3) == Color(21.9, 22.0, 22.1));
+    assert(get(v_cm, 0) == Color(110, 111, 112));
+    assert(get(v_cm, 1) == Color(113, 114 ,115));
+    assert(get(v_cm, 2) == Color(116, 117, 118));
+    assert(get(v_cm, 3) == Color(119, 120, 121));
   }
 
   //--------------------------------------------------------------------------

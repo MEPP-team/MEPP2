@@ -2107,7 +2107,7 @@ public: // private:
 #include "Compression_Valence_Component.inl"
 
 
-/*! \page component_Compression_Valence Documentation
+/*! \page CompressionValencePage  Compression Valence Documentation
  *
  * \section auth Authors
  * H. LEE, C. DIKICI, G. LAVOUE and F. DUPONT \n

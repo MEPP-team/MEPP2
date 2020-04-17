@@ -28,7 +28,9 @@ This make it possible to retrieve a property map without an explicit cast, in th
 
 #### Default property maps type depends on the datastructure
 
-Associative property maps (based on boost::associative_property_maps) are used by default because they are compatible with all datastructures currently used (Polyhedron, Surface_mesh, LCC, OpenMesh, AIF). But this kind of property maps is much slower than vector property maps. The comparison between vector and associative property maps in Compression Valence filter shows a 4-time performance gain in favor of vector property maps with Surface_mesh and Openmesh.
+Two different types of property maps can be used: associative property maps and vector property maps.
+
+Associative property maps (based on boost::associative_property_maps) are used by default because they are compatible with all datastructures (Polyhedron, Surface_mesh, LCC, OpenMesh, AIF). This kind of property maps is much slower than vector property maps. The comparison between vector and associative property maps in Compression Valence filter shows a 4-time performance gain in favor of vector property maps with Surface_mesh and Openmesh for example.
 
 To adress this performance issue, the PMap_traits is specialized for some datastructures (Surface_mesh and Openmesh at the moment) in order to use faster vector property maps with datastructures that support them.
 

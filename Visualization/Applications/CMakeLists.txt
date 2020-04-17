@@ -20,7 +20,7 @@ endif()
 if( MSVC )
   # /FORCE:MULTIPLE for osgDB ifstream / ofstream conflict
   # -> here, really no choice... (because of OSG and OpenMesh already compiled libraries)
-  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
+  #set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
   #set( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /FORCE:MULTIPLE /IGNORE:4006 /IGNORE:4088" )
   # (Note that MSVC apparently considers 4088 too important to allow us to ignore it; I'm nevertheless leaving this here to document that we don't care about it.)
 
@@ -50,21 +50,6 @@ endif()
 
 ### OPENMESH ###
 if( BUILD_USE_OPENMESH )
-
-    #if(0)
-    #  if( BUILD_USE_PCL ) ### For the moment, GUI needs a model of HalfedgeGraph. I (@jlevallois) have choose OpenMesh for the moment. This should be fixed.
-    #    include_directories( ${PCL_INCLUDE_DIRS} )
-    #    add_definitions( ${PCL_DEFINITIONS} )
-
-    #    set( UI_TESTS_SRC_DEMO
-    #       ${UI_TESTS_SRC_DEMO}
-    #       testViewer_PointCloud )
-
-    #    set( GUILIB_DEMO
-    #      ${GUILIB_DEMO}
-    #      ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES} )
-    #  endif()
-    #endif()
 
     if( NOT BUILD_USE_CGAL )
 
@@ -214,34 +199,30 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
 
   target_link_libraries( ${FILE} ${GUILIB_DEMO} )
 
-  if("${FILE}" STREQUAL "testViewer_PointCloud")
-    set( DATA_TEST
-        ${TESTING_DATA_DIR}/ism_test_cat.pcd false)
-  else() # not PCL
-    set( DATA_TEST
-        ${TESTING_DATA_DIR}/casting.off )
-  endif()
+  set( DATA_TEST
+    "${TESTING_DATA_DIR}/casting.off"
+    "${TESTING_DATA_DIR}/casting.xyz" )
 
   if( APPLE )
     if( (NOT DEFINED ENV{TRAVIS}) AND (NOT DEFINED ENV{GITLAB_CI}) ) # OS X - random freeze under travis and GITLAB_CI (but only under OSX VMs)
-      add_test( ${FILE}
+      add_test( "Test_${FILE}"
                 ${FILE}.app/Contents/MacOS/${FILE}
                 ${DATA_TEST}
-                test )
+                -test )
     endif()
   elseif( MSVC )
     if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED ${DOCKER_RUN}) ) # temp
-        add_test( ${FILE}
+        add_test( "Test_${FILE}"
                   ${FILE}
                   ${DATA_TEST}
                   ${VTEST} )
     endif()
   else()
     # LINUX
-    add_test( ${FILE}
+    add_test( "Test_${FILE}"
               ${FILE}
               ${DATA_TEST}
-              test )
+              -test )
     # display backtrace in case of SEGFAULT ; GDB required
     # uncomment to activate
     #add_test( ${FILE}

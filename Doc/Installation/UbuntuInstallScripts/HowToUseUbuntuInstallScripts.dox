@@ -1,6 +1,6 @@
 /**
 
-@page HowToUseUbuntuInstallScriptsPage Using script to install FEVV on Ubuntu
+@page HowToUseUbuntuInstallScriptsPage Using script to install MEPP2 on Ubuntu
 
  1. In your Debian distribution (GNU / Linux), create a folder (eg MEPP) in which you will put all the scripts. 
  2. From a terminal pointing to the folder containing your scripts (Ctrl + Alt + T, and then cd correct address), execute the command `. / Install.sh` to install MEPP2 for the first time on your Debian distribution.

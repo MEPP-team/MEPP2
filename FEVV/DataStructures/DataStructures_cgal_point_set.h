@@ -10,11 +10,13 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+
 #if defined _MSC_VER
-#pragma warning(disable : 4244)
-  // workaround issue https://github.com/CGAL/cgal/issues/4367
-  // remove the pragma when issue is fixed
+#pragma warning(push)
+#pragma warning(disable : 4244) // for VS-2015
 #endif
+
+
 #include <CGAL/version_macros.h>
 #include <CGAL/Cartesian.h>
 #include <CGAL/Point_set_3.h>
@@ -71,3 +73,6 @@ using CGALPointSet = CGAL::Point_set_3< CGALPointSetPoint >;
 
 } // namespace FEVV
 
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif

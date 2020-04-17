@@ -10,6 +10,13 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4267) // for VS-2015 // MANDATORY when PCL is ON !!!
+#endif
+
+
 #include <QTimer>
 #include <QMainWindow>
 #include <QLabel>
@@ -287,6 +294,7 @@ protected slots:
   void on_actionShow_Axis_triggered();
   void on_actionShow_Grid_triggered();
   void on_actionShow_Vertex_Normals_triggered();
+  void on_actionShow_CustomVectors_Vertices_triggered();
 #if 0 //TODO-elo-rm-?-ask_MTO
   void on_actionShow_Selected_triggered();
 #endif
@@ -335,3 +343,8 @@ protected:
 #ifndef Q_MOC_RUN
 #include "Visualization/SimpleWindow.inl"
 #endif // Q_MOC_RUN
+
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif

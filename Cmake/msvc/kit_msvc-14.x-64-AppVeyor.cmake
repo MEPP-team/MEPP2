@@ -34,7 +34,8 @@ set(JPEG_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/jpeg.lib)
 
 # for PNG
 set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/zlib)
-set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+#set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib)
+set(ZLIB_LIBRARY                optimized ${IMG_DIR_3rdParty}/build/lib/Release/zlib.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/zlibd.lib)
 
 set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/libpng)
 set(PNG_LIBRARY                 optimized ${IMG_DIR_3rdParty}/build/lib/Release/libpng.lib debug ${IMG_DIR_3rdParty}/build/lib/Debug/libpngd.lib)
@@ -57,14 +58,14 @@ else(BUILD_USE_QT5)
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)
 endif(BUILD_USE_QT5)
 
-set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.4.0)
+set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.6.4)
 
 ### addon 03 : PCL, FLANN
 
-set(PCL_DIR						${MSVC_KIT_ROOT}/PCL/pcl-1.7.2/cmake)
+set(PCL_DIR						${MSVC_KIT_ROOT}/PCL/pcl-1.9.1/cmake)
 
-set(FLANN_INCLUDE_DIR			${MSVC_KIT_ROOT}/PCL/flann-1.8.4/include)
-set(FLANN_LIBRARY				${MSVC_KIT_ROOT}/PCL/flann-1.8.4/lib/flann.lib)
+set(FLANN_INCLUDE_DIR			${MSVC_KIT_ROOT}/PCL/flann-1.9.1/include)
+set(FLANN_LIBRARY				${MSVC_KIT_ROOT}/PCL/flann-1.9.1/lib/flann_cpp_s.lib) # static version
 
 ### addon 04 : VTK
 
@@ -80,6 +81,6 @@ set(DRACO_DIR					${MSVC_KIT_ROOT}/draco-1.3.4)
 
 ### vtests
 
-set(VTEST						emptytest)
+set(VTEST						  -emptytest)
 
 ###

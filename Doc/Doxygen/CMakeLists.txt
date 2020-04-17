@@ -35,7 +35,11 @@ configure_file(
 file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "/**")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
-  "@page InstallWrapperPage FEVV installation instructions\r")
+  "@page InstallWrapperPage Installation instructions\n\n")
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
+  "<i>Note: this page is a wrapping of the file <a href=\"https://github.com/MEPP-team/MEPP2/blob/master/Install.md\">Install.md</a>.</i>\n\n")
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
+  "<br>\n\n")
 file(READ ${PROJECT_SOURCE_DIR}/Install.md CONTENTS)
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/InstallWrapper.dox
   "${CONTENTS}")

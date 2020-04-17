@@ -94,13 +94,13 @@ vertex_one_ring_angles_based_centroid(
       assert(false);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     Vector d1, d2, c, dc;
-    d1 = gt.sub(get(pm, target(next(opposite(*cir_he, g), g), g)),
-                get(pm, source(*cir_he, g)));
+    d1 = gt.sub_p(get(pm, target(next(opposite(*cir_he, g), g), g)),
+                  get(pm, source(*cir_he, g)));
     // d1 = pm[target(next(opposite(*cir_he, g), g), g)] - pm[source(*cir_he,
     // g)]; // more warnings
     d1 = gt.normalize(d1);
-    d2 = gt.sub(get(pm, target(next(*cir_he, g), g)),
-                get(pm, source(*cir_he, g)));
+    d2 = gt.sub_p(get(pm, target(next(*cir_he, g), g)),
+                  get(pm, source(*cir_he, g)));
     d2 = gt.normalize(d2);
     c = 0.5 * (d1 + d2);
 
@@ -117,18 +117,18 @@ vertex_one_ring_angles_based_centroid(
     if(gt.dot_product(c, c) > MACH_EPS_DOUBLE)
     {
       c = c * (1.0 / std::sqrt(gt.dot_product(c, c)));
-      Point new_ideal_point = gt.add_p(
+      Point new_ideal_point = gt.add_pv(
           get(pm, source(*cir_he, g)),
-          c * std::sqrt(gt.dot_product(gt.sub(get(pm, target(*cir_he, g)),
-                                              get(pm, source(*cir_he, g))),
-                                       gt.sub(get(pm, target(*cir_he, g)),
-                                              get(pm, source(*cir_he, g))))));
+          c * std::sqrt(gt.dot_product(gt.sub_p(get(pm, target(*cir_he, g)),
+                                                get(pm, source(*cir_he, g))),
+                                       gt.sub_p(get(pm, target(*cir_he, g)),
+                                                get(pm, source(*cir_he, g))))));
 
       // Calculate the difference between two adjacent angles...
       // Small angles (alpha1+alpha2) must be favorized to avoid foldover
       iangle = alpha1 + alpha2;
       iangle = 1.0 / (iangle * iangle);
-      dc = gt.sub(new_ideal_point, get(pm, v));
+      dc = gt.sub_p(new_ideal_point, get(pm, v));
       // normalize_Vector(dc); // unit direction towards the bissector of that
       // angle
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ vertex_one_ring_angles_based_centroid(
   vec = vec - gt.dot_product(vec, n) * n;
   // std::cout << "vec = (" << vec[0] << ", " << vec[1] << ", " << vec[2] << ")"
   // << std::endl;
-  return gt.add_p(get(pm, v), smoothing_factor * vec);
+  return gt.add_pv(get(pm, v), smoothing_factor * vec);
 }
 
 } // namespace Operators
