@@ -356,3 +356,17 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 			  ${TEST_DECOMPRESSION_VALENCE_TOLERANCE}
 			  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
+
+#####
+add_executable( test_copy_graph_lcc
+                test_copy_graph_lcc.cpp
+				)
+target_link_libraries( test_copy_graph_lcc
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_copy_graph_lcc_off_with_face-color
+          test_copy_graph_lcc
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          test_copy_graph_off_with_face-color.off
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          )

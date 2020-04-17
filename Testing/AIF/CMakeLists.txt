@@ -559,3 +559,17 @@ set( MEPP2_AIF_COMPILE_DEFINITIONS
      ${COMPILE_DEFINITIONS_TMP}
      CACHE INTERNAL "no-desc" FORCE
      )
+
+#####
+add_executable( test_copy_graph_aif
+                test_copy_graph_aif.cpp
+				)
+target_link_libraries( test_copy_graph_aif
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_copy_graph_aif_off_with_face-color
+          test_copy_graph_aif
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          test_copy_graph_off_with_face-color.off
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          )
