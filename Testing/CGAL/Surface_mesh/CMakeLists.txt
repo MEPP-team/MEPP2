@@ -598,3 +598,54 @@ if( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
 	              APPEND PROPERTY DEPENDS  Test_compression_valence_surfacemesh_monkey_v500_qtz15_withQA
 				  )
 endif( BUILD_ADVANCED_TESTS_COMPR_VALENCE )
+
+#####
+add_executable( test_copy_graph_surfacemesh
+                test_copy_graph_surfacemesh.cpp
+				)
+target_link_libraries( test_copy_graph_surfacemesh
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_copy_graph_surfacemesh_off_aircraft
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/aircraft.off
+          test_copy_graph_off_aircraft.off
+          ${TESTING_DATA_DIR}/aircraft.off
+          )
+add_test( Test_copy_graph_surfacemesh_off_with_face-color
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          test_copy_graph_off_with_face-color.off
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          )
+add_test( Test_copy_graph_surfacemesh_obj_with_vertex-normals_and_vertex-color
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndColor.obj
+          test_copy_graph_obj_with_vertex-normals_and_vertex-color.obj
+          ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndColor.writer-output.obj.ref
+          )
+add_test( Test_copy_graph_surfacemesh_obj_with_vertex-normals_and_vertex-texture
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj
+          test_copy_graph_obj_with_vertex-normals_and_vertex-texture.obj
+          ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref
+          )
+add_test( Test_copy_graph_surfacemesh_obj_with_halfedge-texture
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/textures/usb/usb.obj
+          test_copy_graph_obj_with_halfedge-texture.obj
+          ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref
+          )
+add_test( Test_copy_graph_surfacemesh_obj_with_face-normal
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/textures/simple/simple_with_face_normals.obj
+          test_copy_graph_obj_with_face-normal.obj
+          ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple/simple_with_face_normals.writer-output.obj.ref
+          )
+add_test( Test_copy_graph_surfacemesh_obj_with_multitexture
+          test_copy_graph_surfacemesh
+          ${TESTING_DATA_DIR}/textures/simple-multitexture/simple-multitexture.obj
+          test_copy_graph_obj_with_multitexture.obj
+          ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple-multitexture/simple-multitexture.obj.ref
+          )
+

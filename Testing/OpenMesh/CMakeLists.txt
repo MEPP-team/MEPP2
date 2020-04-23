@@ -544,3 +544,18 @@ set( MEPP2_OPENMESH_COMPILE_DEFINITIONS
      ${COMPILE_DEFINITIONS_TMP}
      CACHE INTERNAL "no-desc" FORCE
      )
+
+#####
+add_executable( test_copy_graph_openmesh
+                test_copy_graph_openmesh.cpp
+				)
+target_link_libraries( test_copy_graph_openmesh
+                       ${OPENMESH_LIBRARIES}
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_copy_graph_openmesh_off_with_face-color
+          test_copy_graph_openmesh
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          test_copy_graph_off_with_face-color.off
+          ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
+          )
