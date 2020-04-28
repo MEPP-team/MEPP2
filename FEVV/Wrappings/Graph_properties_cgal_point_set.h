@@ -47,6 +47,13 @@ get(const boost::vertex_point_t, FEVV::CGALPointSet &ps)
 {
   return ps.point_map();
 }
+// const version for filters that take a const pc as parameter
+inline
+FEVV::CGALPointSetPointMap
+get(const boost::vertex_point_t, const FEVV::CGALPointSet &ps)
+{
+  return ps.point_map();
+}
 
 // --------------- Nearest neighbors search ---------------
 
