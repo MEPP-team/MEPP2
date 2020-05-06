@@ -38,41 +38,42 @@ Other optional dependencies are:
 
 ### Install dependencies
 
-Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
+Examples on 'Ubuntu 20.04 LTS Focal Fossa (amd64)', released on April 23, 2020
+and 'Ubuntu 18.04 LTS Bionic Beaver (amd64)', released on April 26, 2018:
 ````
   # CMake
   $ sudo apt install cmake
 
   # Boost
-  $ sudo apt install libboost-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev libboost-iostreams-dev
+  $ sudo apt install libboost-all-dev
 
   # Eigen 3
   $ sudo apt install libeigen3-dev
 
-  # CGAL 4.14.1 (installation in user home directory)
+  # CGAL 4.14.3 (installation in user home directory)
   $ sudo apt install libgmp-dev libmpfr-dev
   $ cd /tmp
-  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.1/CGAL-4.14.1.zip
-  $ cd && unzip /tmp/CGAL-4.14.1.zip
+  $ wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.3/CGAL-4.14.3.zip
+  $ cd && unzip /tmp/CGAL-4.14.3.zip
 
   # OpenMesh (installation in user home directory)
   $ cd /tmp
-  $ wget https://www.openmesh.org/media/Releases/7.1/OpenMesh-7.1.tar.gz
-  $ tar -xzf OpenMesh-7.1.tar.gz
-  $ cd OpenMesh-7.1 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/OpenMesh-7.1 ..
+  $ wget https://www.openmesh.org/media/Releases/8.1/OpenMesh-8.1.tar.gz
+  $ tar -xzf OpenMesh-8.1.tar.gz
+  $ cd OpenMesh-8.1 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/OpenMesh-8.1 ..
   $ make
   $ make install && cd
 
   # Qt
-  $ sudo apt install libqt4-dev libqt4-opengl-dev (or qtdeclarative5-dev libqt5opengl5-dev for Qt 5 but today OpenSceneGraph is only SingleThread with Qt 5, so prefer Qt 4...)
+  $ sudo apt install qtdeclarative5-dev libqt5opengl5-dev (or libqt4-dev libqt4-opengl-dev for Qt 4 under Ubuntu 18.04)
 
   # OpenSceneGraph
   $ sudo apt install libjpeg-dev libpng-dev libtiff-dev libfreetype6-dev
   $ cd /tmp
-  $ wget https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.6.4.tar.gz
-  $ tar zxf OpenSceneGraph-3.6.4.tar.gz; cd OpenSceneGraph-OpenSceneGraph-3.6.4; mkdir build && cd build
-  $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.6.4
+  $ wget https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.6.5.tar.gz
+  $ tar zxf OpenSceneGraph-3.6.5.tar.gz; cd OpenSceneGraph-OpenSceneGraph-3.6.5; mkdir build && cd build
+  $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_RULE_MESSAGES=OFF -DBUILD_OSG_APPLICATIONS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/osg-3.6.5
   $ make
   $ make install && cd
 
@@ -107,10 +108,10 @@ Example on Ubuntu 18.04 LTS Bionic Beaver (amd64), released on April 26, 2018:
 
   # Draco (installation in user home directory)
   $ cd /tmp
-  $ wget https://github.com/google/draco/archive/1.3.5.tar.gz
-  $ tar -xzf 1.3.5.tar.gz
-  $ cd draco-1.3.5 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.5 ..
+  $ wget https://github.com/google/draco/archive/1.3.6.tar.gz
+  $ tar -xzf 1.3.6.tar.gz
+  $ cd draco-1.3.6 && mkdir build && cd build
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.6 ..
   $ make
   $ make install && cd
 ````
@@ -126,7 +127,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
@@ -134,11 +135,11 @@ Scripting commands for compiling Mepp2:
   $ make
 
   # compile with CGAL, OpenMesh, GUI and FBX
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.1" -DOPENMESH_DIR="$HOME/OpenMesh-7.1" -DOSG_DIR="$HOME/osg-3.6.4" -DBUILD_DOCUMENTATION=ON ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DBUILD_DOCUMENTATION=ON ..
   $ make doc
 ````
 

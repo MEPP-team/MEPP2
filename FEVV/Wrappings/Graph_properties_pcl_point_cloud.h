@@ -94,6 +94,14 @@ get(const boost::vertex_point_t, FEVV::PCLPointCloud &pc)
   FEVV::PCLPointCloudPointMap pm(pc);
   return pm;
 }
+// const version for filters that take a const pc as parameter
+inline
+FEVV::PCLPointCloudPointMap
+get(const boost::vertex_point_t, const FEVV::PCLPointCloud &pc)
+{
+  FEVV::PCLPointCloudPointMap pm(const_cast< FEVV::PCLPointCloud& >(pc));
+  return pm;
+}
 
 
 } // namespace pcl

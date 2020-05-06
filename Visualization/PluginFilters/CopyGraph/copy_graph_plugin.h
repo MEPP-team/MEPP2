@@ -29,14 +29,15 @@
 #include "Visualization/SimpleWindow.h"
 
 // A) include the header of the filter corresponding to your operation
-#include "FEVV/Filters/Generic/copy_graph.hpp"
-
 #include "FEVV/Wrappings/properties.h"
+#include "FEVV/Filters/Generic/copy_graph.hpp"
 
 #ifdef FEVV_USE_CGAL
 #include "FEVV/Wrappings/properties_polyhedron_3.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 #include "FEVV/Wrappings/properties_linear_cell_complex.h"
+#include "FEVV/Wrappings/properties_cgal_point_set.h"
+#include "FEVV/Filters/CGAL/Point_set/copy_graph_cgal_point_set.hpp"
 #endif // FEVV_USE_CGAL
 #ifdef FEVV_USE_OPENMESH
 #include "FEVV/Wrappings/properties_openmesh.h"
@@ -44,6 +45,10 @@
 #ifdef FEVV_USE_AIF
 #include "FEVV/Wrappings/properties_aif.h"
 #endif // FEVV_USE_AIF
+#ifdef FEVV_USE_PCL
+#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
+#include "FEVV/Filters/PCL/copy_graph_pcl.hpp"
+#endif // FEVV_USE_PCL
 #endif
 
 namespace FEVV {
@@ -180,6 +185,13 @@ public:
   {
     apply_choose_output< MeshPolyhedron >(_adapter, _mesh, pmaps_bag);
   }
+
+  void apply(BaseAdapterVisu *_adapter,
+             CGALPointSet *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    apply_choose_output< CGALPointSet >(_adapter, _mesh, pmaps_bag);
+  }
 #endif
 
 #ifdef FEVV_USE_AIF
@@ -188,6 +200,15 @@ public:
              FEVV::PMapsContainer *pmaps_bag) override
   {
     apply_choose_output< MeshAIF >(_adapter, _mesh, pmaps_bag);
+  }
+#endif
+
+#ifdef FEVV_USE_PCL
+  void apply(BaseAdapterVisu *_adapter,
+             PCLPointCloud *_mesh,
+             FEVV::PMapsContainer *pmaps_bag) override
+  {
+    apply_choose_output< PCLPointCloud >(_adapter, _mesh, pmaps_bag);
   }
 #endif
 
@@ -220,6 +241,10 @@ public:
     {
       applyHG< MeshT, MeshLCC >(_adapter, _mesh, pmaps_bag);
     }
+    else if(mesh_type == "CGALPOINTSET")
+    {
+      applyHG< MeshT, CGALPointSet >(_adapter, _mesh, pmaps_bag);
+    }
 #endif
 #ifdef FEVV_USE_OPENMESH
     else if(mesh_type == "OPENMESH")
@@ -234,6 +259,11 @@ public:
     }
 #endif
 #ifdef FEVV_USE_PCL
+    else if(mesh_type == "PCLPOINTCLOUD")
+    {
+      applyHG< MeshT, PCLPointCloud >(_adapter, _mesh, pmaps_bag);
+    }
+#endif
     else
     {
       QMessageBox::information(0,
@@ -242,7 +272,6 @@ public:
                                            "with the datastructure you have "
                                            "chosen!"));
     }
-#endif
   }
 
 
