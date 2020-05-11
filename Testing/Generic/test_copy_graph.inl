@@ -8,9 +8,6 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include "FEVV/Filters/Generic/generic_reader.hpp"
-#include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "FEVV/Filters/Generic/copy_graph.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 #include "Testing/Utils/utils_are_meshes_identical.hpp"

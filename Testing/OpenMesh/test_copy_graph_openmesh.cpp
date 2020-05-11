@@ -13,7 +13,11 @@
 #include "FEVV/Wrappings/Geometry_traits_openmesh.h"
 #include "FEVV/Wrappings/properties_openmesh.h"
 
-#include "Testing/Generic/Manifold/test_copy_graph.inl"
+#include "FEVV/Filters/Generic/generic_reader.hpp"
+#include "FEVV/Filters/Generic/generic_writer.hpp"
+#include "FEVV/Filters/Generic/copy_graph.hpp"
+
+#include "Testing/Generic/test_copy_graph.inl"
 
 
 int
