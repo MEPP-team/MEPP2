@@ -78,6 +78,10 @@ copy_graph(const FEVV::PCLPointCloud  &pc_s,
 #ifdef FEVV_USE_CGAL
 
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_cgal_point_set.h" // for vertex_decriptor
+#include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h" // for CGALPS Kernel
+#include "FEVV/Wrappings/Graph_properties_cgal_point_set.h" // for get(vertex_point_t,...)
+#include "FEVV/Wrappings/properties_cgal_point_set.h" // for CGALPS prop maps
 
 namespace FEVV {
 namespace Filters {
