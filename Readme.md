@@ -2,14 +2,14 @@
 
 MEPP is a C++, cross-platform, software development
 kit (SDK) for **processing and visualizing 3D surface
-meshes**. It provides both an application programming
+meshes and point clouds**. It provides both an application programming
 interface (API) for creating new processing filters and a
 graphical user interface (GUI) that can be used directly
 and integrate new filters as plugins.
 
-**It allows to process and visualize both static and
-dynamic 3D surface meshes, with color attributes and
-texture information.**
+It allows to **process and visualize both static (and
+dynamic) 3D surface meshes, with color attributes and
+texture information** or **point clouds with color attributes**.
 It is intended for engineers, researchers, but also for
 students thanks to a simple use, facilitated by the
 proposed architecture and extensive documentation.
@@ -18,17 +18,16 @@ and Eigen; optional dependencies include FBX, Draco,
 CImg.
 
 **Characteristics**:
-C++, Open-source, Multi-plateform (Windows, Linux,
-Mac OS X), Compilation with CMake, Quick and easy installation thanks to
+C++, open-source, multi-plateform (Windows, Linux,
+Mac OS X), compilation with CMake, quick and easy installation thanks to
 extensive documentation.
 
 **Rendering**: the GUI integrates several shaders such as Blinn-Phong and Cook-Torrance (for
-physical based rendering). It can render both static and dynamic 3D
-surface meshes, with color attributes and
-texture information.
+physical based rendering). It can render both static (and dynamic) 3D
+surface meshes, with color attributes and texture information or point clouds with color attributes.
 
 **Data structures**: MEPP is generic programming oriented. It offers
-an abstraction layer that provides interoperability over several third party data structures: OpenMesh, CGAL Surface Mesh, CGAL Polyhedral Surface, CGAL Linear Cell Complex, AIF (Adjacency and Incidence Framework).
+an abstraction layer that provides interoperability over several third party data structures: **OpenMesh**, **CGAL Surface Mesh**, **CGAL Polyhedral Surface**, **CGAL Linear Cell Complex**, **CGAL Point Set**, **PCL (Point Cloud Library)** and **AIF (Adjacency and Incidence Framework)**.
 
 
 **Installation and developer documentation is [available here](http://liris.cnrs.fr/mepp/doc/nightly/)**.
