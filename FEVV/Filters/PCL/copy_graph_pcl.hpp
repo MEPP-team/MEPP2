@@ -12,6 +12,7 @@
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 #include "FEVV/Filters/Generic/PointCloud/copy_point_cloud.hpp"
+#include "FEVV/Filters/Generic/copy_graph.hpp"
 
 
 namespace FEVV {
@@ -19,19 +20,43 @@ namespace Filters {
 
 
 /**
+ * \brief  Specialization of CopyGraphParameters for PCL Point Cloud copy from.
+ * 
+ */
+template< typename PointCloudT >
+struct CopyGraphParameters< FEVV::PCLPointCloud, PointCloudT > :
+    CopyPCParameters< FEVV::PCLPointCloud, PointCloudT >
+{ };
+
+
+/**
  * \brief  Overloading of copy_graph() for PCL Point Cloud (copy from).
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-template< typename PointCloudT >
+template< typename PointCloudT,
+          typename Parameters =
+              CopyGraphParameters< FEVV::PCLPointCloud, PointCloudT > >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            PointCloudT                &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params =
+               CopyGraphParameters< FEVV::PCLPointCloud, PointCloudT >())
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t, params);
 }
+
+
+/**
+ * \brief  Specialization of CopyGraphParameters for PCL Point Cloud copy to.
+ * 
+ */
+template< typename PointCloudT >
+struct CopyGraphParameters< PointCloudT, FEVV::PCLPointCloud > :
+    CopyPCParameters< PointCloudT, FEVV::PCLPointCloud >
+{ };
 
 
 /**
@@ -39,15 +64,30 @@ copy_graph(const FEVV::PCLPointCloud  &pc_s,
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-template< typename PointCloudT >
+template< typename PointCloudT,
+          typename Parameters =
+              CopyGraphParameters< PointCloudT, FEVV::PCLPointCloud > >
 void
 copy_graph(const PointCloudT          &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params =
+               CopyGraphParameters< PointCloudT, FEVV::PCLPointCloud >())
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t, params);
 }
+
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from PCL Point Cloud
+ *         to PCL Point Cloud.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::PCLPointCloud , FEVV::PCLPointCloud > :
+    CopyPCParameters< FEVV::PCLPointCloud, FEVV::PCLPointCloud >
+{ };
 
 
 /**
@@ -55,14 +95,17 @@ copy_graph(const PointCloudT          &pc_s,
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-inline
+template< typename Parameters =
+              CopyGraphParameters< FEVV::PCLPointCloud, FEVV::PCLPointCloud > >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params =
+               CopyGraphParameters< FEVV::PCLPointCloud, FEVV::PCLPointCloud >())
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t, params);
 }
 
 
@@ -86,25 +129,68 @@ copy_graph(const FEVV::PCLPointCloud  &pc_s,
 namespace FEVV {
 namespace Filters {
 
-inline
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from PCL Point Cloud
+ *         to CGAL Point Set.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::PCLPointCloud , FEVV::CGALPointSet > :
+    CopyPCParameters< FEVV::PCLPointCloud, FEVV::CGALPointSet >
+{ };
+
+
+/**
+ * \brief  Overloading of copy_graph() for copy from PCL Point Cloud
+ *         to CGAL Point Set.
+ * 
+ */
+// note: overloading because function partial specialization is not allowed.
+template< typename Parameters =
+              CopyGraphParameters< FEVV::PCLPointCloud, FEVV::CGALPointSet > >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::CGALPointSet         &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params =
+               CopyGraphParameters< FEVV::PCLPointCloud, FEVV::CGALPointSet >())
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t, params);
 }
 
-inline
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from CGAL Point Set
+ *         to PCL Point Cloud.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud > :
+    CopyPCParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud >
+{ };
+
+
+/**
+ * \brief  Overloading of copy_graph() for copy from CGAL Point Set
+ *         to PCL Point Cloud.
+ * 
+ */
+// note: overloading because function partial specialization is not allowed.
+template< typename Parameters =
+              CopyGraphParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud > >
 void
 copy_graph(const FEVV::CGALPointSet   &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params =
+               CopyGraphParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud >())
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t, params);
 }
+
 
 } // namespace Filters
 } // namespace FEVV
