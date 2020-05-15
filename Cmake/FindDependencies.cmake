@@ -79,7 +79,7 @@ endif()
 ##### IMG-3RDPARTY libraries finding
 if( BUILD_USE_IMG-3RDPARTY )
   FIND_PACKAGE(JPEG)
-  if ( JPEG_FOUND AND EXISTS ${JPEG_LIBRARIES} )
+  if ( JPEG_FOUND ) # AND EXISTS ${JPEG_LIBRARIES} )
     set(FEVV_HAS_ONE_IMG_LIBRARY 1)
 
     add_definitions( -DFEVV_USE_JPEG )
@@ -113,7 +113,7 @@ if( BUILD_USE_IMG-3RDPARTY )
   endif ()
 
   FIND_PACKAGE(TIFF)
-  if ( TIFF_FOUND AND EXISTS ${TIFF_LIBRARIES} )
+  if ( TIFF_FOUND ) # AND EXISTS ${TIFF_LIBRARIES} )
     set(FEVV_HAS_ONE_IMG_LIBRARY 1)
 
     add_definitions( -DFEVV_USE_TIFF )
