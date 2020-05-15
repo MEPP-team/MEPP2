@@ -259,5 +259,63 @@ copy_graph(const FaceListGraphS  &g_s,
 }
 
 
+/**
+ * \brief  Copy a source mesh into a target mesh. Do NOT Copy properties.
+ *
+ * \param  g_s       the mesh to copy from
+ * \param  g_t       the mesh to copy to
+ * \param  params    the named parameters
+ * \param  gt_s      the geometry traits of source mesh
+ * \param  gt_t      the geometry traits of target mesh
+ *
+ * \sa     the simplified variant that use the default geometry traits
+ *         of the meshes.
+ */
+template< typename FaceListGraphS,
+          typename FaceListGraphT,
+          typename Parameters,
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
+void
+copy_graph(const FaceListGraphS  &g_s,
+           FaceListGraphT        &g_t,
+           const Parameters      &params,
+           const GeometryTraitsS &gt_s,
+           const GeometryTraitsT &gt_t)
+{
+  PMapsContainer  pmaps_s; // empty bag
+  PMapsContainer  pmaps_t; // empty bag
+
+  copy_graph(g_s, pmaps_s, g_t, pmaps_t, params, gt_s, gt_t);
+}
+
+
+/**
+ * \brief  Copy a source mesh into a target mesh. Do NOT copy properties.
+ *
+ * \param  g_s       the mesh to copy from
+ * \param  g_t       the mesh to copy to
+ * \param  params    the named parameters
+ *
+ * \sa     the variant that use the geometry traits provided by the user.
+ */
+template< typename FaceListGraphS,
+          typename FaceListGraphT,
+          typename Parameters =
+              CopyGraphParameters< FaceListGraphS, FaceListGraphT >,
+          typename GeometryTraitsS = FEVV::Geometry_traits< FaceListGraphS >,
+          typename GeometryTraitsT = FEVV::Geometry_traits< FaceListGraphT > >
+void
+copy_graph(const FaceListGraphS  &g_s,
+           FaceListGraphT        &g_t,
+           const Parameters      &params =
+               CopyGraphParameters< FaceListGraphS, FaceListGraphT >())
+{
+  GeometryTraitsS gt_s(g_s);
+  GeometryTraitsT gt_t(g_t);
+  copy_graph(g_s, g_t, params, gt_s, gt_t);
+}
+
+
 } // namespace Filters
 } // namespace FEVV
