@@ -16,9 +16,61 @@
 #include "FEVV/Filters/Generic/mesh_to_vector_representation.hpp"
 #include "FEVV/Filters/Generic/mesh_from_vector_representation.hpp"
 
+#include <map>
+
 
 namespace FEVV {
 namespace Filters {
+
+
+/**
+ * Helper type for vertex to vertex map.
+ */
+template< typename BoostGraphS,
+          typename BoostGraphT >
+using VertexToVertexMap = std::map<
+   typename boost::graph_traits< BoostGraphS >::vertex_descriptor,
+   typename boost::graph_traits< BoostGraphT >::vertex_descriptor >;
+
+
+/**
+ * Helper type for face to face map.
+ */
+template< typename FaceGraphS,
+          typename FaceGraphT >
+using FaceToFaceMap = std::map<
+   typename boost::graph_traits< FaceGraphS >::face_descriptor,
+   typename boost::graph_traits< FaceGraphT >::face_descriptor >;
+
+
+/**
+ * Implement the named parameters idiom for copy_graph()
+ *
+ * \param  v2v  vertex to vertex map to be populated
+ * \param  f2f  face to face map to be populated
+ */
+template< typename FaceGraphS,
+          typename FaceGraphT >
+struct CopyGraphParameters
+{
+  typedef  VertexToVertexMap< FaceGraphS, FaceGraphT >  V2VMap;
+  typedef  FaceToFaceMap< FaceGraphS, FaceGraphT >      F2FMap;
+
+  CopyGraphParameters& v2v(V2VMap *_v2v)
+  {
+    m_v2v = _v2v;
+    return *this;
+  }
+
+  CopyGraphParameters& f2f(F2FMap *_f2f)
+  {
+    m_f2f = _f2f;
+    return *this;
+  }
+
+  V2VMap *m_v2v = nullptr;
+  F2FMap *m_f2f = nullptr;
+};
 
 
 /**
@@ -28,6 +80,7 @@ namespace Filters {
  * \param  pmaps_s   the source property maps bag
  * \param  g_t       the mesh to copy to
  * \param  pmaps_t   the target property maps bag
+ * \param  params    the named parameters
  * \param  gt_s      the geometry traits of source mesh
  * \param  gt_t      the geometry traits of target mesh
  *
@@ -37,6 +90,7 @@ namespace Filters {
 //TODO-elo: return v2v, e2e, h2h, f2f maps
 template< typename FaceListGraphS,
           typename FaceListGraphT,
+          typename Parameters,
           typename GeometryTraitsS,
           typename GeometryTraitsT >
 void
@@ -44,6 +98,7 @@ copy_graph(const FaceListGraphS  &g_s,
            const PMapsContainer  &pmaps_s,
            FaceListGraphT        &g_t,
            PMapsContainer        &pmaps_t,
+           const Parameters      &params,
            const GeometryTraitsS &gt_s,
            const GeometryTraitsT &gt_t)
 {
@@ -67,14 +122,81 @@ copy_graph(const FaceListGraphS  &g_s,
   // build the target mesh from the vector representation
 
   unsigned int duplicated_vertices_nbr = 0;
+  VertDescVect< FaceListGraphT > vd_target;
+  FaceDescVect< FaceListGraphT > fd_target;
   bool use_corner_texture_coord = has_map(pmaps_s, halfedge_texcoord);
+
+  MeshFromVectorReprParameters< FaceListGraphT > mfv_params;
 
   mesh_from_vector_representation(g_t,
                                   pmaps_t,
                                   duplicated_vertices_nbr,
                                   mvr,
-                                  use_corner_texture_coord,
+                                  mfv_params.vd_target(&vd_target)
+                                            .fd_target(&fd_target)
+                                            .use_corner_texcoord(
+                                                use_corner_texture_coord),
                                   gt_t);
+ 
+  // populate v2v and f2f maps if provided
+  
+  // populate v2v map
+  if(params.m_v2v)
+  {
+    // reset v2v map
+    params.m_v2v->clear();
+
+    // ensure there are as many source vertices than target vertices
+    if(size_of_vertices(g_s) == vd_target.size())
+    {
+      // loop over source mesh vertices
+      auto v_iter_pair = vertices(g_s);
+      auto vi          = v_iter_pair.first;
+      auto vi_end      = v_iter_pair.second;
+      size_t i = 0;
+      for(; vi != vi_end; ++vi)
+      {
+        // source vertices and vd_target are in the same order
+        (*params.m_v2v)[*vi] = vd_target[i];
+        i++;
+      }
+    }
+    else
+    {
+      std::cout << "copy_graph(): WARNING unable to build v2v map because "
+                   " source and target have not the same number of vertices."
+                << std::endl;
+    }
+  }
+
+  // populate f2f map
+  if(params.m_f2f)
+  {
+    // reset f2f map
+    params.m_f2f->clear();
+
+    // ensure there are as many source faces than target faces
+    if(size_of_faces(g_s) == fd_target.size())
+    {
+      // loop over source mesh faces
+      auto f_iter_pair = faces(g_s);
+      auto fi          = f_iter_pair.first;
+      auto fi_end      = f_iter_pair.second;
+      size_t i = 0;
+      for(; fi != fi_end; ++fi)
+      {
+        // source faces and fd_target are in the same order
+        (*params.m_f2f)[*fi] = fd_target[i];
+        i++;
+      }
+    }
+    else
+    {
+      std::cout << "copy_graph(): WARNING unable to build f2f map because "
+                   " source and target have not the same number of faces."
+                << std::endl;
+    }
+  }
 
   // display some information
 
@@ -113,24 +235,27 @@ copy_graph(const FaceListGraphS  &g_s,
  * \param  pmaps_s   the source property maps bag
  * \param  g_t       the mesh to copy to
  * \param  pmaps_t   the target property maps bag
- * \param  gt_s      the geometry traits of source mesh
- * \param  gt_t      the geometry traits of target mesh
+ * \param  params    the named parameters
  *
  * \sa     the variant that use the geometry traits provided by the user.
  */
 template< typename FaceListGraphS,
           typename FaceListGraphT,
+          typename Parameters =
+              CopyGraphParameters< FaceListGraphS, FaceListGraphT >,
           typename GeometryTraitsS = FEVV::Geometry_traits< FaceListGraphS >,
           typename GeometryTraitsT = FEVV::Geometry_traits< FaceListGraphT > >
 void
 copy_graph(const FaceListGraphS  &g_s,
            const PMapsContainer  &pmap_s,
            FaceListGraphT        &g_t,
-           PMapsContainer        &pmap_t)
+           PMapsContainer        &pmap_t,
+           const Parameters      &params =
+               CopyGraphParameters< FaceListGraphS, FaceListGraphT >())
 {
   GeometryTraitsS gt_s(g_s);
   GeometryTraitsT gt_t(g_t);
-  copy_graph(g_s, pmap_s, g_t, pmap_t, gt_s, gt_t);
+  copy_graph(g_s, pmap_s, g_t, pmap_t, params, gt_s, gt_t);
 }
 
 
