@@ -87,7 +87,6 @@ struct CopyGraphParameters
  * \sa     the simplified variant that use the default geometry traits
  *         of the meshes.
  */
-//TODO-elo: return v2v, e2e, h2h, f2f maps
 template< typename FaceListGraphS,
           typename FaceListGraphT,
           typename Parameters,
