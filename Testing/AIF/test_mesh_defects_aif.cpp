@@ -576,7 +576,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		bool first_phase = true // true when it still remains at least one face with no incident complex edge
 			, second_phase_first_subphase=true;
 		int current_id = 0, nb_used_id = 0;
-		auto iter_f_first = std::find_if(all_faces.begin(), all_faces.end(), AIFHelpers::has_no_incident_complex_edge);
+		auto iter_f_first = std::find_if(all_faces.begin(), all_faces.end(), AIFHelpers::is_not_incident_to_complex_edge);
 		if (iter_f_first == all_faces.end())
 		{
 			first_phase = false;
@@ -599,7 +599,10 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			{
 				assert(*iter_f != current_f);
 				if ((all_faces.find(*iter_f) != all_faces.end()) // not already processed
-					&& (!first_phase || AIFHelpers::has_no_incident_complex_edge(*iter_f))
+                                   &&
+                                   (!first_phase ||
+                                    AIFHelpers::is_not_incident_to_complex_edge(
+                                        *iter_f))
 					&& AIFHelpers::have_consistent_orientation(current_f, *iter_f)
 					)
 				{
@@ -680,7 +683,10 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			}
 			if (set_current_component.empty() && !all_faces.empty())
 			{
-				iter_f_first = std::find_if(all_faces.begin(), all_faces.end(), AIFHelpers::has_no_incident_complex_edge);
+        iter_f_first = std::find_if(
+                              all_faces.begin(),
+                              all_faces.end(),
+                              AIFHelpers::is_not_incident_to_complex_edge);
 				if (iter_f_first == all_faces.end())
 				{ // we estimate the correct next face id by looking at its already processed neighbors
 					first_phase = false;
@@ -790,7 +796,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		}
 		else if (AIFHelpers::is_cut_vertex(*vi) &&
 			!FEVV::DataStructures::AIF::AIFMeshHelpers::has_adjacent_T_junction_vertex(*vi, *ptr_mesh, gt) && // we must process T-junction vectices first
-			!AIFHelpers::has_dangling_or_complex_incident_edge(*vi) // we must process dangling and complex edges first 
+			!AIFHelpers::is_incident_to_dangling_or_complex_edge(*vi) // we must process dangling and complex edges first 
 			)                                                       // and we can even either create new cut vertices 
 		{                                                           // during the complex edge processing or resolve a cut
 			++nb_cut_vertices;                                      // vertex...
