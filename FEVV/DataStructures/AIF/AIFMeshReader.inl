@@ -23,6 +23,9 @@
 #ifdef FEVV_USE_VTK
 #include "FEVV/Tools/IO/VtkFileReader.h"
 #endif
+#ifdef FEVV_USE_FBX
+#include "FEVV/Tools/IO/FbxFileReader.h"
+#endif
 
 #include "FEVV/Types/Material.h"
 
@@ -82,6 +85,8 @@ AIFMeshReader::read(const std::string &filePath)
   std::vector< FEVV::Types::Material > materials;
   std::vector< index_type > face_material;
 
+  bool obj_file = false;
+
   if(has_extension(filePath, ".obj"))
   {
     IO::read_obj_file(filePath,
@@ -94,7 +99,9 @@ AIFMeshReader::read(const std::string &filePath)
                       normal_face_indices,
                       materials,
                       face_material);
-    if(!materials.empty())
+    obj_file = true;					  
+    
+	if(!materials.empty())
       texture_file_name = materials[0].diffuse_texture_filename;
   }
   else if(has_extension(filePath, ".off") || has_extension(filePath, ".coff"))
@@ -146,6 +153,21 @@ AIFMeshReader::read(const std::string &filePath)
                                     field_names);
   }
 #endif
+#ifdef FEVV_USE_FBX
+  else if(FEVV::FileUtils::has_extension(filePath, ".fbx"))
+  {
+    IO::read_fbx_file(filePath,
+                      points_coords,
+                      normals_coords,
+                      texture_coords,
+                      vertex_color_coords,
+                      faces_indices,
+                      texture_face_indices,
+                      normal_face_indices,
+                      materials,
+                      face_material);
+  }
+#endif
   /////////////////////////////// MESH CREATION
   //////////////////////////////////////
 
@@ -164,7 +186,7 @@ AIFMeshReader::read(const std::string &filePath)
   {
     if(color.size() < 3 || color.size() > 4)
     {
-      std::cout << "AIFMeshReader::read: found vertex color with size neither "
+      std::cout << "AIFMeshReader::read(): found vertex color with size neither "
                    "3 nor 4. Disabling vertex color for all vertices."
                 << std::endl;
       vertex_color_coords.clear();
@@ -179,11 +201,39 @@ AIFMeshReader::read(const std::string &filePath)
   {
     if(color.size() < 3 || color.size() > 4)
     {
-      std::cout << "read_mesh(): found face color with size neither 3 nor 4. "
+      std::cout << "AIFMeshReader::read(): found face color with size neither 3 nor 4. "
                    "Disabling face color for all vertices."
                 << std::endl;
       face_color_coords.clear();
       break;
+    }
+  }
+
+  // material must be defined for all faces or none
+  if(!face_material.empty())
+  {
+    if(face_material.size() != faces_indices.size())
+    {
+      std::cout << "AIFMeshReader::read(): found some faces with a material and some "
+                   "without. Disabling material for all faces."
+                << std::endl;
+      face_material.clear();
+    }
+  }
+
+  // check if all faces have a valid material
+  if(!face_material.empty())
+  {
+    for(auto &mtl_id : face_material)
+    {
+      if(mtl_id == -1)
+      {
+        std::cout << "rAIFMeshReader::read(): found some faces with an invalid material. "
+                     "Disabling material for all faces."
+                  << std::endl;
+        face_material.clear();
+        break;
+      }
     }
   }
 
@@ -254,11 +304,26 @@ AIFMeshReader::read(const std::string &filePath)
 
   if(!texture_coords.empty())
   {
-    if(texture_coords.size() == points_coords.size())
+	// choose between vertex-texcoord and corner-texcoord
+    if(obj_file)
+    {
+      // support corner-texture only with OBJ file
+      useCornerTextureCoord = true;	  
+    }
+    else if(texture_coords.size() == points_coords.size())
     {
       // texture coordinates are given by vertex
-      useVertexTextureCoord = true;
+      useVertexTextureCoord = true; 
+    }
+    else if(texture_face_indices.size() == faces_indices.size())
+    {
+      // texture coordinates are given by corner
+      useCornerTextureCoord = true;
+    }
 
+    // create property map to store texcoord
+    if(useVertexTextureCoord)
+    {
       // create property map to store vertex texture-coord
       outputMesh->AddPropertyMap< AIFVertex::ptr, AIFMesh::PointUV >(
           "v:texcoord");
@@ -267,13 +332,10 @@ AIFMeshReader::read(const std::string &filePath)
             "Failed to create vertex-texture-coordinate property map.");
 
       std::cout << "AIF property map for vertex-texture-coordinate created."
-                << std::endl;
+                << std::endl;	 
     }
-    else if(texture_face_indices.size() == faces_indices.size())
+    else if(useCornerTextureCoord)
     {
-      // texture coordinates are given by corner
-      useCornerTextureCoord = true;
-
       // create property map to store corner texture-coord
       outputMesh->AddAssocPropertyMap< helpers::halfedge_descriptor,
                                        AIFMesh::PointUV >("h:texcoord");
@@ -356,7 +418,6 @@ AIFMeshReader::read(const std::string &filePath)
 
     PropHelpers::set_point(
         outputMesh, currentVertex, (*itP)[0], (*itP)[1], (*itP)[2]);
-
     vertices.push_back(
         currentVertex); // Warning : must keep the vertex in a vector to handle
                         // vertex indices for faces
