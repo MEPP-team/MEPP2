@@ -1482,6 +1482,6 @@ main(int narg, char **argv)
 	  }
   }
   /////////////////////////////////////////////////////////////////////////////
-  system("pause");
+  //system("pause");
   return EXIT_SUCCESS;
 }
