@@ -151,6 +151,11 @@ static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 	auto iter_e = selected_edges_to_make_independent.begin(), iter_e_e = selected_edges_to_make_independent.end();
 	while (iter_e != iter_e_e)
 	{
+    if (std::find(set_removed_edges.begin(), set_removed_edges.end(), *iter_e) != set_removed_edges.end())
+    {
+      ++iter_e;
+      continue;
+    }
 		vertex_descriptor s = source(*iter_e, g);
 		vertex_descriptor t = target(*iter_e, g);
 
@@ -170,6 +175,8 @@ static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 
 			set_removed_edges.insert(*iter_e2);
 		}
+    auto res_edges = AIFHelpers::get_unordered_one_ring_edges(s); // to ensure no 2 edges of the same polygonal face are selected
+    set_removed_edges.insert(res_edges.begin(), res_edges.end());
 
 		edges_pair = in_edges(t, g);
 		iter_e2 = edges_pair.first;
@@ -187,6 +194,8 @@ static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 
 			set_removed_edges.insert(*iter_e2);
 		}
+    res_edges = AIFHelpers::get_unordered_one_ring_edges(t); // to ensure no 2 edges of the same polygonal face are selected
+    set_removed_edges.insert(res_edges.begin(), res_edges.end());
 
 		++iter_e;
 	}
@@ -487,7 +496,7 @@ static bool has_different_vertex_indices(MutableFaceIncidentGraph &g, const Poin
 	return (degree(f, g) == v_to_index.size()) ;
 }
 
-static int process_one_meshfile(	const std::string& input_file_path, 
+static int process_one_mesh_file(	const std::string& input_file_path, 
 									const std::string& colorize_mesh, 
 									const std::string& remove_isolated_elements, // except isolated faces for the time being
 									const std::string& resolve_vertices_with_similar_incident_edges,
@@ -571,7 +580,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 				throw std::runtime_error("Failed to create face 2-manifold components property map.");
 		}
 		// compute the face segmentation
-		std::set<face_descriptor> set_current_component,
+		std::set<face_descriptor> to_process,
 			all_faces(faces(*ptr_mesh).first, faces(*ptr_mesh).second); // not yet processed
 		bool first_phase = true // true when it still remains at least one face with no incident complex edge
 			, second_phase_first_subphase=true;
@@ -582,18 +591,18 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			first_phase = false;
 			iter_f_first = all_faces.begin();
 		}
-		set_current_component.insert(*iter_f_first);
+    to_process.insert(*iter_f_first);
 		all_faces.erase(iter_f_first);
 
-		while (!set_current_component.empty())
+		while (!to_process.empty())
 		{
-			face_descriptor current_f = *set_current_component.begin();
+			face_descriptor current_f = *to_process.begin();
 			ptr_mesh->SetProperty< AIFMeshT::face_type::ptr, int >(
 				"f:2_manifold_component_seg", current_f->GetIndex(), current_id);
 
-			set_current_component.erase(set_current_component.begin());
+      to_process.erase(to_process.begin());
 
-     		auto vector_faces = AIFHelpers::adjacent_faces(current_f, true); 
+      auto vector_faces = AIFHelpers::adjacent_faces(current_f, true); 
 			auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
 			for (; iter_f != iter_f_end; ++iter_f)
 			{
@@ -612,7 +621,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						//&&  AIFHelpers::is_regular_vertex(target(e_tmp, *ptr_mesh)))
 						)
 					{
-						set_current_component.insert(*iter_f);
+            to_process.insert(*iter_f);
 						all_faces.erase(*iter_f);
 					}
 				}
@@ -621,11 +630,11 @@ static int process_one_meshfile(	const std::string& input_file_path,
 			{
 				if (second_phase_first_subphase)
 				{
-					if ((set_current_component.size() > 1))
+					if ((to_process.size() > 1))
 					{ // second phase (segmentation of faces incident to at least one complex edge)
 						std::set<face_descriptor> new_face_set;
 						// only keep the face with closest normal to current_f (except current_f itself)
-						auto iter_f = set_current_component.begin(), iter_f_end = set_current_component.end();
+						auto iter_f = to_process.begin(), iter_f_end = to_process.end();
 						auto current_n = FEVV::Operators::calculate_face_normal(current_f, *ptr_mesh, pos_pm, gt);
 						bool first = true;
 						double best_val = -1.1;
@@ -655,7 +664,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 							}
 						}
 
-						if (set_current_component.size() == 2)
+						if (to_process.size() == 2)
 						{
 							current_n = FEVV::Operators::calculate_face_normal(other_f1, *ptr_mesh, pos_pm, gt);
 							auto neighbor_n = FEVV::Operators::calculate_face_normal(other_f2, *ptr_mesh, pos_pm, gt);
@@ -665,11 +674,11 @@ static int process_one_meshfile(	const std::string& input_file_path,
 						}
 						else
 							new_face_set.insert(best_f);
-						set_current_component.swap(new_face_set);
+            to_process.swap(new_face_set);
 					}
 					///////////////////////////////////////////////////////////////
 					second_phase_first_subphase = false;
-					if (set_current_component.size() > 0)
+					if (to_process.size() > 0)
 					{
 						++nb_used_id;
 						current_id = nb_used_id;
@@ -678,10 +687,10 @@ static int process_one_meshfile(	const std::string& input_file_path,
 				else
 				{
 					std::set<face_descriptor> new_face_set;
-					set_current_component.swap(new_face_set);
+          to_process.swap(new_face_set);
 				}
 			}
-			if (set_current_component.empty() && !all_faces.empty())
+			if (to_process.empty() && !all_faces.empty())
 			{
         iter_f_first = std::find_if(
                               all_faces.begin(),
@@ -695,12 +704,12 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					auto iter_f = vector_faces.begin(), iter_f_end = vector_faces.end();
 					auto current_n = FEVV::Operators::calculate_face_normal(*iter_f_first, *ptr_mesh, pos_pm, gt);
 					int id_best_match = -1; // look for the face with a consistent orientation
-					                        // that has the closest normal correcpondance
+					                        // that has the closest normal correspondence
 					double best_val = -1.1;
 					for (; iter_f != iter_f_end; ++iter_f)
 					{
 						if ((all_faces.find(*iter_f) == all_faces.end()) // already processed
-							//&& AIFHelpers::has_no_incident_complex_edge(*iter_f)
+							//&& AIFHelpers::is_not_incident_to_complex_edge(*iter_f)
 							&& AIFHelpers::have_consistent_orientation(*iter_f_first, *iter_f)
 							)
 						{
@@ -735,7 +744,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					if (id_best_match == -1)
 					{ // no valid neighbord found => current_id must take the next available integer value
 						++nb_used_id;
-     					current_id = nb_used_id ;
+            current_id = nb_used_id ;
 					}
 					else
 					{ // at least one valid neighbor => take the same id
@@ -749,7 +758,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 					++current_id;
 					++nb_used_id;
 				}
-				set_current_component.insert(*iter_f_first);
+        to_process.insert(*iter_f_first);
 				all_faces.erase(iter_f_first);
 				
 			}
@@ -797,9 +806,9 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		else if (AIFHelpers::is_cut_vertex(*vi) &&
 			!FEVV::DataStructures::AIF::AIFMeshHelpers::has_adjacent_T_junction_vertex(*vi, *ptr_mesh, gt) && // we must process T-junction vectices first
 			!AIFHelpers::is_incident_to_dangling_or_complex_edge(*vi) // we must process dangling and complex edges first 
-			)                                                       // and we can even either create new cut vertices 
+			)                                                         // and we can even either create new cut vertices 
 		{                                                           // during the complex edge processing or resolve a cut
-			++nb_cut_vertices;                                      // vertex...
+			++nb_cut_vertices;                                        // vertex...
 			if (make_2_mani_not_2_mani == "y")
 				cut_vertices.push_back(*vi);
 			else
@@ -810,7 +819,6 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		else if (FEVV::Operators::contains_similar_incident_edges(
 			*vi, *ptr_mesh))
 		{
-
 			++nb_vertices_with_similar_incident_edges;
 
 			if (resolve_vertices_with_similar_incident_edges == "y")
@@ -832,10 +840,15 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	auto iterator_pair_e = edges(*ptr_mesh);
 	edge_iterator ei = iterator_pair_e.first;
 	edge_iterator ei_end = iterator_pair_e.second;
-	int nb_isolated_edges = 0, nb_dangling_edges = 0, nb_complex_edges = 0,
-		nb_border_edges = 0;
+	int nb_isolated_edges = 0, 
+      nb_dangling_edges = 0, 
+      nb_complex_edges = 0, 
+      nb_non_consitently_oriented_incident_face_edges = 0,
+      nb_border_edges = 0;
 	std::vector< edge_descriptor > e_to_remeove;
-	std::vector< edge_descriptor > dangling_edges, complex_edges;
+	std::vector< edge_descriptor > dangling_edges,
+                                 complex_edges, 
+                                 non_consitently_oriented_incident_face_edges;
 	for (; ei != ei_end; ++ei)
 	{
 		if (AIFHelpers::is_isolated_edge(*ei))
@@ -881,11 +894,22 @@ static int process_one_meshfile(	const std::string& input_file_path,
 				}
 			}
 		}
-		//else if (AIFHelpers::has_inconsistent_incident_face_orientation(*ei))
-		//{
-		//  // should be treated by resolving complex edges
-		//}
-		else if (AIFHelpers::is_surface_regular_edge(*ei))
+		else if (!AIFHelpers::is_incident_to_consistently_oriented_faces(*ei))
+		{
+		  // should be treated by duplicating edges when a 2-manifold mesh is 
+      // expected as output (to extract after complex edges, since a complex
+      // edge has also non consistently oriented incident faces)
+      ++nb_non_consitently_oriented_incident_face_edges;
+      if (make_2_mani_not_2_mani == "y")
+        non_consitently_oriented_incident_face_edges.push_back(*ei);
+      else
+      {
+        if (colorize_mesh == "y")
+          ptr_mesh->SetProperty< AIFMeshT::edge_type::ptr, AIFMeshT::Vector >(
+            "e:color", (*ei)->GetIndex(), red);
+      }
+		}
+		else if (AIFHelpers::is_surface_border_edge(*ei))
 		{
 			++nb_border_edges;
 			if (colorize_mesh == "y")
@@ -1010,6 +1034,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 	// decomplexify complex edges (+ update list of cut vertices)
 	std::vector< edge_descriptor > selected_complex_edges(complex_edges.begin(), complex_edges.end()), 
 		                           remaining_complex_edges;
+decomplexification:
 	remove_adjacent_edges(*ptr_mesh, selected_complex_edges, remaining_complex_edges);
 	while (!selected_complex_edges.empty())
 	{
@@ -1018,21 +1043,21 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		int i = 0;
 		while (iter_e != iter_e_end)
 		{
-			{ // mesh file writing debug
-				auto res_mesh =
-					extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
-				writer_type my_writer;
-				try
-				{
-					my_writer.write(res_mesh,
-						FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
-				}
-				catch (...)
-				{
-					std::cout << "writing failed";
-					exit(EXIT_FAILURE);
-				}
-			}
+			//{ // mesh file writing debug
+			//	auto res_mesh =
+			//		extract_edge_local_neighborhood(*iter_e, *ptr_mesh, pos_pm);
+			//	writer_type my_writer;
+			//	try
+			//	{
+			//		my_writer.write(res_mesh,
+			//			FEVV::FileUtils::get_file_name(input_file_path) + "_edge_" + FEVV::StrUtils::convert((*iter_e)->GetIndex()) + ".off");
+			//	}
+			//	catch (...)
+			//	{
+			//		std::cout << "writing failed";
+			//		exit(EXIT_FAILURE);
+			//	}
+			//}
 			// complex edges
 			std::cout << "Information of current complex edge (" << i << "/" << selected_complex_edges.size() << "): " << std::endl; // debug
 			std::cout << "\tedge id: " << get(edge_idm, *iter_e) << std::endl; // debug
@@ -1156,6 +1181,13 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		selected_complex_edges = remaining_complex_edges;
 		remove_adjacent_edges(*ptr_mesh, selected_complex_edges, remaining_complex_edges);
 	}
+  if (!non_consitently_oriented_incident_face_edges.empty())
+  {
+    std::cout << "New decomplexification step for an independent set of edges incident to 2 non-consitently oriented faces" << std::endl; 
+    selected_complex_edges = non_consitently_oriented_incident_face_edges;
+    non_consitently_oriented_incident_face_edges.clear();
+    goto decomplexification;
+  }
 	// duplicate cut vertices [local partition and cutting]
 	auto iter_v = cut_vertices.begin(), iter_v_end = cut_vertices.end();
 	while (iter_v != iter_v_end)
@@ -1181,6 +1213,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		else
 		{
 			std::cout << "current vertex is not more a cut vertex!" << std::endl;
+      ++iter_v;
 			continue;
 		}
 		// pieces of surface need to replace *iter_v by a new vertex
@@ -1341,7 +1374,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		<< FEVV::FileUtils::get_file_name(input_file_path) +
 		FEVV::FileUtils::get_file_extension(input_file_path);
 	if (nb_isolated_vertices > 0 || nb_t_junction_vertices > 0 || nb_cut_vertices > 0 || nb_isolated_edges > 0 ||
-		nb_dangling_edges > 0 || nb_complex_edges > 0)
+		nb_dangling_edges > 0 || nb_complex_edges > 0 || nb_non_consitently_oriented_incident_face_edges > 0 )
 		std::cout << " is not 2-manifold " << std::endl;
 	else
 		std::cout << " is 2-manifold" << std::endl;
@@ -1367,6 +1400,7 @@ static int process_one_meshfile(	const std::string& input_file_path,
 		std::cout << std::endl;
 	else
 		std::cout << " (" << remaining_complex_edges.size() << " not resolved due to local dependency). " << std::endl;
+  std::cout << "Number of edges incident to 2 faces with inconsistent orientation: " << nb_non_consitently_oriented_incident_face_edges << std::endl;
 	std::cout << "Number of surface border edges: " << nb_border_edges << std::endl;
 	std::cout << "Number of degenerated faces: " << nb_degenerated_faces << std::endl;
 	/////////////////////////////////////////////////////////////////////////////
@@ -1405,7 +1439,7 @@ main(int narg, char **argv)
 	  return EXIT_FAILURE;
   /////////////////////////////////////////////////////////////////////////////
   if(!boost::filesystem::is_directory(input_path))
-    process_one_meshfile(input_path,
+    process_one_mesh_file(input_path,
                          colorize_mesh,
                          remove_isolated_elements,
                          resolve_vertices_with_similar_incident_edges,
@@ -1473,11 +1507,11 @@ main(int narg, char **argv)
 #endif
 			  )
 		  {
-			  process_one_meshfile(dir_itr->path().string(),
-                                   colorize_mesh,
-                                   remove_isolated_elements,
-                                   resolve_vertices_with_similar_incident_edges,
-                                   make_2_mani_not_2_mani);
+			  process_one_mesh_file(dir_itr->path().string(),
+                              colorize_mesh,
+                              remove_isolated_elements,
+                              resolve_vertices_with_similar_incident_edges,
+                              make_2_mani_not_2_mani);
 		  }
 	  }
   }
