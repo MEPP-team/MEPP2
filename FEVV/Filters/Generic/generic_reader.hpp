@@ -231,8 +231,14 @@ read_mesh(const std::string &filename,
   }
 
   unsigned int duplicated_vertices_nbr;
-  mesh_from_vector_representation(g, pmaps, duplicated_vertices_nbr,
-                                  mvr, obj_file, gt);
+  MeshFromVectorReprParameters< HalfedgeGraph > mfvr_params;
+
+  mesh_from_vector_representation(g,
+                                  pmaps,
+                                  duplicated_vertices_nbr,
+                                  mvr,
+                                  mfvr_params.use_corner_texcoord(obj_file),
+                                  gt);
     // corner texture are supported with OBJ file only
 
   auto populating_duration = get_time_and_reset(time);

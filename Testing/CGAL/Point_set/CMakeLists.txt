@@ -91,3 +91,22 @@ target_link_libraries( test_geometry_concept_cgal_point_set
                        )
 add_test( Test_geometry_concept_cgal_point_set
           test_geometry_concept_cgal_point_set )
+
+#####
+add_executable( test_copy_graph_cgal_point_set
+                test_copy_graph_cgal_point_set.cpp
+				        )
+target_link_libraries( test_copy_graph_cgal_point_set
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "5.0" )
+  # CGAL < 5.0
+  # TODO fix test for CGAL >= 5.0
+  add_test( Test_copy_graph_cgal_point_set_monkey_color_normal
+            test_copy_graph_cgal_point_set
+            ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+            test_copy_graph_cgal_point_set_monkey_color_normal.ply
+            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_copy_graph_cgal_point_set_monkey_color_normal.ref.ply
+            )
+endif()

@@ -101,3 +101,17 @@ target_link_libraries( test_geometry_concept_pcl
 add_test( Test_geometry_concept_pcl
           test_geometry_concept_pcl )
 
+#####
+add_executable( test_copy_graph_pcl
+                test_copy_graph_pcl.cpp
+				        )
+target_link_libraries( test_copy_graph_pcl
+                       ${PCL_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
+add_test( Test_copy_graph_pcl_monkey_color_normal
+          test_copy_graph_pcl
+          ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+          test_copy_graph_pcl_monkey_color_normal.ply
+          ${TESTING_REFOUTPUT_DIR}/PCL/test_copy_graph_pcl_monkey_color_normal.ref.ply
+          )

@@ -8,14 +8,15 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include "FEVV/DataStructures/DataStructures_cgal_surface_mesh.h"
+#include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
 
-#include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
-#include "FEVV/Wrappings/properties_surface_mesh.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_point_set.h"
+#include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h"
+#include "FEVV/Wrappings/properties_cgal_point_set.h"
 
-#include "FEVV/Filters/Generic/generic_reader.hpp"
-#include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "FEVV/Filters/Generic/copy_graph.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_reader.hpp"
+#include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
+#include "FEVV/Filters/CGAL/Point_set/copy_graph_cgal_point_set.hpp"
 
 #include "Testing/Generic/test_copy_graph.inl"
 
@@ -23,5 +24,5 @@
 int
 main(int argc, const char **argv)
 {
-  return test_copy_graph< FEVV::MeshSurface >(argc, argv);
+  return test_copy_graph< FEVV::CGALPointSet >(argc, argv);
 }

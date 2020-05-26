@@ -28,13 +28,67 @@ namespace Filters {
 
 
 /**
+ * Helper type for vertex descriptors vector.
+ */
+template< typename BoostGraph >
+using VertDescVect = std::vector<
+    typename boost::graph_traits< BoostGraph >::vertex_descriptor >;
+
+
+/**
+ * Helper type for face descriptors vector.
+ */
+template< typename FaceGraph >
+using FaceDescVect = std::vector<
+    typename boost::graph_traits< FaceGraph >::face_descriptor >;
+
+
+/**
+ * Implement the named parameters idiom for mesh_from_vector_representation()
+ *
+ * \param  use_corner_texture_coord   force use of corner texture
+ * \param  vd_target                  a vector to store the vertex descriptors
+ * \param  fd_target                  a vector to store the face descriptors
+ */
+template< typename FaceGraph >
+struct MeshFromVectorReprParameters
+{
+  typedef  VertDescVect< FaceGraph >  VDVect;
+  typedef  FaceDescVect< FaceGraph >  FDVect;
+
+  MeshFromVectorReprParameters& use_corner_texcoord(
+      bool _use_corner_texcoord)
+  {
+    m_use_corner_texcoord = _use_corner_texcoord;
+    return *this;
+  }
+
+  MeshFromVectorReprParameters& vd_target(VDVect *_vd_target)
+  {
+    m_vd_target = _vd_target;
+    return *this;
+  }
+
+  MeshFromVectorReprParameters& fd_target(FDVect *_fd_target)
+  {
+    m_fd_target = _fd_target;
+    return *this;
+  }
+
+  bool m_use_corner_texcoord;
+  VDVect *m_vd_target = nullptr;
+  FDVect *m_fd_target = nullptr;
+};
+
+
+/**
  * \brief  Build the mesh from the given vector representation.
  *
  * \param  g           the output mesh
  * \param  pmaps       the output property maps bag of the mesh
  * \param  dup_v_nbr   number of duplicated vertices of the mesh
  * \param  mvr         the vector representation structure (input)
- * \param  use_corner_texture_coord   force use of corner texture (input)
+ * \param  params      the named parameters
  * \param  gt          the geometry traits to use
  *
  * \sa     the simplified variant that use the default geometry traits
@@ -48,16 +102,17 @@ template< typename HalfedgeGraph,
           typename index_type,
           typename GeometryTraits >
 void
-mesh_from_vector_representation(HalfedgeGraph        &g,
-                                FEVV::PMapsContainer &pmaps,
-                                unsigned int         &dup_v_nbr,
-                                FEVV::Types::MVR < coordP_type,
-                                                   coordN_type,
-                                                   coordT_type,
-                                                   coordC_type,
-                                                   index_type > &mvr,
-                                bool                 use_corner_texture_coord,
-                                const GeometryTraits &gt)
+mesh_from_vector_representation(
+    HalfedgeGraph                                       &g,
+    FEVV::PMapsContainer                                &pmaps,
+    unsigned int                                        &dup_v_nbr,
+    FEVV::Types::MVR < coordP_type,
+                       coordN_type,
+                       coordT_type,
+                       coordC_type,
+                       index_type >                     &mvr,
+    MeshFromVectorReprParameters< HalfedgeGraph > const &params,
+    const GeometryTraits                                &gt)
 {
   typedef boost::graph_traits< HalfedgeGraph >       GraphTraits;
   typedef typename GraphTraits::vertex_descriptor    vertex_descriptor;
@@ -196,6 +251,7 @@ mesh_from_vector_representation(HalfedgeGraph        &g,
   bool use_face_material = false;
   bool use_face_normal = false; // per-face vertices normals
   bool use_line_color = false;
+  bool use_corner_texture_coord = params.m_use_corner_texcoord;
 
   if(! mvr.texture_coords.empty())
   {
@@ -405,6 +461,12 @@ mesh_from_vector_representation(HalfedgeGraph        &g,
         auto vt_pm = get_property_map(FEVV::vertex_texcoord, g, pmaps);
         put(vt_pm, current_vertex, tex_coords);
       }
+    }
+
+    // save current vertex descriptor for later use
+    if(params.m_vd_target)
+    {
+      params.m_vd_target->push_back(current_vertex);
     }
   }
 
@@ -651,9 +713,14 @@ mesh_from_vector_representation(HalfedgeGraph        &g,
         auto fm_pm = get_property_map(FEVV::face_material, g, pmaps);
         put(fm_pm, current_face, mtl_id);
       }
+
+      // save current face descriptor for later use
+      if(params.m_fd_target)
+      {
+        params.m_fd_target->push_back(current_face);
+      }
     }
   }
-
 }
 
 
@@ -664,7 +731,7 @@ mesh_from_vector_representation(HalfedgeGraph        &g,
  * \param  pmaps       the output property maps bag of the mesh
  * \param  dup_v_nbr   number of duplicated vertices of the mesh
  * \param  mvr         the vector representation structure (input)
- * \param  use_corner_texture_coord   force use of corner texture (input)
+ * \param  params      the named parameters
  * 
  * \sa     the variant that use the geometry traits provided by the user.
  */
@@ -676,19 +743,20 @@ template< typename HalfedgeGraph,
           typename index_type,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-mesh_from_vector_representation(const HalfedgeGraph        &g,
-                                const FEVV::PMapsContainer &pmaps,
-                                unsigned int               &dup_v_nbr,
-                                FEVV::Types::MVR < coordP_type,
-                                                   coordN_type,
-                                                   coordT_type,
-                                                   coordC_type,
-                                                   index_type > &mvr,
-                                bool use_corner_texture_coord)
+mesh_from_vector_representation(
+    const HalfedgeGraph                                 &g,
+    const FEVV::PMapsContainer                          &pmaps,
+    unsigned int                                        &dup_v_nbr,
+    FEVV::Types::MVR < coordP_type,
+                       coordN_type,
+                       coordT_type,
+                       coordC_type,
+                       index_type >                     &mvr,
+    MeshFromVectorReprParameters< HalfedgeGraph > const &params =
+        MeshFromVectorReprParameters< HalfedgeGraph >())
 {
   GeometryTraits gt(g);
-  mesh_from_vector_representation(g, pmaps, mvr, dup_v_nbr,
-                                  use_corner_texture_coord, gt);
+  mesh_from_vector_representation(g, pmaps, dup_v_nbr, mvr, params, gt);
 }
 
 
