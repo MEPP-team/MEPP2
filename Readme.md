@@ -12,8 +12,8 @@ graphical user interface (GUI) that can be used directly
 and integrate new filters as plugins.
 
 It allows to **process and visualize both static (and
-dynamic) 3D surface meshes, with color attributes and
-texture information** or **point clouds with color attributes**.
+dynamic) 3D surface meshes, with color attributes,
+texture informations and normals** or **point clouds with color attributes and normals**.
 It is intended for engineers, researchers, but also for
 students thanks to a simple use, facilitated by the
 proposed architecture and extensive documentation.
