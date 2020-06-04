@@ -74,6 +74,38 @@ namespace Filters {
 
 
 /**
+ * Helper type for vertex to vertex map.
+ */
+template< typename PointCloudS,
+          typename PointCloudT >
+using PCVertexToVertexMap = std::map<
+   typename boost::graph_traits< PointCloudS >::vertex_descriptor,
+   typename boost::graph_traits< PointCloudT >::vertex_descriptor >;
+
+
+/**
+ * Implement the named parameters idiom for copy_point_cloud()
+ * (for consistency with copy_graph())
+ *
+ * \param  v2v  vertex to vertex map to be populated
+ */
+template< typename PointCloudS,
+          typename PointCloudT >
+struct CopyPCParameters
+{
+  typedef  PCVertexToVertexMap< PointCloudS, PointCloudT >  V2VMap;
+
+  CopyPCParameters& v2v(V2VMap *_v2v)
+  {
+    m_v2v = _v2v;
+    return *this;
+  }
+
+  V2VMap *m_v2v = nullptr;
+};
+
+
+/**
  * \brief  Copy a source point cloud into a target point cloud.
  *         Copy standard properties too.
  *
@@ -81,14 +113,15 @@ namespace Filters {
  * \param  pmaps_s   the source property maps bag
  * \param  pc_t      the point cloud to copy to
  * \param  pmaps_t   the target property maps bag
+ * \param  v2v       vertex to vertex map to populate (nullptr allowed)
  * \param  gt_s      the geometry traits of source point cloud
  * \param  gt_t      the geometry traits of target point cloud
  *
  * \sa     the simplified variant that use the default geometry traits.
  */
-//TODO-elo: return v2v maps
 template< typename PointCloudS,
           typename PointCloudT,
+          typename Parameters,
           typename GeometryTraitsS,
           typename GeometryTraitsT >
 void
@@ -96,6 +129,7 @@ copy_point_cloud(const PointCloudS     &pc_s,
                  const PMapsContainer  &pmaps_s,
                  PointCloudT           &pc_t,
                  PMapsContainer        &pmaps_t,
+                 const Parameters      &params,
                  const GeometryTraitsS &gt_s,
                  const GeometryTraitsT &gt_t)
 {
@@ -129,6 +163,10 @@ copy_point_cloud(const PointCloudS     &pc_s,
     auto vc_pm = make_property_map(FEVV::vertex_color, pc_t);
     put_property_map(FEVV::vertex_color, pc_t, pmaps_t, vc_pm);
   }
+
+  // reset v2v map
+  if(params.m_v2v)
+    params.m_v2v->clear();
 
   // copy geometry and properties
   auto iterator_pair = vertices(pc_s);
@@ -177,6 +215,10 @@ copy_point_cloud(const PointCloudS     &pc_s,
                  convert_color_value< TColorValueType >(color[1]),
                  convert_color_value< TColorValueType >(color[2])));
     }
+
+    // populate v2v map
+    if(params.m_v2v)
+      (*params.m_v2v)[*s_vi] = v;
   }
 
   // display some information
@@ -212,17 +254,20 @@ copy_point_cloud(const PointCloudS     &pc_s,
  */
 template< typename PointCloudS,
           typename PointCloudT,
+          typename Parameters,
           typename GeometryTraitsS = FEVV::Geometry_traits< PointCloudS >,
           typename GeometryTraitsT = FEVV::Geometry_traits< PointCloudT > >
 void
 copy_point_cloud(const PointCloudS     &pc_s,
                  const PMapsContainer  &pmap_s,
                  PointCloudT           &pc_t,
-                 PMapsContainer        &pmap_t)
+                 PMapsContainer        &pmap_t,
+                 const Parameters      &params =
+                    CopyPCParameters< PointCloudS, PointCloudT >())
 {
   GeometryTraitsS gt_s(pc_s);
   GeometryTraitsT gt_t(pc_t);
-  copy_point_cloud(pc_s, pmap_s, pc_t, pmap_t, gt_s, gt_t);
+  copy_point_cloud(pc_s, pmap_s, pc_t, pmap_t, params, gt_s, gt_t);
 }
 
 

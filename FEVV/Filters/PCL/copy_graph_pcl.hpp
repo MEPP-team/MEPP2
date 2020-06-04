@@ -12,6 +12,7 @@
 
 #include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
 #include "FEVV/Filters/Generic/PointCloud/copy_point_cloud.hpp"
+#include "FEVV/Filters/Generic/copy_graph.hpp"
 
 
 namespace FEVV {
@@ -19,19 +20,47 @@ namespace Filters {
 
 
 /**
+ * \brief  Specialization of CopyGraphParameters for PCL Point Cloud copy from.
+ * 
+ */
+template< typename PointCloudT >
+struct CopyGraphParameters< FEVV::PCLPointCloud, PointCloudT > :
+    CopyPCParameters< FEVV::PCLPointCloud, PointCloudT >
+{ };
+
+
+/**
  * \brief  Overloading of copy_graph() for PCL Point Cloud (copy from).
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-template< typename PointCloudT >
+template< typename PointCloudT,
+          typename Parameters,
+            // = CopyGraphParameters< FEVV::PCLPointCloud, PointCloudT >
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            PointCloudT                &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params,
+           const GeometryTraitsS      &gt_s,
+           const GeometryTraitsT      &gt_t)
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(
+      pc_s, pmaps_s, pc_t, pmaps_t, params, gt_s, gt_t);
 }
+
+
+/**
+ * \brief  Specialization of CopyGraphParameters for PCL Point Cloud copy to.
+ * 
+ */
+template< typename PointCloudT >
+struct CopyGraphParameters< PointCloudT, FEVV::PCLPointCloud > :
+    CopyPCParameters< PointCloudT, FEVV::PCLPointCloud >
+{ };
 
 
 /**
@@ -39,15 +68,34 @@ copy_graph(const FEVV::PCLPointCloud  &pc_s,
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-template< typename PointCloudT >
+template< typename PointCloudT,
+          typename Parameters,
+            // = CopyGraphParameters< PointCloudT, FEVV::PCLPointCloud > >
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
 void
 copy_graph(const PointCloudT          &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params,
+           const GeometryTraitsS      &gt_s,
+           const GeometryTraitsT      &gt_t)
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(
+      pc_s, pmaps_s, pc_t, pmaps_t, params, gt_s, gt_t);
 }
+
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from PCL Point Cloud
+ *         to PCL Point Cloud.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::PCLPointCloud , FEVV::PCLPointCloud > :
+    CopyPCParameters< FEVV::PCLPointCloud, FEVV::PCLPointCloud >
+{ };
 
 
 /**
@@ -55,14 +103,21 @@ copy_graph(const PointCloudT          &pc_s,
  * 
  */
 // note: overloading because function partial specialization is not allowed.
-inline
+template< typename Parameters,
+            // = CopyGraphParameters< FEVV::PCLPointCloud, FEVV::PCLPointCloud > >
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params,
+           const GeometryTraitsS      &gt_s,
+           const GeometryTraitsT      &gt_t)
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(
+      pc_s, pmaps_s, pc_t, pmaps_t, params, gt_s, gt_t);
 }
 
 
@@ -78,29 +133,84 @@ copy_graph(const FEVV::PCLPointCloud  &pc_s,
 #ifdef FEVV_USE_CGAL
 
 #include "FEVV/DataStructures/DataStructures_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_cgal_point_set.h" // for vertex_decriptor
+#include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h" // for CGALPS Kernel
+#include "FEVV/Wrappings/Graph_properties_cgal_point_set.h" // for get(vertex_point_t,...)
+#include "FEVV/Wrappings/properties_cgal_point_set.h" // for CGALPS prop maps
 
 namespace FEVV {
 namespace Filters {
 
-inline
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from PCL Point Cloud
+ *         to CGAL Point Set.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::PCLPointCloud , FEVV::CGALPointSet > :
+    CopyPCParameters< FEVV::PCLPointCloud, FEVV::CGALPointSet >
+{ };
+
+
+/**
+ * \brief  Overloading of copy_graph() for copy from PCL Point Cloud
+ *         to CGAL Point Set.
+ * 
+ */
+// note: overloading because function partial specialization is not allowed.
+template< typename Parameters,
+            // = CopyGraphParameters< FEVV::PCLPointCloud, FEVV::CGALPointSet > >
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
 void
 copy_graph(const FEVV::PCLPointCloud  &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::CGALPointSet         &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params,
+           const GeometryTraitsS      &gt_s,
+           const GeometryTraitsT      &gt_t)
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(
+      pc_s, pmaps_s, pc_t, pmaps_t, params, gt_s, gt_t);
 }
 
-inline
+
+/**
+ * \brief  Specialization of CopyGraphParameters for copy from CGAL Point Set
+ *         to PCL Point Cloud.
+ * 
+ */
+template< >
+struct CopyGraphParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud > :
+    CopyPCParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud >
+{ };
+
+
+/**
+ * \brief  Overloading of copy_graph() for copy from CGAL Point Set
+ *         to PCL Point Cloud.
+ * 
+ */
+// note: overloading because function partial specialization is not allowed.
+template< typename Parameters,
+            // = CopyGraphParameters< FEVV::CGALPointSet, FEVV::PCLPointCloud > >
+          typename GeometryTraitsS,
+          typename GeometryTraitsT >
 void
 copy_graph(const FEVV::CGALPointSet   &pc_s,
            const FEVV::PMapsContainer &pmaps_s,
            FEVV::PCLPointCloud        &pc_t,
-           FEVV::PMapsContainer       &pmaps_t)
+           FEVV::PMapsContainer       &pmaps_t,
+           const Parameters           &params,
+           const GeometryTraitsS      &gt_s,
+           const GeometryTraitsT      &gt_t)
 {
-  FEVV::Filters::copy_point_cloud(pc_s, pmaps_s, pc_t, pmaps_t);
+  FEVV::Filters::copy_point_cloud(
+      pc_s, pmaps_s, pc_t, pmaps_t, params, gt_s, gt_t);
 }
+
 
 } // namespace Filters
 } // namespace FEVV

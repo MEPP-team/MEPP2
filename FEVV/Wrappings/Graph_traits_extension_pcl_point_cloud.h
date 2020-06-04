@@ -16,6 +16,7 @@
  */
 
 #include "Graph_traits_extension.h"
+#include "Graph_traits_pcl_point_cloud.h"
 
 namespace FEVV {
 
