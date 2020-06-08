@@ -211,7 +211,7 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
                 -test )
     endif()
   elseif( MSVC )
-    if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED ${DOCKER_RUN}) ) # temp
+    if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED DOCKER_RUN) ) # temp
         add_test( "Test_${FILE}"
                   ${FILE}
                   ${DATA_TEST}
