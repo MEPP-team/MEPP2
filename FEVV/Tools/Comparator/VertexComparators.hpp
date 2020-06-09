@@ -10,6 +10,11 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#include <boost/graph/graph_traits.hpp>
+#include <boost/graph/properties.hpp>
+
+#include "FEVV/Wrappings/Geometry_traits.h"
+
 #include <limits>
 #include <iterator>
 
