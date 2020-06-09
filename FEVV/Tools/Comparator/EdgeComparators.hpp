@@ -34,9 +34,8 @@ namespace Comparator
     typedef boost::graph_traits<Graph>              GraphTraits;
     typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
     typedef typename GraphTraits::edge_descriptor   edge_descriptor;
-    typedef FEVV::Geometry_traits<Graph>            Geometry;
-    typedef typename Geometry::Scalar               Scalar;
-    typedef typename Geometry::Point                Point;
+    typedef typename GeometryTraits::Scalar         Scalar;
+    typedef typename GeometryTraits::Point          Point;
   private:
     const Graph& _g;
     const PointMap& _pm;
