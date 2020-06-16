@@ -1,0 +1,26 @@
+/**
+
+@page CreatingUnitTestsPage  Creating unit tests
+
+## Presentation of testing directory hierarchy
+
+If MEPP2 is the local repository folder, then 
+MEPP2/Testing is the folder which contains the source code of the unit tests and their input
+files.
+MEPP2/Testing hierarchy is the following:
+ - Folder for specific unit test, one folder per data structure: AIF, CGAL/LCC, CGAL Polyhedron, CGAL/Surfae_mesh, CGAL/Point_set, OpenMesh, PCL.
+TODO
+
+## Where to store the reference files for unit tests
+
+TODO
+
+## How to add new unit tests (data structure specific + generic)
+
+TODO
+
+## Utils (relevant functions/tools for unit testing)
+
+TODO parler de comment comparer 2 maillages et de are_meshes_equal
+
+*/
