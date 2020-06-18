@@ -345,7 +345,7 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
  - Run cmake-gui.exe
 
- - Choose 'Visual Studio 15 2017 Win64/x64' as the compiler version (or 'Visual Studio 16 2019 Win64/x64')
+ - Choose 'Visual Studio 15 2017 Win64/x64' as the compiler version (or 'Visual Studio 16 2019 Win64/x64') -> !!! You have to choose x64 in 'Optional platform for generator' field !!!
 
  - Where is the source code = ".../MEPP2"
 
