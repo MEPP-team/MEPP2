@@ -17,9 +17,20 @@
 
 #include "FEVV/Tools/IO/FileUtilities.hpp" // for FileUtils::has_extension()
 
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4267) // for VS-2015
+#endif
+
 #include <pcl/io/ascii_io.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
+
 
 #include <string>
 #include <stdexcept> // for std::invalid_argument

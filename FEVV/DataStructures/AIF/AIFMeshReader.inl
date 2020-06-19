@@ -23,8 +23,20 @@
 #ifdef FEVV_USE_VTK
 #include "FEVV/Tools/IO/VtkFileReader.h"
 #endif
+
 #ifdef FEVV_USE_FBX
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4267)
+#endif
+
 #include "FEVV/Tools/IO/FbxFileReader.h"
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
+
 #endif
 
 #include "FEVV/Types/Material.h"
