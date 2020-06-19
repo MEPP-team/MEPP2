@@ -2,25 +2,74 @@
 
 @page CreatingUnitTestsPage  Creating unit tests
 
+## General introduction
+
+A unit test is a program (contains the main function) which permits to detect
+code regressions and is a measure of the code quality. Several kinds of unit 
+tests are used in MEPP2 to prevent either compilation or running time issues.
+A unit test must have a short execution time (generally less than 1 s), and 
+it must validate only one thing (e.g. only one processing filter for a 
+particular data structure).
+A failed test either returns a value different from 0 or has an assertion
+(assert call) which fails.
+A successful test always returns 0 and has all its assertions (assert call) 
+which pass.
+
+For libraries integrating a mesh and point cloud data structure, unit tests 
+permit to ensure the proper functioning of some functionalities. For instance,
+you can ensure the proper file loading, the proper file writing, or the proper
+execution of a processing filter (processing onto a mesh or a point cloud is 
+called a filter in MEPP2). You can also ensure that some concepts are implemented.
+
+For other libraries, there might be a specific library usage test (it is always 
+the case if the library was compiled by the MEPP team). It ensures that the 
+library includes are found and that the library link edition operates normally under
+the 3 OS (Windows, Linux, and Mac OS X).
+
+
 ## Presentation of testing directory hierarchy
 
-If MEPP2 is the local repository folder, then 
-MEPP2/Testing is the folder which contains the source code of the unit tests and their input
-files.
-MEPP2/Testing hierarchy is the following:
- - Folder for specific unit test, one folder per data structure: AIF, CGAL/LCC, CGAL Polyhedron, CGAL/Surfae_mesh, CGAL/Point_set, OpenMesh, PCL.
-TODO
+If MEPP2 is your local repository folder, then MEPP2/Testing is the folder 
+which contains the source code of the unit tests and their input files.
 
-## Where to store the reference files for unit tests
+More specifically, MEPP2/Testing hierarchy is the following:
+ - Folder for specific unit test
+   - Mesh data structure: AIF, CGAL/LCC, CGAL/Polyhedron, CGAL/Surfae_mesh, OpenMesh.
+   - Point cloud data structure: CGAL/Point_set, PCL.
+   - External lib specific test: boost, Cimg, Draco
+ - Folder for generic unit tests  
+   - To write generic tests (applicable for several data structures): Generic
+   - Concepts checking (compilation checks only): Concepts
+ - Folder for unit test utils: Utils
+ - Data folders  
+   - Mesh files, point clouds files, etc.: Data
+   - Reference files for unit test only: RefOutput
 
-TODO
+
+## Utils (relevant functions/tools for unit testing)
+
+The Utils folder contains functions to help for the elaboration of unit tests.
+It contains:
+ - generic function to retrieve the vertex_descriptor (resp. halfedge_descriptor, 
+   edge_descriptor, and face_descriptor) from 1 index (resp. 2 indices, 2 indices, and 1 index)
+ - functions to compare 2 off files (duplicate vertices are not properly managed yet): 
+   there are 2 use cases: 
+   - if you have a reference file located in the RefOutput folder (usual case), 
+     you can use it at the end of your applied processing to check if the result 
+	 is stable (are_meshes_equal(result_mesh_file.off, ref_mesh_file.off, verbose, 
+	  geom_threshold, attr_threshold, relative_thresholds))
+   - if you have filter1 and filter2, such as filter2 is the "inverse" processing of filter1:
+     you first create a classic unit test for filter1 (with a reference file), then you make
+     another unit test for filter2 without a reference file from the RefOutput folder: you will 
+	 apply filter1 and then filter2, you will thus use the input data file (e.g. from the Data 
+	 folder) as a reference file. For instance, this kind of test is used to test a decompression
+	 filter once we have validated its associated compression filter.
+
 
 ## How to add new unit tests (data structure specific + generic)
 
 TODO
 
-## Utils (relevant functions/tools for unit testing)
 
-TODO parler de comment comparer 2 maillages et de are_meshes_equal
 
 */
