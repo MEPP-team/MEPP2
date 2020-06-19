@@ -258,7 +258,7 @@ public:
     if (idx != -1)
     {
       // remove element from container
-      std::size_t cLastId;
+      std::size_t cLastId = 0; // init to 0 to remove C6001 Warning under VS2019
       if (container[idx]->GetIndex() == idx)
         cLastId = container.remove(idx);
       else
