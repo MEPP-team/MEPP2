@@ -109,7 +109,18 @@ color_descriptor_from_map(const Descriptor &d,
                           const MapType max_metric,
                           const ColorMeshLUT &colors)
 {
-  typedef typename boost::property_traits< ColorMap >::value_type Color;
+  typedef typename boost::property_traits< ColorMap >::value_type  Color;
+  // this is a work-around to retrieve the color component type (aka float
+  // with meshes and uchar with point clouds)
+  Color dummy;
+  typedef  typename std::remove_reference< decltype(dummy[0]) >::type
+                                                                ColorComponent;
+  // note: std::remove_reference< > is needed because dummy[0] is a reference
+  //       with some datastructure (PCL).
+  // TODO-elo: fix this work-around by something like
+  //             typedef  color_traits< Color >::component_type  ColorComponent
+  //           when a 'Color traits' is implemented
+
   size_t number_of_colors = colors.size() / 3;
 
   if(min_metric != max_metric)
@@ -126,16 +137,17 @@ color_descriptor_from_map(const Descriptor &d,
     int indice_lut = static_cast< int >(std::floor((number_of_colors - 1) * id));
 
     // convert value to color
-    // to ELO : the cast fix the warning under Windows but 2 tests failed after that -> Test_MSDM2_Cow and Test_Just_Noticeable_Distortion_Cow
-    Color newcolor(/*(unsigned char)*/colors[3 * indice_lut],
-                   /*(unsigned char)*/colors[3 * indice_lut + 1],
-                   /*(unsigned char)*/colors[3 * indice_lut + 2]);
+    Color newcolor(static_cast< ColorComponent >(colors[3 * indice_lut]),
+                   static_cast< ColorComponent >(colors[3 * indice_lut + 1]),
+                   static_cast< ColorComponent >(colors[3 * indice_lut + 2]));
     put(color_pmap, d, newcolor);
   }
   else
   {
-    // to ELO : the cast fix the warning under Windows but 2 tests failed after that -> Test_MSDM2_Cow and Test_Just_Noticeable_Distortion_Cow
-    put(color_pmap, d, Color(/*(unsigned char)*/colors[0], /*(unsigned char)*/colors[1], /*(unsigned char)*/colors[2]));
+    // use first color of the color map for all values
+    put(color_pmap, d, Color(static_cast< ColorComponent >(colors[0]),
+                             static_cast< ColorComponent >(colors[1]),
+                             static_cast< ColorComponent >(colors[2])));
   }
 }
 
