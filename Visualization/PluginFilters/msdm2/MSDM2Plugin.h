@@ -67,19 +67,11 @@ public:
 public:
   void init() override
   {
-    init(false, false, false, 3, true);
+    one_two = false;
+    two_one = false;
+    scales = 3;
+    color = true;
     LUT_CourbureClust = FEVV::Filters::make_LUT(false);
-  }
-
-  void
-  init(bool _computed, bool _one_two, bool _two_one, int _scales, bool _color)
-  {
-    computed = _computed;
-
-    *one_two = _one_two;
-    *two_one = _two_one;
-    *scales = _scales;
-    *color = _color;
   }
 
   void reset() override
@@ -105,7 +97,6 @@ public:
                FEVV::PMapsContainer &pmaps_bag_original,
                double &MSDM2)
   {
-
     auto pm_degrad = get(boost::vertex_point, m_degraded);
     auto pm_original = get(boost::vertex_point, m_original);
 
@@ -172,7 +163,7 @@ public:
                                           pm_original,
                                           fnm_original,
                                           pmaps_bag_original,
-                                          *scales,
+                                          scales,
                                           msdm2_pmap,
                                           MSDM2);
 
@@ -195,7 +186,7 @@ public:
     }
 
     double maxMSDM2, minMSDM2;
-    if(*color)
+    if(color)
     {
       FEVV::Filters::compute_min_max_vertices(
           m_degraded, msdm2_pmap, minMSDM2, maxMSDM2);
@@ -212,7 +203,10 @@ public:
                FEVV::PMapsContainer &pmaps_bag_original,
                double &MSDM2)
   {
-    std::cout << "MSMD2 only works with surface_mesh" << std::endl;
+    QMessageBox::information(0,
+        "",
+        QObject::tr("MSMD2 filter only works with Surface_mesh "
+                    "data structure"));
   }
 
   template< typename HalfedgeGraph >
@@ -226,69 +220,74 @@ public:
     SimpleViewer *viewer =
         dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
-    if(!computed)
+    if(! viewer)
     {
-      MixedMeshesVector mixed_meshes = viewer->getMeshes();
-      std::vector< FEVV::PMapsContainer * > properties_maps =
-          viewer->get_properties_maps();
+      // something goes wrong
+      QMessageBox::information(0,
+          "",
+          QObject::tr("An error occur during MSDM2 filter processing."));
+      return;
+    }
 
-      if(mixed_meshes.size() == 2)
+    MixedMeshesVector mixed_meshes = viewer->getMeshes();
+    std::vector< FEVV::PMapsContainer * > properties_maps =
+        viewer->get_properties_maps();
+
+    if(mixed_meshes.size() == 2)
+    {
+      // check that the two input meshes have the same type
+      if( mixed_meshes[0].second ==  mixed_meshes[1].second )
       {
-        // check that the two input meshes have the same type
-        if( mixed_meshes[0].second ==  mixed_meshes[1].second )
-        {
-          // get filter parameters from dialog window
-          DialogMSDM21 dial1;
-          if(dial1.exec() == QDialog::Accepted)
-            dial1.getProcess(*one_two, *two_one, *scales, *color);
-          else
-            return; // abort applying filter
-
-          auto m1 = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
-          auto pm1 = properties_maps[0];
-          auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
-          auto pm2 = properties_maps[1];
-
-          double MSDM2, MSDM2_1_2, MSDM2_2_1;
-          if(*one_two)
-          {
-            process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);
-            MSDM2 = MSDM2_1_2;
-          }
-          if(*two_one)
-          {
-            process(*m1, *pm1, *m2, *pm2, MSDM2_2_1);
-            MSDM2 = MSDM2_2_1;
-          }
-          if(*one_two && *two_one)
-          {
-            MSDM2 = (MSDM2_1_2 + MSDM2_2_1) / 2.;
-          }
-          std::cout << "MSDM2 :" << MSDM2 << std::endl;
-          computed = true;
-        }
+        // get filter parameters from dialog window
+        DialogMSDM21 dial1;
+        if(dial1.exec() == QDialog::Accepted)
+          dial1.getProcess(one_two, two_one, scales, color);
         else
+          return; // abort applying filter
+
+        auto m1 = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
+        auto pm1 = properties_maps[0];
+        auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
+        auto pm2 = properties_maps[1];
+
+        double MSDM2, MSDM2_1_2, MSDM2_2_1;
+        if(one_two)
         {
-          QMessageBox::information(0,
-              "",
-              QObject::tr("MSDM2 filter can not be applied on meshes "
-                          "with different datastructures."));
+          process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);
+          MSDM2 = MSDM2_1_2;
         }
+        if(two_one)
+        {
+          process(*m1, *pm1, *m2, *pm2, MSDM2_2_1);
+          MSDM2 = MSDM2_2_1;
+        }
+        if(one_two && two_one)
+        {
+          MSDM2 = (MSDM2_1_2 + MSDM2_2_1) / 2.;
+        }
+        std::cout << "MSDM2 :" << MSDM2 << std::endl;
+
+        // redraw meshes
+        viewer->draw_or_redraw_mesh(m1, pm1, true, false);
+        viewer->draw_or_redraw_mesh(m2, pm2, true, false);
       }
       else
       {
-        std::cout << "MSDM2 needs 2 meshes opened "
-                  << "with the same datastructure."
-                  << std::endl;
+        QMessageBox::information(0,
+            "",
+            QObject::tr("MSDM2 filter can not be applied on meshes "
+                        "with different data structures."));
       }
     }
-
-    if(viewer)
+    else
     {
-      viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
+      QMessageBox::information(0,
+          "",
+          QObject::tr("MSDM2 filter needs two meshes opened "
+                      "with the Surface_mesh data structure."));
     }
 
-
+    // comment next line to keep parameters between calls
     reset();
 
     viewer->frame();
@@ -355,11 +354,10 @@ signals:
   void resetSignal();
 
 protected:
-  bool computed = false;
-  bool *one_two = new bool(false);
-  bool *two_one = new bool(false);
-  int *scales = new int(3);
-  bool *color = new bool(false);
+  bool one_two;
+  bool two_one;
+  int  scales;
+  bool color;
   FEVV::Filters::ColorMeshLUT LUT_CourbureClust;
 };
 
