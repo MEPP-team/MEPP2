@@ -203,7 +203,10 @@ public:
                FEVV::PMapsContainer &pmaps_bag_original,
                double &MSDM2)
   {
-    std::cout << "MSMD2 only works with surface_mesh" << std::endl;
+    QMessageBox::information(0,
+        "",
+        QObject::tr("MSMD2 filter only works with Surface_mesh "
+                    "data structure"));
   }
 
   template< typename HalfedgeGraph >
@@ -273,14 +276,15 @@ public:
         QMessageBox::information(0,
             "",
             QObject::tr("MSDM2 filter can not be applied on meshes "
-                        "with different datastructures."));
+                        "with different data structures."));
       }
     }
     else
     {
-      std::cout << "MSDM2 needs 2 meshes opened "
-                << "with the same datastructure."
-                << std::endl;
+      QMessageBox::information(0,
+          "",
+          QObject::tr("MSDM2 filter needs two meshes opened "
+                      "with the Surface_mesh data structure."));
     }
 
     // comment next line to keep parameters between calls
