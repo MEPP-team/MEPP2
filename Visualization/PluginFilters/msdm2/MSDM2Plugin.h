@@ -67,17 +67,11 @@ public:
 public:
   void init() override
   {
-    init(false, false, 3, true);
+    one_two = false;
+    two_one = false;
+    scales = 3;
+    color = true;
     LUT_CourbureClust = FEVV::Filters::make_LUT(false);
-  }
-
-  void
-  init(bool _one_two, bool _two_one, int _scales, bool _color)
-  {
-    *one_two = _one_two;
-    *two_one = _two_one;
-    *scales = _scales;
-    *color = _color;
   }
 
   void reset() override
@@ -169,7 +163,7 @@ public:
                                           pm_original,
                                           fnm_original,
                                           pmaps_bag_original,
-                                          *scales,
+                                          scales,
                                           msdm2_pmap,
                                           MSDM2);
 
@@ -192,7 +186,7 @@ public:
     }
 
     double maxMSDM2, minMSDM2;
-    if(*color)
+    if(color)
     {
       FEVV::Filters::compute_min_max_vertices(
           m_degraded, msdm2_pmap, minMSDM2, maxMSDM2);
@@ -244,7 +238,7 @@ public:
         // get filter parameters from dialog window
         DialogMSDM21 dial1;
         if(dial1.exec() == QDialog::Accepted)
-          dial1.getProcess(*one_two, *two_one, *scales, *color);
+          dial1.getProcess(one_two, two_one, scales, color);
         else
           return; // abort applying filter
 
@@ -254,17 +248,17 @@ public:
         auto pm2 = properties_maps[1];
 
         double MSDM2, MSDM2_1_2, MSDM2_2_1;
-        if(*one_two)
+        if(one_two)
         {
           process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);
           MSDM2 = MSDM2_1_2;
         }
-        if(*two_one)
+        if(two_one)
         {
           process(*m1, *pm1, *m2, *pm2, MSDM2_2_1);
           MSDM2 = MSDM2_2_1;
         }
-        if(*one_two && *two_one)
+        if(one_two && two_one)
         {
           MSDM2 = (MSDM2_1_2 + MSDM2_2_1) / 2.;
         }
@@ -356,10 +350,10 @@ signals:
   void resetSignal();
 
 protected:
-  bool *one_two = new bool(false);
-  bool *two_one = new bool(false);
-  int *scales = new int(3);
-  bool *color = new bool(false);
+  bool one_two;
+  bool two_one;
+  int  scales;
+  bool color;
   FEVV::Filters::ColorMeshLUT LUT_CourbureClust;
 };
 
