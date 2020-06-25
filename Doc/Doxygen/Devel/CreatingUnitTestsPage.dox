@@ -12,8 +12,11 @@ it must validate only one thing (e.g. only one processing filter for a
 particular data structure).
 A failed test must return a value different from 0. It can also have an assertion
 check (assert call) which fails (but assertion failure is only detected in Debug mode).
-A successful test always returns 0 and has all its assertions (assert call) 
+A successful test always returns 0 and has all its assertions (assert calls) 
 which pass.
+A unit test generally produces an output file (e.g. a mesh or a point cloud file)
+and then compares this file with the expected result file (which is called
+the reference file when the expected result is different from the input file).
 
 For mesh and point cloud data structures (the most relevant use case), unit tests 
 permit to ensure the proper functioning of some functionalities. For instance,
@@ -30,7 +33,7 @@ the 3 OS (Windows, Linux, and Mac OS X).
 ### Presentation of testing directory hierarchy
 
 If MEPP2 is your local repository folder, then [`MEPP2/Testing`](https://github.com/MEPP-team/MEPP2/tree/master/Testing) 
-is the folder which contains the source code of the unit tests and their input files.
+is the folder that contains the source code of the unit tests and their input and output reference files.
 
 More specifically, MEPP2/Testing hierarchy is the following:
  - Folder for specific unit test
@@ -51,7 +54,7 @@ More specifically, MEPP2/Testing hierarchy is the following:
 	 in the [`Manifold`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Generic/Manifold) (resp. 
 	 [`PointCloud`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Generic/PointCloud)) subfolder;
    - Concepts checking (compilation checks only): [`Concepts`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Concepts).
- - Folder for unit test utils: [`Utils`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Utils).
+ - Folder for unit test utilities: [`Utils`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Utils).
  - Data folders  
    - Mesh files, point clouds files, etc.: [`Data`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Data);
    - Reference files for unit test only: [`RefOutput`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/RefOutput). Inside it, 
@@ -63,12 +66,12 @@ More specifically, MEPP2/Testing hierarchy is the following:
 The [`Utils`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Utils) folder 
 contains functions to help for the elaboration of unit tests.
 It contains:
- - generic function to [`retrieve the vertex_descriptor`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_retrieve_vertex.h) 
+ - Generic function to [`retrieve the vertex_descriptor`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_retrieve_vertex.h) 
                 (resp. [`halfedge_descriptor`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_retrieve_halfedge.h),
                        [`edge_descriptor`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_retrieve_edge.h), and 
 					   [`face_descriptor`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_retrieve_face.h)) from 1 index 
 					   (resp. 2 indices, 2 indices, and 1 index).
- - functions to compare 2 files (duplicate vertices are not properly managed yet): 
+ - Functions to compare 2 files (duplicate vertices are not properly managed yet): 
     [`bool identical_text_based_files(std::string filename_a, std::string filename_b, bool skip_mtllib = false)`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_identical_text_based_files.hpp#L24)
    and [`bool are_meshes_equal(std::string filename_a, std::string filename_b, bool verbose, FloatT threshold, bool relative_threshold)`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Utils/utils_are_meshes_identical.hpp#L67).	
    The first function searches for a line difference in the two input text files. The second function uses face 
@@ -76,12 +79,12 @@ It contains:
    This function does not work with vertex duplicates and only supports OFF files.
    
    There are 2 use cases: 
-   - if you have a reference file located in the [`RefOutput`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/RefOutput) 
+   - If you have a reference file located in the [`RefOutput`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/RefOutput) 
    folder (usual case), 
      you can use it at the end of your applied processing to check if the result 
 	 is stable (are_meshes_equal(result_mesh_file.off, ref_mesh_file.off, verbose, 
 	  geom_threshold, attr_threshold, relative_thresholds));
-   - if you have filter1 and filter2, such as filter2 is the "inverse" processing of filter1:
+   - If you have filter1 and filter2, such as filter2 is the "inverse" processing of filter1:
      you first create a classic unit test for filter1 (with a reference file), then you make
      another unit test for filter2 without a reference file from the [`RefOutput`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/RefOutput) 
 	 folder: you will 
@@ -90,7 +93,7 @@ It contains:
 	 filter once we have validated its associated compression filter.
  - A CMakeLists.txt to generate an executable for the comparison of 2 off files.
 
-### How to add new unit test for a specific data structure specific (non-generic)
+### How to add a new unit test for a specific data structure (non-generic)
 
 Testing a processing filter with a data structure (either a mesh or a point cloud data structure) consists
 in writing a program (containing the main function) inside a mesh/point cloud data structure folder 
@@ -100,8 +103,8 @@ As mentioned at the beginning of this page, it is important that the main functi
 a value different from 0 (which works in Debug and Release) or asserting with an assert function
 that something is true of false in your code (which works in Debug).
 
-A non-generic unit test permits to both test a data structure specific filter and a generic filter 
-for a data structure (see next section for the generic case). 
+A non-generic unit test permits to both test a data-structure-specific filter and a generic
+filter with a specific data structure (see next section for the generic case). 
 
 For instance, the CGAL specific filter [`boolean_operations.hpp`](https://github.com/MEPP-team/MEPP2/blob/master/FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp)
 is tested for the Polyhedron data structure in the [`CGAL/Polyhedron`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/CGAL/Polyhedron) folder.
@@ -146,7 +149,12 @@ add_test( Test_boolean_operations_polyhedron_minus
 
 Note that ${TESTING_DATA_DIR} (resp. ${TESTING_REFOUTPUT_DIR}) refers to the [`Data`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Data) (resp. [`RefOutput`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/RefOutput)) folder.
 
-### How to add new unit test for several data structures (generic unit testing)
+Note that unit tests can be run in parallel and therefore it is highly recommended that
+each output file produced by a unit test in the temporary testing directory has a unique name.
+For instance, the first test (union case) will produce an output file that is named "test_boolean_operations_polyhedron_UNION.off".
+Some unit tests specify the output file name directly as an argument of the add_test cmake function.
+
+### How to add a new unit test for several data structures (generic unit testing)
 
 A generic test is used to test a generic filter.  
 The example below is given for a 2-manifold generic test. A generic test for point cloud 
@@ -175,6 +183,6 @@ main(int argc, const char **argv)
 ```
 in the [`MEPP2/Testing/CGAL/Surface_mesh/test_curvature_filter_surfacemesh.cpp`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/CGAL/Surface_mesh/test_curvature_filter_surfacemesh.cpp) file.
 Note that this file includes the data structure headers and then includes the generic test file.
-
+ - Add your unit test in the relevant CMakeLists.txt as explained in the previous section.
 
 */
