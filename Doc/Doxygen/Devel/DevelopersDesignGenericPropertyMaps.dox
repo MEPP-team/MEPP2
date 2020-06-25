@@ -38,7 +38,7 @@ Also a mechanism is provided to create new non-standard property maps in a gener
 
 
 Note: vector property maps (boost::vector_property_maps) don't work with
-Polyhedron and AIF. Using boost::vector_property_maps with Polyhedron makes
+Polyhedron. Using boost::vector_property_maps with Polyhedron makes
 the program crash at run time because Polyhedron indices are not properly
 initialized.
 
