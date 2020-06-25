@@ -91,7 +91,7 @@ It contains:
 	 apply filter1 and then filter2, you will thus use the input data file (e.g. from the Data 
 	 folder) as a reference file. For instance, this kind of test is used to test a decompression
 	 filter once we have validated its associated compression filter.
- - A CMakeLists.txt to generate an executable for the comparison of 2 off files.
+ - A CMakeLists.txt to generate an executable for the comparison of 2 OFF files.
 
 ### How to add a new unit test for a specific data structure (non-generic)
 
