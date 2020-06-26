@@ -5,7 +5,7 @@
 ### General introduction
 
 A unit test is a program (contains the main function) which permits to detect
-code regressions and is a measure of the code quality. Unit 
+code regressions and is a measure of code quality. Unit 
 tests are used in MEPP2 to prevent either compilation or running time issues.
 A unit test must have a short execution time (generally less than 1 s), and 
 it must validate only one thing (e.g. only one processing filter for a 
@@ -16,7 +16,7 @@ A successful test always returns 0 and has all its assertions (assert calls)
 which pass.
 A unit test generally produces an output file (e.g. a mesh or a point cloud file)
 and then compares this file with the expected result file (which is called
-the reference file when the expected result is different from the input file).
+reference file when the expected result is different from the input file).
 
 For mesh and point cloud data structures (the most relevant use case), unit tests 
 permit to ensure the proper functioning of some functionalities. For instance,
@@ -35,8 +35,8 @@ the 3 OS (Windows, Linux, and Mac OS X).
 If MEPP2 is your local repository folder, then [`MEPP2/Testing`](https://github.com/MEPP-team/MEPP2/tree/master/Testing) 
 is the folder that contains the source code of the unit tests and their input and output reference files.
 
-More specifically, MEPP2/Testing hierarchy is the following:
- - Folder for specific unit test
+More specifically, the MEPP2/Testing hierarchy is the following:
+ - Folder for specific unit tests
    - Mesh data structure: [`AIF`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/AIF), 
                           [`CGAL/LCC`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/CGAL/LCC), 
 						  [`CGAL/Polyhedron`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/CGAL/Polyhedron), 
@@ -103,7 +103,7 @@ As mentioned at the beginning of this page, it is important that the main functi
 a value different from 0 (which works in Debug and Release) or asserting with an assert function
 that something is true of false in your code (which works in Debug).
 
-A non-generic unit test permits to both test a data-structure-specific filter and a generic
+A non-generic unit test permits to test both a data-structure-specific filter and a generic
 filter with a specific data structure (see next section for the generic case). 
 
 For instance, the CGAL specific filter [`boolean_operations.hpp`](https://github.com/MEPP-team/MEPP2/blob/master/FEVV/Filters/CGAL/Boolean_Operations/boolean_operations.hpp)
@@ -158,11 +158,11 @@ Some unit tests specify the output file name directly as an argument of the add_
 
 A generic test is used to test a generic filter.  
 The example below is given for a 2-manifold generic test. A generic test for point cloud 
-data structures can be coded in the same way. 
+data structures can be implemented in the same way. 
 
  - Write a generic test (templated main function) in the [`MEPP2/Testing/Generic/Manifold`](https://github.com/MEPP-team/MEPP2/tree/master/Testing/Generic/Manifold) folder: 
    test_xxxx.inl (see for instance [`test_curvature_filter.inl`](https://github.com/MEPP-team/MEPP2/blob/master/Testing/Generic/Manifold/test_curvature_filter.inl#L74)).
-   It is important to not include data structure specific headers in this file.
+   It is important not to include data structure specific headers in this file.
  
  - Write a unit test for each specific data structure you want to test. For instance, to write a unit test 
    for the generic curvature for the CGAL/Surface_mesh you write the following code:
