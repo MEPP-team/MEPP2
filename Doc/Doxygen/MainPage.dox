@@ -19,6 +19,7 @@
  - For the contributor
      - \ref ForkingCloningContributingExternalPage  "Forking/Cloning/Contributing for externals"
      - \ref DevelopersCodingStyleGeneralitiesPage "Coding style"
+     - \ref CreatingUnitTestsPage "Creating unit tests"
  - [Latest nightly generated documentation](http://liris.cnrs.fr/mepp/doc/nightly/)
 
 */
