@@ -51,7 +51,7 @@ if(MSVC)
 	if(DEFINED ENV{WARN_ERROR})
 	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
 	  message("--> /WX ON (Treat linker warnings as errors)")
-	else
+	else()
 	  message("--> /WX OFF (Don't treat linker warnings as errors)")
 	endif()
 
