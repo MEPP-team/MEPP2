@@ -48,6 +48,12 @@ endif()
 # /MP for multiple compilation units (cl.exe) ; without any value, it is set automatically depending on your number of main threads
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+	if( (DEFINED ENV{WARN_ERROR}) AND ($ENV{WARN_ERROR} STREQUAL "TRUE") )
+	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+	  message("--> /WX ON (Treat linker warnings as errors)")
+	else()
+	  message("--> /WX OFF (Don't treat linker warnings as errors)")
+	endif()
 
 	add_definitions(-DWIN32_LEAN_AND_MEAN) # 'include <winsock2.h>' before 'include <Windows.h>' or set that line (for Boost.Beast)
 	add_definitions(-D_WIN32_WINNT=0x0601) # Assuming _WIN32_WINNT=0x0601 (i.e. Windows 7 target) for Boost.Beast
