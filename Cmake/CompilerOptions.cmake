@@ -48,7 +48,7 @@ endif()
 # /MP for multiple compilation units (cl.exe) ; without any value, it is set automatically depending on your number of main threads
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-	if( (DEFINED ENV{WARN_ERROR}) AND ($ENV{WARN_ERROR} STREQUAL "TRUE") )
+	if( (DEFINED ENV{WARN_ERROR}) AND ("$ENV{WARN_ERROR}" STREQUAL "TRUE") )
 	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
 	  message("--> /WX ON (Treat linker warnings as errors)")
 	else()
