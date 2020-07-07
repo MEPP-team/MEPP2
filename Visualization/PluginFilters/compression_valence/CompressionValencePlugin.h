@@ -64,16 +64,13 @@ public:
   ~CompressionValencePlugin() = default;
 
 public:
-  void init() override { init(true, "compressed_mesh.p3d", false, 10, 100); }
+  void init() override { init("compressed_mesh.p3d", false, 10, 100); }
 
-  void init(bool _forceCompute,
-            const std::string &_p3dFilePath,
+  void init(const std::string &_p3dFilePath,
             bool _with_adaptative_quantization,
             int _quantization_bits,
             int _max_vertices)
   {
-    *value_forceCompute = _forceCompute;
-
     p3dFilePath = _p3dFilePath;
     with_adaptative_quantization = _with_adaptative_quantization;
     quantization_bits = _quantization_bits;
@@ -314,8 +311,6 @@ signals:
   void resetSignal();
 
 protected:
-  bool *value_forceCompute = new bool(false);
-
   // filter parameters
   std::string p3dFilePath;
   bool with_adaptative_quantization;

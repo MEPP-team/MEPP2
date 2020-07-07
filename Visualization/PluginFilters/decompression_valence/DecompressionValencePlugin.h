@@ -64,16 +64,13 @@ public:
   ~DecompressionValencePlugin() = default;
 
 public:
-  void init() override { init(true, "example.p3d", -1, true, false); }
+  void init() override { init("example.p3d", -1, true, false); }
 
-  void init(bool _forceCompute,
-            const std::string &_p3dFilePath,
+  void init(const std::string &_p3dFilePath,
             int _stop_level,
             bool _write_info,
             bool _write_intermediate_meshes)
   {
-    *value_forceCompute = _forceCompute;
-
     p3dFilePath = _p3dFilePath;
     stop_level = _stop_level;
     write_info = _write_info;
@@ -389,8 +386,6 @@ signals:
   void resetSignal();
 
 protected:
-  bool *value_forceCompute = new bool(false);
-
   // filter parameters
   std::string p3dFilePath;
   int stop_level;
