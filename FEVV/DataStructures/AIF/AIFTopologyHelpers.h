@@ -1524,10 +1524,16 @@ public:
     )
       return true;
     auto eRange = incident_edges(face);
+    edge_descriptor last = null_edge();
     for(auto eIt = eRange.begin(); eIt != eRange.end(); ++eIt)
     {
+      if (last == *eIt)
+        return true; // 2 consecutive identical edges
+
       if(is_degenerated_edge(*eIt))
         return true;
+
+      last = *eIt;
     }
     return false;
   }
@@ -5624,6 +5630,12 @@ public:
 
     for(; itF != facesRange.end(); ++itF, ++cpt)
     {
+      if (is_degenerated_face(*itF))
+      {
+        throw std::invalid_argument("AIFTopologyHelpers::halfedge(src, target, "
+          "m) -> an incident face is degenerated.");
+      }
+
       edge_descriptor next_good_e;
 
       auto edgesRange = (*itF)->GetIncidentEdges();
