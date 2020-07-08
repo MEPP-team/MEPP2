@@ -315,8 +315,6 @@ signals:
   void resetSignal();
 
 protected:
-  bool value_forceCompute;
-
   // filter parameters
   std::string m_operation;
 

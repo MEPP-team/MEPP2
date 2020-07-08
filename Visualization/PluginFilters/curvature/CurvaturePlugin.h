@@ -1238,7 +1238,7 @@ signals:
   void resetSignal();
 
 protected:
-  bool *value_forceCompute = new bool(false);
+  bool *value_forceCompute = new bool(true);
 
   bool *value_isGeod = new bool(false);
   double *value_radius = new double(0.0);

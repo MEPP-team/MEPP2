@@ -64,12 +64,10 @@ public:
   ~ScalingPlugin() = default;
 
 public:
-  void init() override { init(true, 1.0, 1.0, 1.0); }
+  void init() override { init(1.0, 1.0, 1.0); }
 
-  void init(bool _forceCompute, double _x, double _y, double _z)
+  void init(double _x, double _y, double _z)
   {
-    *value_forceCompute = _forceCompute;
-
     *value_x = _x;
     *value_y = _y;
     *value_z = _z;
@@ -219,8 +217,6 @@ signals:
   void resetSignal();
 
 protected:
-  bool *value_forceCompute = new bool(false);
-
   double *value_x = new double(0.0);
   double *value_y = new double(0.0);
   double *value_z = new double(0.0);
