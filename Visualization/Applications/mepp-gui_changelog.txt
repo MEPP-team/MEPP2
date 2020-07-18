@@ -1,3 +1,6 @@
+v0.13.1 - 18/07/2020 :
+ - bug fixes related to list refresh
+
 v0.13.0 - 20/03/2020 :
  - add support for CustomVectors (Vertices), can be used from plugins (sample in CurvaturePlugin for Min and Max directions)
  - improve some icons for dark mode
