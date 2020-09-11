@@ -92,7 +92,7 @@ and 'Ubuntu 18.04 LTS Bionic Beaver (amd64)', released on April 26, 2018:
   $ wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz
   $ tar -xzf pcl-1.9.1.tar.gz
   $ cd pcl-pcl-1.9.1 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 ..
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ENABLE_SSE=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 ..
   $ make
   $ make install && cd
 
@@ -185,7 +185,7 @@ All the dependencies of MEPP2 are already installed (see installation documentat
 
 ### Docker
 
-Soon, under construction...
+You can find various Dockerfiles for Linux in /Docker/Linux
 
 ## MacOS installation
 Various successful installations that we reported:
