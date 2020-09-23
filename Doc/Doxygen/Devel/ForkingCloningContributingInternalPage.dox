@@ -4,10 +4,32 @@
 
 ## Forking and cloning MEPP2 from GitLab
 
-TODO
+In order to become a MEPP2 contributor, you should be at ease with the following usages of [git (version control system)](https://en.wikipedia.org/wiki/Git)):
+ - [git for beginners](https://www.atlassian.com/git/tutorials/what-is-version-control) (that refers to a [git install how-to](https://www.atlassian.com/git/tutorials/install-git) and also provides an interactive tutorial)
+ - [Collaborating with git](https://www.atlassian.com/git/tutorials/syncing) (that mainly introduces the `git remote`, `git fetch`, `git push` and `git pull` commands)
+ - Working within a [forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow), that is the recommended workflow for MEPP2 (as opposed to using e.g. a [centralized workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#centralized-workflow))
+
+Then you can proceed with
+ - [Connecting to your own gitlab account](https://gitlab.liris.cnrs.fr/). Then, ask by email (mepp@liris.cnrs.fr) to join the MEPP-team by giving your <tt>gitlab login name (important)</tt> in order to be able to see the MEPP2 repo. As long as a MEPP2 maintainer has not informed you that it is done, you will not be able to go further...
+ For the rest of this inception description we shall assume that you signed in as `YourLogin`.
+ - Once signed in, you should fork the [MEPP2 repository](https://gitlab.liris.cnrs.fr/MEPP-team/MEPP2) ([Gitlab](https://gitlab.liris.cnrs.fr/MEPP-team/MEPP2) web interface provides a single button method for this: look in the upper right section of the [MEPP2 repository](https://gitlab.liris.cnrs.fr/MEPP-team/MEPP2) home page)
+ - Then in `Settings -> General -> Visibility, project features, permissions` (see the menu on the left) set `Pipelines` to OFF
+ - On your desktop machine, you can now [(git) clone](https://git-scm.com/docs/git-clone) your fork. When doing so on a [CLI](https://en.wikipedia.org/wiki/Command-line_interface) you could use [something similar](https://en.wikipedia.org/wiki/Mutatis_mutandis) to the following command:
+  ```
+  git clone https://gitlab.liris.cnrs.fr/YourLogin/MEPP2
+  ```
 
 ## Contributing to MEPP2 on GitLab
 
-TODO
+To submit your own code for integration into the MEPP2 main repository, proceed
+as usually in a [forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#centralized-workflow) \b except the last step (`Making a Pull Request`):
+- commit your code to your local clone of MEPP2
+- push your local commits to your fork of MEPP2 on Gitlab
+- then push your branch (from your fork) to your MEPP2 master branch (i.e. `FLL-master`) on Gitlab (branch naming rule: first letter of your first name (\b F) and first two letters of your last name (\b LL), example `bst-master` pour Bjarne Stroustrup)
+- open a Merge Request from your MEPP2 master branch (i.e. `FLL-master`) on Gitlab
+- check the continuous integration (see `CI / CD -> Pipelines` menu on the left) results: if one build fail, fix the issue
+  then try again until all builds pass without error
+- when the continuous integration succeeds, a MEPP2 maintainer will integrate
+  your code into the main repository.
 
 */
