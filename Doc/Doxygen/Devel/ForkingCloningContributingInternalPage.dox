@@ -25,7 +25,7 @@ To submit your own code for integration into the MEPP2 main repository, proceed
 as usually in a [forking workflow](https://www.atlassian.com/git/tutorials/comparing-workflows#centralized-workflow) \b except the last step (`Making a Pull Request`):
 - commit your code to your local clone of MEPP2
 - push your local commits to your fork of MEPP2 on Gitlab
-- then push your branch (from your fork) to your MEPP2 master branch (i.e. `FLL-master`) on Gitlab (branch naming rule: first letter of your first name (\b F) and first two letters of your last name (\b LL), example `bst-master` pour Bjarne Stroustrup)
+- then push your branch (from your fork) to your MEPP2 master branch (i.e. `FLL-master`) on Gitlab (branch naming rule: first letter of your first name (\b F) and then first two letters of your last name (\b LL), example `bst-master` for Bjarne Stroustrup)
 - open a Merge Request from your MEPP2 master branch (i.e. `FLL-master`) on Gitlab
 - check the continuous integration (see `CI / CD -> Pipelines` menu on the left) results: if one build fail, fix the issue
   then try again until all builds pass without error
