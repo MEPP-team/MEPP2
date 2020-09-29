@@ -127,7 +127,7 @@ FEVV::SimpleWindow::attach(AdapterQt *_adapter, const bool _useMdiWindows)
   {
     if(mdiArea == nullptr) // Only once.
     {
-      mdiArea = new QMdiArea(this);
+      mdiArea = new /*Q*/MdiArea(this);
       // mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded ); //
       // Qt::ScrollBarAlwaysOff mdiArea->setVerticalScrollBarPolicy(
       // Qt::ScrollBarAsNeeded ); // Qt::ScrollBarAlwaysOff
@@ -143,6 +143,8 @@ FEVV::SimpleWindow::attach(AdapterQt *_adapter, const bool _useMdiWindows)
 
       // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
       // SLOT(updateMenus())); // TODO
+
+      mdiArea->setAcceptDrops(true);
     }
 
     _adapter->setMinimumSize(300, 200); // default value is 300 x 200 pixels
@@ -1169,15 +1171,15 @@ FEVV::SimpleWindow::on_actionChange_MDI_view_mode_triggered()
 {
   if(mdiArea)
   {
-    if(mdiArea->viewMode() == QMdiArea::SubWindowView)
+    if(mdiArea->viewMode() == /*Q*/MdiArea::SubWindowView)
     {
-      mdiArea->setViewMode(QMdiArea::TabbedView);
+      mdiArea->setViewMode(/*Q*/MdiArea::TabbedView);
       ui.actionChange_MDI_view_mode->setText(
           QObject::tr("Change MDI view mode (-> to subwindow view)"));
     }
     else
     {
-      mdiArea->setViewMode(QMdiArea::SubWindowView);
+      mdiArea->setViewMode(/*Q*/MdiArea::SubWindowView);
       ui.actionChange_MDI_view_mode->setText(
           QObject::tr("Change MDI view mode (-> to tabbed view)"));
     }
@@ -2102,7 +2104,7 @@ FEVV::SimpleWindow::onItemChanged(QListWidgetItem *_item,
           // QMdiSubWindow FOCUS
           SimpleWindow *sw =
               dynamic_cast< SimpleWindow * >(w->getViewer()->getWindow());
-          QMdiArea *_mdiArea = sw->mdiArea;
+          /*Q*/MdiArea *_mdiArea = sw->mdiArea;
           if(_mdiArea)
           {
             BaseAdapterVisuQt *bavQt = dynamic_cast< BaseAdapterVisuQt * >(w);

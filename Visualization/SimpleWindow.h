@@ -45,7 +45,8 @@
 
 #include <QDebug>
 #include <QMenuBar>
-#include <QMdiArea>
+//#include <QMdiArea>
+#include "Visualization/MdiArea.h"
 
 #include <boost/assert.hpp>
 
@@ -159,7 +160,7 @@ public:
 
   void loadQtPlugins();
 
-  QMdiArea *getMdiArea() { return mdiArea; }
+  /*Q*/MdiArea *getMdiArea() { return mdiArea; }
 
   void sortModelList();
 
@@ -325,7 +326,7 @@ protected:
   QStringList pluginFileNames;
   QMenu *menuPlugins;
 
-  QMdiArea *mdiArea = nullptr;
+  /*Q*/MdiArea *mdiArea = nullptr;
 
   bool useMdiWindows = false;
 
