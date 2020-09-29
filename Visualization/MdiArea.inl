@@ -11,6 +11,8 @@
 //#include "mdiarea.hxx"
 //#include "mainwindow.hxx"
 
+#include <QMimeData>
+
 #include <iostream>
 
 inline FEVV::MdiArea::MdiArea(QWidget *parent) : QMdiArea(parent)
