@@ -40,6 +40,7 @@
 #include "Visualization/SimpleAdapterVisu.h" // for create an adapter (a child)
 #endif
 
+#include "Visualization/MdiArea.h"
 
 #define USE_MDI true
 
@@ -2183,4 +2184,28 @@ FEVV::SimpleWindow::createNewViewer(void)
     this->getMdiArea()->tileSubWindows();
 
   return viewer;
+}
+
+inline
+QWidget * FEVV::SimpleWindow::activeMdiChild()
+{
+  if(mdiArea)
+  {
+    if(QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
+      return qobject_cast< QWidget * >(activeSubWindow->widget());
+  }
+  else
+  {
+    for(unsigned i = 0; i < adapters.size(); i++)
+    {
+      if(adapters[i]->isSelected())
+      {
+        BaseAdapterVisuQt *bavQt =
+            dynamic_cast< BaseAdapterVisuQt * >(adapters[i]);
+        return qobject_cast< QWidget * >(bavQt);
+      }
+    }
+  }
+
+  return 0;
 }

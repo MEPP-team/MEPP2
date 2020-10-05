@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+#include "SimpleWindow.h"
+
 inline FEVV::MdiArea::MdiArea(QWidget *parent) : QMdiArea(parent)
 {
 	bType = bNone;

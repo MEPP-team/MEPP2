@@ -46,7 +46,7 @@
 #include <QDebug>
 #include <QMenuBar>
 //#include <QMdiArea>
-#include "Visualization/MdiArea.h"
+//#include "Visualization/MdiArea.h"
 
 #include <boost/assert.hpp>
 
@@ -62,6 +62,7 @@
 namespace FEVV {
 
 class SimpleViewer; // NEW 21/07
+class MdiArea;
 
 /**
  * \class SimpleWindow
@@ -209,28 +210,7 @@ protected:
                  QActionGroup *actionGroup = 0);
   // Plugins
 
-  QWidget *activeMdiChild()
-  {
-    if(mdiArea)
-    {
-      if(QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
-        return qobject_cast< QWidget * >(activeSubWindow->widget());
-    }
-    else
-    {
-      for(unsigned i = 0; i < adapters.size(); i++)
-      {
-        if(adapters[i]->isSelected())
-        {
-          BaseAdapterVisuQt *bavQt =
-              dynamic_cast< BaseAdapterVisuQt * >(adapters[i]);
-          return qobject_cast< QWidget * >(bavQt);
-        }
-      }
-    }
-
-    return 0;
-  }
+  QWidget *activeMdiChild();
 
   void closeEvent(QCloseEvent *event) override;
 
