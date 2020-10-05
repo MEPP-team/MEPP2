@@ -191,6 +191,8 @@ public:
 
   void centerHG(FEVV::SimpleViewer *viewer);
 
+  QWidget *activeMdiChild();
+
 #if 0 //TODO-elo-rm-?-ask_MTO
   template< typename HalfedgeGraph >
   void showSelectedHG(FEVV::SimpleViewer *viewer);
@@ -207,8 +209,6 @@ protected:
                  const char *member,
                  QActionGroup *actionGroup = 0);
   // Plugins
-
-  QWidget *activeMdiChild();
 
   void closeEvent(QCloseEvent *event) override;
 
