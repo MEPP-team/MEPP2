@@ -46,7 +46,6 @@
 #include <QDebug>
 #include <QMenuBar>
 //#include <QMdiArea>
-//#include "Visualization/MdiArea.h"
 
 #include <boost/assert.hpp>
 
@@ -61,8 +60,9 @@
 
 namespace FEVV {
 
-class SimpleViewer; // NEW 21/07
-class MdiArea;
+class SimpleViewer;
+
+class MdiArea; // NEW
 
 /**
  * \class SimpleWindow
@@ -171,7 +171,6 @@ public:
 
   void updateActiveChildTitle();
 
-  // NEW 21/07
   // TODO : standardize template MeshT/HalfedgeGraph
   template< typename MeshT >
   void draw_or_redraw_mesh(/*const */ MeshT *mesh,
@@ -195,7 +194,6 @@ public:
 #if 0 //TODO-elo-rm-?-ask_MTO
   template< typename HalfedgeGraph >
   void showSelectedHG(FEVV::SimpleViewer *viewer);
-  // NEW 21/07
 #endif
 
 protected:

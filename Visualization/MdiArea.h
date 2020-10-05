@@ -24,8 +24,6 @@
 
 #include <QDragEnterEvent>
 
-//#include "Visualization/SimpleWindow.h" // à la place de "class SimpleWindow;" ci-dessous
-
 //#endif
 
 namespace FEVV {

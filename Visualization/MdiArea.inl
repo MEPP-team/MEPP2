@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include "SimpleWindow.h"
+#include "Visualization/SimpleWindow.h"
 
 inline FEVV::MdiArea::MdiArea(QWidget *parent) : QMdiArea(parent)
 {
@@ -65,11 +65,12 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	//Viewer *viewer = NULL;
 	//QList<QUrl> urls = event->mimeData()->urls();
 
-	m_mw->enableSpaceTimeMenus(); // TEST 100% BIDON
-	/*if (m_mw->activeMdiChild() == 0)
+	// test
+	if (m_mw->activeMdiChild() == 0)
 		std::cout << "No MdiChild" << std::endl;
 	else
-		std::cout << "MdiChild" << std::endl;*/
+		std::cout << "MdiChild" << std::endl;
+	// test
 
 // ---------------------------------------------------
 #ifdef __APPLE__
