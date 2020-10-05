@@ -145,6 +145,7 @@ FEVV::SimpleWindow::attach(AdapterQt *_adapter, const bool _useMdiWindows)
       // SLOT(updateMenus())); // TODO
 
       mdiArea->setAcceptDrops(true);
+      mdiArea->setMainWindow(this);
     }
 
     _adapter->setMinimumSize(300, 200); // default value is 300 x 200 pixels

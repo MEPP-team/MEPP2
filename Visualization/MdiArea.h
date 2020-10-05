@@ -24,11 +24,13 @@
 
 #include <QDragEnterEvent>
 
+//#include "Visualization/SimpleWindow.h" // à la place de "class SimpleWindow;" ci-dessous
+
 //#endif
 
 namespace FEVV {
 
-//class mainwindow;
+class SimpleWindow;
 
 enum { bNone, bLeft, bRight };
 
@@ -53,7 +55,7 @@ class MdiArea : public QMdiArea
 		 *
 		 * \param mw mainwindow pointer.
 		 */
-		//void setMainWindow(mainwindow* mw) { m_mw = mw; }
+		void setMainWindow(SimpleWindow* mw) { m_mw = mw; }
 
 	protected:
 		/*!
@@ -80,7 +82,7 @@ class MdiArea : public QMdiArea
 		//void paintEvent(QPaintEvent *);
 
 	private:
-		//mainwindow* m_mw;	//!< mainwindow
+		SimpleWindow* m_mw;	//!< mainwindow
 		int bType;			//!< mouse bouton type (bNone, bLeft, bRight)
 };
 

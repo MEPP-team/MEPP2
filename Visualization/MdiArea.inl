@@ -63,6 +63,12 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	//Viewer *viewer = NULL;
 	//QList<QUrl> urls = event->mimeData()->urls();
 
+	m_mw->enableSpaceTimeMenus(); // TEST 100% BIDON
+	/*if (m_mw->activeMdiChild() == 0)
+		std::cout << "No MdiChild" << std::endl;
+	else
+		std::cout << "MdiChild" << std::endl;*/
+
 // ---------------------------------------------------
 #ifdef __APPLE__
 	bType=bLeft;
