@@ -8,12 +8,15 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-// #include "Visualization/SimpleWindow.h"
 #include "Visualization/Helpers/QtHelpers.h"
 #include "Visualization/Qt/ChooseDatastructureMsgBox.hpp"
 
 #include <QDebug>
 #include <QMenuBar>
+
+// DirView
+#include <QFileSystemModel>
+#include <QSortFilterProxyModel>
 
 #include <QCloseEvent>
 
@@ -254,6 +257,65 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   ui.applyButton->setEnabled(false);
 
   ui.listParams->setVisible(false);
+
+  // ---
+
+  // TODO : to delete !
+  QDockWidget *dockDirView;
+  QFileSystemModel *model;
+  QSortFilterProxyModel *proxyModel;
+  QTreeView *tree;
+
+  // DirView
+  dockDirView = new QDockWidget(tr(" Directory View"), this);
+  dockDirView->setObjectName("dockDirView");
+  dockDirView->setMinimumWidth(/*m_dockDirView_MinimumWidth*/320);
+  this->addDockWidget(Qt::RightDockWidgetArea, dockDirView);
+
+    model = new QFileSystemModel;
+    QStringList filters;
+    filters << "*.obj" << "*.off" << "*.coff" << "*.ply" << "*.msh"; // defaultExtensions
+#ifdef FEVV_USE_VTK
+    filters << "*.vtk" << "*.vtp" << "*.vtu"; // vtkExtensions
+#endif
+#ifdef FEVV_USE_FBX
+    filters << "*.fbx"; // FBX
+#endif
+// Point clouds
+#ifdef FEVV_USE_CGAL
+    filters << "*.xyz"; // CGALPOINTSET
+#endif 
+#ifdef FEVV_USE_PCL
+    filters << "*.pcd"; // PCLPOINTCLOUD
+#endif 
+    model->setNameFilters(filters);
+    model->setNameFilterDisables(false);
+
+    proxyModel = new QSortFilterProxyModel;
+    proxyModel->setSourceModel(model);
+
+    tree = new QTreeView();
+    tree->setModel(proxyModel); // model
+    tree->setSortingEnabled(true);
+
+    tree->setColumnHidden(2, true);
+    tree->setColumnWidth(0, 320);
+    tree->sortByColumn(0, Qt::AscendingOrder);
+    
+    //QString location("C:\\_mt_\\MEPP2\\MEPP2.mto-master\\Testing\\Data\\");
+    QModelIndex index = model->setRootPath(/*treeLocation*//*location*/model->rootPath());
+    QModelIndex proxyIndex = proxyModel->mapFromSource(index);
+
+    tree->scrollTo(proxyIndex);
+    tree->setExpanded(proxyIndex, true);
+    tree->setCurrentIndex(proxyIndex);
+
+    tree->setSelectionMode(QAbstractItemView::ExtendedSelection); // QAbstractItemView::MultiSelection
+    tree->setDragEnabled(true);
+
+  dockDirView->setWidget(tree);
+
+  // ---
 
   // time
   // TODO LATER - SPACE/TIME - FINDME
@@ -1282,12 +1344,13 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
       tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
-         "Copyright (c) 2016-2019 University of Lyon and CNRS (France)<br>"
+         "Copyright (c) 2016-2020 University of Lyon and CNRS (France)<br>"
          "<br>"
-         "LIRIS M2DISCO / MEPP-team<br>"
+         "LIRIS ORIGAMI / MEPP-team<br>"
          "<br>"
          "<b>GitHub: <a href=\"https://github.com/MEPP-team/MEPP2\">see online "
          "repository</a></b><br>"
+         "<br>"
          "<b>Developer documentation: <a "
          "href=\"http://liris.cnrs.fr/mepp/doc/nightly/\">see online "
          "help</a></b><br>"
@@ -1305,10 +1368,10 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
          "must be shown, see toolbar)<br>"
          "<br>"
          "Viewer -> <b>OSG</b>            instrumentation : <b>S</b><br>"
-         "<br>"
-         "<b>*</b> on MacOS, the <b>ctrl</b> key is replaced by the "
-         "<b>command</b> "
-         "key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>"));
+//         "<br>"
+//         "<b>*</b> on MacOS, the <b>ctrl</b> key is replaced by the "
+//         "<b>command</b> key"
+         "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>"));
 }
 
 inline void
