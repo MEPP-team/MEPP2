@@ -47,6 +47,10 @@
 #include <QMenuBar>
 //#include <QMdiArea>
 
+// DirView
+#include <QFileSystemModel>
+#include <QSortFilterProxyModel>
+
 #include <boost/assert.hpp>
 
 // Plugins
@@ -305,6 +309,12 @@ protected:
   QMenu *menuPlugins;
 
   /*Q*/MdiArea *mdiArea = nullptr;
+
+  // DirView
+  QDockWidget *dockDirView;
+  QFileSystemModel *model;
+  QSortFilterProxyModel *proxyModel;
+  QTreeView *tree;
 
   bool useMdiWindows = false;
 

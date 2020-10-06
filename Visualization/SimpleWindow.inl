@@ -14,10 +14,6 @@
 #include <QDebug>
 #include <QMenuBar>
 
-// DirView
-#include <QFileSystemModel>
-#include <QSortFilterProxyModel>
-
 #include <QCloseEvent>
 
 #include <boost/assert.hpp>
@@ -93,6 +89,12 @@ inline FEVV::SimpleWindow::~SimpleWindow()
     delete mdiArea;
   }
 
+  // DirView
+  delete tree;
+  delete proxyModel;
+  delete model;
+  delete dockDirView;
+
 #ifdef DEBUG_VISU2
   std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
 #endif
@@ -129,29 +131,6 @@ FEVV::SimpleWindow::attach(AdapterQt *_adapter, const bool _useMdiWindows)
 
   if(_useMdiWindows)
   {
-    if(mdiArea == nullptr) // Only once.
-    {
-      mdiArea = new /*Q*/MdiArea(this);
-      // mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded ); //
-      // Qt::ScrollBarAlwaysOff mdiArea->setVerticalScrollBarPolicy(
-      // Qt::ScrollBarAsNeeded ); // Qt::ScrollBarAlwaysOff
-
-      ui.gridLayout->addWidget(mdiArea, 0, 0);
-
-      connect(
-          ui.actionTile, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
-      connect(ui.actionCascade,
-              SIGNAL(triggered()),
-              mdiArea,
-              SLOT(cascadeSubWindows()));
-
-      // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
-      // SLOT(updateMenus())); // TODO
-
-      mdiArea->setAcceptDrops(true);
-      mdiArea->setMainWindow(this);
-    }
-
     _adapter->setMinimumSize(300, 200); // default value is 300 x 200 pixels
     mdiArea->addSubWindow(_adapter);
   }
@@ -260,11 +239,32 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
 
   // ---
 
-  // TODO : to delete !
-  QDockWidget *dockDirView;
-  QFileSystemModel *model;
-  QSortFilterProxyModel *proxyModel;
-  QTreeView *tree;
+  // MdiArea
+  if(USE_MDI)
+  {
+    mdiArea = new /*Q*/MdiArea(this);
+    // mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded ); //
+    // Qt::ScrollBarAlwaysOff mdiArea->setVerticalScrollBarPolicy(
+    // Qt::ScrollBarAsNeeded ); // Qt::ScrollBarAlwaysOff
+
+    ui.gridLayout->addWidget(mdiArea, 0, 0);
+
+    connect(
+        ui.actionTile, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
+    connect(ui.actionCascade,
+            SIGNAL(triggered()),
+            mdiArea,
+            SLOT(cascadeSubWindows()));
+
+    // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
+    // SLOT(updateMenus())); // TODO
+
+    mdiArea->setAcceptDrops(true);
+
+    mdiArea->setMainWindow(this); // only if MdiArea instead of QMdiArea
+  }
+
+  // ---
 
   // DirView
   dockDirView = new QDockWidget(tr(" Directory View"), this);
