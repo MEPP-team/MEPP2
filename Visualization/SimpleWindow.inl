@@ -259,9 +259,10 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
     // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
     // SLOT(updateMenus())); // TODO
 
+    // only if MdiArea instead of QMdiArea
     mdiArea->setAcceptDrops(true);
-
-    mdiArea->setMainWindow(this); // only if MdiArea instead of QMdiArea
+    mdiArea->setMainWindow(this);
+    // only if MdiArea instead of QMdiArea
   }
 
   // ---
@@ -780,66 +781,78 @@ template< typename HalfedgeGraph >
 inline void
 FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
 {
-  std::string ds_name =
-      FEVV::getDatastructureName(static_cast< HalfedgeGraph * >(nullptr));
+  std::vector< std::string > files;
 
-  QString allExtensions;
+  if (!drag)
+  {
+    std::string ds_name =
+        FEVV::getDatastructureName(static_cast< HalfedgeGraph * >(nullptr));
 
-  if(ds_name == "CGALPOINTSET")
-  {
-    allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
-                    "XYZ files (*.xyz);;"
-                    "OFF files (*.off);;"
-                    "PLY files (*.ply)";
-  }
-  else if(ds_name == "PCLPOINTCLOUD")
-  {
-    allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
-                    "XYZ files (*.xyz);;"
-                    "PCD files (*.pcd);;"
-                    "PLY files (*.ply)";
+    QString allExtensions;
+
+    if(ds_name == "CGALPOINTSET")
+    {
+      allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
+                      "XYZ files (*.xyz);;"
+                      "OFF files (*.off);;"
+                      "PLY files (*.ply)";
+    }
+    else if(ds_name == "PCLPOINTCLOUD")
+    {
+      allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
+                      "XYZ files (*.xyz);;"
+                      "PCD files (*.pcd);;"
+                      "PLY files (*.ply)";
+    }
+    else
+    {
+      QString defaultExtensions = "OBJ/OFF files (*.obj *.off);;"
+                                  "OBJ files (*.obj);;"
+                                  "OFF files (*.off);;"
+                                  "COFF files (*.coff);;"
+                                  "PLY files (*.ply);;"
+                                  "MSH files (*.msh)";
+
+      QString vtkExtensions = "VTK Files (*.vtk);;"
+                              "VTP files (*.vtp);;"
+                              "VTU files (*.vtu)";
+
+      allExtensions = defaultExtensions;
+#ifdef FEVV_USE_VTK
+      allExtensions += ";;" + vtkExtensions;
+#endif
+#ifdef FEVV_USE_FBX
+      allExtensions += ";;FBX files (*.fbx)";
+#endif
+    }
+
+    QString suffix;
+    QFileDialog::Option options = (QFileDialog::Option)0;
+
+#if defined(__linux__) || defined(__APPLE__)
+    options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
+#endif
+
+    QStringList files_qt =
+        QFileDialog::getOpenFileNames(this,
+                                      "Open (SPACE/TIME)",
+                                      /*openLocation*/ QDir::currentPath(),
+                                      allExtensions,
+                                      &suffix,
+                                      options);
+
+    // convert QStringList to standard type
+    for(auto qstr: files_qt)
+      files.push_back(qstr.toStdString());
   }
   else
   {
-    QString defaultExtensions = "OBJ/OFF files (*.obj *.off);;"
-                                "OBJ files (*.obj);;"
-                                "OFF files (*.off);;"
-                                "COFF files (*.coff);;"
-                                "PLY files (*.ply);;"
-                                "MSH files (*.msh)";
+    for(auto qstr: drag_files)
+      files.push_back(qstr.toStdString());
 
-    QString vtkExtensions = "VTK Files (*.vtk);;"
-                            "VTP files (*.vtp);;"
-                            "VTU files (*.vtu)";
-
-    allExtensions = defaultExtensions;
-#ifdef FEVV_USE_VTK
-    allExtensions += ";;" + vtkExtensions;
-#endif
-#ifdef FEVV_USE_FBX
-    allExtensions += ";;FBX files (*.fbx)";
-#endif
+    drag=false;
+    shift_drag=alt_drag=ctrl_drag=false;
   }
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files_qt =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  // convert QStringList to standard type
-  std::vector< std::string > files;
-  for(auto qstr: files_qt)
-    files.push_back(qstr.toStdString());
 
   // open files
   open_SPACE_TIME< HalfedgeGraph >(viewer, files);
@@ -910,13 +923,21 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
 inline void
 FEVV::SimpleWindow::on_actionOpen_triggered()
 {
+  bool shift_pressed, alt_pressed;
+
   // capture keyboard state
-  bool shift_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
-  bool alt_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
-  ctrl_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
+  if (drag==false)
+  {
+    shift_pressed = QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
+    alt_pressed = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
+    ctrl_pressed = QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
+  }
+  else
+  {
+    shift_pressed = shift_drag;
+    alt_pressed = alt_drag;
+    ctrl_pressed = ctrl_drag;
+  }
 
   // for 'only_pts' mode
   if(alt_pressed)
@@ -945,7 +966,12 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   // ask the user for the datastructure
   std::string mesh_type = chooseDatastructureMsgBox();
   if(mesh_type == "NONE")
+  {
+    drag=false;
+    shift_drag=alt_drag=ctrl_drag=false;
+
     return; // cancel pressed, aborting
+  }
 
   // open mesh(es)
 #ifdef FEVV_USE_CGAL
@@ -1357,9 +1383,11 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
          "<br>"
          "-<br>"
          "<br>"
-         "<b>Keys: </b><br>"
+         "<b>Keys:</b><br>"
          "<br>"
-         "Open in a new viewer -> <b>shift + OPEN</b><br>"
+         "<b>OPEN</b> in a new viewer:"
+         "<br>"
+         " -> <b>shift + 'Open' menu</b> (or <b>RIGHT mouse button</b> during 'drag & drop')<br>"
          "<br>"
          "Viewer -> <b>SELECT</b>         mesh : <b>shift</b><br>"
          "Viewer -> <b>TRANSLATE</b>      mesh : <b>T</b> (Translation "

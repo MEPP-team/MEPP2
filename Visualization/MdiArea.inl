@@ -8,10 +8,9 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-//#include "mdiarea.hxx"
-//#include "mainwindow.hxx"
-
 #include <QMimeData>
+
+#include <QUrl>
 
 #include <iostream>
 
@@ -22,36 +21,20 @@ inline FEVV::MdiArea::MdiArea(QWidget *parent) : QMdiArea(parent)
 	bType = bNone;
 }
 
-#if(0)
-inline void
-FEVV::MdiArea::paintEvent(QPaintEvent *paintEvent)
-{
-	QMdiArea::paintEvent(paintEvent);
-
-	// and now only paint your image here
-	QPainter painter(viewport());
- 
-	painter.fillRect(paintEvent->rect(), QColor(23, 74, 124));
-	//painter.drawImage(paintEvent->rect()/*QPoint(0, 0)*/, QImage("./mepp_background.bmp"));
- 
-	painter.end();
-}
-#endif
-
 inline void
 FEVV::MdiArea::dragEnterEvent(QDragEnterEvent *event)
 {
-    std::cout << "dragEnterEvent called" << std::endl;
-	if (event->mimeData()->hasUrls())	//hasFormat("text/uri-list")
+	//std::cout << "dragEnterEvent called" << std::endl;
+	if (event->mimeData()->hasUrls()) // hasFormat("text/uri-list")
 	{
+		//std::cout << "acceptProposedAction" << std::endl;
 		event->acceptProposedAction();
-        std::cout << "acceptProposedAction" << std::endl;
 
 // ---------------------------------------------------
 #ifdef __linux__
-	bType=bLeft;
-	if (event->mouseButtons() & Qt::RightButton)
-		bType=bRight;
+		bType=bLeft;
+		if (event->mouseButtons() & Qt::RightButton)
+			bType=bRight;
 #endif
 // ---------------------------------------------------
 	}
@@ -60,17 +43,12 @@ FEVV::MdiArea::dragEnterEvent(QDragEnterEvent *event)
 inline void
 FEVV::MdiArea::dropEvent(QDropEvent *event)
 {
-    std::cout << "dropEvent called" << std::endl;
-	int res = 0;
-	//Viewer *viewer = NULL;
-	//QList<QUrl> urls = event->mimeData()->urls();
+	//std::cout << "dropEvent called" << std::endl;
 
-	// test
-	if (m_mw->activeMdiChild() == 0)
-		std::cout << "No MdiChild" << std::endl;
-	else
-		std::cout << "MdiChild" << std::endl;
-	// test
+	// new
+	m_mw->activateWindow();
+	m_mw->raise();
+	// new
 
 // ---------------------------------------------------
 #ifdef __APPLE__
@@ -85,49 +63,55 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 #endif
 // ---------------------------------------------------
 
-#if(0)
+	QList<QUrl> urls;
+	urls = event->mimeData()->urls();
+
+	m_mw->drag_files.clear();
+
 	for (int i=0; i<urls.size(); i++)
 	{
 		QFileInfo fi(urls[i].toLocalFile());
 		QString ext = fi.suffix();
 
-		if ( (ext.toLower()=="off") || (ext.toLower()=="obj") || (ext.toLower()=="smf") || (ext.toLower()=="ply") || (ext.toLower()=="x3d")
-#ifdef WITH_ASSIMP
-				|| (ext.toLower()=="dae") || (ext.toLower()=="3ds") || (ext.toLower()=="lwo")
+		if ( (ext.toLower()=="obj") || (ext.toLower()=="off") || (ext.toLower()=="coff") || (ext.toLower()=="ply") || (ext.toLower()=="msh")
+#ifdef FEVV_USE_VTK
+				|| (ext.toLower()=="vtk") || (ext.toLower()=="vtp") || (ext.toLower()=="vtu")
 #endif
+#ifdef FEVV_USE_FBX
+				|| (ext.toLower()=="fbx")
+#endif
+// Point clouds
+#ifdef FEVV_USE_CGAL
+				|| (ext.toLower()=="xyz")// CGALPOINTSET
+#endif 
+#ifdef FEVV_USE_PCL
+				|| (ext.toLower()=="pcd")// PCLPOINTCLOUD
+#endif 
 				)
 		{
-			if (m_mw->activeMdiChild() == 0)
-				res = m_mw->loadFile(urls[i].toLocalFile(), Normal, NULL);
-			else
-			{
-				viewer = qobject_cast<Viewer *>(m_mw->activeMdiChild());
+			QString sFile = urls[i].toLocalFile();
+			m_mw->drag_files << sFile;
 
-				if (bType == bLeft)
-					res = m_mw->loadFile(urls[i].toLocalFile(), Normal, NULL);
-				else if (bType == bRight)
-				{
-	#ifdef __linux__
-					if (event->keyboardModifiers() & Qt::MetaModifier)
-	#else
-					if (event->keyboardModifiers() & Qt::AltModifier)
-	#endif
-						res = m_mw->addFile(viewer, urls[i].toLocalFile(), Time, NULL);
-					else
-						res = m_mw->addFile(viewer, urls[i].toLocalFile(), Space, NULL);
-				}
-			}
-
-			if (res)
-				break;
-
-			m_mw->writeSettings();
-			m_mw->readSettings();
+			//std::cout << "File: " << sFile.toStdString() << std::endl;
 		}
 	}
-	if (viewer)
-		viewer->recreateListsAndUpdateGL();
-#endif
 
-	event->acceptProposedAction();
+	if (! m_mw->drag_files.isEmpty())
+	{
+		m_mw->drag=true;
+
+		if (bType==bRight)
+			m_mw->shift_drag = true;
+		else
+			m_mw->shift_drag = false;
+		if (event->keyboardModifiers() & Qt::AltModifier)
+			m_mw->alt_drag = true;
+		if (event->keyboardModifiers() & Qt::ControlModifier)
+			m_mw->ctrl_drag = true;
+
+		//std::cout << "acceptProposedAction" << std::endl;
+		event->acceptProposedAction();
+
+		m_mw->on_actionOpen_triggered();
+	}
 }

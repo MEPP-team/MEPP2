@@ -45,6 +45,7 @@
 
 #include <QDebug>
 #include <QMenuBar>
+
 //#include <QMdiArea>
 
 // DirView
@@ -242,7 +243,7 @@ public:
 
 protected slots:
   void on_actionNew_triggered();
-  void on_actionOpen_triggered();
+  //void on_actionOpen_triggered();
   void on_actionSaveAs_triggered();
   void on_actionClose_triggered();
   void on_actionQuit_triggered();
@@ -300,6 +301,8 @@ public slots:
   void onModificationParam(std::string _pluginName, BasePlugin *_plugin);
   void onApplyButton();
 
+  void on_actionOpen_triggered();
+
 protected:
   QTimer timerQuit;
 
@@ -323,6 +326,14 @@ protected:
   bool ctrl_pressed = false;
 
   Ui::MainWindow ui; //<! Interface : QtDesigner
+
+public:
+  QStringList drag_files;
+
+  bool drag = false;
+  bool shift_drag = false;
+  bool alt_drag = false;
+  bool ctrl_drag = false;
 };
 
 } // namespace FEVV

@@ -12,19 +12,9 @@
 
 // DOC -> https://doc.qt.io/archives/qt-4.8/dnd.html
 
-//#ifndef Q_MOC_RUN  // See: https://bugreports.qt-project.org/browse/QTBUG-22829
-
-//#ifndef _MSC_VER
-//#pragma GCC diagnostic ignored "-Wuninitialized"
-//#endif
 #include <QMdiArea>
-//#ifndef _MSC_VER
-//#pragma GCC diagnostic warning "-Wuninitialized"
-//#endif
 
 #include <QDragEnterEvent>
-
-//#endif
 
 namespace FEVV {
 
@@ -70,14 +60,6 @@ class MdiArea : public QMdiArea
 		 * \param event an event.
 		 */
 		void dropEvent(QDropEvent *event);
-
-		/*!
-		 * \fn paintEvent(QPaintEvent *)
-		 * \brief paint Mepp mdiarea.
-		 *
-		 * \param paintEvent an event.
-		 */
-		//void paintEvent(QPaintEvent *);
 
 	private:
 		SimpleWindow* m_mw;	//!< mainwindow
