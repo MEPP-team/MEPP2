@@ -27,16 +27,21 @@ FEVV::MdiArea::dragEnterEvent(QDragEnterEvent *event)
 	//std::cout << "dragEnterEvent called" << std::endl;
 	if (event->mimeData()->hasUrls()) // hasFormat("text/uri-list")
 	{
-		//std::cout << "acceptProposedAction" << std::endl;
-		event->acceptProposedAction();
-
 // ---------------------------------------------------
 #ifdef __linux__
+		// new
+		m_mw->activateWindow();
+		m_mw->raise();
+		// new
+
 		bType=bLeft;
 		if (event->mouseButtons() & Qt::RightButton)
 			bType=bRight;
 #endif
 // ---------------------------------------------------
+
+		//std::cout << "acceptProposedAction" << std::endl;
+		event->acceptProposedAction();
 	}
 }
 
@@ -45,18 +50,23 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 {
 	//std::cout << "dropEvent called" << std::endl;
 
+// ---------------------------------------------------
+#ifdef __APPLE__
 	// new
 	m_mw->activateWindow();
 	m_mw->raise();
 	// new
 
-// ---------------------------------------------------
-#ifdef __APPLE__
 	bType=bLeft;
 	if (event->keyboardModifiers() & Qt::MetaModifier)
 		bType=bRight;
 #endif
 #ifdef _MSC_VER
+	// new
+	m_mw->activateWindow();
+	m_mw->raise();
+	// new
+
 	bType=bLeft;
 	if (event->mouseButtons() & Qt::RightButton)
 		bType=bRight;
@@ -100,10 +110,15 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	{
 		m_mw->drag=true;
 
+#ifdef _MSC_VER
 		if (bType==bRight)
 			m_mw->shift_drag = true;
 		else
 			m_mw->shift_drag = false;
+#else
+		if (event->keyboardModifiers() & Qt::ShiftModifier)
+			m_mw->shift_drag = true;
+#endif
 		if (event->keyboardModifiers() & Qt::AltModifier)
 			m_mw->alt_drag = true;
 		if (event->keyboardModifiers() & Qt::ControlModifier)
