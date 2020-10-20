@@ -92,7 +92,7 @@ and 'Ubuntu 18.04 LTS Bionic Beaver (amd64)', released on April 26, 2018:
   $ wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz
   $ tar -xzf pcl-1.9.1.tar.gz
   $ cd pcl-pcl-1.9.1 && mkdir build && cd build
-  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 ..
+  $ cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ENABLE_SSE=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 ..
   $ make
   $ make install && cd
 
@@ -185,7 +185,7 @@ All the dependencies of MEPP2 are already installed (see installation documentat
 
 ### Docker
 
-Soon, under construction...
+You can find various Dockerfiles for Linux in /Docker/Linux
 
 ## MacOS installation
 Various successful installations that we reported:
@@ -380,9 +380,11 @@ The automatically generated documentation is [available online](https://liris.cn
    $ software-properties-gtk
    ```
 
+* If you are under OSX Mojave (10.14), you have to upgrade to 10.14.4 (March 25, 2019) at least in order to avoid black blinking video problem
+
+## Known (old) issues
+
 * On Ubuntu 17.04 (04/13/17 Release): when using BUILD_USE_PCL=ON, you must complete your dependency installation stage with the following command:
    ```
    $ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpi.so /usr/lib/libmpi.so
    ```
-
-* If you are under OSX Mojave (10.14), you have to upgrade to 10.14.4 (March 25, 2019) at least in order to avoid black blinking video problem

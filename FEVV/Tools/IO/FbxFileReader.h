@@ -633,3 +633,4 @@ read_fbx_file(const std::string &filePath,
 } // namespace IO
 } // namespace FEVV
 
+#undef isnan // fix issue with std::isnan due to fbxmath.h
