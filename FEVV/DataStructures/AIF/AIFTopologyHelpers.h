@@ -375,7 +375,18 @@ public:
   static std::vector< vertex_descriptor >
   adjacent_vertices(vertex_descriptor vertex)
   {
-    return get_ordered_one_ring_of_adjacent_vertices(vertex);
+    std::vector< vertex_descriptor > adjacent_v;
+
+    auto incidentEdgesRange = incident_edges(vertex);
+    adjacent_v.reserve(incidentEdgesRange.size());
+    auto it = incidentEdgesRange.begin();
+    auto ite = incidentEdgesRange.end();
+    for (; it != ite; ++it)
+    {
+      adjacent_v.push_back(opposite_vertex(*it, vertex));
+    }
+
+    return adjacent_v;
   }
   /*!
    * 			Incidence relations with edges
