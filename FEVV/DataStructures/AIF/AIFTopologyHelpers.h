@@ -375,7 +375,18 @@ public:
   static std::vector< vertex_descriptor >
   adjacent_vertices(vertex_descriptor vertex)
   {
-    return get_ordered_one_ring_of_adjacent_vertices(vertex);
+    std::vector< vertex_descriptor > adjacent_v;
+
+    auto incidentEdgesRange = incident_edges(vertex);
+    adjacent_v.reserve(incidentEdgesRange.size());
+    auto it = incidentEdgesRange.begin();
+    auto ite = incidentEdgesRange.end();
+    for (; it != ite; ++it)
+    {
+      adjacent_v.push_back(opposite_vertex(*it, vertex));
+    }
+
+    return adjacent_v;
   }
   /*!
    * 			Incidence relations with edges
@@ -1524,10 +1535,16 @@ public:
     )
       return true;
     auto eRange = incident_edges(face);
+    edge_descriptor last = null_edge();
     for(auto eIt = eRange.begin(); eIt != eRange.end(); ++eIt)
     {
+      if (last == *eIt)
+        return true; // 2 consecutive identical edges
+
       if(is_degenerated_edge(*eIt))
         return true;
+
+      last = *eIt;
     }
     return false;
   }
@@ -5624,6 +5641,12 @@ public:
 
     for(; itF != facesRange.end(); ++itF, ++cpt)
     {
+      if (is_degenerated_face(*itF))
+      {
+        throw std::invalid_argument("AIFTopologyHelpers::halfedge(src, target, "
+          "m) -> an incident face is degenerated.");
+      }
+
       edge_descriptor next_good_e;
 
       auto edgesRange = (*itF)->GetIncidentEdges();
