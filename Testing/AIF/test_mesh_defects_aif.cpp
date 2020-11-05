@@ -151,7 +151,7 @@ static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 	auto iter_e = selected_edges_to_make_independent.begin(), iter_e_e = selected_edges_to_make_independent.end();
 	while (iter_e != iter_e_e)
 	{
-    if (std::find(set_removed_edges.begin(), set_removed_edges.end(), *iter_e) != set_removed_edges.end())
+    if (set_removed_edges.find(*iter_e) != set_removed_edges.end())
     {
       ++iter_e;
       continue;
@@ -574,7 +574,7 @@ static int process_one_mesh_file(	const std::string& input_file_path,
 	if (make_2_mani_not_2_mani == "y")
 	{
 		if (!ptr_mesh->isPropertyMap< AIFMeshT::face_type::ptr >("f:2_manifold_component_seg"))
-		{ // create a property map to store face colors if not already created
+		{ // create a property map to store face segment indices if not already created
 			ptr_mesh->AddPropertyMap< AIFMeshT::face_type::ptr, int >("f:2_manifold_component_seg");
 			if (!ptr_mesh->isPropertyMap< AIFMeshT::face_type::ptr >("f:2_manifold_component_seg"))
 				throw std::runtime_error("Failed to create face 2-manifold components property map.");
@@ -634,28 +634,36 @@ static int process_one_mesh_file(	const std::string& input_file_path,
 					{ // second phase (segmentation of faces incident to at least one complex edge)
 						std::set<face_descriptor> new_face_set;
 						// only keep the face with closest normal to current_f (except current_f itself)
-						auto iter_f = to_process.begin(), iter_f_end = to_process.end();
+						auto iter_f = to_process.begin(), iter_f_end = to_process.end(); // be careful: faces in to_process
+						                                                                 // are not necessarily adjacent
 						auto current_n = FEVV::Operators::calculate_face_normal(current_f, *ptr_mesh, pos_pm, gt);
 						bool first = true;
-						double best_val = -1.1;
-						face_descriptor best_f, other_f1 = AIFHelpers::null_face(), other_f2 = AIFHelpers::null_face();
+						double best_val = -1.1, val_f1 = -1.1, val_f2 = -1.1;
+						face_descriptor best_f = AIFHelpers::null_face(), 
+							              other_f1 = AIFHelpers::null_face(), 
+					                  other_f2 = AIFHelpers::null_face();
+						size_t cpt_neigh = 0;
 						for (; iter_f != iter_f_end; ++iter_f)
 						{
 							if (*iter_f == current_f)
 								continue;
-
+							if (!AIFHelpers::are_adjacent(current_f, *iter_f))
+								continue; // if the two faces do not share an edge continue
 							auto neighbor_n = FEVV::Operators::calculate_face_normal(*iter_f, *ptr_mesh, pos_pm, gt);
 							double tmp = gt.dot_product(current_n, neighbor_n);
 							if (first)
 							{
-								best_val = tmp;
+								best_val = val_f1 = tmp;
 								best_f = *iter_f;
 								first = false;
 								other_f1 = *iter_f;
+								++cpt_neigh;
 							}
 							else
 							{
+								++cpt_neigh;
 								other_f2 = *iter_f;
+								val_f2 = tmp;
 								if (tmp > best_val)
 								{
 									best_val = tmp;
@@ -663,17 +671,23 @@ static int process_one_mesh_file(	const std::string& input_file_path,
 								}
 							}
 						}
-
-						if (to_process.size() == 2)
+						if (best_f != AIFHelpers::null_face())
 						{
-							current_n = FEVV::Operators::calculate_face_normal(other_f1, *ptr_mesh, pos_pm, gt);
-							auto neighbor_n = FEVV::Operators::calculate_face_normal(other_f2, *ptr_mesh, pos_pm, gt);
-							double tmp = gt.dot_product(current_n, neighbor_n);
-							if (tmp < best_val)
+							if (cpt_neigh == 2)
+							{
+								current_n = FEVV::Operators::calculate_face_normal(other_f1, *ptr_mesh, pos_pm, gt);
+								auto neighbor_n = FEVV::Operators::calculate_face_normal(other_f2, *ptr_mesh, pos_pm, gt);
+								double tmp = gt.dot_product(current_n, neighbor_n);
+								if (tmp > best_val) // if the 2 neighboring faces better match together then take one of the two
+									new_face_set.insert(best_f);
+								else if(val_f1 > val_f2)
+									new_face_set.insert(other_f2);
+								else
+									new_face_set.insert(other_f1);
+							}
+							else
 								new_face_set.insert(best_f);
 						}
-						else
-							new_face_set.insert(best_f);
             to_process.swap(new_face_set);
 					}
 					///////////////////////////////////////////////////////////////
@@ -754,7 +768,7 @@ static int process_one_mesh_file(	const std::string& input_file_path,
 					second_phase_first_subphase = true;
 				}
 				else
-				{
+				{ // a new connected component with at least one face without complex incident edges
 					++current_id;
 					++nb_used_id;
 				}
