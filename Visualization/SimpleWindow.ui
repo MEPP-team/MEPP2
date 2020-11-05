@@ -35,14 +35,8 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen">
-     <property name="title">
-      <string>Open...</string>
-     </property>
-     <addaction name="actionOpen"/>
-    </widget>
     <addaction name="actionNew"/>
-    <addaction name="menuOpen"/>
+    <addaction name="actionOpen"/>
     <addaction name="actionSaveAs"/>
     <addaction name="actionClose"/>
     <addaction name="separator"/>
