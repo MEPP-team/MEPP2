@@ -8,7 +8,6 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-// #include "Visualization/SimpleWindow.h"
 #include "Visualization/Helpers/QtHelpers.h"
 #include "Visualization/Qt/ChooseDatastructureMsgBox.hpp"
 
@@ -40,6 +39,7 @@
 #include "Visualization/SimpleAdapterVisu.h" // for create an adapter (a child)
 #endif
 
+#include "Visualization/MdiArea.h"
 
 #define USE_MDI true
 
@@ -89,6 +89,12 @@ inline FEVV::SimpleWindow::~SimpleWindow()
     delete mdiArea;
   }
 
+  // DirView
+  delete tree;
+  delete proxyModel;
+  delete model;
+  delete dockDirView;
+
 #ifdef DEBUG_VISU2
   std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
 #endif
@@ -125,26 +131,6 @@ FEVV::SimpleWindow::attach(AdapterQt *_adapter, const bool _useMdiWindows)
 
   if(_useMdiWindows)
   {
-    if(mdiArea == nullptr) // Only once.
-    {
-      mdiArea = new QMdiArea(this);
-      // mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded ); //
-      // Qt::ScrollBarAlwaysOff mdiArea->setVerticalScrollBarPolicy(
-      // Qt::ScrollBarAsNeeded ); // Qt::ScrollBarAlwaysOff
-
-      ui.gridLayout->addWidget(mdiArea, 0, 0);
-
-      connect(
-          ui.actionTile, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
-      connect(ui.actionCascade,
-              SIGNAL(triggered()),
-              mdiArea,
-              SLOT(cascadeSubWindows()));
-
-      // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
-      // SLOT(updateMenus())); // TODO
-    }
-
     _adapter->setMinimumSize(300, 200); // default value is 300 x 200 pixels
     mdiArea->addSubWindow(_adapter);
   }
@@ -250,6 +236,87 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   ui.applyButton->setEnabled(false);
 
   ui.listParams->setVisible(false);
+
+  // ---
+
+  // MdiArea
+  if(USE_MDI)
+  {
+    mdiArea = new /*Q*/MdiArea(this);
+    // mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded ); //
+    // Qt::ScrollBarAlwaysOff mdiArea->setVerticalScrollBarPolicy(
+    // Qt::ScrollBarAsNeeded ); // Qt::ScrollBarAlwaysOff
+
+    ui.gridLayout->addWidget(mdiArea, 0, 0);
+
+    connect(
+        ui.actionTile, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
+    connect(ui.actionCascade,
+            SIGNAL(triggered()),
+            mdiArea,
+            SLOT(cascadeSubWindows()));
+
+    // connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
+    // SLOT(updateMenus())); // TODO
+
+    // only if MdiArea instead of QMdiArea
+    mdiArea->setAcceptDrops(true);
+    mdiArea->setMainWindow(this);
+    // only if MdiArea instead of QMdiArea
+  }
+
+  // ---
+
+  // DirView
+  dockDirView = new QDockWidget(tr(" Directory View"), this);
+  dockDirView->setObjectName("dockDirView");
+  dockDirView->setMinimumWidth(/*m_dockDirView_MinimumWidth*/320);
+  this->addDockWidget(Qt::RightDockWidgetArea, dockDirView);
+
+    model = new QFileSystemModel;
+    QStringList filters;
+    filters << "*.obj" << "*.off" << "*.coff" << "*.ply" << "*.msh"; // defaultExtensions
+#ifdef FEVV_USE_VTK
+    filters << "*.vtk" << "*.vtp" << "*.vtu"; // vtkExtensions
+#endif
+#ifdef FEVV_USE_FBX
+    filters << "*.fbx"; // FBX
+#endif
+// Point clouds
+#ifdef FEVV_USE_CGAL
+    filters << "*.xyz"; // CGALPOINTSET
+#endif 
+#ifdef FEVV_USE_PCL
+    filters << "*.pcd"; // PCLPOINTCLOUD
+#endif 
+    model->setNameFilters(filters);
+    model->setNameFilterDisables(false);
+
+    proxyModel = new QSortFilterProxyModel;
+    proxyModel->setSourceModel(model);
+
+    tree = new QTreeView();
+    tree->setModel(proxyModel); // model
+    tree->setSortingEnabled(true);
+
+    tree->setColumnHidden(2, true);
+    tree->setColumnWidth(0, 320);
+    tree->sortByColumn(0, Qt::AscendingOrder);
+    
+    //QString location("C:\\_mt_\\MEPP2\\MEPP2.mto-master\\Testing\\Data\\");
+    QModelIndex index = model->setRootPath(/*treeLocation*//*location*/model->rootPath());
+    QModelIndex proxyIndex = proxyModel->mapFromSource(index);
+
+    tree->scrollTo(proxyIndex);
+    tree->setExpanded(proxyIndex, true);
+    tree->setCurrentIndex(proxyIndex);
+
+    tree->setSelectionMode(QAbstractItemView::ExtendedSelection); // QAbstractItemView::MultiSelection
+    tree->setDragEnabled(true);
+
+  dockDirView->setWidget(tree);
+
+  // ---
 
   // time
   // TODO LATER - SPACE/TIME - FINDME
@@ -714,66 +781,78 @@ template< typename HalfedgeGraph >
 inline void
 FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
 {
-  std::string ds_name =
-      FEVV::getDatastructureName(static_cast< HalfedgeGraph * >(nullptr));
+  std::vector< std::string > files;
 
-  QString allExtensions;
+  if (!drag)
+  {
+    std::string ds_name =
+        FEVV::getDatastructureName(static_cast< HalfedgeGraph * >(nullptr));
 
-  if(ds_name == "CGALPOINTSET")
-  {
-    allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
-                    "XYZ files (*.xyz);;"
-                    "OFF files (*.off);;"
-                    "PLY files (*.ply)";
-  }
-  else if(ds_name == "PCLPOINTCLOUD")
-  {
-    allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
-                    "XYZ files (*.xyz);;"
-                    "PCD files (*.pcd);;"
-                    "PLY files (*.ply)";
+    QString allExtensions;
+
+    if(ds_name == "CGALPOINTSET")
+    {
+      allExtensions = "XYZ/OFF/PLY files (*.xyz *.off *.ply);;"
+                      "XYZ files (*.xyz);;"
+                      "OFF files (*.off);;"
+                      "PLY files (*.ply)";
+    }
+    else if(ds_name == "PCLPOINTCLOUD")
+    {
+      allExtensions = "XYZ/PCD/PLY files (*.xyz *.pcd *.ply);;"
+                      "XYZ files (*.xyz);;"
+                      "PCD files (*.pcd);;"
+                      "PLY files (*.ply)";
+    }
+    else
+    {
+      QString defaultExtensions = "OBJ/OFF files (*.obj *.off);;"
+                                  "OBJ files (*.obj);;"
+                                  "OFF files (*.off);;"
+                                  "COFF files (*.coff);;"
+                                  "PLY files (*.ply);;"
+                                  "MSH files (*.msh)";
+
+      QString vtkExtensions = "VTK Files (*.vtk);;"
+                              "VTP files (*.vtp);;"
+                              "VTU files (*.vtu)";
+
+      allExtensions = defaultExtensions;
+#ifdef FEVV_USE_VTK
+      allExtensions += ";;" + vtkExtensions;
+#endif
+#ifdef FEVV_USE_FBX
+      allExtensions += ";;FBX files (*.fbx)";
+#endif
+    }
+
+    QString suffix;
+    QFileDialog::Option options = (QFileDialog::Option)0;
+
+#if defined(__linux__) || defined(__APPLE__)
+    options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
+#endif
+
+    QStringList files_qt =
+        QFileDialog::getOpenFileNames(this,
+                                      "Open (SPACE/TIME)",
+                                      /*openLocation*/ QDir::currentPath(),
+                                      allExtensions,
+                                      &suffix,
+                                      options);
+
+    // convert QStringList to standard type
+    for(auto qstr: files_qt)
+      files.push_back(qstr.toStdString());
   }
   else
   {
-    QString defaultExtensions = "OBJ/OFF files (*.obj *.off);;"
-                                "OBJ files (*.obj);;"
-                                "OFF files (*.off);;"
-                                "COFF files (*.coff);;"
-                                "PLY files (*.ply);;"
-                                "MSH files (*.msh)";
+    for(auto qstr: drag_files)
+      files.push_back(qstr.toStdString());
 
-    QString vtkExtensions = "VTK Files (*.vtk);;"
-                            "VTP files (*.vtp);;"
-                            "VTU files (*.vtu)";
-
-    allExtensions = defaultExtensions;
-#ifdef FEVV_USE_VTK
-    allExtensions += ";;" + vtkExtensions;
-#endif
-#ifdef FEVV_USE_FBX
-    allExtensions += ";;FBX files (*.fbx)";
-#endif
+    drag=false;
+    shift_drag=alt_drag=ctrl_drag=false;
   }
-
-  QString suffix;
-  QFileDialog::Option options = (QFileDialog::Option)0;
-
-#if defined(__linux__) || defined(__APPLE__)
-  options = QFileDialog::DontUseNativeDialog; // PB under LINUX !?
-#endif
-
-  QStringList files_qt =
-      QFileDialog::getOpenFileNames(this,
-                                    "Open (SPACE/TIME)",
-                                    /*openLocation*/ QDir::currentPath(),
-                                    allExtensions,
-                                    &suffix,
-                                    options);
-
-  // convert QStringList to standard type
-  std::vector< std::string > files;
-  for(auto qstr: files_qt)
-    files.push_back(qstr.toStdString());
 
   // open files
   open_SPACE_TIME< HalfedgeGraph >(viewer, files);
@@ -844,13 +923,21 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
 inline void
 FEVV::SimpleWindow::on_actionOpen_triggered()
 {
+  bool shift_pressed, alt_pressed;
+
   // capture keyboard state
-  bool shift_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
-  bool alt_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
-  ctrl_pressed =
-      QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
+  if (drag==false)
+  {
+    shift_pressed = QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
+    alt_pressed = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
+    ctrl_pressed = QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
+  }
+  else
+  {
+    shift_pressed = shift_drag;
+    alt_pressed = alt_drag;
+    ctrl_pressed = ctrl_drag;
+  }
 
   // for 'only_pts' mode
   if(alt_pressed)
@@ -879,7 +966,12 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   // ask the user for the datastructure
   std::string mesh_type = chooseDatastructureMsgBox();
   if(mesh_type == "NONE")
+  {
+    drag=false;
+    shift_drag=alt_drag=ctrl_drag=false;
+
     return; // cancel pressed, aborting
+  }
 
   // open mesh(es)
 #ifdef FEVV_USE_CGAL
@@ -1169,15 +1261,15 @@ FEVV::SimpleWindow::on_actionChange_MDI_view_mode_triggered()
 {
   if(mdiArea)
   {
-    if(mdiArea->viewMode() == QMdiArea::SubWindowView)
+    if(mdiArea->viewMode() == /*Q*/MdiArea::SubWindowView)
     {
-      mdiArea->setViewMode(QMdiArea::TabbedView);
+      mdiArea->setViewMode(/*Q*/MdiArea::TabbedView);
       ui.actionChange_MDI_view_mode->setText(
           QObject::tr("Change MDI view mode (-> to subwindow view)"));
     }
     else
     {
-      mdiArea->setViewMode(QMdiArea::SubWindowView);
+      mdiArea->setViewMode(/*Q*/MdiArea::SubWindowView);
       ui.actionChange_MDI_view_mode->setText(
           QObject::tr("Change MDI view mode (-> to tabbed view)"));
     }
@@ -1278,33 +1370,40 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
       tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
-         "Copyright (c) 2016-2019 University of Lyon and CNRS (France)<br>"
+         "Copyright (c) 2016-2020 University of Lyon and CNRS (France)<br>"
          "<br>"
-         "LIRIS M2DISCO / MEPP-team<br>"
+         "LIRIS ORIGAMI / MEPP-team<br>"
          "<br>"
          "<b>GitHub: <a href=\"https://github.com/MEPP-team/MEPP2\">see online "
          "repository</a></b><br>"
+         "<br>"
          "<b>Developer documentation: <a "
          "href=\"http://liris.cnrs.fr/mepp/doc/nightly/\">see online "
          "help</a></b><br>"
          "<br>"
          "-<br>"
          "<br>"
-         "<b>Keys: </b><br>"
+         "<b>Keys:</b><br>"
          "<br>"
-         "Open in a new viewer -> <b>shift + OPEN</b><br>"
+         "<b>OPEN</b> in a new viewer:"
+         "<br>"
+         " -> <b>shift + 'Open' menu</b> (or <b>shift</b>* during 'drag & drop')<br>"
+         "<br>"
+         "<b>*</b> on Windows, <b>shift</b> is replaced by <b>RIGHT mouse button</b> during 'drag & drop'<br>"
+         "<br>"
          "<br>"
          "Viewer -> <b>SELECT</b>         mesh : <b>shift</b><br>"
+         "<br>"
          "Viewer -> <b>TRANSLATE</b>      mesh : <b>T</b> (Translation "
          "draggers must be shown, see toolbar)<br>"
          "Viewer -> <b>ROTATE</b>         mesh : <b>R</b> (Rotation draggers "
          "must be shown, see toolbar)<br>"
          "<br>"
          "Viewer -> <b>OSG</b>            instrumentation : <b>S</b><br>"
-         "<br>"
-         "<b>*</b> on MacOS, the <b>ctrl</b> key is replaced by the "
-         "<b>command</b> "
-         "key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>"));
+//         "<br>"
+//         "<b>*</b> on MacOS, the <b>ctrl</b> key is replaced by the "
+//         "<b>command</b> key"
+         "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>"));
 }
 
 inline void
@@ -2102,7 +2201,7 @@ FEVV::SimpleWindow::onItemChanged(QListWidgetItem *_item,
           // QMdiSubWindow FOCUS
           SimpleWindow *sw =
               dynamic_cast< SimpleWindow * >(w->getViewer()->getWindow());
-          QMdiArea *_mdiArea = sw->mdiArea;
+          /*Q*/MdiArea *_mdiArea = sw->mdiArea;
           if(_mdiArea)
           {
             BaseAdapterVisuQt *bavQt = dynamic_cast< BaseAdapterVisuQt * >(w);
@@ -2180,4 +2279,28 @@ FEVV::SimpleWindow::createNewViewer(void)
     this->getMdiArea()->tileSubWindows();
 
   return viewer;
+}
+
+inline
+QWidget * FEVV::SimpleWindow::activeMdiChild()
+{
+  if(mdiArea)
+  {
+    if(QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
+      return qobject_cast< QWidget * >(activeSubWindow->widget());
+  }
+  else
+  {
+    for(unsigned i = 0; i < adapters.size(); i++)
+    {
+      if(adapters[i]->isSelected())
+      {
+        BaseAdapterVisuQt *bavQt =
+            dynamic_cast< BaseAdapterVisuQt * >(adapters[i]);
+        return qobject_cast< QWidget * >(bavQt);
+      }
+    }
+  }
+
+  return 0;
 }

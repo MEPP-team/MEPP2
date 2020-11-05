@@ -239,8 +239,14 @@ endforeach()
 if( MSVC )
   if( QT4_FOUND_MEPP )
     set( QT_PLUGINS_DIR "${QTDIR}/plugins" )
+    set( QT_PLUGINS_DBG_DIR "${QTDIR}/plugins" )
   elseif( QT5_FOUND_MEPP )
     set( QT_PLUGINS_DIR "${QT5_DIR}/plugins" )
+    set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/plugins" )
+
+    #if( (DEFINED ENV{VCPKG}) OR (DEFINED VCPKG) )
+    #  set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/debug/plugins" )
+    #endif()
   endif()
 
   #---------------------------------------------------------------------------
@@ -259,7 +265,7 @@ if( MSVC )
   file( MAKE_DIRECTORY
     "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_OUTPUT_PATH}/Release/QtPlugins" )
   foreach( qtplugin ${qtplugin_dirs} )
-    file( COPY "${QT_PLUGINS_DIR}/${qtplugin}"
+    file( COPY "${QT_PLUGINS_DBG_DIR}/${qtplugin}"
       DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_OUTPUT_PATH}/Debug/QtPlugins" )
     file( COPY "${QT_PLUGINS_DIR}/${qtplugin}"
       DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${EXECUTABLE_OUTPUT_PATH}/Release/QtPlugins" )

@@ -45,7 +45,12 @@
 
 #include <QDebug>
 #include <QMenuBar>
-#include <QMdiArea>
+
+//#include <QMdiArea>
+
+// DirView
+#include <QFileSystemModel>
+#include <QSortFilterProxyModel>
 
 #include <boost/assert.hpp>
 
@@ -60,7 +65,9 @@
 
 namespace FEVV {
 
-class SimpleViewer; // NEW 21/07
+class SimpleViewer;
+
+class MdiArea; // NEW
 
 /**
  * \class SimpleWindow
@@ -159,7 +166,7 @@ public:
 
   void loadQtPlugins();
 
-  QMdiArea *getMdiArea() { return mdiArea; }
+  /*Q*/MdiArea *getMdiArea() { return mdiArea; }
 
   void sortModelList();
 
@@ -169,7 +176,6 @@ public:
 
   void updateActiveChildTitle();
 
-  // NEW 21/07
   // TODO : standardize template MeshT/HalfedgeGraph
   template< typename MeshT >
   void draw_or_redraw_mesh(/*const */ MeshT *mesh,
@@ -190,10 +196,11 @@ public:
 
   void centerHG(FEVV::SimpleViewer *viewer);
 
+  QWidget *activeMdiChild();
+
 #if 0 //TODO-elo-rm-?-ask_MTO
   template< typename HalfedgeGraph >
   void showSelectedHG(FEVV::SimpleViewer *viewer);
-  // NEW 21/07
 #endif
 
 protected:
@@ -207,29 +214,6 @@ protected:
                  const char *member,
                  QActionGroup *actionGroup = 0);
   // Plugins
-
-  QWidget *activeMdiChild()
-  {
-    if(mdiArea)
-    {
-      if(QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
-        return qobject_cast< QWidget * >(activeSubWindow->widget());
-    }
-    else
-    {
-      for(unsigned i = 0; i < adapters.size(); i++)
-      {
-        if(adapters[i]->isSelected())
-        {
-          BaseAdapterVisuQt *bavQt =
-              dynamic_cast< BaseAdapterVisuQt * >(adapters[i]);
-          return qobject_cast< QWidget * >(bavQt);
-        }
-      }
-    }
-
-    return 0;
-  }
 
   void closeEvent(QCloseEvent *event) override;
 
@@ -259,7 +243,7 @@ public:
 
 protected slots:
   void on_actionNew_triggered();
-  void on_actionOpen_triggered();
+  //void on_actionOpen_triggered();
   void on_actionSaveAs_triggered();
   void on_actionClose_triggered();
   void on_actionQuit_triggered();
@@ -317,6 +301,8 @@ public slots:
   void onModificationParam(std::string _pluginName, BasePlugin *_plugin);
   void onApplyButton();
 
+  void on_actionOpen_triggered();
+
 protected:
   QTimer timerQuit;
 
@@ -325,7 +311,13 @@ protected:
   QStringList pluginFileNames;
   QMenu *menuPlugins;
 
-  QMdiArea *mdiArea = nullptr;
+  /*Q*/MdiArea *mdiArea = nullptr;
+
+  // DirView
+  QDockWidget *dockDirView;
+  QFileSystemModel *model;
+  QSortFilterProxyModel *proxyModel;
+  QTreeView *tree;
 
   bool useMdiWindows = false;
 
@@ -334,6 +326,14 @@ protected:
   bool ctrl_pressed = false;
 
   Ui::MainWindow ui; //<! Interface : QtDesigner
+
+public:
+  QStringList drag_files;
+
+  bool drag = false;
+  bool shift_drag = false;
+  bool alt_drag = false;
+  bool ctrl_drag = false;
 };
 
 } // namespace FEVV

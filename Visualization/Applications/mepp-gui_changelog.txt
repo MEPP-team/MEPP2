@@ -1,3 +1,7 @@
+v0.14.0 - 05/11/2020 :
+ - add directory view on the right side of the HMI
+ - add drag & drop support for files opening
+
 v0.13.1 - 18/07/2020 :
  - bug fixes related to list refresh
 
