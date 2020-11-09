@@ -119,18 +119,6 @@ main(int argc, const char **argv)
     pmaps_bag_degraded["v:cmdm"] = cmdm_pmap_deg;
   }
 
-  if(FEVV::has_map(pmaps_bag_original, std::string("v:cmdm")))
-  {
-    cmdm_pmap_orig =
-        boost::any_cast< vertex_cmdm_map >(pmaps_bag_original.at("v:cmdm"));
-  }
-  else
-  {
-    cmdm_pmap_orig =
-        FEVV::make_vertex_property_map< FEVV::MeshSurface, double >(m_original);
-    pmaps_bag_original["v:cmdm"] = cmdm_pmap_orig;
-  }
-
   int nb_levels = 3;
   double cmdm_1_2, cmdm;//cmdm_2_1,
 
@@ -146,19 +134,6 @@ main(int argc, const char **argv)
                                        cmdm_pmap_deg,
                                        cmdm_1_2);
 
-  /*FEVV::Filters::process_CMDM_multires(m_original,
-                                       pm_original,
-                                       fnm_original,
-                                       pmaps_bag_original,
-                                       m_degraded,
-                                       pm_degrad,
-                                       fnm_degrad,
-                                       pmaps_bag_degraded,
-                                       nb_levels,
-                                       cmdm_pmap_orig,
-                                       cmdm_2_1);
-
-  cmdm = (cmdm_1_2 + cmdm_2_1) / 2.;*/
   cmdm = cmdm_1_2;
   std::cout << "Calculated CMDM = " << cmdm << std::endl;
 

@@ -22,9 +22,9 @@ target_link_libraries( test_cmdm
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                        )
-add_test(Test_CMDM_Fish
+add_test(Test_CMDM_Monkey
          test_cmdm
-         ${TESTING_DATA_DIR}/monkey.obj
+         ${TESTING_DATA_DIR}/monkey2.obj
          ${TESTING_DATA_DIR}/monkey_simplified.obj
          surfacemesh/monkey_simplified_cmdm.out.obj
          ${TESTING_REFOUTPUT_DIR}/CGAL/Surface_mesh/monkey_cmdm_reference.obj)
