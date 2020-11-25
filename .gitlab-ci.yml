@@ -295,7 +295,7 @@ linux - 20.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 20.04LTS [Release - CLANG - QT5 - CONF3 (ALL)]:
@@ -305,7 +305,7 @@ linux - 20.04LTS [Release - CLANG - QT5 - CONF3 (ALL)]:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 osx - Debug - QT4 - CONF3 (ALL):
@@ -315,7 +315,7 @@ osx - Debug - QT4 - CONF3 (ALL):
     - brew link qt@4
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
 osx - Release - QT4 - CONF3 (ALL):
@@ -325,7 +325,7 @@ osx - Release - QT4 - CONF3 (ALL):
     - brew link qt@4
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
 osx - Debug - QT5 - CONF3 (ALL):
@@ -335,7 +335,7 @@ osx - Debug - QT5 - CONF3 (ALL):
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
 osx - Release - QT5 - CONF3 (ALL):
@@ -345,7 +345,7 @@ osx - Release - QT5 - CONF3 (ALL):
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 3
+    - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
 windows - Debug - 2015 - QT4 - CONF3 (ALL):
