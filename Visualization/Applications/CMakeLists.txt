@@ -244,9 +244,9 @@ if( MSVC )
     set( QT_PLUGINS_DIR "${QT5_DIR}/plugins" )
     set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/plugins" )
 
-    #if( (DEFINED ENV{VCPKG}) OR (DEFINED VCPKG) )
-    #  set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/debug/plugins" )
-    #endif()
+    if( (DEFINED ENV{VCPKG}) OR (DEFINED VCPKG) )
+      set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/debug/plugins" )
+    endif()
   endif()
 
   #---------------------------------------------------------------------------
