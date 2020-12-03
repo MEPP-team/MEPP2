@@ -493,13 +493,13 @@ dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
     paths:
       - build/Visualization/Applications/Release
 
-dock-win2017 - Release - QT4 - CONF3 (ALL):
+dock-w2017 - Release - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt4-release
 
-dock-win2019 - Release - QT5 - CONF3 (ALL):
+dock-w2019 - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2
@@ -514,13 +514,13 @@ dock-win2019 - Release - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-dock-win2017-VCPKG - Release - QT5 - CONF3 (ALL):
+dock-w2017-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock-win2019-VCPKG - Release - QT5 - CONF3 (ALL):
+dock-w2019-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
