@@ -404,30 +404,30 @@ win2017 - Release - QT5 - CONF3 (ALL):
 # 16.04LTS - CONF3 (ALL) - ONLY 2 configs (to reduce the time) #
 ################################################################
 #
-linux - 16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,linux,16.04LTS
-  script:
-    - export CXX=clang++ CC=clang
-    - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 2 # now freeze with -j 3 !
-    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+#linux - 16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,linux,16.04LTS
+#  script:
+#    - export CXX=clang++ CC=clang
+#    - mkdir build; cd build
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - make -j 2 # now freeze with -j 3 !
+#    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux - 16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,linux,16.04LTS
-  script:
-    - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-    - make -j 2 # now freeze with -j 3 !
-    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+#linux - 16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,linux,16.04LTS
+#  script:
+#    - mkdir build; cd build
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - make -j 2 # now freeze with -j 3 !
+#    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 #####################
 # DOC - CONF3 (ALL) #
 #####################
 #
-osx - DOC [Release - QT5 - CONF3 (ALL)]:
+DOC - osx [Release - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,Mojave # not MojaveVM for the documentation (because of rsync)
   script:
@@ -514,13 +514,13 @@ dock-win2019 - Release - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-dock-vcpkg2017 - Release - QT5 - CONF3 (ALL):
+dock-win2017-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock-vcpkg2019 - Release - QT5 - CONF3 (ALL):
+dock-win2019-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
