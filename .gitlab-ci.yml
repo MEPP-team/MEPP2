@@ -80,7 +80,7 @@ osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - make -j 3
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -93,7 +93,7 @@ windows - Debug - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -106,7 +106,7 @@ windows - Release - 2015 - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=O
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -119,7 +119,7 @@ windows - Debug - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -214,7 +214,7 @@ osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - make -j 3
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -227,7 +227,7 @@ windows - Debug - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -240,7 +240,7 @@ windows - Release - 2015 - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -253,7 +253,7 @@ windows - Debug - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -348,7 +348,7 @@ osx - Release - QT5 - CONF3 (ALL):
     - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2015 - QT4 - CONF3 (ALL):
+win2015 - Debug - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -361,7 +361,7 @@ windows - Debug - 2015 - QT4 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2015 - QT4 - CONF3 (ALL):
+win2015 - Release - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -374,7 +374,7 @@ windows - Release - 2015 - QT4 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Debug - 2017 - QT5 - CONF3 (ALL):
+win2017 - Debug - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -387,7 +387,7 @@ windows - Debug - 2017 - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-windows - Release - 2017 - QT5 - CONF3 (ALL):
+win2017 - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -437,9 +437,9 @@ osx - DOC [Release - QT5 - CONF3 (ALL)]:
     - make -j 3 doc
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
-########################
-# DOCKER - CONF3 (ALL) #
-########################
+####################################
+# DOCKER - CONF3 (ALL) - 6 configs #
+####################################
 #
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
   script:
@@ -459,13 +459,13 @@ osx - DOC [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux 16.04 - GCC - Release - QT4 - CONF3 (ALL):
+dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/ubuntu-16.04-mepp2
   <<: *linux_build_definition_0x-gcc-qt4-release
 
-linux 16.04 - CLANG - Debug - QT5 - CONF3 (ALL):
+dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/ubuntu-16.04-mepp2
@@ -493,19 +493,19 @@ linux 16.04 - CLANG - Debug - QT5 - CONF3 (ALL):
     paths:
       - build/Visualization/Applications/Release
 
-win1809 - VS2017 - Release - QT4 - CONF3 (ALL):
+dock-win2017 - Release - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt4-release
 
-win1809 - VS2019 - Release - QT5 - CONF3 (ALL):
+dock-win2019 - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt5-release
 #
-.windows_build_template_0x - MSBuild - Release - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-vcpkg-release
+.windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL): &windows_build_definition_1x-powershell-vcpkg-release
   script:
     - $env:DOCKER_RUN='YES'
     - $env:VCPKG='YES'
@@ -514,14 +514,14 @@ win1809 - VS2019 - Release - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-w1809-VCPKG17 - Release - QT5 - CONF3 (ALL):
+dock-vcpkg2017 - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
-  <<: *windows_build_definition_0x-powershell-vcpkg-release
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-w1809-VCPKG19 - Release - QT5 - CONF3 (ALL):
+dock-vcpkg2019 - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
-  <<: *windows_build_definition_0x-powershell-vcpkg-release
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
