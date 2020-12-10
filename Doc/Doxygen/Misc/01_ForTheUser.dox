@@ -4,6 +4,17 @@
 
 @subpage GeneralIntroductionPage
 @subpage InstallWrapperPage
-@subpage CompressionValencePage
+
+@subpage FilterBooleanOperation
+@subpage FilterCMDM
+@subpage FilterCompressionValence
+@subpage FilterCopyGraph
+@subpage FilterMeshCurvature
+@subpage FilterDecompressionValence
+@subpage FilterJND
+@subpage FilterMSDM2
+@subpage FilterPointCloudCurvature
+@subpage FilterScaling
+@subpage FilterWeightedPCA
 
 */

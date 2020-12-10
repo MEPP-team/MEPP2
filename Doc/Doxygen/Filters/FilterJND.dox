@@ -1,0 +1,46 @@
+/**
+
+@page FilterJND  JND Filter
+
+
+@section FilterJNDDescriptionSection    Description
+
+This filter implements the just noticeable distortion (JND) model recently proposed
+by (Nader et al. 2016). This perceptually-driven model
+integrates mathematical models of contrast sensitivity function and
+contrast masking. It was calibrated using an experimental study of
+the properties of the human visual system. It can predict, for a given
+illumination and screen resolution, whether a change in local contrast
+on a 3D mesh, induced by a local geometric distortion, is visible
+or not.
+
+@section FilterJNDParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Screen width (pixels) | Characteristics of the visualization screen |
+| Screen height (pixels) | Characteristics of the visualization screen |
+| Screen size (cm) | Characteristics of the visualization screen |
+| Scene height (pixels) | Characteristics of the scene |
+| FOV (rad) | Field of view |
+| User distance (cm) | Characteristics of the scene |
+| Number of lights | Characteristics of the scene |
+| Log in color-map | Parameter for visualizing results |
+| Displacement of log | Parameter for visualizing results |
+
+@section FilterJNDDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh, AIF.
+
+@section FilterJNDRestrictionsSection   Restrictions
+
+The mesh has to be triangular and manifold.
+
+@section FilterJNDReferencesSection     References
+Just Noticeable Distortion Profile for Flat-Shaded 3D Mesh Surfaces, \n
+G. Nader, K. Wang, F. Hétroy-Wheeler, F. Dupont, \n
+IEEE Transactions on Visualization and Computer Graphics, 2016.
+\n
+\n
+
+*/

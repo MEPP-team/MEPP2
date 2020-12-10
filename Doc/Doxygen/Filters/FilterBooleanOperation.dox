@@ -1,0 +1,35 @@
+/**
+
+@page FilterBooleanOperation  Boolean Operation Filter
+
+
+@section FilterBooleanOperationDescriptionSection    Description
+
+This filter implements the fast and exact Boolean operation algorithm between
+3D meshes from (Leconte et al.,2010).\n
+This algorithm is able to compute the union, intersection and difference between two 3D meshes.
+
+@section FilterBooleanOperationParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Operation | Must be one of: UNION, INTERSECTION, SUBTRACTION. |
+
+@section FilterBooleanOperationDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC. \n
+OpenMesh and AIF are not supported.
+
+@section FilterBooleanOperationRestrictionsSection   Restrictions
+
+Two meshes must be opened; they both have to be triangular and manifold.
+
+@section FilterBooleanOperationReferencesSection    References
+
+Efficient Booleans for Polyhedra, \n
+Leconte, C., Barki, H., and Dupont, F., \n
+Technical report, 2010.
+
+\n
+\n
+*/
