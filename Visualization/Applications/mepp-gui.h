@@ -11,7 +11,7 @@
 #pragma once
 
 // -----------------------------------------------------------------------
-#define MEPP_VERSION "v0.14.0 - 05/11/2020"
+#define MEPP_VERSION "v0.14.1 - 10/12/2020"
 
 #define MAINWINDOW_TITLE QObject::tr("MEPP2 : 3D MEsh Processing Platform")
 
@@ -37,6 +37,6 @@
 //#define CGAL_VERSION_STR CGAL_str(CGAL_VERSION)
 //#endif
 
-#define ORGANIZATION QObject::tr("LIRIS")
-#define APPLICATION QObject::tr("MEPP2")
+//#define ORGANIZATION QObject::tr("LIRIS")
+//#define APPLICATION QObject::tr("MEPP2")
 // -----------------------------------------------------------------------
