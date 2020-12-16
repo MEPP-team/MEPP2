@@ -541,8 +541,8 @@ dock-w2019-VCPKG - Release - QT5 - CONF3 (ALL):
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-  dock-w2019-VCPKG - Debug - QT5 - CONF3 (ALL):
-  tags:
-    - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2019-ltsc2019-mepp2-vcpkg
-  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+dock-w2019-VCPKG - Debug - QT5 - CONF3 (ALL):
+tags:
+  - MEPP2,windows,DOCKER-WIN
+image: mtola/vs2019-ltsc2019-mepp2-vcpkg
+<<: *windows_build_definition_1x-powershell-vcpkg-debug
