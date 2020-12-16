@@ -514,14 +514,35 @@ dock-w2019 - Release - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
+.windows_build_template_1x - MSBuild - Debug - QT5 - CONF3 (ALL): &windows_build_definition_1x-powershell-vcpkg-debug
+  script:
+    - $env:DOCKER_RUN='YES'
+    - $env:VCPKG='YES'
+    - md build; cd build
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure
+
 dock-w2017-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
+dock-w2017-VCPKG - Debug - QT5 - CONF3 (ALL):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2017-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+
 dock-w2019-VCPKG - Release - QT5 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
+
+  dock-w2019-VCPKG - Debug - QT5 - CONF3 (ALL):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
