@@ -313,7 +313,7 @@ v1 ---------- v0 ----------- v3             v7 --------- v8
   assert((TopoHelpers::is_one_ring_2_manifold(v11) == false));
 
   std::cout << "testing  is_one_ring_2_manifold(v12)" << std::endl;
-  assert((TopoHelpers::is_one_ring_2_manifold(v12) == true));
+  assert((TopoHelpers::is_one_ring_2_manifold(v12) == false));
 
   std::cout << "Test passed.\n";
   return 0; // all tests passed

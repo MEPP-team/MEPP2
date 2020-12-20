@@ -70,23 +70,40 @@ namespace Comparator
 		  return e_v1_deg < e_v2_deg ;
 	  
       e_v1_deg=e_v2_deg=0;
+      decltype(e_v1_deg) e_v1_min_deg = 1000, e_v1_max_deg = 0, e_v2_min_deg = 1000, e_v2_max_deg = 0;
       auto iter_e_v = e_v1.first;
 	  for( ; iter_e_v!=e_v1.second; ++iter_e_v)
 	  {
-		  auto e_vopp = (source(*iter_e_v, _g)!=v1)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
-		  e_v1_deg += std::distance(e_vopp.first, e_vopp.second);
+        auto e_vopp = (source(*iter_e_v, _g)!=v1)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
+        auto current_deg = std::distance(e_vopp.first, e_vopp.second);
+        if (current_deg < e_v1_min_deg)
+          e_v1_min_deg = current_deg;
+        if (current_deg > e_v1_max_deg)
+          e_v1_max_deg = current_deg;
+        e_v1_deg += current_deg;
 	  }
 	  
 	  iter_e_v = e_v2.first;
 	  for( ; iter_e_v!=e_v2.second; ++iter_e_v)
 	  {
-		  auto e_vopp = (source(*iter_e_v, _g)!=v2)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
-		  e_v2_deg += std::distance(e_vopp.first, e_vopp.second);
+        auto e_vopp = (source(*iter_e_v, _g)!=v2)?in_edges(source(*iter_e_v, _g),_g):in_edges(target(*iter_e_v, _g),_g);
+        auto current_deg = std::distance(e_vopp.first, e_vopp.second);
+        if (current_deg < e_v2_min_deg)
+          e_v2_min_deg = current_deg;
+        if (current_deg > e_v2_max_deg)
+          e_v2_max_deg = current_deg;
+        e_v2_deg += current_deg;
 	  }
 	  
 	  if( e_v1_deg != e_v2_deg)
         return e_v1_deg < e_v2_deg ;
 	  
+      if (e_v1_min_deg != e_v2_min_deg)
+        return e_v1_min_deg < e_v2_min_deg;
+
+      if (e_v1_max_deg != e_v2_max_deg)
+        return e_v1_max_deg < e_v2_max_deg;
+
 	  return false;
     }
   };
