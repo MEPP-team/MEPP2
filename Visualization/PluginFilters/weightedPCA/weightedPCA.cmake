@@ -34,8 +34,6 @@ if (BUILD_USE_GUI_WeightedPCAPlugin)
       SHARED
       "${CMAKE_CURRENT_LIST_DIR}/weightedPCA_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/weightedPCA_dialog.cpp"
-      "${CMAKE_CURRENT_LIST_DIR}/../../../FEVV/Filters/Generic/PointCloud/WeightedPCANormals/core.cpp"
-      "${CMAKE_CURRENT_LIST_DIR}/../../../FEVV/Filters/Generic/PointCloud/WeightedPCANormals/cloud.cpp"
       ${WeightedPCA_Qt_Plugin_SRC}
       ${osgQt_SRC} # from viewer
       )

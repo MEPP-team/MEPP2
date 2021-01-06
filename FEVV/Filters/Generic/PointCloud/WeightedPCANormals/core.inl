@@ -24,11 +24,8 @@
 #pragma warning(disable: 4267 4244)
 #endif
 
-
-#include "core.h"
-
 //Extract neighbors
-void CApp::selectNeighborsKnn(int N)
+inline void CApp::selectNeighborsKnn(int N)
 {
     n_neigh_ = N;
     std::vector<float> dis;
@@ -63,7 +60,7 @@ void CApp::selectNeighborsKnn(int N)
 }
 
 //Flann search (internally used in selectNeighborsKnn )
-void CApp::SearchFLANNTreeKnn(flann::Index<flann::L2<float>>* index,
+inline void CApp::SearchFLANNTreeKnn(flann::Index<flann::L2<float>>* index,
                             Eigen::Vector3f& input,
                             std::vector<int>& indices,
                             std::vector<float>& dists,
@@ -105,20 +102,20 @@ void CApp::SearchFLANNTreeKnn(flann::Index<flann::L2<float>>* index,
 
 
 //Fills dist_ with distances of the neighbors from current PCA reference point
-void CApp::ComputeDist()
+inline void CApp::ComputeDist()
 {
     dist_ = neighborhood_ - Eigen::VectorXf::Ones(n_neigh_) * pt.transpose();
 }
 
 //Computes 3rd eigen vector of a covariance matrix
-Eigen::Vector3f CApp::getThirdEigenVector(Eigen::Matrix3f& C)
+inline Eigen::Vector3f CApp::getThirdEigenVector(Eigen::Matrix3f& C)
 {
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> es(C);
     return es.eigenvectors().col(0);
 }
 
 //first initialization with PCA + initialize mu_lim and tau
-void CApp::init1()
+inline void CApp::init1()
 {
     //PCA
     Eigen::MatrixXf centered_points (n_neigh_, 3);
@@ -161,13 +158,13 @@ void CApp::init1()
     limMuPos_ = emax*emax;
 }
 
-void CApp::reinitFirst0()
+inline void CApp::reinitFirst0()
 {
     normal = *normalFirst0_;
 }
 
 //second initialization -> perpendicular to edge and n01
-void CApp::init2()
+inline void CApp::init2()
 {
     normal = *normalFirst2_;
     if(abs(normalFirst0_->dot(*normalFirst2_))<0.996)
@@ -189,14 +186,14 @@ void CApp::init2()
 }
 
 //First weighting -> all weights in 1
-void CApp::init_weight()
+inline void CApp::init_weight()
 {
     for (int i = 0; i<weights_.size(); ++i)
         weights_[i] = 1;
 }
 
 //Checks if point has neigborhood on edge (use tau)
-bool CApp::isOnEdge()
+inline bool CApp::isOnEdge()
 {
     Eigen::Vector3f pt_moy = Eigen::Vector3f::Zero();
     for (int c = 0; c < n_neigh_; c++)
@@ -214,14 +211,14 @@ bool CApp::isOnEdge()
 }
 
 //Actualizes weights
-void CApp::ComputeWeights()
+inline void CApp::ComputeWeights()
 {
     for (int c = 0; c < n_neigh_; c++)
         weights_(c) = pow(mu_/(mu_+pow(normal.dot(dist_.row(c)),2)),2); //Scaled version of Geman McClure estimator
 }
 
 //Compute maximal residual
-float CApp::GetMaxError()
+inline float CApp::GetMaxError()
 {
     float er_max = 0;
     float er_proj;
@@ -235,7 +232,7 @@ float CApp::GetMaxError()
 }
 
 //Rough estimation
-void CApp::Optimize(bool first)
+inline void CApp::Optimize(bool first)
 {
     ComputeDist();
 
@@ -284,7 +281,7 @@ void CApp::Optimize(bool first)
 }
 
 //Refinement
-void CApp::OptimizePos(bool first, float thresh_weight)
+inline void CApp::OptimizePos(bool first, float thresh_weight)
 {
     if(!first)
     {
@@ -369,7 +366,7 @@ void CApp::OptimizePos(bool first, float thresh_weight)
 }
 
 //orient normal to the exterior of the edge
-void CApp::orient()
+inline void CApp::orient()
 {
     float moy_err = 0;
     for (int c = 0; c < n_neigh_; c++)
@@ -379,24 +376,24 @@ void CApp::orient()
         normal = -normal;
 }
 
-bool CApp::isSecondOption()
+inline bool CApp::isSecondOption()
 {
     return (abs(normalFirst1_->dot(*normalSecond1_))<likelihood_threshold);
 }
 
-void CApp::setRef( int ref)
+inline void CApp::setRef( int ref)
 {
     ref_ = ref;
     pt = pointcloud_->row(ref);
     ptRef_ = pt;
 }
 
-void CApp::reinitPoint()
+inline void CApp::reinitPoint()
 {
     setPoint(ptRef_);
 }
 
-void CApp::evaluate(int *impact, float *mean, float weight_tresh)
+inline void CApp::evaluate(int *impact, float *mean, float weight_tresh)
 {
     float imp = 0;
     for(int c = 0; c<n_neigh_; ++c)
@@ -409,19 +406,19 @@ void CApp::evaluate(int *impact, float *mean, float weight_tresh)
     *mean = (pt-ptRef_).dot(normal);
 }
 
-void CApp::setPoint(Eigen::Vector3f point)
+inline void CApp::setPoint(Eigen::Vector3f point)
 {
     pt = point;
     ComputeDist();
 }
 
 //Check if result contains nan
-bool CApp::isNan()
+inline bool CApp::isNan()
 {
     return (finalNormal_(0) != finalNormal_(0) || finalPos_(0) != finalPos_(0));
 }
 
-void CApp::select_normal()
+inline void CApp::select_normal()
 {
     int min_points = (int)(min_points_fact*(float)neighborhood_.rows());
     if( moyErrorFirst_<moyErrorSecond_ && impactFirst_>min_points )

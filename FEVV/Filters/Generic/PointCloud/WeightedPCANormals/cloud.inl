@@ -24,15 +24,12 @@
 #pragma warning(disable: 4267 4244)
 #endif
 
-
-#include "cloud.h"
-
 #include <pcl/search/impl/search.hpp>
 #include <pcl/features/normal_3d.h>
 #include <pcl/kdtree/kdtree_flann.h>
 
 // Reads file and puts it into pointcloud_
-int RawCloud::ReadCSV(std::string filepath)
+inline int RawCloud::ReadCSV(std::string filepath)
 {
     int n = 0;
     vector<Eigen::Vector3f> res;
@@ -95,7 +92,7 @@ int RawCloud::ReadCSV(std::string filepath)
 }
 
 //builds tree to extract neighbors
-void RawCloud::buildTree()
+inline void RawCloud::buildTree()
 {
     int dim = pointcloud_->cols();
     int pc_size = pointcloud_->rows();
@@ -119,7 +116,7 @@ void RawCloud::buildTree()
 }
 
 //computes resolution as mean distance between nearest neighbors
-float RawCloud::getResolution ()
+inline float RawCloud::getResolution ()
 {
   float res = 0.0;
 
@@ -130,7 +127,7 @@ float RawCloud::getResolution ()
   return res;
 }
 
-void RawCloud::rescale ()
+inline void RawCloud::rescale ()
 {
     float resolution = getResolution();
     std::cout<<"current resolution : "<<resolution<<std::endl<<std::endl;
@@ -138,7 +135,7 @@ void RawCloud::rescale ()
 }
 
 // Gets first neighbor distance
-float RawCloud::getNearestNeighborDistance(Eigen::Vector3f pt)
+inline float RawCloud::getNearestNeighborDistance(Eigen::Vector3f pt)
 {
     std::vector<float> dis;
     std::vector<int> neigh;
@@ -152,7 +149,7 @@ float RawCloud::getNearestNeighborDistance(Eigen::Vector3f pt)
 
 
 //Search function in the tree to get the nearest neighbors
-void RawCloud::SearchFLANNTree(flann::Index<flann::L2<float>>* index,
+inline void RawCloud::SearchFLANNTree(flann::Index<flann::L2<float>>* index,
                             Eigen::Vector3f& input,
                             std::vector<int>& indices,
                             std::vector<float>& dists,

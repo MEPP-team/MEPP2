@@ -27,22 +27,6 @@
 #include "core.h"
 #include "cloud.h"
 
-#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
-  // for FEVV::PCLPointCloud
-#include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
-  // for boost::graph_traits< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
-  // for FEVV::RetrieveKernel< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
-  // for get(FEVV::PCLPointCloudPointMap&, ...)
-#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
-  // for FEVV::PMap_traits< FEVV::PCLPointCloud >
-
-#include "FEVV/Filters/PCL/pcl_point_cloud_reader.hpp"
-  // for FEVV::Filters::read_mesh< FEVV::PCLPointCloud >
-#include "FEVV/Filters/PCL/pcl_point_cloud_writer.hpp"
-  // for FEVV::Filters::write_mesh< FEVV::PCLPointCloud >
-
 namespace FEVV {
 namespace Filters {
 
@@ -62,7 +46,7 @@ void compute_weighted_pca(const PointCloud& pointCloud,
     /// Convert generic cloud into raw cloud
     /// Raw cloud is the structure used by the original normal computation algorithm
     RawCloud c;
-    int cloud_size = num_vertices(pointCloud);
+    int cloud_size = static_cast<int>(num_vertices(pointCloud));
     auto iterator_pair = vertices(pointCloud);
     auto vi = iterator_pair.first;
     auto vi_end = iterator_pair.second;

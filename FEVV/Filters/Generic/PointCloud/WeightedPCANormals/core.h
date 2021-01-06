@@ -28,7 +28,17 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4267 4244)
+#endif
+
 #include <flann/flann.hpp>
+
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
 
 using namespace std;
 
@@ -236,3 +246,5 @@ private:
     float er_max;
     float mu_init2_;
 };
+
+#include "core.inl"

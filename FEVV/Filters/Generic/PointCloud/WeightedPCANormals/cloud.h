@@ -28,23 +28,17 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4267 4244)
+#endif
+
 #include <flann/flann.hpp>
 
-#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
-  // for FEVV::PCLPointCloud
-#include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
-  // for boost::graph_traits< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
-  // for FEVV::RetrieveKernel< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
-  // for get(FEVV::PCLPointCloudPointMap&, ...)
-#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
-  // for FEVV::PMap_traits< FEVV::PCLPointCloud >
-
-#include "FEVV/Filters/PCL/pcl_point_cloud_reader.hpp"
-  // for FEVV::Filters::read_mesh< FEVV::PCLPointCloud >
-#include "FEVV/Filters/PCL/pcl_point_cloud_writer.hpp"
-  // for FEVV::Filters::write_mesh< FEVV::PCLPointCloud >
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
 
 using namespace std;
 
@@ -72,3 +66,5 @@ private:
                                 int nn);
 
 };
+
+#include "cloud.inl"
