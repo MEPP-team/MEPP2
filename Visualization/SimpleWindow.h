@@ -309,6 +309,12 @@ protected slots:
   void aboutPlugins();
   // Plugins
 
+  /*!
+   * \fn openRecentFile()
+   * \brief Open a recent file (from menu).
+   */
+  void openRecentFile();
+
 public slots:
   void onModificationParam(std::string _pluginName, BasePlugin *_plugin);
   void onApplyButton();
@@ -334,6 +340,36 @@ protected:
   QString treeLocation, openLocation, saveLocation;
   int m_dockDirView_MinimumWidth;
 
+  // ---
+
+  /*!
+   * \fn setCurrentFile()
+   * \brief Set a mesh filename in recent files list.
+   *
+   * \param fileName filename of the mesh.
+   */
+  void setCurrentFile(const QString &fileName);
+  /*!
+   * \fn strippedName(const QString &fullFileName)
+   * \brief Return the filename of a mesh without path.
+   *
+   * \param fullFileName filename of the mesh.
+   * \return QString.
+   */
+  QString strippedName(const QString &fullFileName);
+
+  /*!
+   * \fn updateRecentFileActions()
+   * \brief Update Mepp recent files list.
+   */
+  void updateRecentFileActions();
+
+  QAction *separatorAct_menuFile; //!< separator in file menu
+  enum { MaxRecentFiles = 9 }; //!< only 9 mesh files in recent list
+  QAction *recentFileActs[MaxRecentFiles]; //!< tab of mesh files recent list
+
+  // ---
+
   bool useMdiWindows = false;
 
   bool open_only_pts_mode = false;
@@ -349,6 +385,8 @@ public:
   bool shift_drag = false;
   bool alt_drag = false;
   bool ctrl_drag = false;
+
+  bool recent = false;
 };
 
 } // namespace FEVV

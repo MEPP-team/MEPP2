@@ -101,6 +101,11 @@ inline FEVV::SimpleWindow::~SimpleWindow()
   delete model;
   delete dockDirView;
 
+  for (int i = 0; i < MaxRecentFiles; ++i)
+  {
+    delete recentFileActs[i];
+  }
+
 #ifdef DEBUG_VISU2
   std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
 #endif
@@ -323,6 +328,22 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
     tree->setDragEnabled(true);
 
   dockDirView->setWidget(tree);
+
+  // ---
+
+  for (int i = 0; i < MaxRecentFiles; ++i)
+  {
+    recentFileActs[i] = new QAction(this);
+    recentFileActs[i]->setVisible(false);
+    connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
+
+  QMenu *menuFile = ui.menuFile;
+  separatorAct_menuFile = menuFile->addSeparator();
+  for (int i = 0; i < MaxRecentFiles; ++i)
+    menuFile->addAction(recentFileActs[i]);
+
+  updateRecentFileActions();
 
   // ---
 
@@ -910,6 +931,8 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
       ++m;
 
       openLocation = QFileInfo(QString::fromStdString(filename)).absolutePath();
+
+      setCurrentFile(QString::fromStdString(filename));
     }
     catch(const std::exception& e)
     {
@@ -936,7 +959,7 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   bool shift_pressed, alt_pressed;
 
   // capture keyboard state
-  if (drag==false)
+  if ( (drag==false) || ((drag==true) && (recent==true)) )
   {
     shift_pressed = QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
     alt_pressed = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
@@ -980,6 +1003,8 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
     drag=false;
     shift_drag=alt_drag=ctrl_drag=false;
 
+    recent=false;
+
     return; // cancel pressed, aborting
   }
 
@@ -1011,6 +1036,68 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
 #endif
 }
 
+
+inline void
+FEVV::SimpleWindow::openRecentFile()
+{
+  QAction *action = qobject_cast<QAction *>(sender());
+  if (action)
+  {
+    // HERE we use 'drag' and 'drag_files' ONLY for convenience...
+    // BUT we ADD also 'recent' flag
+    drag=recent=true;
+
+    drag_files.clear();
+    drag_files << action->data().toString();
+
+    on_actionOpen_triggered();
+  }
+}
+
+inline void
+FEVV::SimpleWindow::setCurrentFile(const QString &fileName)
+{
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat);
+  QStringList files = settings.value("recentFileList").toStringList();
+
+  QString unixFileName = QDir::fromNativeSeparators(fileName);
+
+  files.removeAll(unixFileName);
+  files.prepend(unixFileName);
+  while (files.size() > MaxRecentFiles)
+    files.removeLast();
+
+  settings.setValue("recentFileList", files);
+
+  updateRecentFileActions();
+}
+
+inline QString
+FEVV::SimpleWindow::strippedName(const QString &fullFileName)
+{
+  return QFileInfo(fullFileName).fileName();
+}
+
+inline void
+FEVV::SimpleWindow::updateRecentFileActions()
+{
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat);
+  QStringList files = settings.value("recentFileList").toStringList();
+
+  int numRecentFiles = qMin(files.size(), (int)MaxRecentFiles);
+
+  for (int i = 0; i < numRecentFiles; ++i)
+  {
+    QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+    recentFileActs[i]->setText(text);
+    recentFileActs[i]->setData(files[i]);
+    recentFileActs[i]->setVisible(true);
+  }
+  for (int j = numRecentFiles; j < MaxRecentFiles; ++j)
+    recentFileActs[j]->setVisible(false);
+
+  separatorAct_menuFile->setVisible(numRecentFiles > 0);
+}
 
 inline
 void
@@ -1382,7 +1469,7 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
       tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
-         "Copyright (c) 2016-2020 University of Lyon and CNRS (France)<br>"
+         "Copyright (c) 2016-2021 University of Lyon and CNRS (France)<br>"
          "<br>"
          "LIRIS ORIGAMI / MEPP-team<br>"
          "<br>"
