@@ -281,7 +281,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   // ---
 
   // DirView
-  dockDirView = new QDockWidget(tr(" Directory View"), this);
+  dockDirView = new QDockWidget(QObject::tr(" Directory View"), this);
   dockDirView->setObjectName("dockDirView");
   dockDirView->setMinimumWidth(m_dockDirView_MinimumWidth);
   this->addDockWidget(Qt::RightDockWidgetArea, dockDirView);
@@ -1088,7 +1088,7 @@ FEVV::SimpleWindow::updateRecentFileActions()
 
   for (int i = 0; i < numRecentFiles; ++i)
   {
-    QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+    QString text = QObject::tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
     recentFileActs[i]->setText(text);
     recentFileActs[i]->setData(files[i]);
     recentFileActs[i]->setVisible(true);
@@ -1465,8 +1465,8 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
 {
   QMessageBox::about(
       this,
-      tr("About MEPP2 / Help"),
-      tr("<b>MEPP2</b><br>"
+      QObject::tr("About MEPP2 / Help"),
+      QObject::tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
          "Copyright (c) 2016-2021 University of Lyon and CNRS (France)<br>"
