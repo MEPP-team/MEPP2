@@ -1032,13 +1032,12 @@ public:
    */
   static bool is_degenerated_edge(edge_descriptor edge)
   {
-    return edge == null_edge() || // a null edge is degenerated
-           edge->get_first_vertex() ==
-               edge->get_second_vertex() || // null-length edge are
+    return (edge == null_edge()) // a null edge is degenerated
+            || (edge->get_first_vertex() == edge->get_second_vertex()) // null-length edge are
                                             // degenereated, thus edge with 2
                                             // identical vertices are too.
-           is_degenerated_vertex(edge->get_first_vertex()) ||
-           is_degenerated_vertex(edge->get_second_vertex());
+            || (edge->get_first_vertex() == null_vertex()) 
+            || (edge->get_second_vertex() == null_vertex());
   }
 
   /*!
@@ -4213,14 +4212,22 @@ public:
       return false;
 
     std::set< edge_descriptor > starEdges = get_unordered_one_ring_edges(v);
+    std::set< vertex_descriptor > starVertices;
     auto its = starEdges.begin();
     auto itse = starEdges.end();
-    for(; its != itse; ++its)
+    for (; its != itse; ++its)
     {
-      if(is_complex_edge(*its))
-        return false;
+      starVertices.insert((*its)->get_first_vertex());
+      starVertices.insert((*its)->get_second_vertex());
     }
 
+    auto itvs = starVertices.begin();
+    auto itvse = starVertices.end();
+    for (; itvs != itvse; ++itvs)
+    {
+      if (!is_2_manifold_vertex(*itvs))
+        return false;
+    }
     return true;
   }
   // End of one-ring stuff
