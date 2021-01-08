@@ -1,15 +1,18 @@
+v0.14.1 (TAGGED) - 07/01/2021 :
+ - add settings support : folder locations (tree/open/save), mainwindow (pos, size, state), recent files list...
+
 v0.14.0 - 05/11/2020 :
  - add directory view on the right side of the HMI
  - add drag & drop support for files opening
 
-v0.13.1 - 18/07/2020 :
+v0.13.1 (TAGGED) - 18/07/2020 :
  - bug fixes related to list refresh
 
 v0.13.0 - 20/03/2020 :
  - add support for CustomVectors (Vertices), can be used from plugins (sample in CurvaturePlugin for Min and Max directions)
  - improve some icons for dark mode
 
-v0.12.1 - 17/01/2020 :
+v0.12.1 (TAGGED) - 17/01/2020 :
  - bug fixes related to point clouds
  - activate PCL 1.9.1
 

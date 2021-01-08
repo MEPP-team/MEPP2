@@ -109,6 +109,7 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	if (! m_mw->drag_files.isEmpty())
 	{
 		m_mw->drag=true;
+		m_mw->recent=false; // here only for 'protection'
 
 #ifdef _MSC_VER
 		if (bType==bRight)

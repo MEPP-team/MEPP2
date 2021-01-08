@@ -14,6 +14,9 @@
 #include <QDebug>
 #include <QMenuBar>
 
+#include <QSettings>
+#include <QDesktopWidget>
+
 #include <QCloseEvent>
 
 #include <boost/assert.hpp>
@@ -44,6 +47,9 @@
 #define USE_MDI true
 
 #define STEP_SPACE 0. // TEMP
+
+#define ORGANIZATION QObject::tr("LIRIS")
+#define APPLICATION QObject::tr("MEPP2")
 
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
@@ -94,6 +100,11 @@ inline FEVV::SimpleWindow::~SimpleWindow()
   delete proxyModel;
   delete model;
   delete dockDirView;
+
+  for (int i = 0; i < MaxRecentFiles; ++i)
+  {
+    delete recentFileActs[i];
+  }
 
 #ifdef DEBUG_VISU2
   std::cout << "*** this=" << this << "    leaving " << __func__ << std::endl;
@@ -202,12 +213,14 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
 
 #ifdef DEBUG_VISU
   Helpers::changeBackgroundColor(this, Color::Green());
-  Helpers::changeBackgroundColor(ui.statusbar, Color::Pin());
+  Helpers::changeBackgroundColor(ui.statusbar, Color::Pink());
   Helpers::changeBackgroundColor(ui.dockWidget, Color::Blue());
 #endif
 
   setMinimumSize(_width, _height);
   resize(_width, _height);
+
+  readSettings();
 
   std::srand(std::time(0)); // @todo only for debug
 
@@ -268,9 +281,9 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   // ---
 
   // DirView
-  dockDirView = new QDockWidget(tr(" Directory View"), this);
+  dockDirView = new QDockWidget(QObject::tr(" Directory View"), this);
   dockDirView->setObjectName("dockDirView");
-  dockDirView->setMinimumWidth(/*m_dockDirView_MinimumWidth*/320);
+  dockDirView->setMinimumWidth(m_dockDirView_MinimumWidth);
   this->addDockWidget(Qt::RightDockWidgetArea, dockDirView);
 
     model = new QFileSystemModel;
@@ -304,7 +317,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
     tree->sortByColumn(0, Qt::AscendingOrder);
     
     //QString location("C:\\_mt_\\MEPP2\\MEPP2.mto-master\\Testing\\Data\\");
-    QModelIndex index = model->setRootPath(/*treeLocation*//*location*/model->rootPath());
+    QModelIndex index = model->setRootPath(treeLocation/*location*//*model->rootPath()*/);
     QModelIndex proxyIndex = proxyModel->mapFromSource(index);
 
     tree->scrollTo(proxyIndex);
@@ -315,6 +328,22 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
     tree->setDragEnabled(true);
 
   dockDirView->setWidget(tree);
+
+  // ---
+
+  for (int i = 0; i < MaxRecentFiles; ++i)
+  {
+    recentFileActs[i] = new QAction(this);
+    recentFileActs[i]->setVisible(false);
+    connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
+
+  QMenu *menuFile = ui.menuFile;
+  separatorAct_menuFile = menuFile->addSeparator();
+  for (int i = 0; i < MaxRecentFiles; ++i)
+    menuFile->addAction(recentFileActs[i]);
+
+  updateRecentFileActions();
 
   // ---
 
@@ -836,7 +865,7 @@ FEVV::SimpleWindow::on_actionOpen_SPACE_TIME(FEVV::SimpleViewer *viewer)
     QStringList files_qt =
         QFileDialog::getOpenFileNames(this,
                                       "Open (SPACE/TIME)",
-                                      /*openLocation*/ QDir::currentPath(),
+                                      /*QDir::currentPath()*/openLocation,
                                       allExtensions,
                                       &suffix,
                                       options);
@@ -900,6 +929,10 @@ FEVV::SimpleWindow::open_SPACE_TIME(FEVV::SimpleViewer *viewer,
           m * STEP_SPACE);
 
       ++m;
+
+      openLocation = QFileInfo(QString::fromStdString(filename)).absolutePath();
+
+      setCurrentFile(QString::fromStdString(filename));
     }
     catch(const std::exception& e)
     {
@@ -926,7 +959,7 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
   bool shift_pressed, alt_pressed;
 
   // capture keyboard state
-  if (drag==false)
+  if ( (drag==false) || ((drag==true) && (recent==true)) )
   {
     shift_pressed = QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
     alt_pressed = QApplication::keyboardModifiers().testFlag(Qt::AltModifier);
@@ -970,6 +1003,8 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
     drag=false;
     shift_drag=alt_drag=ctrl_drag=false;
 
+    recent=false;
+
     return; // cancel pressed, aborting
   }
 
@@ -1001,6 +1036,68 @@ FEVV::SimpleWindow::on_actionOpen_triggered()
 #endif
 }
 
+
+inline void
+FEVV::SimpleWindow::openRecentFile()
+{
+  QAction *action = qobject_cast<QAction *>(sender());
+  if (action)
+  {
+    // HERE we use 'drag' and 'drag_files' ONLY for convenience...
+    // BUT we ADD also 'recent' flag
+    drag=recent=true;
+
+    drag_files.clear();
+    drag_files << action->data().toString();
+
+    on_actionOpen_triggered();
+  }
+}
+
+inline void
+FEVV::SimpleWindow::setCurrentFile(const QString &fileName)
+{
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat);
+  QStringList files = settings.value("recentFileList").toStringList();
+
+  QString unixFileName = QDir::fromNativeSeparators(fileName);
+
+  files.removeAll(unixFileName);
+  files.prepend(unixFileName);
+  while (files.size() > MaxRecentFiles)
+    files.removeLast();
+
+  settings.setValue("recentFileList", files);
+
+  updateRecentFileActions();
+}
+
+inline QString
+FEVV::SimpleWindow::strippedName(const QString &fullFileName)
+{
+  return QFileInfo(fullFileName).fileName();
+}
+
+inline void
+FEVV::SimpleWindow::updateRecentFileActions()
+{
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat);
+  QStringList files = settings.value("recentFileList").toStringList();
+
+  int numRecentFiles = qMin(files.size(), (int)MaxRecentFiles);
+
+  for (int i = 0; i < numRecentFiles; ++i)
+  {
+    QString text = QObject::tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+    recentFileActs[i]->setText(text);
+    recentFileActs[i]->setData(files[i]);
+    recentFileActs[i]->setVisible(true);
+  }
+  for (int j = numRecentFiles; j < MaxRecentFiles; ++j)
+    recentFileActs[j]->setVisible(false);
+
+  separatorAct_menuFile->setVisible(numRecentFiles > 0);
+}
 
 inline
 void
@@ -1062,9 +1159,7 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
     QString fileName = QFileDialog::getSaveFileName(
         0,
         "Save As",
-        /*saveLocation*/ /*QDir::currentPath()*/
-        QFileInfo(QString::fromStdString(meshes_names[i]))
-            .baseName(),
+        /*QDir::currentPath()*/saveLocation,
         allExtensions,
         &suffix,
         options);
@@ -1154,6 +1249,8 @@ FEVV::SimpleWindow::writeHG(FEVV::SimpleViewer *viewer)
                                   *(properties_maps[i]));
       }
 #endif //FEVV_USE_PCL
+
+      saveLocation = QFileInfo(fileName).absolutePath();
     }
   }
 }
@@ -1200,11 +1297,13 @@ FEVV::SimpleWindow::closeEvent(QCloseEvent *event)
     }
     else
     {
+      writeSettings();
       event->accept();
     }
   }
   else
   {
+    writeSettings();
     event->accept();
   }
 }
@@ -1366,11 +1465,11 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
 {
   QMessageBox::about(
       this,
-      tr("About MEPP2 / Help"),
-      tr("<b>MEPP2</b><br>"
+      QObject::tr("About MEPP2 / Help"),
+      QObject::tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
-         "Copyright (c) 2016-2020 University of Lyon and CNRS (France)<br>"
+         "Copyright (c) 2016-2021 University of Lyon and CNRS (France)<br>"
          "<br>"
          "LIRIS ORIGAMI / MEPP-team<br>"
          "<br>"
@@ -2303,4 +2402,58 @@ QWidget * FEVV::SimpleWindow::activeMdiChild()
   }
 
   return 0;
+}
+
+inline void
+FEVV::SimpleWindow::writeSettings()
+{
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat);
+
+  QString path;
+  QFileInfo fileInfo = model->fileInfo(proxyModel->mapToSource(tree->currentIndex()));
+  if (fileInfo.isFile())
+    path = fileInfo.absolutePath();
+  else
+    path = fileInfo.absoluteFilePath(); // why ???
+  settings.setValue("treeLocation", path);
+
+  settings.setValue("openLocation", openLocation);
+  settings.setValue("saveLocation", saveLocation);
+
+  settings.beginGroup("MainWindow");
+    settings.setValue("pos", pos());
+    settings.setValue("size", size());
+
+    settings.setValue("state", saveState());
+
+    settings.setValue("dockDirView_MinimumWidth", m_dockDirView_MinimumWidth);
+  settings.endGroup();
+}
+
+inline void
+FEVV::SimpleWindow::readSettings()
+{
+  // HKEY_CURRENT_USER\Software\LIRIS
+  QSettings settings(QString(APPLICATION+".ini").toLower(), QSettings::IniFormat); // or QSettings settings(ORGANIZATION, APPLICATION);
+
+  treeLocation = settings.value("treeLocation", QDir::currentPath()).toString();
+
+  openLocation = settings.value("openLocation", QDir::currentPath()).toString();
+  saveLocation = settings.value("saveLocation", QDir::currentPath()).toString();
+
+  settings.beginGroup("MainWindow");
+    QRect screen_size = QDesktopWidget().availableGeometry();
+    int win_w = screen_size.width() * 0.9;
+    int win_h = screen_size.height() * 0.8;
+    int pos_x = (screen_size.width() - win_w) / 2;
+    int pos_y = (screen_size.height() - win_h) / 2;
+
+    move(settings.value("pos", QPoint(pos_x, pos_y)).toPoint());
+    resize(settings.value("size", QSize(win_w, win_h)).toSize()); // resize(QDesktopWidget().availableGeometry().size() * 0.7);
+
+    if(!settings.value("state").isNull())
+      restoreState(settings.value("state").toByteArray());
+
+    m_dockDirView_MinimumWidth = settings.value("dockDirView_MinimumWidth", 320).toInt(); if (m_dockDirView_MinimumWidth < 1) m_dockDirView_MinimumWidth=320;
+  settings.endGroup();
 }

@@ -127,12 +127,12 @@ public:
    * operations.
    *
    * @param[in]   _test    boolean to enable test mode (will close the window
-   * after 5 sec. This mode is useful for Travis/AppVeyor) (Default value =
+   * after 10 sec. This mode is useful for Travis/AppVeyor) (Default value =
    * false).
-   * @param[in]   _width   Minimum width of the window  (Default value = 800).
-   * @param[in]   _height  Minimum heigth of the window (Default value = 600).
+   * @param[in]   _width   Minimum width of the window  (Default value = 1024).
+   * @param[in]   _height  Minimum heigth of the window (Default value =  768).
    */
-  void init(const bool _test, const int _width = 800, const int _height = 600);
+  void init(const bool _test, const int _width = 1024, const int _height = 768);
 
   void notify() override;
 
@@ -228,6 +228,18 @@ protected:
    */
   FEVV::SimpleViewer* createNewViewer(void);
 
+  /*!
+   * \fn readSettings()
+   * \brief Read settings: folder locations (tree/open/save), mainwindow (pos, size, state), recent files list... (init).
+   */
+  void readSettings();
+
+  /*!
+   * \fn writeSettings()
+   * \brief Write settings: folder locations (tree/open/save), mainwindow (pos, size, state), recent files list... (exit).
+   */
+  void writeSettings();
+
 public:
   /**
    * \brief  Open meshes in a viewer with datastructure HalfedgeGraph.
@@ -297,6 +309,12 @@ protected slots:
   void aboutPlugins();
   // Plugins
 
+  /*!
+   * \fn openRecentFile()
+   * \brief Open a recent file (from menu).
+   */
+  void openRecentFile();
+
 public slots:
   void onModificationParam(std::string _pluginName, BasePlugin *_plugin);
   void onApplyButton();
@@ -319,6 +337,39 @@ protected:
   QSortFilterProxyModel *proxyModel;
   QTreeView *tree;
 
+  QString treeLocation, openLocation, saveLocation;
+  int m_dockDirView_MinimumWidth;
+
+  // ---
+
+  /*!
+   * \fn setCurrentFile()
+   * \brief Set a mesh filename in recent files list.
+   *
+   * \param fileName filename of the mesh.
+   */
+  void setCurrentFile(const QString &fileName);
+  /*!
+   * \fn strippedName(const QString &fullFileName)
+   * \brief Return the filename of a mesh without path.
+   *
+   * \param fullFileName filename of the mesh.
+   * \return QString.
+   */
+  QString strippedName(const QString &fullFileName);
+
+  /*!
+   * \fn updateRecentFileActions()
+   * \brief Update Mepp recent files list.
+   */
+  void updateRecentFileActions();
+
+  QAction *separatorAct_menuFile; //!< separator in file menu
+  enum { MaxRecentFiles = 9 }; //!< only 9 mesh files in recent list
+  QAction *recentFileActs[MaxRecentFiles]; //!< tab of mesh files recent list
+
+  // ---
+
   bool useMdiWindows = false;
 
   bool open_only_pts_mode = false;
@@ -334,6 +385,8 @@ public:
   bool shift_drag = false;
   bool alt_drag = false;
   bool ctrl_drag = false;
+
+  bool recent = false;
 };
 
 } // namespace FEVV
