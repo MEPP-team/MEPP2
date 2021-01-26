@@ -51,6 +51,9 @@ namespace FEVV {
           auto vi = iterator_pair.first;
           auto vi_end = iterator_pair.second;
 
+          if(n_neight > cloud_size)
+              throw std::invalid_argument("compute_weighted_pca() -> n_neight parameter value bigger than the point cloud's number of point.");
+
           c.pointcloud_ = new Eigen::Matrix<float, Eigen::Dynamic, 3>(cloud_size+1, 3);
 
           vi = iterator_pair.first;
