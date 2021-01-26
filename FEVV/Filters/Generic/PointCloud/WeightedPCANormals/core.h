@@ -44,7 +44,7 @@ using namespace std;
 
 //Constants with effect on result
 const float mu_max2 = 0.35f;         // initial mu when starting the optimization for selection 2
-                                    // increase if too many normals stuck in medium position/ decrease if too many face confusions when sampling anisotropy
+// increase if too many normals stuck in medium position/ decrease if too many face confusions when sampling anisotropy
 const float div_fact = 1.01f;
 
 //Usual constants DO NOT MODIFY
@@ -63,89 +63,89 @@ const float thresh_weight = 0.25;           // threshold to select neighbors
 
 
 class CApp{
-public:
+  public:
     CApp()
     {
-        std::cout<<"add one pointcloud + its kdtree + the reference point you want to compute the normal on"<<std::endl<<std::endl;
-        normalFirst0_ = NULL;
-        normalFirst1_ = NULL;
-        normalFirst2_ = NULL;
-        normalSecond0_ = NULL;
-        normalSecond1_ = NULL;
-        normalSecond2_ = NULL;
-        pointFirst_ = NULL;
-        pointSecond_ = NULL;
+      std::cout<<"add one pointcloud + its kdtree + the reference point you want to compute the normal on"<<std::endl<<std::endl;
+      normalFirst0_ = NULL;
+      normalFirst1_ = NULL;
+      normalFirst2_ = NULL;
+      normalSecond0_ = NULL;
+      normalSecond1_ = NULL;
+      normalSecond2_ = NULL;
+      pointFirst_ = NULL;
+      pointSecond_ = NULL;
     };
 
     CApp(Eigen::Matrix<float, Eigen::Dynamic, 3> *pc, flann::Index<flann::L2<float>>* tree, float noise)
     {
-        setPc(pc);
-        setTree(tree);
-        noise_ = noise;
-        normalFirst0_ = NULL;
-        normalFirst1_ = NULL;
-        normalFirst2_ = NULL;
-        normalSecond0_ = NULL;
-        normalSecond1_ = NULL;
-        normalSecond2_ = NULL;
-        pointFirst_ = NULL;
-        pointSecond_ = NULL;
+      setPc(pc);
+      setTree(tree);
+      noise_ = noise;
+      normalFirst0_ = NULL;
+      normalFirst1_ = NULL;
+      normalFirst2_ = NULL;
+      normalSecond0_ = NULL;
+      normalSecond1_ = NULL;
+      normalSecond2_ = NULL;
+      pointFirst_ = NULL;
+      pointSecond_ = NULL;
     };
 
     CApp(Eigen::Matrix<float, Eigen::Dynamic, 3> *pc, flann::Index<flann::L2<float>>* tree, int ref, float noise)
     {
-        setPc(pc);
-        setTree(tree);
-        setRef(ref);
-        noise_ = noise;
-        normalFirst0_ = NULL;
-        normalFirst1_ = NULL;
-        normalFirst2_ = NULL;
-        normalSecond0_ = NULL;
-        normalSecond1_ = NULL;
-        normalSecond2_ = NULL;
-        pointFirst_ = NULL;
-        pointSecond_ = NULL;
+      setPc(pc);
+      setTree(tree);
+      setRef(ref);
+      noise_ = noise;
+      normalFirst0_ = NULL;
+      normalFirst1_ = NULL;
+      normalFirst2_ = NULL;
+      normalSecond0_ = NULL;
+      normalSecond1_ = NULL;
+      normalSecond2_ = NULL;
+      pointFirst_ = NULL;
+      pointSecond_ = NULL;
     };
 
     CApp(float divFact, float limMu, float limMuPos, Eigen::Matrix<float, Eigen::Dynamic, 3> *pc, flann::Index<flann::L2<float>>* tree, int ref, float noise)
     {
-        divFact_ = divFact;
-        limMu_ = limMu;
-        limMuPos_ = limMuPos;
-        noise_ = noise;
-        setPc(pc);
-        setTree(tree);
-        setRef(ref);
-        normalFirst0_ = NULL;
-        normalFirst1_ = NULL;
-        normalFirst2_ = NULL;
-        normalSecond0_ = NULL;
-        normalSecond1_ = NULL;
-        normalSecond2_ = NULL;
-        pointFirst_ = NULL;
-        pointSecond_ = NULL;
+      divFact_ = divFact;
+      limMu_ = limMu;
+      limMuPos_ = limMuPos;
+      noise_ = noise;
+      setPc(pc);
+      setTree(tree);
+      setRef(ref);
+      normalFirst0_ = NULL;
+      normalFirst1_ = NULL;
+      normalFirst2_ = NULL;
+      normalSecond0_ = NULL;
+      normalSecond1_ = NULL;
+      normalSecond2_ = NULL;
+      pointFirst_ = NULL;
+      pointSecond_ = NULL;
 
     };
 
     ~CApp()
     {
-        if(normalFirst0_!= NULL)
-            delete normalFirst0_;
-        if(normalFirst1_!= NULL)
-            delete normalFirst1_;
-        if(normalFirst2_!= NULL)
-            delete normalFirst2_;
-        if(normalSecond0_!= NULL)
-            delete normalSecond0_;
-        if(normalSecond1_!= NULL)
-            delete normalSecond1_;
-        if(normalSecond2_!= NULL)
-            delete normalSecond2_;
-        if(pointFirst_!= NULL)
-            delete pointFirst_;
-        if(pointSecond_!= NULL)
-            delete pointSecond_;
+      if(normalFirst0_!= NULL)
+        delete normalFirst0_;
+      if(normalFirst1_!= NULL)
+        delete normalFirst1_;
+      if(normalFirst2_!= NULL)
+        delete normalFirst2_;
+      if(normalSecond0_!= NULL)
+        delete normalSecond0_;
+      if(normalSecond1_!= NULL)
+        delete normalSecond1_;
+      if(normalSecond2_!= NULL)
+        delete normalSecond2_;
+      if(pointFirst_!= NULL)
+        delete pointFirst_;
+      if(pointSecond_!= NULL)
+        delete pointSecond_;
     };
 
     void setTree(flann::Index<flann::L2<float>> *t){tree_ = t;}
@@ -160,8 +160,8 @@ public:
     void setNoise ( float noise){noise_= noise;}
     void setParams(float divFact, float curvature)
     {
-        divFact_= divFact;
-        curvature_ = curvature;
+      divFact_= divFact;
+      curvature_ = curvature;
     };
     Eigen::Vector3f getNormal(){return normal;}
     Eigen::Vector3f getPoint (){return pt;}
@@ -171,10 +171,10 @@ public:
     void reinitPoint();
     void ComputeDist();
     void SearchFLANNTreeKnn(flann::Index<flann::L2<float>>* index,
-                                Eigen::Vector3f& input,
-                                std::vector<int>& indices,
-                                std::vector<float>& dists,
-                                int nn);
+        Eigen::Vector3f& input,
+        std::vector<int>& indices,
+        std::vector<float>& dists,
+        int nn);
     void selectNeighborsKnn(int N);
     void selectNeighborsRadius(float r);
 
@@ -200,7 +200,7 @@ public:
     bool SuspectedOnEdge_;
 
 
-private:
+  private:
     int n_neigh_;
     float mu_;
     float noise_;
