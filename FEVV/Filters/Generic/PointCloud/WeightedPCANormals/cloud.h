@@ -28,28 +28,22 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4267 4244)
+#endif
+
 #include <flann/flann.hpp>
 
-#include "FEVV/DataStructures/DataStructures_pcl_point_cloud.h"
-  // for FEVV::PCLPointCloud
-#include "FEVV/Wrappings/Graph_traits_pcl_point_cloud.h"
-  // for boost::graph_traits< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Geometry_traits_pcl_point_cloud.h"
-  // for FEVV::RetrieveKernel< FEVV::PCLPointCloud >
-#include "FEVV/Wrappings/Graph_properties_pcl_point_cloud.h"
-  // for get(FEVV::PCLPointCloudPointMap&, ...)
-#include "FEVV/Wrappings/properties_pcl_point_cloud.h"
-  // for FEVV::PMap_traits< FEVV::PCLPointCloud >
-
-#include "FEVV/Filters/PCL/pcl_point_cloud_reader.hpp"
-  // for FEVV::Filters::read_mesh< FEVV::PCLPointCloud >
-#include "FEVV/Filters/PCL/pcl_point_cloud_writer.hpp"
-  // for FEVV::Filters::write_mesh< FEVV::PCLPointCloud >
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
 
 using namespace std;
 
 class RawCloud{
-public:
+  public:
     RawCloud(){}
     int Read(std::string filepath);
     void buildTree();
@@ -60,15 +54,17 @@ public:
 
     Eigen::Matrix<float, Eigen::Dynamic, 3> *pointcloud_;
 
-private:
+  private:
     int ReadCSV(std::string filepath);
     FEVV::PMapsContainer pmaps_bag;
     flann::Index<flann::L2<float>>* tree_;
     float getNearestNeighborDistance(Eigen::Vector3f pt);
     void SearchFLANNTree(flann::Index<flann::L2<float>>* index,
-                                Eigen::Vector3f& input,
-                                std::vector<int>& indices,
-                                std::vector<float>& dists,
-                                int nn);
+        Eigen::Vector3f& input,
+        std::vector<int>& indices,
+        std::vector<float>& dists,
+        int nn);
 
 };
+
+#include "cloud.inl"

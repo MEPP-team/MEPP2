@@ -19,7 +19,7 @@
  * \brief  Generic test of Point Cloud Curvature filter.
  */
 template< typename PointCloud >
-int
+  int
 test_point_cloud_curvature(int argc, const char **argv)
 {
   // parse arguments
@@ -27,18 +27,18 @@ test_point_cloud_curvature(int argc, const char **argv)
   if(argc < 3)
   {
     std::cout << "Load a point cloud then apply the Point Cloud Curvature"
-              << " filter."
-              << std::endl;
+      << " filter."
+      << std::endl;
     std::cout << "Usage: " << argv[0]
-              << "  input_point_cloud_file  output_file.ply"
-              << "  [nearest_neighbors_number  [reference_file]]"
-              << std::endl;
+      << "  input_point_cloud_file  output_file.ply"
+      << "  [nearest_neighbors_number  [reference_file]]"
+      << std::endl;
     std::cout << "Examples: \n"
-              << argv[0] << "  casting.xyz  casting.curvature.ply\n"
-              << argv[0] << "  casting.xyz  casting.curvature.ply  15\n"
-              << argv[0] << "  casting.xyz  casting.curvature.ply  15"
-                                "  casting.curvature.ref.ply\n"
-              << std::endl;
+      << argv[0] << "  casting.xyz  casting.curvature.ply\n"
+      << argv[0] << "  casting.xyz  casting.curvature.ply  15\n"
+      << argv[0] << "  casting.xyz  casting.curvature.ply  15"
+      "  casting.curvature.ref.ply\n"
+      << std::endl;
 
     return EXIT_FAILURE;
   }
@@ -80,7 +80,7 @@ test_point_cloud_curvature(int argc, const char **argv)
 
   // save the point cloud
   std::cout << "saving point cloud with curvature to " << output_file_path
-            << std::endl;
+    << std::endl;
   FEVV::Filters::write_mesh(output_file_path, pc, pmaps_bag);
 
   // check output file
