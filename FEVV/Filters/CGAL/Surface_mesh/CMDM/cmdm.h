@@ -416,7 +416,7 @@ template< typename CMDMMap,
           typename FaceIterator =
               typename boost::graph_traits< HalfedgeGraph >::face_iterator >
 void
-matching_multires_init(
+matching_multires_init_cmdm(
     const HalfedgeGraph &m_poly_degrad,
     CMDMMap &cmdm_degrad,
     CMDMNearestMap &cmdmm_degrad,
@@ -496,11 +496,11 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
 {
   auto curvature_map_degr =
       FEVV::make_vertex_property_map< HalfedgeGraph,
-                                      FEVV::Filters::v_Curv< HalfedgeGraph > >(
+                                      FEVV::Filters::v_Curv_cmdm< HalfedgeGraph > >(
           m_poly_degrad);
   auto curvature_map_orig =
       FEVV::make_vertex_property_map< HalfedgeGraph,
-                                      FEVV::Filters::v_Curv< HalfedgeGraph > >(
+                                      FEVV::Filters::v_Curv_cmdm< HalfedgeGraph > >(
           m_poly_original);
 
   CGAL::SM_Face_index *tab_matched_facet =
@@ -588,13 +588,13 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
     tab_pm_degrad[ii] = p1;
   }
 
-  matching_multires_init(m_poly_degrad,
-                         cmdm_pmap,
-                         cmdm_nearest_pmap,
-                         tag_map,
-                         pm_degrad,
-                         m_poly_original,
-                         tab_matched_facet);
+  matching_multires_init_cmdm(m_poly_degrad,
+                              cmdm_pmap,
+                              cmdm_nearest_pmap,
+                              tag_map,
+                              pm_degrad,
+                              m_poly_original,
+                              tab_matched_facet);
 
 #pragma omp parallel for
   for(int ii = 0; ii < (int)num_vertices(m_poly_degrad); ii++)
@@ -629,29 +629,29 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
     double min_nrm_min_curvature_org, max_nrm_min_curvature_org,
         min_nrm_max_curvature_org, max_nrm_max_curvature_org;
 
-    FEVV::Filters::calculate_curvature(m_poly_degrad,
-                                       curvature_map_degr,
-                                       pm_degrad,
-                                       fnm_degrad,
-                                       true,
-                                       maxdim * radius_curvature,
-                                       min_nrm_min_curvature_deg,
-                                       max_nrm_min_curvature_deg,
-                                       min_nrm_max_curvature_deg,
-                                       max_nrm_max_curvature_deg);
-    FEVV::Filters::calculate_curvature(m_poly_original,
-                                       curvature_map_orig,
-                                       pm_original,
-                                       fnm_original,
-                                       true,
-                                       maxdim * radius_curvature,
-                                       min_nrm_min_curvature_org,
-                                       max_nrm_min_curvature_org,
-                                       min_nrm_max_curvature_org,
-                                       max_nrm_max_curvature_org);
+    FEVV::Filters::calculate_curvature_cmdm(m_poly_degrad,
+                                            curvature_map_degr,
+                                            pm_degrad,
+                                            fnm_degrad,
+                                            true,
+                                            maxdim * radius_curvature,
+                                            min_nrm_min_curvature_deg,
+                                            max_nrm_min_curvature_deg,
+                                            min_nrm_max_curvature_deg,
+                                            max_nrm_max_curvature_deg);
+    FEVV::Filters::calculate_curvature_cmdm(m_poly_original,
+                                            curvature_map_orig,
+                                            pm_original,
+                                            fnm_original,
+                                            true,
+                                            maxdim * radius_curvature,
+                                            min_nrm_min_curvature_org,
+                                            max_nrm_min_curvature_org,
+                                            min_nrm_max_curvature_org,
+                                            max_nrm_max_curvature_org);
 
-    kmax_kmean(m_poly_original, curvature_map_orig, maxdim);
-    kmax_kmean(m_poly_degrad, curvature_map_degr, maxdim);
+    kmax_kmean_cmdm(m_poly_original, curvature_map_orig, maxdim);
+    kmax_kmean_cmdm(m_poly_degrad, curvature_map_degr, maxdim);
 
     matching_multires_update(m_poly_degrad,
                              m_poly_original,
@@ -1178,9 +1178,9 @@ according to the size of the model
 */
 template< typename HalfedgeGraph, typename CurvatureVertexMap >
 void
-kmax_kmean(const HalfedgeGraph &mesh,
-           CurvatureVertexMap &curv_vmap,
-           const double coef)
+kmax_kmean_cmdm(const HalfedgeGraph &mesh,
+                CurvatureVertexMap &curv_vmap,
+                const double coef)
 {
   BOOST_FOREACH(Vertex_Descriptor vi, vertices(mesh))
   {
