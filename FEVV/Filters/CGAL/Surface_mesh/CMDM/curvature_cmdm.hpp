@@ -37,7 +37,7 @@ namespace Filters {
 
 template< typename HalfedgeGraph,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
-struct v_Curv
+struct v_Curv_cmdm
 {
   double KminCurv; ///< The minimum curvature
   double KmaxCurv; ///< The minimum curvature
@@ -51,7 +51,7 @@ struct v_Curv
 template< typename HalfedgeGraph,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 double
-fabs(const v_Curv< HalfedgeGraph > &input)
+fabs_cmdm(const v_Curv_cmdm< HalfedgeGraph > &input)
 {
   return std::max(::fabs(input.KminCurv), ::fabs(input.KmaxCurv));
 }
@@ -60,10 +60,11 @@ template< typename HalfedgeGraph,
           typename PointMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 double
-triangle_area(const HalfedgeGraph &g,
-              const PointMap &pm,
-              typename boost::graph_traits< HalfedgeGraph >::face_descriptor fd,
-              const GeometryTraits &gt)
+triangle_area_cmdm(
+    const HalfedgeGraph &g,
+    const PointMap &pm,
+    typename boost::graph_traits< HalfedgeGraph >::face_descriptor fd,
+    const GeometryTraits &gt)
 {
   typedef typename boost::property_traits< PointMap >::value_type Point3d;
   using Vector = typename GeometryTraits::Vector;
@@ -88,12 +89,12 @@ template< typename HalfedgeGraph,
           typename GraphTraits = boost::graph_traits< HalfedgeGraph >,
           typename VertexDescriptor = typename GraphTraits::vertex_descriptor >
 void
-principal_curvature_per_vert(const HalfedgeGraph &g,
-                             const PointMap &pm,
-                             const FaceNormalMap &f_nm,
-                             VertexDescriptor vd,
-                             double pp_matrix_sum[3][3],
-                             const GeometryTraits &gt)
+principal_curvature_per_vert_cmdm(const HalfedgeGraph &g,
+                                  const PointMap &pm,
+                                  const FaceNormalMap &f_nm,
+                                  VertexDescriptor vd,
+                                  double pp_matrix_sum[3][3],
+                                  const GeometryTraits &gt)
 {
   typedef typename GeometryTraits::Point Point3d;
   using Vector = typename GeometryTraits::Vector;
@@ -136,7 +137,7 @@ principal_curvature_per_vert(const HalfedgeGraph &g,
       continue; // Normal vector is set to be (NaN, NaN, NaN) if 2 edges of
                 // the face are collinear -- [YN]
 
-    area += triangle_area(g, pm, p_facet1, gt);
+    area += triangle_area_cmdm(g, pm, p_facet1, gt);
 
     // ---
     Vector cp(normal1[1] * normal2[2] - normal1[2] * normal2[1],
@@ -177,13 +178,13 @@ template< typename HalfedgeGraph,
           typename GraphTraits = boost::graph_traits< HalfedgeGraph >,
           typename VertexDescriptor = typename GraphTraits::vertex_descriptor >
 void
-geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
-                                    const PointMap &pm,
-                                    const FaceNormalMap &f_nm,
-                                    VertexDescriptor vd,
-                                    double pp_matrix_sum[3][3],
-                                    double radius,
-                                    const GeometryTraits &gt)
+geodes_principal_curvature_per_vert_cmdm(const HalfedgeGraph &g,
+                                         const PointMap &pm,
+                                         const FaceNormalMap &f_nm,
+                                         VertexDescriptor vd,
+                                         double pp_matrix_sum[3][3],
+                                         double radius,
+                                         const GeometryTraits &gt)
 {
   typedef typename GeometryTraits::Point Point3d;
   using Vector = typename GeometryTraits::Vector;
@@ -487,7 +488,7 @@ geodes_principal_curvature_per_vert(const HalfedgeGraph &g,
 }
 
 
-//#define DBG_calculate_curvature
+//#define DBG_calculate_curvature_cmdm
 
 
 /**
@@ -518,17 +519,17 @@ template< typename HalfedgeGraph,
           typename FaceNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-calculate_curvature(const HalfedgeGraph &g,
-                    VertexCurvatureMap &v_cm,
-                    const PointMap &pm,
-                    const FaceNormalMap &f_nm,
-                    bool is_geod,
-                    double radius,
-                    double &min_nrm_min_curvature,
-                    double &max_nrm_min_curvature,
-                    double &min_nrm_max_curvature,
-                    double &max_nrm_max_curvature,
-                    const GeometryTraits &gt)
+calculate_curvature_cmdm(const HalfedgeGraph &g,
+                         VertexCurvatureMap &v_cm,
+                         const PointMap &pm,
+                         const FaceNormalMap &f_nm,
+                         bool is_geod,
+                         double radius,
+                         double &min_nrm_min_curvature,
+                         double &max_nrm_min_curvature,
+                         double &min_nrm_max_curvature,
+                         double &max_nrm_max_curvature,
+                         const GeometryTraits &gt)
 {
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
@@ -544,7 +545,7 @@ calculate_curvature(const HalfedgeGraph &g,
   // ---
 
   std::cout << "Asking to calculate curvature" << std::endl;
-#ifdef DBG_calculate_curvature
+#ifdef DBG_calculate_curvature_cmdm
   std::cout << "Real radius = " << radius << std::endl;
 #endif
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair
@@ -559,23 +560,24 @@ calculate_curvature(const HalfedgeGraph &g,
     double pp_matrix_sum[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
     if(is_geod == true) // geodesic neighborhood
-      geodes_principal_curvature_per_vert<
+      geodes_principal_curvature_per_vert_cmdm<
           HalfedgeGraph,
           PointMap,
           FaceNormalMap,
           GeometryTraits,
           GraphTraits,
-          typename GraphTraits::vertex_descriptor >(
-          g, pm, f_nm, *vi, pp_matrix_sum, radius, gt);
+          typename GraphTraits::vertex_descriptor >(g, pm, f_nm, *vi,
+                                                    pp_matrix_sum, radius, gt);
 
     else // 1-ring neighborhood
-      principal_curvature_per_vert< HalfedgeGraph,
-                                    PointMap,
-                                    FaceNormalMap,
-                                    GeometryTraits,
-                                    GraphTraits,
-                                    typename GraphTraits::vertex_descriptor >(
-          g, pm, f_nm, *vi, pp_matrix_sum, gt);
+      principal_curvature_per_vert_cmdm<
+          HalfedgeGraph,
+          PointMap,
+          FaceNormalMap,
+          GeometryTraits,
+          GraphTraits,
+          typename GraphTraits::vertex_descriptor >(g, pm, f_nm, *vi,
+                                                    pp_matrix_sum, gt);
 
     // Eigen values/vectors
     EigenMatrix cov_mat;
@@ -592,7 +594,7 @@ calculate_curvature(const HalfedgeGraph &g,
     cov_mat(2, 1) = pp_matrix_sum[2][1];
     cov_mat(2, 2) = pp_matrix_sum[2][2];
 
-#ifdef DBG_calculate_curvature
+#ifdef DBG_calculate_curvature_cmdm
     std::cout << "\n\nCovMat\n\n" << CovMat << std::endl;
 #endif
 
@@ -612,7 +614,7 @@ calculate_curvature(const HalfedgeGraph &g,
       }
     }
 
-#ifdef DBG_calculate_curvature
+#ifdef DBG_calculate_curvature_cmdm
     std::cout << "\n\nValpro\n\n" << Valpro << std::endl;
     std::cout << "\n\nVectPro\n\n" << VectPro << std::endl;
 #endif
@@ -623,7 +625,7 @@ calculate_curvature(const HalfedgeGraph &g,
       Vector v_kmax_curv(vect_pro(0, 1), vect_pro(1, 1), vect_pro(2, 1));
       Vector v_kmin_curv(vect_pro(0, 0), vect_pro(1, 0), vect_pro(2, 0));
 
-#ifdef DBG_calculate_curvature
+#ifdef DBG_calculate_curvature_cmdm
       std::cout << "\n\nValpro sorted\n\n" << Valpro << std::endl;
       std::cout << "\n\nVectPro sorted\n\n" << VectPro << std::endl;
       std::cout << "\nVKmaxCurv = " << VKmaxCurv[0] << " " << VKmaxCurv[1]
@@ -654,7 +656,7 @@ calculate_curvature(const HalfedgeGraph &g,
       v_cm[*vi].KminCurv = 0;
     }
 
-#ifdef DBG_calculate_curvature
+#ifdef DBG_calculate_curvature_cmdm
     std::cout << "\nv_cm[*vi].KmaxCurv = " << v_cm[*vi].KmaxCurv << std::endl;
     std::cout << "\nv_cm[*vi].KminCurv = " << v_cm[*vi].KminCurv << std::endl;
 #endif
@@ -715,33 +717,33 @@ template< typename HalfedgeGraph,
           typename FaceNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-calculate_curvature(const HalfedgeGraph &g,
-                    VertexCurvatureMap &v_cm,
-                    const PointMap &pm,
-                    const FaceNormalMap &f_nm,
-                    bool is_geod,
-                    double radius,
-                    double &min_nrm_min_curvature,
-                    double &max_nrm_min_curvature,
-                    double &min_nrm_max_curvature,
-                    double &max_nrm_max_curvature)
+calculate_curvature_cmdm(const HalfedgeGraph &g,
+                         VertexCurvatureMap &v_cm,
+                         const PointMap &pm,
+                         const FaceNormalMap &f_nm,
+                         bool is_geod,
+                         double radius,
+                         double &min_nrm_min_curvature,
+                         double &max_nrm_min_curvature,
+                         double &min_nrm_max_curvature,
+                         double &max_nrm_max_curvature)
 {
   GeometryTraits gt(g);
-  calculate_curvature< HalfedgeGraph,
-                       VertexCurvatureMap,
-                       PointMap,
-                       FaceNormalMap,
-                       GeometryTraits >(g,
-                                        v_cm,
-                                        pm,
-                                        f_nm,
-                                        is_geod,
-                                        radius,
-                                        min_nrm_min_curvature,
-                                        max_nrm_min_curvature,
-                                        min_nrm_max_curvature,
-                                        max_nrm_max_curvature,
-                                        gt);
+  calculate_curvature_cmdm< HalfedgeGraph,
+                            VertexCurvatureMap,
+                            PointMap,
+                            FaceNormalMap,
+                            GeometryTraits >(g,
+                                             v_cm,
+                                             pm,
+                                             f_nm,
+                                             is_geod,
+                                             radius,
+                                             min_nrm_min_curvature,
+                                             max_nrm_min_curvature,
+                                             min_nrm_max_curvature,
+                                             max_nrm_max_curvature,
+                                             gt);
 }
 
 } // namespace Filters
