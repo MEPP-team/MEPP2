@@ -291,6 +291,92 @@ copy_file(const std::string &from, const std::string &to)
 }
 
 
+/**
+ * Create a directory.
+ *
+ * \param  dir_path  the path/name of the directory
+ */
+inline
+void
+create_dir(const std::string &dirname)
+{
+  boost::filesystem::create_directory(dirname);
+}
+
+
+/**
+ * Remove a directory and its content.
+ *
+ * \param  dir_path  the path/name of the directory
+ */
+inline
+void
+remove_dir(const std::string &dirname)
+{
+  boost::filesystem::remove_all(dirname);
+}
+
+
+/**
+ * Get the current working directory.
+ */
+inline
+std::string
+get_wdir(void)
+{
+  return boost::filesystem::current_path().string();
+}
+
+
+/**
+ * Change the current working directory.
+ *
+ * \param  dir_path  the path/name of the directory
+ */
+inline
+void
+change_wdir(const std::string &dirname)
+{
+  boost::filesystem::current_path(dirname);
+}
+
+
+/**
+ * Load a whole file into a string.
+ *
+ * \param  file_name  the name of the file to read.
+ * \return  a string hosting the file content.
+ * 
+ * \see    http://insanecoding.blogspot.com/2011/11/how-to-read-in-file-in-c.html
+ */
+inline
+std::string
+load_file(const std::string &file_name)
+{
+  std::string contents;
+
+  std::ifstream in(file_name, std::ios::in | std::ios::binary);
+  if(in)
+  {
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
+  }
+  else
+  {
+    std::cout << "FEVV::FileUtils::load_file: failed to open file '"
+              << file_name
+              << "'."
+              << std::endl;
+  }
+
+  //throw(errno);
+  return(contents);
+}
+
+
 } // namespace FileUtils
 } // namespace FEVV
 
