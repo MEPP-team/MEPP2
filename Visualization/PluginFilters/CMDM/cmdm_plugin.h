@@ -247,21 +247,23 @@ public:
 
         // apply filter
         auto m1 = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
-        auto pm1 = properties_maps[0];
+        auto pmaps_bag1 = properties_maps[0];
         auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
-        auto pm2 = properties_maps[1];
+        auto pmaps_bag2 = properties_maps[1];
 
         double CMDM, CMDM_1_2, CMDM_2_1;
         vertex_cmdm_map cmdm_pmap_deg, cmdm_pmap_orig;
         VertexColorMap v_cm_deg, v_cm_orig;
         if(one_two)
         {
-          process(*m2, *pm2, *m1, *pm1, CMDM_1_2, cmdm_pmap_deg, v_cm_deg);
+          process(*m2, *pmaps_bag2, *m1, *pmaps_bag1, CMDM_1_2, cmdm_pmap_deg,
+                  v_cm_deg);
           CMDM = CMDM_1_2;
         }
         if(two_one)
         {
-          process(*m1, *pm1, *m2, *pm2, CMDM_2_1, cmdm_pmap_orig, v_cm_orig);
+          process(*m1, *pmaps_bag1, *m2, *pmaps_bag2, CMDM_2_1, cmdm_pmap_orig,
+                  v_cm_orig);
           CMDM = CMDM_2_1;
         }
         if(one_two && two_one)
@@ -304,8 +306,8 @@ public:
         }
 
         // redraw meshes
-        viewer->draw_or_redraw_mesh(m1, pm1, true, false);
-        viewer->draw_or_redraw_mesh(m2, pm2, true, false);
+        viewer->draw_or_redraw_mesh(m1, pmaps_bag1, true, false);
+        viewer->draw_or_redraw_mesh(m2, pmaps_bag2, true, false);
       }
       else
       {
