@@ -120,6 +120,17 @@ convert(const ScalarType &s)
   return st;
 }
 
+/**
+ * Check if string str starts with string prefix.
+ */
+inline
+bool
+starts_with(const std::string &str,
+            const std::string &prefix)
+{
+  return (str.substr(0, prefix.size()) == prefix);
+}
+
 } // namespace StrUtils
 } // namespace FEVV
 
