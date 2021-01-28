@@ -1,0 +1,31 @@
+/**
+
+@page FilterCopyGraph  Copy Graph Filter
+
+
+@section FilterCopyGraphDescriptionSection    Description
+
+Copy one mesh or point cloud to another datastructure. \n
+Copying a mesh to a point cloud (or vice versa) is allowed. \n
+The features not supported by the destination data structure are lost. For example, faces and edges are lost when copying a mesh to a point cloud data structure.
+
+@section FilterCopyGraphParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Destination data structure | One of: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh, AIF, CGAL Point Set, PCL Point Cloud |
+
+
+@section FilterCopyGraphDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh, AIF, CGAL Point Set, PCL Point Cloud.
+
+@section FilterCopyGraphRestrictionsSection   Restrictions
+
+None.
+
+@section FilterCopyGraphReferencesSection     References
+
+None.
+
+*/

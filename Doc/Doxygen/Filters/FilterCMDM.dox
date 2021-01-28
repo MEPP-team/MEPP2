@@ -1,0 +1,37 @@
+/**
+
+@page FilterCMDM  CMDM Filter
+
+
+@section FilterCMDMDescriptionSection    Description
+
+This filter implements the CMDM perceptual metric from (Nehmé et al. 2021). \n
+CMDM is the first metric for quality assessment of 3D meshes with diffuse colors, which works entirely on the mesh domain, at vertex level.\n
+It is a full-reference data-driven multiscale metric, that incorporates perceptually-relevant curvature-based and color-based features.\n
+It computes a quality score that predicts the perceived distortion between two colored meshes, as well as a per-vertex distortion map.
+
+@section FilterCMDMParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Mode | The direction of the comparison. One of: Symmetric, 1_to_2, 2_to_1. |
+| Scales | Number of scales.  One of: 1, 2, 3. |
+| Color map | Fill the mesh vertex-color map with CMDM values. |
+
+@section FilterCMDMDataStructuresSection Supported data structures
+
+Only one data structure is supported: CGAL Surface_mesh.
+
+@section FilterCMDMRestrictionsSection   Restrictions
+
+Two meshes must be opened; they both have to be triangular and manifold. They have also to contain vertex colors.
+
+@section FilterCMDMReferencesSection     References
+
+Visual Quality of 3D Meshes with Diffuse Colors in Virtual Reality: Subjective and Objective Evaluation, \n
+Yana Nehmé, Florent Dupont, Jean-Philippe Farrugia, Patrick Le Callet, Guillaume Lavoué, \n
+IEEE Transactions on Visualization and Computer Graphics, 2021.
+\n
+\n
+
+*/

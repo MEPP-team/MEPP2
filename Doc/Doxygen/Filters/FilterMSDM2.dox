@@ -1,0 +1,36 @@
+/**
+
+@page FilterMSDM2  MSDM2 Filter
+
+
+@section FilterMSDM2DescriptionSection    Description
+This filter implements the MSDM2 perceptual metric from (Lavoué 2011). Given a distorted 3D
+shape and a reference one, it computes a quality score that predicts
+the perceived distortion between them, as well as a per-vertex distortion
+map.
+
+@section FilterMSDM2ParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Mode | The direction of the comparison. One of: Symmetric, 1_to_2, 2_to_1. |
+| Scales | Number of scales.  One of: 1, 2, 3.|
+| Color map | Fill the mesh vertex-color map with MSDM2 values. |
+
+@section FilterMSDM2DataStructuresSection Supported data structures
+
+Only one data structure is supported: CGAL Surface_mesh.
+
+@section FilterMSDM2RestrictionsSection   Restrictions
+
+Two meshes must be opened; they both have to be triangular and manifold.
+
+@section FilterMSDM2ReferencesSection     References
+
+A Multiscale Metric for 3D Mesh Visual Quality Assessment, \n
+Lavoué, G., \n
+Computer Graphics Forum, 30(5), 1427–1437, 2011.
+\n
+\n
+
+*/

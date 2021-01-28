@@ -1,0 +1,38 @@
+/**
+
+@page FilterMeshCurvature  Curvature Filter
+
+
+@section FilterMeshCurvatureDescriptionSection    Description
+
+This filter implements the mesh curvature computation algorithm from (Cohen-
+Steiner and Morvan, 2003).\n
+The computation can be done for 1-ring or geodesic neighborhood integration.\n
+The filter computes, for each vertex, the mininum and maximum curvature values and directions. 
+
+@section FilterMeshCurvatureParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Neighborhood | One of: 1-ring, geodesic. |
+| Radius | Radius of integration, for the geodesic computation. \n It corresponds to a ratio of the bounding box length. |
+| Color map | One of: min, max. |
+| Direction | One of: min, max. |
+
+@section FilterMeshCurvatureDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh, AIF.
+
+@section FilterMeshCurvatureRestrictionsSection   Restrictions
+
+Restricted to manifold meshes.
+
+@section FilterMeshCurvatureReferencesSection     References
+
+Restricted delaunay triangulations and normal cycle, \n
+Cohen-Steiner, D. and Morvan, J. , \n
+19th Annu. ACM Sympos. Comput. Geom., 2003.
+\n
+\n
+
+*/

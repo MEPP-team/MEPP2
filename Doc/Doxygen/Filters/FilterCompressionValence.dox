@@ -1,0 +1,55 @@
+/**
+
+@page FilterCompressionValence  Compression Valence Filter
+
+
+@section FilterCompressionValenceOverviewSection       Overview
+
+ The Compression Valence filter implements a progressive compression for 3D meshes. \n
+ The progressive compression method simplifies iteratively the input mesh to
+ generate differents levels of details (LoDs). \n
+ These LoDs can then be transmitted progressively in a coarse-to-fine way at the
+ decompression. \n
+ In particular, our method adapts the quantization precision (both geometry
+ and color) to each LoD in order to optimize the rate-distortion (R-D)
+ trade-off. \n \n
+ Our joint progressive compression and reversible watermarking method (not implemented here) offers a
+ possibility to embed an watermark information in order to protect the ownership of the input mesh. \n
+ \n
+ See the @ref FilterDecompressionValence for the decompression step.
+
+@section FilterCompressionValenceParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Compressed file name | Name for the compressed file. The file extension should be ".p3d". |
+| With adaptative quantization | Enable or disable the use of the adaptation of quantization precision. |
+| Quantization bits | Number of bits for the geometry quantization. |
+| Max vertices | Maximum number of vertices of the final (the coarsest) mesh. |
+
+@section FilterCompressionValenceDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh. AIF is not yet supported.
+
+@section FilterCompressionValenceRestrictionsSection   Restrictions
+
+Applies to manifold triangular meshes only.
+
+@section FilterCompressionValenceReferencesSection     References
+
+@subsection compression_paper Progressive compression of colored meshes
+H. LEE, G. LAVOUE, F. DUPONT, \n
+Rate-distortion optimization for progressive compression of 3D mesh with
+lor attributes, \n
+The Visual Computer, 2011.
+\n
+
+@subsection jcw_paper Joint watermarking and progressive compression of 3D meshes
+H. LEE, C. DIKICI, G. LAVOUE, F. DUPONT, \n
+Joint reversible watermarking and progressive compression of 3D meshes, \n
+The Visual Computer 27(6-8):781-792, 2011.
+\n
+\n
+
+
+*/

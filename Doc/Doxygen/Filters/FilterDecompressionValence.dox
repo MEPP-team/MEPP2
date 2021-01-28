@@ -1,0 +1,35 @@
+/**
+
+@page FilterDecompressionValence  Decompression Valence Filter
+
+
+@section FilterDecompressionValenceOverviewSection       Overview
+
+The Decompression Valence filter decompresses a ".p3d" file produced by the @ref FilterCompressionValence. \n
+
+It can either decompress all the levels of details (LoDs) contained in the p3d file, or stop at one specific LoD.
+
+@section FilterDecompressionValenceParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| .p3d file name | Name of the ".p3d" file to decompress. |
+| Stop at level | Stop at the given LoD. |
+| Write compression levels information | Write compression levels information to the file <p3d_file_name>.infos.txt in the current directory. |
+| Write intermediate meshes | Save all LoDs meshes to files in the current directory. |
+| Display intermediate meshes | Display all LoDs meshes in the GUI. |
+
+@section FilterDecompressionValenceDataStructuresSection Supported data structures
+
+All mesh data structures are supported: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh and AIF.
+
+@section FilterDecompressionValenceRestrictionsSection   Restrictions
+
+None.
+
+@section FilterDecompressionValenceReferencesSection     References
+
+See @ref FilterCompressionValence.
+
+
+*/

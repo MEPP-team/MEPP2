@@ -1,0 +1,30 @@
+/**
+
+@page FilterScaling  Scaling Filter
+
+
+@section FilterScalingDescriptionSection    Description
+
+Scales the coordinates of the vertices of the mesh or point cloud.
+
+@section FilterScalingParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| X scale | Scale on X. |
+| Y scale | Scale on Y. |
+| Z scale | Scale on Z. |
+
+@section FilterScalingDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh, AIF, CGAL Point Set, PCL Point Cloud.
+
+@section FilterScalingRestrictionsSection   Restrictions
+
+None.
+
+@section FilterScalingReferencesSection     References
+
+None.
+
+*/

@@ -1,0 +1,31 @@
+/**
+
+@page FilterPointCloudCurvature  Point Cloud Curvature Filter
+
+
+@section FilterPointCloudCurvatureDescriptionSection    Description
+
+This filter implements the computation of mean curvature, at each point, by local least squares fitting of a quadric surface.\n
+The neighborhoods used for the fitting can be either computed by kNN search or radius search.
+
+@section FilterPointCloudCurvatureParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Search method | One of: kNN search, radius search. |
+| Number of neighbors | Number of neighbors used by the kNN search. |
+| Radius | Radius of the radius search relatively to the mesh bounding box size. |
+
+@section FilterPointCloudCurvatureDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Point Set, PCL Point Cloud.
+
+@section FilterPointCloudCurvatureRestrictionsSection   Restrictions
+
+None.
+
+@section FilterPointCloudCurvatureReferencesSection     References
+
+None.
+
+*/

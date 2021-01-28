@@ -6,6 +6,18 @@
  - For the user
    - \ref GeneralIntroductionPage    "General introduction"
    - \ref InstallWrapperPage         "Installation instructions"
+   - Existing filters
+     - \ref FilterBooleanOperation      "Boolean Operation"
+     - \ref FilterCMDM                  "CMDM"
+     - \ref FilterCompressionValence    "Compression Valence"
+     - \ref FilterCopyGraph             "Copy Graph"
+     - \ref FilterMeshCurvature         "Curvature"
+     - \ref FilterDecompressionValence  "Decompression Valence"
+     - \ref FilterJND                   "JND"
+     - \ref FilterMSDM2                 "MSDM2"
+     - \ref FilterPointCloudCurvature   "Point Cloud Curvature"
+     - \ref FilterScaling               "Scaling"
+     - \ref FilterWeightedPCA           "Weighted PCA"
  - For the developer
    - \ref DevelopersInceptionPage    "Add a new mesh processing filter"
    - \ref CategorizedExamplesPage    "A mesh processing filter example"

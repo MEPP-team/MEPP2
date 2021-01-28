@@ -1,0 +1,38 @@
+/**
+
+@page FilterWeightedPCA  Weighted PCA Filter
+
+
+@section FilterWeightedPCADescriptionSection    Description
+
+This filters implements a robust normal vector estimator for point cloud data.\n
+It can handle sharp features as well as smooth areas. \n
+The method is based on the inclusion of a robust estimator into a Principal Component Analysis in the neighborhood of the studied point which can detect and reject outliers automatically during the estimation. \n
+
+@section FilterWeightedPCAParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Number of neighbors | Number of points taken into account for local surface fitting. Low value leads to a faster computation time but can decrease quality in case of important sampling anisotropy or noise level. \n Typical: 100. \n For scattered point clouds: 50. \n For very noisy point clouds: 300. |
+| Noise (m) | The sensor noise, in meters. \n For bad sensor: 0.03. \n For good sensor: 0.005. \n For artificial point cloud: 0. |
+| Max Curvature (m) | Maximum curvature radius to define a sharp feature, in meters. \n For curved objects: 0.1. \n For piecewise planar objects: inf (3.40282e+38). |
+
+@section FilterWeightedPCADataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Point Set, PCL Point Cloud.
+
+@section FilterWeightedPCARestrictionsSection   Restrictions
+
+None.
+
+@section FilterWeightedPCAReferencesSection     References
+
+Robust normal vector estimation in 3D point clouds through iterative principal component analysis, \n
+Julia Sanchez, Florence Denis, David Coeurjolly, Florent Dupont, Laurent Trassoudaine and Paul Checchin, \n
+ISPRS Journal of Photogrammetry and Remote Sensing, vol. 163, pp. 18-35, 2020.
+\n
+\n
+
+
+*/
+
