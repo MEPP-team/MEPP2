@@ -127,7 +127,7 @@ Scripting commands for compiling Mepp2:
   $ cd MEPP2 && mkdir build && cd build
 
   # compile with CGAL, OpenMesh and GUI
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DBUILD_USE_GUI=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # compile without CGAL nor OpenMesh, nor GUI
@@ -135,7 +135,7 @@ Scripting commands for compiling Mepp2:
   $ make
 
   # compile with CGAL, OpenMesh, GUI and FBX
-  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
+  $ cmake -DCGAL_DIR="$HOME/CGAL-4.14.3" -DOPENMESH_DIR="$HOME/OpenMesh-8.1" -DOSG_DIR="$HOME/osg-3.6.5" -DFBX_DIR="$HOME/FBX_SDK/2019.0" -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_FBX=ON -DCMAKE_BUILD_TYPE=Release ..
   $ make
 
   # generate the documentation
