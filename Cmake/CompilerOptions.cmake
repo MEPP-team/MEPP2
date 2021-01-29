@@ -4,7 +4,7 @@
 # GNUCXX
 #------------------------------------------------------------------------------
 if(CMAKE_COMPILER_IS_GNUCXX)
-	set(ENABLE_CXX11 "-std=c++11")
+	set(ENABLE_CXX11 "-std=c++14")
 
 	EXECUTE_PROCESS(COMMAND "${CMAKE_CXX_COMPILER} -dumpversion" OUTPUT_VARIABLE GCC_VERSION)
 	if (GCC_VERSION LESS 4.7)
@@ -22,7 +22,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
 if(CMAKE_COMPILER_IS_CLANGXX)
-	set(ENABLE_CXX11 "-std=c++11")
+	set(ENABLE_CXX11 "-std=c++14")
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ENABLE_CXX11}")
 	message( STATUS "Clang compiler detected (with ${ENABLE_CXX11} activated)" )
