@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
   double mr = 0.002;
   pcl::NormalEstimation< PointType, NormalType > n;
   n.setInputCloud(pc.makeShared());
-  boost::shared_ptr< std::vector< int > > indicesptr(new std::vector< int >(indices));
+  std::shared_ptr< std::vector< int > > indicesptr(new std::vector< int >(indices));
   n.setIndices(indicesptr);
   n.setSearchMethod(tree);
   n.setRadiusSearch(20 * mr);
