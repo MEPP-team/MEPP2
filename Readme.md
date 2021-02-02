@@ -1,4 +1,4 @@
-![MEPP](https://perso.liris.cnrs.fr/guillaume.lavoue/teaser.jpg)
+![MEPP](https://projet.liris.cnrs.fr/mepp/mepp2/img/teaser.jpg)
 
 
 **MEPP website is [available here](http://liris.cnrs.fr/mepp/)**.
@@ -37,7 +37,7 @@ an abstraction layer that provides interoperability over several third party dat
 **Installation and developer documentation is [available here](http://liris.cnrs.fr/mepp/doc/nightly/)**.
 
 
-![MEPP-GUI](https://projet.liris.cnrs.fr/mepp/images/mepp2/MEPP2-GUI-V2.PNG)
+![MEPP-GUI](https://projet.liris.cnrs.fr/mepp/mepp2/img/mepp2_gui.jpg)
 
 
 Linux / Mac OS X (under Travis CI) : [![Build Status](https://travis-ci.org/MEPP-team/MEPP2.svg?branch=master)](https://travis-ci.org/MEPP-team/MEPP2)
