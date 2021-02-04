@@ -19,9 +19,25 @@ FEVV::DialogCurvature1::DialogCurvature1(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogCurvature1)
 {
   ui->setupUi(this);
+
+  // ---
+
+  helpButton = new QPushButton("?");
+
+  helpButton->setMaximumSize(32, 32);
+  connect( helpButton, &QPushButton::clicked, []() {
+    QWhatsThis::enterWhatsThisMode();
+  } );
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
 }
 ////////////////////////////////////////////////////////////////////////////////
-FEVV::DialogCurvature1::~DialogCurvature1() { delete ui; }
+FEVV::DialogCurvature1::~DialogCurvature1()
+{
+  delete helpButton;
+
+  delete ui;
+}
 ////////////////////////////////////////////////////////////////////////////////
 void
 FEVV::DialogCurvature1::setCurvature(bool geod, double radius, bool Cmin_max, bool Dmin_max)
