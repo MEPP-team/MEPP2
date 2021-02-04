@@ -10,6 +10,10 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #include "DialogCurvature1.h"
 #include "ui_DialogCurvature1.h"
+
+#include <QWhatsThis>
+#include <QUrl>
+#include <QDesktopServices>
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogCurvature1::DialogCurvature1(QWidget *parent)
     : QDialog(parent), ui(new Ui::DialogCurvature1)
@@ -47,5 +51,20 @@ FEVV::DialogCurvature1::getCurvature(bool &geod, double &radius, bool &Cmin_max,
   Cmin_max = ui->checkBox_Cmin_max->isChecked();
 
   Dmin_max = ui->checkBox_Dmin_max->isChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool FEVV::DialogCurvature1::event(QEvent *e)
+{
+  if (e->type() == QEvent::EnterWhatsThisMode)
+  {
+    QWhatsThis::leaveWhatsThisMode();
+
+    QString link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_mesh_curvature.html";
+    QDesktopServices::openUrl(QUrl(link));
+
+    return true;
+  }
+
+  return QDialog::event(e);
 }
 ////////////////////////////////////////////////////////////////////////////////
