@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include <QDialog>
 
+#include <QWhatsThis>
 #include <QPushButton>
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
@@ -33,6 +34,12 @@ public:
 
   void setCurvature(bool geod, double radius, bool Cmin_max, bool Dmin_max);
   void getCurvature(bool &geod, double &radius, bool &Cmin_max, bool &Dmin_max);
+
+public slots:
+  void onHelpTriggered()
+  {
+    QWhatsThis::enterWhatsThisMode();
+  }
 
 private:
   Ui::DialogCurvature1 *ui;

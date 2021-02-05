@@ -11,7 +11,6 @@
 #include "DialogCurvature1.h"
 #include "ui_DialogCurvature1.h"
 
-#include <QWhatsThis>
 #include <QUrl>
 #include <QDesktopServices>
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,11 +22,14 @@ FEVV::DialogCurvature1::DialogCurvature1(QWidget *parent)
   // ---
 
   helpButton = new QPushButton("?");
-
   helpButton->setMaximumSize(32, 32);
-  connect( helpButton, &QPushButton::clicked, []() {
+
+  // Qt5 only
+  /*connect( helpButton, &QPushButton::clicked, []() {
     QWhatsThis::enterWhatsThisMode();
-  } );
+  } );*/
+  // Qt4 and Qt5
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
 
   ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
 }
