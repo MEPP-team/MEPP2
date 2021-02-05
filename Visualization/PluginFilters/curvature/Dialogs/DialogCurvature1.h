@@ -11,10 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
-
-#include <QWhatsThis>
-#include <QPushButton>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogCurvature1;
@@ -22,7 +19,7 @@ class DialogCurvature1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogCurvature1 : public QDialog
+class DialogCurvature1 : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -30,21 +27,14 @@ public:
   explicit DialogCurvature1(QWidget *parent = 0);
   ~DialogCurvature1();
 
-  bool event(QEvent *e);
-
   void setCurvature(bool geod, double radius, bool Cmin_max, bool Dmin_max);
   void getCurvature(bool &geod, double &radius, bool &Cmin_max, bool &Dmin_max);
 
-public slots:
-  void onHelpTriggered()
-  {
-    QWhatsThis::enterWhatsThisMode();
-  }
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::DialogCurvature1 *ui;
-
-  QPushButton *helpButton;
 };
 
 } // namespace FEVV
