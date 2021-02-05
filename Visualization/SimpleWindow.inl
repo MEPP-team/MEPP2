@@ -206,6 +206,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
   // --- JUST HERE FOR AUTOMATIC TEST ---
   if(_test)
   {
+    clean_closure = true;
     connect(&timerQuit, SIGNAL(timeout()), this, SLOT(close()));
     timerQuit.start(10000);
   }
@@ -1281,30 +1282,42 @@ FEVV::SimpleWindow::on_actionClose_triggered()
 inline void
 FEVV::SimpleWindow::on_actionQuit_triggered()
 {
+  clean_closure = true;
   close();
 }
 
 inline void
 FEVV::SimpleWindow::closeEvent(QCloseEvent *event)
 {
-  if(mdiArea)
+#if ( defined(__linux__) && defined(FEVV_USE_QT5) )
+  if (!clean_closure)
   {
-    mdiArea->closeAllSubWindows();
+    event->ignore();
 
-    if(activeMdiChild())
+    QMessageBox::information(this, "", QObject::tr("Please, use 'File' -> 'Exit' menu to quit."));
+  }
+  else
+#endif
+  {
+    if(mdiArea)
     {
-      event->ignore();
+      mdiArea->closeAllSubWindows();
+
+      if(activeMdiChild())
+      {
+        event->ignore();
+      }
+      else
+      {
+        writeSettings();
+        event->accept();
+      }
     }
     else
     {
       writeSettings();
       event->accept();
     }
-  }
-  else
-  {
-    writeSettings();
-    event->accept();
   }
 }
 

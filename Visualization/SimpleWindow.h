@@ -387,6 +387,9 @@ public:
   bool ctrl_drag = false;
 
   bool recent = false;
+
+private:
+  bool clean_closure = false;
 };
 
 } // namespace FEVV
