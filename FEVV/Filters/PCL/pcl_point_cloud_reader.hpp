@@ -238,7 +238,7 @@ read_mesh(
 
       // retrieve all pcl::PointNormal fields
       std::vector<pcl::PCLPointField> fields;
-      pcl::getFields< pcl::PointNormal >(fields);
+      fields = pcl::getFields< pcl::PointNormal >();
       // remove the last unwanted field (curvature)
       fields.pop_back();
       reader.setInputFields(fields);
