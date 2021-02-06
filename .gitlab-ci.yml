@@ -493,13 +493,13 @@ dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
 dock-lin20.04LTS-cgal_5.0-pcl_1.10 [Release - GCC - QT4 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
-  image: mtola/mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
   <<: *linux_build_definition_1x-gcc-qt4-release-cgal_50-pcl_110
 
 dock-lin20.04LTS-cgal_5.1-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
-  image: mtola/mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
   <<: *linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
