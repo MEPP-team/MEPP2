@@ -471,7 +471,7 @@ dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
   image: mtola/ubuntu-16.04-mepp2
   <<: *linux_build_definition_0x-clang-qt5-debug
 #
-.linux_build_template_1x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt4-release-cgal_5.0-pcl_1.10
+.linux_build_template_1x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt4-release-cgal_50-pcl_110
   script:
     - export CGAL_DIR="$HOME/CGAL-5.0.4"
     - export PCL_DIR="$HOME/pcl-1.10.1/share/pcl-1.10"
@@ -480,7 +480,7 @@ dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_5.1-pcl_1.11
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
   script:
     - export CGAL_DIR="$HOME/CGAL-5.1.2"
     - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
@@ -494,13 +494,13 @@ dock-lin20.04LTS-cgal_5.0-pcl_1.10 [Release - GCC - QT4 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  <<: *linux_build_definition_1x-gcc-qt4-release-cgal_5.0-pcl_1.10
+  <<: *linux_build_definition_1x-gcc-qt4-release-cgal_50-pcl_110
 
 dock-lin20.04LTS-cgal_5.1-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_5.1-pcl_1.11
+  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
   script:
