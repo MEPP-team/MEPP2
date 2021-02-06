@@ -27,6 +27,8 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/io/ply_io.h>
 
+#include <pcl/pcl_config.h>
+
 #if defined _MSC_VER
 #pragma warning(pop)
 #endif
@@ -238,7 +240,11 @@ read_mesh(
 
       // retrieve all pcl::PointNormal fields
       std::vector<pcl::PCLPointField> fields;
+#if PCL_VERSION_COMPARE(<, 1, 11, 0)
+      pcl::getFields< pcl::PointNormal >(fields);
+#else
       fields = pcl::getFields< pcl::PointNormal >();
+#endif
       // remove the last unwanted field (curvature)
       fields.pop_back();
       reader.setInputFields(fields);
