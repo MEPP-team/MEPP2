@@ -473,7 +473,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #
 .linux_build_template_1x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-release-cgal_50-pcl_110
   script:
-    - export CGAL_DIR="$HOME/CGAL-5.0.4"
+    - export CGAL_DIR="$HOME/CGAL-5.1.2"
     - export PCL_DIR="$HOME/pcl-1.10.1/share/pcl-1.10"
     - mkdir build; cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
@@ -482,7 +482,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 
 .linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
   script:
-    - export CGAL_DIR="$HOME/CGAL-5.1.2"
+    - export CGAL_DIR="$HOME/CGAL-5.2"
     - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
