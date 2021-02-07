@@ -459,17 +459,17 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-16.04-mepp2
-  <<: *linux_build_definition_0x-gcc-qt4-release
+#dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-16.04-mepp2
+#  <<: *linux_build_definition_0x-gcc-qt4-release
 
-dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-16.04-mepp2
-  <<: *linux_build_definition_0x-clang-qt5-debug
+#dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-16.04-mepp2
+#  <<: *linux_build_definition_0x-clang-qt5-debug
 #
 .linux_build_template_1x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-release-cgal_50-pcl_110
   script:
