@@ -437,9 +437,9 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 3 doc
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
-####################################
-# DOCKER - CONF3 (ALL) - 6 configs #
-####################################
+#####################################
+# DOCKER - CONF3 (ALL) - 10 configs #
+#####################################
 #
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
   script:
@@ -451,6 +451,13 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #    paths:
 #      - build/Visualization/Applications
 
+.linux_build_template_0x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt5-release
+  script:
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
 .linux_build_template_0x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_0x-clang-qt5-debug
   script:
     - export CXX=clang++ CC=clang
@@ -459,17 +466,74 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-16.04-mepp2
-  <<: *linux_build_definition_0x-gcc-qt4-release
+#dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-16.04-mepp2
+#  <<: *linux_build_definition_0x-gcc-qt4-release
 
-dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#dock-lin16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-16.04-mepp2
+#  <<: *linux_build_definition_0x-clang-qt5-debug
+
+#dock-lin20.10LTS [Release - GCC - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-20.10-mepp2
+#  <<: *linux_build_definition_0x-gcc-qt5-release
+
+#dock-lin20.10LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-20.10-mepp2
+#  <<: *linux_build_definition_0x-clang-qt5-debug
+
+#dock-lin21.04LTS [Release - GCC - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-21.04-mepp2
+#  <<: *linux_build_definition_0x-gcc-qt5-release
+
+#dock-lin21.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-21.04-mepp2
+#  <<: *linux_build_definition_0x-clang-qt5-debug
+#
+.linux_build_template_1x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-release-cgal_50-pcl_110
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.0.4"
+    - export PCL_DIR="$HOME/pcl-1.10.1/share/pcl-1.10"
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.2"
+    - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+dock-lin20.04LTS-cgal_5.0-pcl_1.10 [Release - GCC - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-16.04-mepp2
-  <<: *linux_build_definition_0x-clang-qt5-debug
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-gcc-qt5-release-cgal_50-pcl_110
+
+# NOTE: Test_decompression_valence_surfacemesh_nefertiti_v100_qtz10_noQA NOT OK with cgal_5.1.2... -> BUT OK with cgal_5.0.4 and cgal_5.2 !
+
+dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+  tags:
+    - MEPP2,osx,DOCKER-LIN
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
   script:

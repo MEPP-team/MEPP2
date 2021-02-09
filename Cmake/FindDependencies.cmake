@@ -36,7 +36,7 @@ else()
 endif()
 
 ##### Boost package finding (mandatory)
-find_package(Boost COMPONENTS thread system filesystem REQUIRED)
+find_package(Boost COMPONENTS thread system filesystem chrono REQUIRED)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 else()

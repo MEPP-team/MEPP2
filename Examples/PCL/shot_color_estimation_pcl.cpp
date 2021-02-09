@@ -35,6 +35,7 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/features/shot_omp.h>
 
+#include <pcl/pcl_config.h>
 
 // main
 int main(int argc, char *argv[])
@@ -95,7 +96,11 @@ int main(int argc, char *argv[])
   double mr = 0.002;
   pcl::NormalEstimation< PointType, NormalType > n;
   n.setInputCloud(pc.makeShared());
+#if PCL_VERSION_COMPARE(<, 1, 11, 0)
   boost::shared_ptr< std::vector< int > > indicesptr(new std::vector< int >(indices));
+#else
+  std::shared_ptr< std::vector< int > > indicesptr(new std::vector< int >(indices));
+#endif
   n.setIndices(indicesptr);
   n.setSearchMethod(tree);
   n.setRadiusSearch(20 * mr);

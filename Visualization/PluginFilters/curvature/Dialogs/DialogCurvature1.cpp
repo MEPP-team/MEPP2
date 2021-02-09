@@ -12,9 +12,16 @@
 #include "ui_DialogCurvature1.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogCurvature1::DialogCurvature1(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogCurvature1)
+    : BasePluginDialogQt(parent), ui(new Ui::DialogCurvature1)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_mesh_curvature.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogCurvature1::~DialogCurvature1() { delete ui; }
