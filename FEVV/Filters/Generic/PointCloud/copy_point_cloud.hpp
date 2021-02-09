@@ -12,61 +12,10 @@
 
 
 #include "FEVV/Wrappings/properties.h"
+#include "FEVV/Tools/Math/color_conversion.hpp"
 
 #include <iostream>
 #include <type_traits> // for std::remove_reference
-
-
-/**
- * Convert color value given in [0; 255]
- * General case, casting is enough.
- */
-template< typename OutT >
-OutT convert_color_value(uint8_t color_0_255)
-{
-  return static_cast< OutT >(color_0_255);
-}
-
-/**
- * Convert color value in [0; 255] to color value in [0.0; 1.0] (float).
- */
-template<>
-inline
-float convert_color_value< float >(uint8_t color_0_255)
-{
-  return color_0_255 / 255.0f;
-}
-
-/**
- * Convert color value in [0; 255] to color value in [0.0; 1.0] (double).
- */
-template<>
-inline
-double convert_color_value< double >(uint8_t color_0_255)
-{
-  return color_0_255 / 255.0;
-}
-
-/**
- * Convert color value given in [0.0; 1.0].
- * General case, casting is enough.
- */
-template< typename OutT >
-OutT convert_color_value(double color_0_1)
-{
-  return static_cast< OutT >(color_0_1);
-}
-
-/**
- * Convert color value in [0.0; 1.0] to color value in [0; 255].
- */
-template<>
-inline
-uint8_t convert_color_value< uint8_t >(double color_0_1)
-{
-  // note: applies also to color_0_1 of type float
-  return static_cast< uint8_t >(color_0_1 * 255.0);
-}
 
 
 namespace FEVV {
@@ -211,9 +160,9 @@ copy_point_cloud(const PointCloudS     &pc_s,
 
       put(target_pm,
           v,
-          TColor(convert_color_value< TColorValueType >(color[0]),
-                 convert_color_value< TColorValueType >(color[1]),
-                 convert_color_value< TColorValueType >(color[2])));
+          TColor(FEVV::Math::convert_color_value< TColorValueType >(color[0]),
+                 FEVV::Math::convert_color_value< TColorValueType >(color[1]),
+                 FEVV::Math::convert_color_value< TColorValueType >(color[2])));
     }
 
     // populate v2v map
