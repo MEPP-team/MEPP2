@@ -28,6 +28,7 @@
      - \ref GeometryConceptPage    "Geometry API"
      - \ref GenericPropertyMapConceptPage "Property maps API"
    - \ref DatastructureSpecificFilterAndPlugin "Datastructure-specific filter and plugin"
+   - \ref FAQPage "FAQ"
  - For the contributor
      - \ref ForkingCloningContributingExternalPage  "Forking/Cloning/Contributing for externals"
      - \ref ForkingCloningContributingInternalPage  "Forking/Cloning/Contributing for project members"
