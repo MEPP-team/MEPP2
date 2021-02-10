@@ -780,7 +780,8 @@ INPUT                  = @PROJECT_SOURCE_DIR@/Base \
                          @PROJECT_SOURCE_DIR@/FEVV \
                          @PROJECT_SOURCE_DIR@/Testing \
                          @PROJECT_SOURCE_DIR@/Visualization \
-                         @PROJECT_SOURCE_DIR@/Doc/Doxygen/Devel/DatastructureSpecificFilterAndPlugin.md
+                         @PROJECT_SOURCE_DIR@/Doc/Doxygen/Devel/DatastructureSpecificFilterAndPlugin.md \
+                         @PROJECT_SOURCE_DIR@/Doc/Doxygen/Devel/FAQ.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
