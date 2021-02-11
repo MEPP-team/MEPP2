@@ -30,6 +30,9 @@ public:
   void setParameters(double x, double y, double z);
   void getParameters(double &x, double &y, double &z);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::HelloworldDialog *ui;
 };

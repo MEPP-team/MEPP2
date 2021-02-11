@@ -41,6 +41,9 @@ public:
 private slots:
   void selectFilename();
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::DialogDecompressionValence1 *ui;
 };

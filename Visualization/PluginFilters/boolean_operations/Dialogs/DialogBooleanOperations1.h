@@ -31,6 +31,9 @@ public:
   void setParameters(const std::string &operation);
   void getParameters(std::string &operation);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::DialogBooleanOperations1 *ui;
 };

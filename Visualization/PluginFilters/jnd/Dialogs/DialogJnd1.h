@@ -38,6 +38,9 @@ public:
                   bool &use_log,
                   bool &force_jnd);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::DialogJnd1 *ui;
 };

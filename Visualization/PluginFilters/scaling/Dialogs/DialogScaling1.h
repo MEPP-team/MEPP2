@@ -30,6 +30,9 @@ public:
   void setScale(double x, double y, double z);
   void getScale(double &x, double &y, double &z);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::DialogScaling1 *ui;
 };

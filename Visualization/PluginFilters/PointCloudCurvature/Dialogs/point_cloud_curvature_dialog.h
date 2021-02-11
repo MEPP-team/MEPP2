@@ -30,6 +30,9 @@ public:
   void setParameters(unsigned int k, double radius, bool knn_search);
   void getParameters(unsigned int &k, double &radius, bool &knn_search);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::PointCloudCurvatureDialog *ui;
 };

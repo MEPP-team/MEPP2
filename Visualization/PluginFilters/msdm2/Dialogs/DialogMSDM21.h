@@ -29,6 +29,9 @@ public:
 
   void getProcess(bool &one_two, bool &two_one, int &scales, bool &colors);
 
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
+
 private:
   Ui::DialogMSDM21 *ui;
 };
