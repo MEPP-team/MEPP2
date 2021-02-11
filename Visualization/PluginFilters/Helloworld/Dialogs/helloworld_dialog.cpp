@@ -12,9 +12,16 @@
 #include "ui_helloworld_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::HelloworldDialog::HelloworldDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::HelloworldDialog)
+    : BasePluginDialogQt(parent), ui(new Ui::HelloworldDialog)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly"; // no help page for helloworld_plugin for now...
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::HelloworldDialog::~HelloworldDialog() { delete ui; }

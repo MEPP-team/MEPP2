@@ -13,9 +13,16 @@
 #include "ui_DialogBooleanOperations1.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogBooleanOperations1::DialogBooleanOperations1(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogBooleanOperations1)
+    : BasePluginDialogQt(parent), ui(new Ui::DialogBooleanOperations1)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_boolean_operation.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogBooleanOperations1::~DialogBooleanOperations1() { delete ui; }

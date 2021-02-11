@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogDecompressionValence1;
@@ -19,7 +19,7 @@ class DialogDecompressionValence1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogDecompressionValence1 : public QDialog
+class DialogDecompressionValence1 : public BasePluginDialogQt
 {
   Q_OBJECT
 

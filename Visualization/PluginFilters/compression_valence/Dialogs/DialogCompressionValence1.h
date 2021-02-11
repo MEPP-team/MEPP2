@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogCompressionValence1;
@@ -19,7 +19,7 @@ class DialogCompressionValence1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogCompressionValence1 : public QDialog
+class DialogCompressionValence1 : public BasePluginDialogQt
 {
   Q_OBJECT
 

@@ -12,9 +12,16 @@
 #include "ui_copy_graph_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::CopyGraphDialog::CopyGraphDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::CopyGraphDialog)
+    : BasePluginDialogQt(parent), ui(new Ui::CopyGraphDialog)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_copy_graph.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::CopyGraphDialog::~CopyGraphDialog() { delete ui; }
