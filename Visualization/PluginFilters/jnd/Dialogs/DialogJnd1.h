@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogJnd1;
@@ -19,7 +19,7 @@ class DialogJnd1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogJnd1 : public QDialog
+class DialogJnd1 : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -37,6 +37,9 @@ public:
                   float &log_disp,
                   bool &use_log,
                   bool &force_jnd);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::DialogJnd1 *ui;

@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class CopyGraphDialog;
@@ -19,7 +19,7 @@ class CopyGraphDialog;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class CopyGraphDialog : public QDialog
+class CopyGraphDialog : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -29,6 +29,9 @@ public:
 
   void setParameters(double x, double y, double z);
   void getParameters(double &x, double &y, double &z);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::CopyGraphDialog *ui;

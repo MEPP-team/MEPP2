@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class CMDMDialog;
@@ -19,7 +19,7 @@ class CMDMDialog;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class CMDMDialog : public QDialog
+class CMDMDialog : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -28,6 +28,9 @@ public:
   ~CMDMDialog();
 
   void getProcess(bool &one_two, bool &two_one, int &scales, bool &colors);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::CMDMDialog *ui;

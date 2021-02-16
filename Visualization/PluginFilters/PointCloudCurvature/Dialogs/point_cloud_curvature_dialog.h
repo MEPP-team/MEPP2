@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class PointCloudCurvatureDialog;
@@ -19,7 +19,7 @@ class PointCloudCurvatureDialog;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class PointCloudCurvatureDialog : public QDialog
+class PointCloudCurvatureDialog : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -29,6 +29,9 @@ public:
 
   void setParameters(unsigned int k, double radius, bool knn_search);
   void getParameters(unsigned int &k, double &radius, bool &knn_search);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::PointCloudCurvatureDialog *ui;

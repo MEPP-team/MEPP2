@@ -12,9 +12,16 @@
 #include "ui_cmdm_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::CMDMDialog::CMDMDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::CMDMDialog)
+    : BasePluginDialogQt(parent), ui(new Ui::CMDMDialog)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_c_m_d_m.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::CMDMDialog::~CMDMDialog() { delete ui; }

@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogMSDM21;
@@ -19,7 +19,7 @@ class DialogMSDM21;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogMSDM21 : public QDialog
+class DialogMSDM21 : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -28,6 +28,9 @@ public:
   ~DialogMSDM21();
 
   void getProcess(bool &one_two, bool &two_one, int &scales, bool &colors);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::DialogMSDM21 *ui;

@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class HelloworldDialog;
@@ -19,7 +19,7 @@ class HelloworldDialog;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class HelloworldDialog : public QDialog
+class HelloworldDialog : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -29,6 +29,9 @@ public:
 
   void setParameters(double x, double y, double z);
   void getParameters(double &x, double &y, double &z);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::HelloworldDialog *ui;

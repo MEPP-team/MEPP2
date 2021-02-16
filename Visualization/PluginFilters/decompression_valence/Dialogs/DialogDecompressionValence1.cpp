@@ -15,11 +15,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogDecompressionValence1::DialogDecompressionValence1(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogDecompressionValence1)
+    : BasePluginDialogQt(parent), ui(new Ui::DialogDecompressionValence1)
 {
   ui->setupUi(this);
   connect(
       ui->pushButtonBrowse, SIGNAL(clicked()), this, SLOT(selectFilename()));
+
+  // ---
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_decompression_valence.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogDecompressionValence1::~DialogDecompressionValence1() { delete ui; }

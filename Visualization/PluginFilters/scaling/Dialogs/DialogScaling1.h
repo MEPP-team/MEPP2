@@ -11,7 +11,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogScaling1;
@@ -19,7 +19,7 @@ class DialogScaling1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogScaling1 : public QDialog
+class DialogScaling1 : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -29,6 +29,9 @@ public:
 
   void setScale(double x, double y, double z);
   void getScale(double &x, double &y, double &z);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::DialogScaling1 *ui;

@@ -12,7 +12,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-#include <QDialog>
+#include "Visualization/PluginFilters/BasePluginDialogQt.h"
 ////////////////////////////////////////////////////////////////////////////////
 namespace Ui {
 class DialogBooleanOperations1;
@@ -20,7 +20,7 @@ class DialogBooleanOperations1;
 ////////////////////////////////////////////////////////////////////////////////
 namespace FEVV {
 
-class DialogBooleanOperations1 : public QDialog
+class DialogBooleanOperations1 : public BasePluginDialogQt
 {
   Q_OBJECT
 
@@ -30,6 +30,9 @@ public:
 
   void setParameters(const std::string &operation);
   void getParameters(std::string &operation);
+
+protected slots:
+  void onHelpTriggered() { helpTriggered(); }
 
 private:
   Ui::DialogBooleanOperations1 *ui;

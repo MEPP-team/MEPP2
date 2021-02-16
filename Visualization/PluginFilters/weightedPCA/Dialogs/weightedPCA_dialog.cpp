@@ -12,9 +12,16 @@
 #include "ui_weightedPCA_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::WeightedPCADialog::WeightedPCADialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::WeightedPCADialog)
+    : BasePluginDialogQt(parent), ui(new Ui::WeightedPCADialog)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_weighted_p_c_a.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::WeightedPCADialog::~WeightedPCADialog() { delete ui; }

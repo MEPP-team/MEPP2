@@ -12,9 +12,16 @@
 #include "ui_point_cloud_curvature_dialog.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::PointCloudCurvatureDialog::PointCloudCurvatureDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::PointCloudCurvatureDialog)
+    : BasePluginDialogQt(parent), ui(new Ui::PointCloudCurvatureDialog)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_point_cloud_curvature.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::PointCloudCurvatureDialog::~PointCloudCurvatureDialog() { delete ui; }

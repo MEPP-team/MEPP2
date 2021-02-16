@@ -1,8 +1,8 @@
 # How to building the image
-# docker build -t ubuntu-20.04-mepp2 .
+# docker build -t ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2 .
 
 # How to start a container in interactive mode
-# docker run -it ubuntu-20.04-mepp2
+# docker run -it ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 
 FROM ubuntu:20.04
 
@@ -33,7 +33,7 @@ RUN apt-get -y install xvfb
 # CMake
 RUN apt-get -y install cmake cmake-curses-gui
 
-# Boost (it is 1.71.0, not 1.72.0 -> bad news, because problem with CGAL 5.0.x !)
+# Boost
 RUN apt-get -y install libboost-all-dev
 
 # Eigen 3
@@ -41,13 +41,19 @@ RUN apt-get -y install libeigen3-dev
 
 # CGAL (installation in user home directory)
 RUN apt-get -y install libgmp-dev libmpfr-dev
-#RUN apt-get -y install libcgal-dev # official package CGAL-5.0.2 don't work because of Boost 1.71.0 ! (must work with Boost 1.72.0...)
+#RUN apt-get -y install libcgal-dev
 RUN cd /tmp                                                                                    && \
     wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.3/CGAL-4.14.3.zip && \
     cd && unzip /tmp/CGAL-4.14.3.zip
 RUN cd /tmp                                                                                    && \
-    wget https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-5.0.3/CGAL-5.0.3.zip   && \
-    cd && unzip /tmp/CGAL-5.0.3.zip
+    wget https://github.com/CGAL/cgal/releases/download/v5.0.4/CGAL-5.0.4.zip                  && \
+    cd && unzip /tmp/CGAL-5.0.4.zip
+RUN cd /tmp                                                                                    && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.1.2/CGAL-5.1.2.zip                  && \
+    cd && unzip /tmp/CGAL-5.1.2.zip
+RUN cd /tmp                                                                                    && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.2/CGAL-5.2.zip                      && \
+    cd && unzip /tmp/CGAL-5.2.zip
 
 # OpenMesh (installation in user home directory)
 RUN cd /tmp                                                                       && \
@@ -83,13 +89,27 @@ RUN apt-get -y install libvtk7-dev
 
 # PCL (installation in user home directory) - DON'T use libpcl-dev package !
 RUN apt-get -y install libflann-dev libproj-dev
-#RUN apt-get -y install libpcl-dev # official package pcl-1.10.0 don't work...
+#RUN apt-get -y install libpcl-dev
 RUN cd /tmp                                                                                                                                                                && \
     wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz                                                                                                 && \
     tar -xzf pcl-1.9.1.tar.gz                                                                                                                                              && \
     cd pcl-pcl-1.9.1 && mkdir build && cd build                                                                                                                            && \
     cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ENABLE_SSE=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.9.1 .. && \
     make -j 3                                                                                                                                                              && \
+    make install && cd
+RUN cd /tmp                                                                                                                                                                 && \
+    wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.10.1.tar.gz                                                                                                 && \
+    tar -xzf pcl-1.10.1.tar.gz                                                                                                                                              && \
+    cd pcl-pcl-1.10.1 && mkdir build && cd build                                                                                                                            && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ENABLE_SSE=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.10.1 .. && \
+    make -j 3                                                                                                                                                               && \
+    make install && cd
+RUN cd /tmp                                                                                                                                                                 && \
+    wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.11.1.tar.gz                                                                                                 && \
+    tar -xzf pcl-1.11.1.tar.gz                                                                                                                                              && \
+    cd pcl-pcl-1.11.1 && mkdir build && cd build                                                                                                                            && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DPCL_ENABLE_SSE=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF -DWITH_VTK=OFF -DCMAKE_INSTALL_PREFIX=$HOME/pcl-1.11.1 .. && \
+    make -j 3                                                                                                                                                               && \
     make install && cd
 
 # FBX SDK
@@ -110,6 +130,13 @@ RUN cd /tmp                                                                     
     cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.3.6 .. && \
     make -j 3                                                                                           && \
     make install && cd
+RUN cd /tmp                                                                                             && \
+    wget https://github.com/google/draco/archive/1.4.1.tar.gz                                           && \
+    tar -xzf 1.4.1.tar.gz                                                                               && \
+    cd draco-1.4.1 && mkdir build && cd build                                                           && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.4.1 .. && \
+    make -j 3                                                                                           && \
+    make install && cd
 
 # Cleanup
 RUN apt-get -y autoremove
@@ -117,10 +144,19 @@ RUN apt-get -y autoremove
 ENV HOME /root
 
 # App environment
-ENV CGAL_DIR "$HOME/CGAL-4.14.3"
-#ENV CGAL_DIR "$HOME/CGAL-5.0.3"
+#ENV CGAL_DIR "$HOME/CGAL-4.14.3"
+#ENV CGAL_DIR "$HOME/CGAL-5.0.4"
+#ENV CGAL_DIR "$HOME/CGAL-5.1.2"
+ENV CGAL_DIR "$HOME/CGAL-5.2"
+
 #ENV OPENMESH_DIR "$HOME/OpenMesh-7.1"
 ENV OPENMESH_DIR "$HOME/OpenMesh-8.1"
-ENV PCL_DIR "$HOME/pcl-1.9.1/share/pcl-1.9"
+
+#ENV PCL_DIR "$HOME/pcl-1.9.1/share/pcl-1.9"
+#ENV PCL_DIR "$HOME/pcl-1.10.1/share/pcl-1.10"
+ENV PCL_DIR "$HOME/pcl-1.11.1/share/pcl-1.11"
+
 ENV FBX_DIR "$HOME/FBX_SDK/2019.0"
-ENV DRACO_DIR "$HOME/draco-1.3.6"
+
+#ENV DRACO_DIR "$HOME/draco-1.3.6"
+ENV DRACO_DIR "$HOME/draco-1.4.1"

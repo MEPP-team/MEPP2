@@ -12,9 +12,16 @@
 #include "ui_DialogMSDM21.h"
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogMSDM21::DialogMSDM21(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogMSDM21)
+    : BasePluginDialogQt(parent), ui(new Ui::DialogMSDM21)
 {
   ui->setupUi(this);
+
+  ui->verticalLayout->addWidget(helpButton, 0, Qt::AlignRight);
+  QObject::connect( helpButton, SIGNAL(clicked(bool)), this, SLOT(onHelpTriggered()) );
+
+  // ---
+
+  link = "https://liris.cnrs.fr/mepp/doc/nightly/_filter_m_s_d_m2.html";
 }
 ////////////////////////////////////////////////////////////////////////////////
 FEVV::DialogMSDM21::~DialogMSDM21() { delete ui; }
