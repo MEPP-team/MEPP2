@@ -1,4 +1,4 @@
-# How to building the image
+# How to build the image
 # docker build -t ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2 .
 
 # How to start a container in interactive mode

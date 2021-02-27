@@ -1,4 +1,4 @@
-# How to building the image
+# How to build the image
 # docker build -t ubuntu-16.04-mepp2 .
 
 # How to start a container in interactive mode
