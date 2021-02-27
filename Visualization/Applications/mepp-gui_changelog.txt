@@ -1,3 +1,8 @@
+v0.14.2 - 16/02/2021 :
+ - add help for all plugins
+ - add support for CGAL-5.0.x/CGAL-5.1.x/CGAL-5.2
+ - add support for pcl-1.10.x/pcl-1.11.x
+
 v0.14.1 (TAGGED) - 07/01/2021 :
  - add settings support : folder locations (tree/open/save), mainwindow (pos, size, state), recent files list...
 

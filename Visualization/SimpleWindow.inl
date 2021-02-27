@@ -1289,7 +1289,7 @@ FEVV::SimpleWindow::on_actionQuit_triggered()
 inline void
 FEVV::SimpleWindow::closeEvent(QCloseEvent *event)
 {
-#if ( defined(__linux__) && defined(FEVV_USE_QT5) )
+#if ( defined(__linux__) && defined(FEVV_USE_QT5) ) // no PB with Qt4...
   if (!clean_closure)
   {
     event->ignore();
