@@ -116,43 +116,54 @@ public:
     // create output mesh
     HalfedgeGraph *output_mesh = new HalfedgeGraph;
 
-    // apply filter
-    if(m_operation == "UNION")
-      FEVV::Filters::boolean_union(*mesh_A, *mesh_B, *output_mesh);
-    else if(m_operation == "INTER")
-      FEVV::Filters::boolean_inter(*mesh_A, *mesh_B, *output_mesh);
-    else
-      FEVV::Filters::boolean_minus(*mesh_A, *mesh_B, *output_mesh);
+    try
+    {
+      // apply filter
+      if(m_operation == "UNION")
+        FEVV::Filters::boolean_union(*mesh_A, *mesh_B, *output_mesh);
+      else if(m_operation == "INTER")
+        FEVV::Filters::boolean_inter(*mesh_A, *mesh_B, *output_mesh);
+      else
+        FEVV::Filters::boolean_minus(*mesh_A, *mesh_B, *output_mesh);
 
-    // store output mesh for later display
-    m_output_mesh_void = static_cast< void * >(output_mesh);
+      // store output mesh for later display
+      m_output_mesh_void = static_cast< void * >(output_mesh);
 
-    // hide mesh A
-    auto m_gpm_A =
-        get_property_map(FEVV::mesh_guiproperties, *mesh_A, *pmaps_bag_A);
-    auto gui_props_A = get(m_gpm_A, 0);
-    //gui_props_A.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
-    put(m_gpm_A, 0, gui_props_A);
+      // hide mesh A
+      auto m_gpm_A =
+          get_property_map(FEVV::mesh_guiproperties, *mesh_A, *pmaps_bag_A);
+      auto gui_props_A = get(m_gpm_A, 0);
+      //gui_props_A.is_visible = false;
+      // we finally use TIME mode (see function 'activate_time_mode' below...)
+      put(m_gpm_A, 0, gui_props_A);
 
-    // hide mesh B
-    auto m_gpm_B =
-        get_property_map(FEVV::mesh_guiproperties, *mesh_B, *pmaps_bag_B);
-    auto gui_props_B = get(m_gpm_B, 0);
-    //gui_props_B.is_visible = false; // we finally use TIME mode (see function 'activate_time_mode' below...)
-    put(m_gpm_B, 0, gui_props_B);
+      // hide mesh B
+      auto m_gpm_B =
+          get_property_map(FEVV::mesh_guiproperties, *mesh_B, *pmaps_bag_B);
+      auto gui_props_B = get(m_gpm_B, 0);
+      //gui_props_B.is_visible = false;
+      // we finally use TIME mode (see function 'activate_time_mode' below...)
+      put(m_gpm_B, 0, gui_props_B);
 
-    // show output mesh
-    FEVV::Types::GuiProperties gui_props_output;
-    //gui_props_output.is_visible = true; // not necessary because true by default...
+      // show output mesh
+      FEVV::Types::GuiProperties gui_props_output;
+      //gui_props_output.is_visible = true;
+      // not necessary because true by default...
 
-    // create a property map and a bag to store output mesh GUI properties
-    auto m_gpm_output = make_property_map(FEVV::mesh_guiproperties, *output_mesh);
-    put(m_gpm_output, 0, gui_props_output);
-    output_pmaps_bag = new FEVV::PMapsContainer;
-    put_property_map(FEVV::mesh_guiproperties,
-                     *output_mesh,
-                     *output_pmaps_bag,
-                     m_gpm_output);
+      // create a property map and a bag to store output mesh GUI properties
+      auto m_gpm_output = make_property_map(FEVV::mesh_guiproperties,
+                                            *output_mesh);
+      put(m_gpm_output, 0, gui_props_output);
+      output_pmaps_bag = new FEVV::PMapsContainer;
+      put_property_map(FEVV::mesh_guiproperties,
+                      *output_mesh,
+                      *output_pmaps_bag,
+                      m_gpm_output);
+    }
+    catch(const std::exception &e)
+    {
+      std::cout << e.what() << std::endl;
+    }
   }
 
   template< typename HalfedgeGraph >
@@ -231,19 +242,19 @@ public:
       auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
       if(output_mesh)
       {
-          // pmaps_bag is required for display
-          viewer->draw_or_redraw_mesh(output_mesh,
-                                      output_pmaps_bag,
-                                      false,
-                                      false,
-                                      m_operation);
+        // pmaps_bag is required for display
+        viewer->draw_or_redraw_mesh(output_mesh,
+                                    output_pmaps_bag,
+                                    false,
+                                    false,
+                                    m_operation);
+
+        viewer->activate_time_mode();
       }
     }
 
     //ELO comment next line to keep parameters between calls
     //reset();
-
-    viewer->activate_time_mode();
 
     viewer->frame();
   }

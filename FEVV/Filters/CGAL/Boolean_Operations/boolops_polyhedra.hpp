@@ -28,13 +28,14 @@
 #include "boolops_triangulation.hpp"
 
 #include <CGAL/boost/graph/copy_face_graph.h> // for CGAL::copy_face_graph()
-#include <CGAL/boost/graph/helpers.h> // for CGAL::clear()
+#include <CGAL/boost/graph/helpers.h> // for CGAL::clear() and CGAL::is_closed()
 
 #include <boost/graph/graph_traits.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Wrappings/properties.h"
 #include <list>
 #include <stack>
+#include <stdexcept> // for std::runtime_error
 
 
 typedef typename EnrichedPolyhedron::Vertex_iterator Vertex_iterator;
@@ -206,6 +207,13 @@ public:
     auto time_total_start = std::chrono::steady_clock::now();
     auto time_start = time_total_start;
 #endif // BOOLEAN_OPERATIONS_TIME
+
+    // ensure both input meshes are closed (no border edge)
+    if(!(CGAL::is_closed(_gA) && CGAL::is_closed(_gB)))
+    {
+      throw std::runtime_error(
+          "Boolean Operation: only closed meshes are allowed.");
+    }
 
     // convert input meshes to enriched Polyhedrons
     EnrichedPolyhedron gA;
