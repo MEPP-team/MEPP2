@@ -1,18 +1,15 @@
+# activate c++14 for the 3 OS
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 #------------------------------------------------------------------------------
 # Specific compiler options
 #------------------------------------------------------------------------------
 # GNUCXX
 #------------------------------------------------------------------------------
 if(CMAKE_COMPILER_IS_GNUCXX)
-	set(ENABLE_CXX11 "-std=c++14")
-
-	EXECUTE_PROCESS(COMMAND "${CMAKE_CXX_COMPILER} -dumpversion" OUTPUT_VARIABLE GCC_VERSION)
-	if (GCC_VERSION LESS 4.7)
-		set(ENABLE_CXX11 "-std=c++0x")
-	endif()
-
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ENABLE_CXX11}" )
-	message( STATUS "GNUCXX compiler detected (with ${ENABLE_CXX11} activated)" )
+	message( STATUS "GNUCXX compiler detected" )
 endif()
 #------------------------------------------------------------------------------
 # Clang (export CXX=clang++ CC=clang)
@@ -22,10 +19,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
 if(CMAKE_COMPILER_IS_CLANGXX)
-	set(ENABLE_CXX11 "-std=c++14")
-
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ENABLE_CXX11}")
-	message( STATUS "Clang compiler detected (with ${ENABLE_CXX11} activated)" )
+	message( STATUS "Clang compiler detected" )
 endif()
 #------------------------------------------------------------------------------
 # Fix link error undefined reference to `boost::filesystem::detail::copy_file`
