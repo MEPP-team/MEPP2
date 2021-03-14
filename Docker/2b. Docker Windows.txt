@@ -1,0 +1,17 @@
+*** This guide applies ONLY to Docker for Windows 10 (AND ONLY in 'Windows containers' mode) ***
+
+Use an already existing Docker image and run a Docker container to compile
+---> IMPORTANT: the Docker image MUST match your version of Windows 10 (See menu 'Démarrer' then 'Paramètres' then 'Système' then 'À propos de' then down 'Version'), here are the supported versions of Windows 10 currently: 1809(=ltsc2019)/1903/1909/2004/(20h2)
+- docker pull mtola/vs2017-2004-mepp2 (if your Windows is 2004) or mtola/vs2017-2004-mepp2-vcpkg (to use the VCPKG libraries)
+---> start a container in interactive mode: docker run -it mtola/vs2017-2004-mepp2 or mtola/vs2017-2004-mepp2-vcpkg (to use the VCPKG libraries)
+- cmd
+- set DOCKER_RUN=YES
+  - ONLY if you have chosen a vcpkg image: set VCPKG=YES
+- git clone https://github.com/MEPP-team/MEPP2.git
+- cd MEPP2
+- md build & cd build
+- cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+- MSBuild /m MEPP2.sln
+- ctest -j 3 --output-on-failure
+- exit
+---> if needed later, to restart a container in interactive mode: docker start CONTAINER_ID -i (to find CONTAINER_ID: docker ps -a)
