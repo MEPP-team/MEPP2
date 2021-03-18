@@ -177,6 +177,15 @@ public:
     SimpleViewer *viewer =
       dynamic_cast< SimpleViewer * >(_adapter->getViewer());
 
+    if(!viewer)
+    {
+      // something goes wrong
+      QMessageBox::information(
+          0, "", QObject::tr("An error occurred during Boolean "
+                             "Operation filter processing."));
+      return;
+    }
+
     MixedMeshesVector mixed_meshes = viewer->getMeshes();
     std::vector< FEVV::PMapsContainer * > pmaps_bags =
         viewer->get_properties_maps();
@@ -209,6 +218,25 @@ public:
         // is now applied to mesh coordinates
         viewer->resetTransformMatrix(0);
         viewer->resetTransformMatrix(1);
+
+        // redraw input meshes
+        // required because the user may have manually moved the meshes
+        viewer->draw_or_redraw_mesh(mA, pmaps_bagA, true, false);
+        viewer->draw_or_redraw_mesh(mB, pmaps_bagB, true, false);
+
+        // draw output mesh
+        auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
+        if(output_mesh)
+        {
+          // pmaps_bag is required for display
+          viewer->draw_or_redraw_mesh(output_mesh,
+                                      output_pmaps_bag,
+                                      false,
+                                      false,
+                                      m_operation);
+
+          viewer->activate_time_mode();
+        }
       }
       else
       {
@@ -228,32 +256,7 @@ public:
                       "with the same datastructure."));
     }
 
-    // draw output mesh
-    if(viewer)
-    {
-      // redraw input meshes
-      // required because the user may have manually moved the meshes
-      auto input_mesh_A = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
-      auto input_mesh_B = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
-      viewer->draw_or_redraw_mesh(input_mesh_A, pmaps_bags[0], true, false);
-      viewer->draw_or_redraw_mesh(input_mesh_B, pmaps_bags[1], true, false);
-
-      // draw output mesh
-      auto output_mesh = static_cast< HalfedgeGraph * >( m_output_mesh_void);
-      if(output_mesh)
-      {
-        // pmaps_bag is required for display
-        viewer->draw_or_redraw_mesh(output_mesh,
-                                    output_pmaps_bag,
-                                    false,
-                                    false,
-                                    m_operation);
-
-        viewer->activate_time_mode();
-      }
-    }
-
-    //ELO comment next line to keep parameters between calls
+    // comment next line to keep parameters between calls
     //reset();
 
     viewer->frame();

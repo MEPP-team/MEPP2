@@ -88,7 +88,8 @@ int test_point_cloud_normal_wpca(int argc, const char **argv)
   //std::string output_file_path = create_output_name(input_file_path, "weightedPCA", n_neigh, "pcd");
 
   // save the point cloud
-  std::cout << "saving point cloud with normals to " << output_file_path;
+  std::cout << "saving point cloud with normals to " << output_file_path
+            << std::endl;
   FEVV::Filters::write_mesh(output_file_path, cloud, pmaps_bag);
 
   // check output file

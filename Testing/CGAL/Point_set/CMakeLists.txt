@@ -113,9 +113,9 @@ endif()
 
 #####
 if( BUILD_USE_PCL )
-    add_executable( test_point_cloud_normal_wpca_cgal_point_set 
+    add_executable( test_point_cloud_normal_wpca_cgal_point_set
                     test_point_cloud_normal_wpca_cgal_point_set.cpp )
-    target_link_libraries( test_point_cloud_normal_wpca_cgal_point_set 
+    target_link_libraries( test_point_cloud_normal_wpca_cgal_point_set
                            ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                            ${Boost_LIBRARIES}
                            ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
@@ -125,9 +125,9 @@ if( BUILD_USE_PCL )
       # CGAL < 5.0
       add_test( Test_point_cloud_wpca_cgal_point_set
                 test_point_cloud_normal_wpca_cgal_point_set
-                ${TESTING_DATA_DIR}/casting_with_normals.ply
-                test_point_cloud_wpca_cgal_point_set_casting.ply
-                15
+                ${TESTING_DATA_DIR}/tetra.xyz
+                test_point_cloud_wpca_cgal_point_set_tetra.ply
+                3
                 0
                 0.1
                 )
