@@ -49,11 +49,14 @@ RUN cd /tmp                                                                     
     wget https://github.com/CGAL/cgal/releases/download/v5.0.4/CGAL-5.0.4.zip                  && \
     cd && unzip /tmp/CGAL-5.0.4.zip
 RUN cd /tmp                                                                                    && \
-    wget https://github.com/CGAL/cgal/releases/download/v5.1.2/CGAL-5.1.2.zip                  && \
-    cd && unzip /tmp/CGAL-5.1.2.zip
+    wget https://github.com/CGAL/cgal/releases/download/v5.1.3/CGAL-5.1.3.zip                  && \
+    cd && unzip /tmp/CGAL-5.1.3.zip
 RUN cd /tmp                                                                                    && \
     wget https://github.com/CGAL/cgal/releases/download/v5.2/CGAL-5.2.zip                      && \
     cd && unzip /tmp/CGAL-5.2.zip
+RUN cd /tmp                                                                                    && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.2.1/CGAL-5.2.1.zip                  && \
+    cd && unzip /tmp/CGAL-5.2.1.zip
 
 # OpenMesh (installation in user home directory)
 RUN cd /tmp                                                                       && \
@@ -146,8 +149,8 @@ ENV HOME /root
 # App environment
 #ENV CGAL_DIR "$HOME/CGAL-4.14.3"
 #ENV CGAL_DIR "$HOME/CGAL-5.0.4"
-#ENV CGAL_DIR "$HOME/CGAL-5.1.2"
-ENV CGAL_DIR "$HOME/CGAL-5.2"
+#ENV CGAL_DIR "$HOME/CGAL-5.1.3"
+ENV CGAL_DIR "$HOME/CGAL-5.2.1"
 
 #ENV OPENMESH_DIR "$HOME/OpenMesh-7.1"
 ENV OPENMESH_DIR "$HOME/OpenMesh-8.1"
