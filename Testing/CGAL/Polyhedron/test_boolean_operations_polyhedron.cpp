@@ -81,7 +81,6 @@ int main(int argc, const char **argv)
 
   // create output mesh
   FEVV::MeshPolyhedron m_out;
-  auto pm_out = get(boost::vertex_point, m_out);
   FEVV::PMapsContainer pmaps_bag_out;
 
   // apply filter, result in m_out

@@ -46,8 +46,8 @@ public:
    * Constructor.
    */
   BaseViewerOSG()
-      : root_node(new osg::Group),
-        visitor(new DataVisitor(this)), osgViewer::Viewer(), BaseViewer()
+      : osgViewer::Viewer(), BaseViewer(),
+        root_node(new osg::Group), visitor(new DataVisitor(this))
   {
 #ifdef DEBUG_VISU2
     std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;

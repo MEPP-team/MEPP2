@@ -47,9 +47,16 @@ get_max_bb_size(const HalfedgeGraph &g,
                                                      max_aabb,
                                                      gt);
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif // __GNUC__
   double xmax = gt.get_x(max_aabb) - gt.get_x(min_aabb);
   double ymax = gt.get_y(max_aabb) - gt.get_y(min_aabb);
   double zmax = gt.get_z(max_aabb) - gt.get_z(min_aabb);
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif // __GNUC__
   double max = xmax > ymax ? xmax : ymax;
 
   return max > zmax ? max : zmax;

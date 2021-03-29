@@ -104,7 +104,7 @@ flip_edge(
   face_descriptor f2 = CGAL::Euler::add_face(face_vertices, g);
   ///////////////////////////////////////////////////////////////////////////
   Halfedge_around_face_iterator hi, he;
-  int cpt = 0;
+  //int cpt = 0;
   for(boost::tie(hi, he) = CGAL::halfedges_around_face(halfedge(f1, g), g);
       hi != he;
       ++hi)

@@ -45,13 +45,13 @@ reposition_vertices(
     const PropertyGraph &g,
     PointMap pm,                    // modifiable map (follows CGAL usage)
     const NewPointMap &smoothed_pm, // const map (follows CGAL usage)
-    const GeometryTraits &gt)
+    const GeometryTraits &/*gt*/)
 {
   typedef boost::graph_traits< PropertyGraph > GraphTraits;
 
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
-  typedef typename boost::property_traits< PointMap >::value_type Point;
-  typedef typename boost::property_traits< PointMap >::reference Reference;
+  //typedef typename boost::property_traits< PointMap >::value_type Point;
+  //typedef typename boost::property_traits< PointMap >::reference Reference;
 
   // this code works only for Polyhedron_3, Surface Mesh, OpenMesh and AIF
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair
@@ -62,7 +62,7 @@ reposition_vertices(
 
   for(; vi != vi_end; ++vi)
   {
-    Point p = pm[*vi];
+    //Point p = pm[*vi];
     put(pm, *vi, smoothed_pm[*vi]);
   }
 }

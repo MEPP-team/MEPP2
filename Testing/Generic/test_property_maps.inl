@@ -35,6 +35,10 @@ test_property_maps_point_cloud(PointCloud& pc)
   for(int i = 0; i < 4; i++)
     add_vertex(pc);
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
   //--------------------------------------------------------------------------
   // test Point type
   //--------------------------------------------------------------------------
@@ -172,6 +176,9 @@ test_property_maps_point_cloud(PointCloud& pc)
     std::ostringstream ss;
     ss << c2; // operator<<
   }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
   //--------------------------------------------------------------------------
   // create ColorMap

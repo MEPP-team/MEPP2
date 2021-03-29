@@ -79,7 +79,7 @@ public:
   // void attachMesh( HalfedgeGraph& _mesh );
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override
+  virtual void paintEvent(QPaintEvent * /*event*/) override
   {
     static_cast< BaseViewerOSG * >(myViewer)->frame();
   }

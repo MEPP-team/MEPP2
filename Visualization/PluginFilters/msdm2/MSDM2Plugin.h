@@ -197,11 +197,11 @@ public:
   }
 
   template< typename HalfedgeGraph >
-  void process(HalfedgeGraph &m_degraded,
-               FEVV::PMapsContainer &pmaps_bag_degraded,
-               HalfedgeGraph &m_original,
-               FEVV::PMapsContainer &pmaps_bag_original,
-               double &MSDM2)
+  void process(HalfedgeGraph &/*m_degraded*/,
+               FEVV::PMapsContainer &/*pmaps_bag_degraded*/,
+               HalfedgeGraph &/*m_original*/,
+               FEVV::PMapsContainer &/*pmaps_bag_original*/,
+               double &/*MSDM2*/)
   {
     QMessageBox::information(0,
         "",
@@ -211,8 +211,8 @@ public:
 
   template< typename HalfedgeGraph >
   void applyHG(BaseAdapterVisu *_adapter,
-               HalfedgeGraph *_mesh,
-               FEVV::PMapsContainer *pmaps_bag)
+               HalfedgeGraph * /*_mesh*/,
+               FEVV::PMapsContainer * /*pmaps_bag*/)
   {
     // retrieve the two input meshes in current viewer window,
     // then apply the filter
@@ -340,7 +340,7 @@ public:
     return QStringList() << "MSDM2Plugin";
   }
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X

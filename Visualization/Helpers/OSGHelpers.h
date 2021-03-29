@@ -28,7 +28,7 @@ namespace FEVV {
 
 namespace Helpers {
 
-static unsigned int nbMeshDrawed = 0;
+//static unsigned int nbMeshDrawed = 0;
 
 osg::Vec4
 ColorConverter(const Color &_color);

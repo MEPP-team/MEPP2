@@ -48,15 +48,15 @@ mesh_to_vector_representation(const FaceListGraph  &g,
                                                  coordT_type,
                                                  coordC_type,
                                                  index_type > &mvr,
-                              const GeometryTraits &gt)
+                              const GeometryTraits &/*gt*/)
 {
   typedef boost::graph_traits< FaceListGraph >       GraphTraits;
   typedef typename GraphTraits::vertex_descriptor    vertex_descriptor;
   typedef typename GraphTraits::vertex_iterator      vertex_iterator;
   typedef boost::iterator_range< vertex_iterator >   vertex_range;
-  typedef typename GraphTraits::edge_descriptor      edge_descriptor;
+  //typedef typename GraphTraits::edge_descriptor      edge_descriptor;
   typedef typename GraphTraits::halfedge_descriptor  halfedge_descriptor;
-  typedef typename GraphTraits::face_descriptor      face_descriptor;
+  //typedef typename GraphTraits::face_descriptor      face_descriptor;
   typedef typename GraphTraits::face_iterator        face_iterator;
   typedef boost::iterator_range< face_iterator >     face_range;
   typedef typename GeometryTraits::Point             Point;
@@ -70,7 +70,6 @@ mesh_to_vector_representation(const FaceListGraph  &g,
   bool use_halfedge_texture_coord = false;
   bool use_face_color = false;
   bool use_face_normal = false; // per-face vertices normals
-  bool use_texture_file_name = false;
   bool use_face_material = false;
   bool use_mesh_materials = false;
 
@@ -91,7 +90,6 @@ mesh_to_vector_representation(const FaceListGraph  &g,
   if(has_map(pmaps, FEVV::mesh_materials))
     use_mesh_materials = true;
 
-  unsigned int point_dim = 3;
   long vertex_index = 0; // to be sure to start to 0
   std::map< vertex_descriptor, long >
       index_map; // for correct corresponding between vertex order in file and

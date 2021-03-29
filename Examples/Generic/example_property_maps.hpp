@@ -121,8 +121,8 @@ example_property_maps(int argc, char *argv[])
 
   // populate vertex color map
   typedef typename boost::property_traits< VertexColorMap >::value_type Color;
-  typedef boost::graph_traits< PointCloudT > GraphTraits;
-  typedef typename GraphTraits::vertex_iterator vertex_iterator;
+  //typedef boost::graph_traits< PointCloudT > GraphTraits;
+  //typedef typename GraphTraits::vertex_iterator vertex_iterator;
 
   std::cout << "populate vertex-color map" << std::endl;
   counter = 0;

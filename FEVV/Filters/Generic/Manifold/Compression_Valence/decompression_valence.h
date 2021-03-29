@@ -68,7 +68,7 @@ decompression_valence(
         *intermediate_vertex_color_maps, /* nullptr allowed */
     int stop_level, /* decompression level to stop at */
     bool do_write_intermediate_meshes,
-    const GeometryTraits &gt)
+    const GeometryTraits &/*gt*/)
 {
   Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >
       compr_valence_component;

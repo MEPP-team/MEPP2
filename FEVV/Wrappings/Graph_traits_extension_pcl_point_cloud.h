@@ -45,7 +45,7 @@ size_of_vertices(const FEVV::PCLPointCloud &g)
  */
 inline
 int
-size_of_edges(const FEVV::PCLPointCloud &g)
+size_of_edges(const FEVV::PCLPointCloud &/*g*/)
 {
   return 0;
 }
@@ -60,7 +60,7 @@ size_of_edges(const FEVV::PCLPointCloud &g)
  */
 inline
 int
-size_of_halfedges(const FEVV::PCLPointCloud &g)
+size_of_halfedges(const FEVV::PCLPointCloud &/*g*/)
 {
   return 0;
 }
@@ -75,7 +75,7 @@ size_of_halfedges(const FEVV::PCLPointCloud &g)
  */
 inline
 int
-size_of_faces(const FEVV::PCLPointCloud &g)
+size_of_faces(const FEVV::PCLPointCloud &/*g*/)
 {
   return 0;
 }

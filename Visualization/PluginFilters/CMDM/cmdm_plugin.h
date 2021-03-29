@@ -198,13 +198,13 @@ public:
   }
 
   template< typename HalfedgeGraph >
-  void process(HalfedgeGraph &m_degraded,
-               FEVV::PMapsContainer &pmaps_bag_degraded,
-               HalfedgeGraph &m_original,
-               FEVV::PMapsContainer &pmaps_bag_original,
-               double &CMDM,
-               vertex_cmdm_map &cmdm_pmap,
-               VertexColorMap &v_cm)
+  void process(HalfedgeGraph &/*m_degraded*/,
+               FEVV::PMapsContainer &/*pmaps_bag_degraded*/,
+               HalfedgeGraph &/*m_original*/,
+               FEVV::PMapsContainer &/*pmaps_bag_original*/,
+               double &/*CMDM*/,
+               vertex_cmdm_map &/*cmdm_pmap*/,
+               VertexColorMap &/*v_cm*/)
   {
     QMessageBox::information(
         0, "", QObject::tr("CMDM only works with surface_mesh"));
@@ -214,8 +214,8 @@ public:
 
   template< typename HalfedgeGraph >
   void applyHG(BaseAdapterVisu *_adapter,
-               HalfedgeGraph *_mesh,
-               FEVV::PMapsContainer *pmaps_bag)
+               HalfedgeGraph * /*_mesh*/,
+               FEVV::PMapsContainer * /*pmaps_bag*/)
   {
     // retrieve the two input meshes in current viewer window
     SimpleViewer *viewer =
@@ -379,7 +379,7 @@ public:
   }
 
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
     // dynamic_cast fails under OS X

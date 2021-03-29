@@ -36,7 +36,7 @@ inline void CApp::selectNeighborsKnn(int N)
   neighborhood_.resize (n_neigh_,3);
   std::vector<int> to_erase;
 
-  for (int i = 1; i < neigh.size(); ++i)
+  for (size_t i = 1; i < neigh.size(); ++i)
   {
     if( dis[i] != 0)
       neighborhood_.row(i-1) = pointcloud_->row(neigh[i]);

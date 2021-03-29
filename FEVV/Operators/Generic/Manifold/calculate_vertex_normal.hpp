@@ -112,7 +112,7 @@ typename GeometryTraits::Vector
 calculate_vertex_normal(
     typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor v,
     const HalfedgeGraph &g,
-    const PointMap &pm,
+    const PointMap &/*pm*/,
     const FaceNormalMap &fnm, /// provided face normals
     const GeometryTraits &gt)
 {

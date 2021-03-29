@@ -37,7 +37,7 @@ public:
    * @param[in]   _flags    Windows flags (used by Qt) (Default value = 0).
    */
   BaseWindowQt(QWidget *_parent = 0, Qt::WindowFlags _flags = 0)
-      : BaseWindow(), QMainWindow(_parent, _flags)
+      : QMainWindow(_parent, _flags), BaseWindow()
   {
 #ifdef DEBUG_VISU2
     std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;

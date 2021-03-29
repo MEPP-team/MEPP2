@@ -19,7 +19,7 @@
 //----------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   FEVV::PCLPointCloud pc;
   test_property_maps_point_cloud< FEVV::PCLPointCloud,

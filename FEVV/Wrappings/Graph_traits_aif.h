@@ -216,7 +216,7 @@ inline std::pair< typename boost::graph_traits<
                       FEVV::DataStructures::AIF::AIFMesh >::adjacency_iterator >
 adjacent_vertices(typename boost::graph_traits<
                       FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor v,
-                  const FEVV::DataStructures::AIF::AIFMesh &sm)
+                  const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto vertices_range = AIFHelpers::adjacent_vertices(v);
   return std::pair<
@@ -361,7 +361,7 @@ edge(typename boost::graph_traits<
          FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
      typename boost::graph_traits<
          FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor v,
-     const FEVV::DataStructures::AIF::AIFMesh &sm)
+     const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   typedef typename boost::graph_traits< FEVV::DataStructures::AIF::AIFMesh >
       GraphTrait;
@@ -386,7 +386,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor
 source(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return e->get_first_vertex();
 }
@@ -399,7 +399,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor
 target(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return e->get_second_vertex();
 }
@@ -415,7 +415,7 @@ inline std::pair< typename boost::graph_traits<
                       FEVV::DataStructures::AIF::AIFMesh >::out_edge_iterator >
 out_edges(typename boost::graph_traits<
               FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
-          const FEVV::DataStructures::AIF::AIFMesh &sm)
+          const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto edges_range = u->GetIncidentEdges();
   auto e_it = edges_range.begin(), e_ite = edges_range.end();
@@ -450,7 +450,7 @@ inline std::pair< typename boost::graph_traits<
                       FEVV::DataStructures::AIF::AIFMesh >::in_edge_iterator >
 in_edges(typename boost::graph_traits<
              FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
-         const FEVV::DataStructures::AIF::AIFMesh &sm)
+         const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto edges_range = u->GetIncidentEdges();
   auto e_it = edges_range.begin(), e_ite = edges_range.end();
@@ -480,7 +480,7 @@ inline std::pair<
             out_edge_iterator >
 out_edges(typename boost::graph_traits<
               FEVV::DataStructures::AIF::AIFMesh >::face_descriptor f,
-          const FEVV::DataStructures::AIF::AIFMesh &sm)
+          const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto edge_range = AIFHelpers::incident_edges(f);
 
@@ -507,7 +507,7 @@ inline std::pair<
             in_edge_iterator >
 in_edges(typename boost::graph_traits<
              FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e,
-         const FEVV::DataStructures::AIF::AIFMesh &sm)
+         const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto face_range = AIFHelpers::incident_faces(e);
 
@@ -527,7 +527,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::degree_size_type
 out_degree(typename boost::graph_traits<
                FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
-           const FEVV::DataStructures::AIF::AIFMesh &sm)
+           const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return u->GetIncidentEdges().size();
 }
@@ -537,7 +537,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::degree_size_type
 in_degree(typename boost::graph_traits<
               FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
-          const FEVV::DataStructures::AIF::AIFMesh &sm)
+          const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return u->GetIncidentEdges().size();
 }
@@ -547,7 +547,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::degree_size_type
 degree(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor u,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return u->GetIncidentEdges().size();
 }
@@ -557,7 +557,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::degree_size_type
 degree(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::edge_descriptor e,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   auto face_range = AIFHelpers::incident_faces(e);
 
@@ -572,7 +572,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::degree_size_type
 degree(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::face_descriptor f,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return f->GetDegree();
 }
@@ -585,7 +585,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor
 source(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::halfedge_descriptor h,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return h.get_source();
 }
@@ -637,7 +637,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor
 target(typename boost::graph_traits<
            FEVV::DataStructures::AIF::AIFMesh >::halfedge_descriptor h,
-       const FEVV::DataStructures::AIF::AIFMesh &sm)
+       const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return h.get_target();
 }
@@ -663,7 +663,7 @@ inline typename boost::graph_traits<
     FEVV::DataStructures::AIF::AIFMesh >::face_descriptor
 face(typename boost::graph_traits<
          FEVV::DataStructures::AIF::AIFMesh >::halfedge_descriptor h,
-     const FEVV::DataStructures::AIF::AIFMesh &sm)
+     const FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   return h.get_face();
 }
@@ -956,7 +956,7 @@ remove_in_edge_if(typename boost::graph_traits<
 inline void
 clear_vertex(typename boost::graph_traits<
                  FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor v,
-             FEVV::DataStructures::AIF::AIFMesh &sm)
+             FEVV::DataStructures::AIF::AIFMesh &/*sm*/)
 {
   AIFHelpers::clear_vertex(v);
 

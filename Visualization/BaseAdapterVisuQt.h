@@ -38,7 +38,7 @@ public:
    * @param[in]   _f        Windows flags (used by Qt) (Default value = 0).
    */
   BaseAdapterVisuQt(QWidget *_parent = 0, Qt::WindowFlags _f = 0)
-      : BaseAdapterVisu(), QWidget(_parent, _f)
+      : QWidget(_parent, _f), BaseAdapterVisu()
   {
 #ifdef DEBUG_VISU2
     std::cout << "*** this=" << this << "    entering " << __func__ << std::endl;

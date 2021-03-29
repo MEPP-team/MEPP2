@@ -14,7 +14,7 @@
 #include <pcl/point_types.h>
 
 int
-main(int argc, char **argv)
+main(void)
 {
   pcl::PointCloud< pcl::PointXYZ > cloud;
 

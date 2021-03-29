@@ -45,7 +45,7 @@ size_of_vertices(const FEVV::CGALPointSet &g)
  */
 inline
 int
-size_of_edges(const FEVV::CGALPointSet &g)
+size_of_edges(const FEVV::CGALPointSet &/*g*/)
 {
   return 0;
 }
@@ -60,7 +60,7 @@ size_of_edges(const FEVV::CGALPointSet &g)
  */
 inline
 int
-size_of_halfedges(const FEVV::CGALPointSet &g)
+size_of_halfedges(const FEVV::CGALPointSet &/*g*/)
 {
   return 0;
 }
@@ -75,7 +75,7 @@ size_of_halfedges(const FEVV::CGALPointSet &g)
  */
 inline
 int
-size_of_faces(const FEVV::CGALPointSet &g)
+size_of_faces(const FEVV::CGALPointSet &/*g*/)
 {
   return 0;
 }

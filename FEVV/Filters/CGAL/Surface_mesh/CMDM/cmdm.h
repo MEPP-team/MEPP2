@@ -109,7 +109,7 @@ template< typename VertexIterator,
           typename PointMap,
           typename CMDMNearestMap >
 void
-compute_geometry_statistics(const HalfedgeGraph &m_degr,
+compute_geometry_statistics(const HalfedgeGraph &/*m_degr*/,
                             const PointMap &pm_degr,
                             const CMDMNearestMap &nearest_pmap,
                             const VertexIterator p_vertex,
@@ -211,7 +211,7 @@ template< typename VertexIterator,
           typename PointMap,
           typename CMDMNearestMap >
 void
-compute_color_statistics(const HalfedgeGraph &m_degr,
+compute_color_statistics(const HalfedgeGraph &/*m_degr*/,
                          const PointMap &pm_degr,
                          const CMDMNearestMap &nearest_pmap,
                          const VertexIterator p_vertex,
@@ -429,7 +429,7 @@ matching_multires_init_cmdm(
       typename CGAL::AABB_face_graph_triangle_primitive< HalfedgeGraph >;
   using AABB_Traits = typename CGAL::AABB_traits< CGALKernel, AABB_Primitive >;
   using AABB_Tree = typename CGAL::AABB_tree< AABB_Traits >;
-  using Object_and_primitive_id = typename AABB_Tree::Object_and_primitive_id;
+  //using Object_and_primitive_id = typename AABB_Tree::Object_and_primitive_id;
   using Point_and_primitive_id = typename AABB_Tree::Point_and_primitive_id;
 
   auto original_faces = faces(m_poly_original);
@@ -572,7 +572,7 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
   CGALPoint *tab_cmdm_nearest_pmap =
       new CGALPoint[(int)num_vertices(m_poly_degrad)];
 
-#pragma omp parallel for
+//#pragma omp parallel for
   for(int ii = 0; ii < (int)num_vertices(m_poly_original); ii++)
   {
     Vertex_Descriptor vi(ii);
@@ -580,7 +580,7 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
     tab_pm_original[ii] = p0;
   }
 
-#pragma omp parallel for
+//#pragma omp parallel for
   for(int ii = 0; ii < (int)num_vertices(m_poly_degrad); ii++)
   {
     Vertex_Descriptor vi(ii);
@@ -596,7 +596,7 @@ process_CMDM_multires(const HalfedgeGraph &m_poly_degrad,
                               m_poly_original,
                               tab_matched_facet);
 
-#pragma omp parallel for
+//#pragma omp parallel for
   for(int ii = 0; ii < (int)num_vertices(m_poly_degrad); ii++)
   {
     Vertex_Descriptor vi(ii);

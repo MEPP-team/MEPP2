@@ -33,7 +33,7 @@ print_property_map(FEVV::DataStructures::AIF::PropertyMap< T > *pm)
 //----------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   typedef FEVV::DataStructures::AIF::AIFMesh AIFMesh;
   typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;

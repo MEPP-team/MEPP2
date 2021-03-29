@@ -105,7 +105,7 @@ public:
   {
 
     typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
-    typedef typename GraphTraits::vertex_iterator vertex_iterator;
+    //typedef typename GraphTraits::vertex_iterator vertex_iterator;
     typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
 
     ScreenParam screen(*screen_width, *screen_height, *screen_size);
@@ -325,7 +325,7 @@ public:
     return QStringList() << "JndPlugin";
   }
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X

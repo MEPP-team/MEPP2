@@ -39,7 +39,7 @@ void
 write_mesh(
     const std::string &filename,
     FEVV::PCLPointCloud &g,
-    PMapsContainer &pmaps)
+    PMapsContainer &/*pmaps*/)
 {
   bool success = false;
 
