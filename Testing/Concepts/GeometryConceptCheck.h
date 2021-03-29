@@ -10,6 +10,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#undef NDEBUG // enable assert in release build
 #include <cassert>
 #include <boost/concept_check.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -55,9 +56,16 @@ struct GeometryConcept
     p = gt.ORIGIN;
 
     // Point coordinate component access
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
     Scalar x = gt.get_x(p);
     Scalar y = gt.get_y(p);
     Scalar z = gt.get_z(p);
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
     //////////////////////// Vector manipulations
 

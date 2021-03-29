@@ -55,6 +55,7 @@ lines_indices_to_segments_indices(
         break;
       case 2:
         line_segment.erase(line_segment.begin());
+        // FALL THROUGH
       case 1:
         line_segment.push_back(in_out_lines_indices[i][j]);
         in_out_lines_indices.push_back(line_segment);

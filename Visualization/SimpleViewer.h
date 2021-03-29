@@ -73,25 +73,25 @@ namespace FEVV {
  */
 #ifdef FEVV_USE_CGAL
   inline
-  std::string getDatastructureName(FEVV::MeshPolyhedron* m)
+  std::string getDatastructureName(FEVV::MeshPolyhedron* /*m*/)
   {
     return "POLYHEDRON";
   }
 
   inline
-  std::string getDatastructureName(FEVV::MeshSurface* m)
+  std::string getDatastructureName(FEVV::MeshSurface* /*m*/)
   {
     return "SURFACEMESH";
   }
 
   inline
-  std::string getDatastructureName(FEVV::MeshLCC* m)
+  std::string getDatastructureName(FEVV::MeshLCC* /*m*/)
   {
     return "LCC";
   }
 
   inline
-  std::string getDatastructureName(FEVV::CGALPointSet* m)
+  std::string getDatastructureName(FEVV::CGALPointSet* /*m*/)
   {
     return "CGALPOINTSET";
   }
@@ -99,7 +99,7 @@ namespace FEVV {
 
 #ifdef FEVV_USE_OPENMESH
   inline
-  std::string getDatastructureName(FEVV::MeshOpenMesh* m)
+  std::string getDatastructureName(FEVV::MeshOpenMesh* /*m*/)
   {
     return "OPENMESH";
   }
@@ -107,7 +107,7 @@ namespace FEVV {
 
 #ifdef FEVV_USE_AIF
   inline
-  std::string getDatastructureName(FEVV::MeshAIF* m)
+  std::string getDatastructureName(FEVV::MeshAIF* /*m*/)
   {
     return "AIF";
   }
@@ -115,7 +115,7 @@ namespace FEVV {
 
 #ifdef FEVV_USE_PCL
   inline
-  std::string getDatastructureName(FEVV::PCLPointCloud* m)
+  std::string getDatastructureName(FEVV::PCLPointCloud* /*m*/)
   {
     return "PCLPOINTCLOUD";
   }

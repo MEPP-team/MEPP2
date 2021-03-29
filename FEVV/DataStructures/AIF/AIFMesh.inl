@@ -109,7 +109,7 @@ AIFMesh::operator=(const Self &other)
   std::vector<std::string> dfv_names = other.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
   std::vector<std::string> dff_names = other.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
   
-  unsigned int pointDim = 3;
+  //unused  unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long > indexMap;
 

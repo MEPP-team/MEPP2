@@ -45,7 +45,7 @@ calculate_scaling(Graph &g,
   typedef boost::graph_traits< Graph > GraphTraits;
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
   typedef typename boost::property_traits< PointMap >::value_type Point;
-  typedef typename boost::property_traits< PointMap >::reference Reference;
+  //typedef typename boost::property_traits< PointMap >::reference Reference;
 
   // std::cout << "Asking to scale mesh to " << scaleX << ";" << scaleY << ";"
   // << scaleZ << std::endl;

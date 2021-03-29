@@ -66,7 +66,7 @@ triangle_area(const HalfedgeGraph &g,
               const GeometryTraits &gt)
 {
   typedef typename boost::property_traits< PointMap >::value_type Point3d;
-  using Vector = typename GeometryTraits::Vector;
+  //using Vector = typename GeometryTraits::Vector;
 
   CGAL::Halfedge_around_face_circulator< HalfedgeGraph > p_halfedge(
       halfedge(fd, g), g);

@@ -48,7 +48,7 @@ extract_k_ring(
   typedef boost::graph_traits< FaceGraph > GraphTraits;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
   typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
-  typedef typename GraphTraits::face_descriptor face_descriptor;
+  //typedef typename GraphTraits::face_descriptor face_descriptor;
 
   std::map< vertex_descriptor, int > d;
   qv.push_back(v);
@@ -65,8 +65,8 @@ extract_k_ring(
     // e_end(e); // ok for polyhedron
     do
     {
-      vertex_descriptor new_v = source(h, g), tardeb = target(h, g);
-      assert(v == tardeb);
+      vertex_descriptor new_v = source(h, g);
+      assert(v == target(h, g));
       if(d.insert(std::make_pair(new_v, dist_v + 1)).second)
       {
         qv.push_back(new_v);
@@ -112,9 +112,9 @@ extract_vertex_star(
   typedef boost::graph_traits< FaceGraph > GraphTraits;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
   typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
-  typedef typename GraphTraits::face_descriptor face_descriptor;
+  //typedef typename GraphTraits::face_descriptor face_descriptor;
 
-  std::size_t current_index = 0;
+  //std::size_t current_index = 0;
 
   halfedge_descriptor h = halfedge(v, g), hend = h;
   do

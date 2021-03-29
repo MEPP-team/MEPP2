@@ -112,14 +112,14 @@ mesh_from_vector_representation(
                        coordC_type,
                        index_type >                     &mvr,
     MeshFromVectorReprParameters< HalfedgeGraph > const &params,
-    const GeometryTraits                                &gt)
+    const GeometryTraits                                &/*gt*/)
 {
   typedef boost::graph_traits< HalfedgeGraph >       GraphTraits;
   typedef typename GraphTraits::vertex_descriptor    vertex_descriptor;
-  typedef typename GraphTraits::edge_descriptor      edge_descriptor;
+  //typedef typename GraphTraits::edge_descriptor      edge_descriptor;
   typedef typename GraphTraits::face_descriptor      face_descriptor;
   typedef typename GraphTraits::halfedge_descriptor  halfedge_descriptor;
-  typedef typename GraphTraits::face_iterator        face_iterator;
+  //typedef typename GraphTraits::face_iterator        face_iterator;
   typedef typename GeometryTraits::Point             Point;
   typedef typename GeometryTraits::Vector            Vector;
 
@@ -207,12 +207,16 @@ mesh_from_vector_representation(
     }
   }
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif
   // check if all faces have a valid material
   if(! mvr.face_material.empty())
   {
     for(auto &mtl_id : mvr.face_material)
     {
-      if(mtl_id == -1)
+      if(mtl_id == -1) //TODO: FIX THE WARNING HERE
       {
         std::cout << __func__
                   << "(): found some faces with an invalid material. "
@@ -223,6 +227,9 @@ mesh_from_vector_representation(
       }
     }
   }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
   // store materials in a property map
   if(! mvr.materials.empty())
@@ -250,7 +257,7 @@ mesh_from_vector_representation(
   bool use_face_color = false;
   bool use_face_material = false;
   bool use_face_normal = false; // per-face vertices normals
-  bool use_line_color = false;
+  //unused  bool use_line_color = false;
   bool use_corner_texture_coord = params.m_use_corner_texcoord;
 
   if(! mvr.texture_coords.empty())

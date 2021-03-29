@@ -358,7 +358,7 @@ kNN_search(
     const PCLPointCloudNNSearch::KdTree &kd_tree,
     unsigned int k,
     const FEVV::PCLPoint &query,
-    const FEVV::PCLPointCloud &pc) // useless for PCL
+    const FEVV::PCLPointCloud &/*pc*/) // useless for PCL
 {
   typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
       vertex_descriptor;
@@ -412,7 +412,7 @@ radius_search(
     const PCLPointCloudNNSearch::KdTree &kd_tree,
     double radius,
     const FEVV::PCLPoint &query,
-    const FEVV::PCLPointCloud &pc) // useless for PCL
+    const FEVV::PCLPointCloud &/*pc*/) // useless for PCL
 {
   typedef typename boost::graph_traits< FEVV::PCLPointCloud >::vertex_descriptor
       vertex_descriptor;

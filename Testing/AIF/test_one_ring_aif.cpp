@@ -52,7 +52,7 @@ rotationally_equal(const T &v1, T v2, bool test_in_reverse_order_too = true)
 
   while(true)
   {
-    for(int i = 0; i < v1.size(); i++)
+    for(size_t i = 0; i < v1.size(); i++)
     {
       if(VERBOSE)
       {
@@ -95,14 +95,14 @@ rotationally_equal(const T &v1, T v2, bool test_in_reverse_order_too = true)
 //------------------------------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   typedef FEVV::DataStructures::AIF::AIFMesh AIFMesh;
-  typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
-  typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
-  typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
+  //typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
+  //typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
+  //typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
   typedef FEVV::DataStructures::AIF::AIFTopologyHelpers helpers;
-  typedef helpers::AIFHalfEdge AIFHalfEdge;
+  //typedef helpers::AIFHalfEdge AIFHalfEdge;
   typedef helpers::smart_ptr_mesh smart_ptr_mesh;
   typedef helpers::vertex_descriptor vertex_descriptor;
   typedef helpers::edge_descriptor edge_descriptor;

@@ -54,7 +54,7 @@ FEVV::SimpleAdapterVisu::init()
 
 inline
 void
-FEVV::SimpleAdapterVisu::init(const bool _useMdiWindows)
+FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
 {
   if(!Assert::check(
          !bIsInit, "is already init. Leaving...", "SimpleAdapterVisu::init"))

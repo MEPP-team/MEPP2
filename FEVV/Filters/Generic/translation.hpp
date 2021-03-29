@@ -45,7 +45,7 @@ translate(const HalfedgeGraph &g,
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
   typedef typename boost::property_traits< PointMap >::value_type Point;
-  typedef typename boost::property_traits< PointMap >::reference Reference;
+  //typedef typename boost::property_traits< PointMap >::reference Reference;
 
   vertex_iterator vi;
   for(vi = vertices(g).first; vi != vertices(g).second; ++vi)

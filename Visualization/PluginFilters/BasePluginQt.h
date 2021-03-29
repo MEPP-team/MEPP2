@@ -34,36 +34,36 @@ public:
   // in derived class if the plugin supports the MeshT mesh type
 
 #ifdef FEVV_USE_CGAL
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     MeshPolyhedron *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     MeshPolyhedron * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with Polyhedron_3!"));
   }
 
 
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     MeshSurface *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     MeshSurface * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with Surface_mesh!"));
   }
 
 
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     MeshLCC *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     MeshLCC * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with LCC!"));
   }
 
 
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     CGALPointSet *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     CGALPointSet * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with CGALPointSet!"));
@@ -72,9 +72,9 @@ public:
 
 
 #ifdef FEVV_USE_OPENMESH
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     MeshOpenMesh *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     MeshOpenMesh * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with OpenMesh!"));
@@ -83,9 +83,9 @@ public:
 
 
 #ifdef FEVV_USE_AIF
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     MeshAIF *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     MeshAIF * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with AIF!"));
@@ -94,9 +94,9 @@ public:
 
 
 #ifdef FEVV_USE_PCL
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     PCLPointCloud *_mesh,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     PCLPointCloud * /*_mesh*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("This filter is not compatible with PCLPointCloud!"));
@@ -105,9 +105,9 @@ public:
 
 
   // case where the plugin is applied when no mesh is opened
-  virtual void apply(BaseAdapterVisu *_adapter,
-                     void *_mesh_void,
-                     FEVV::PMapsContainer *pmaps_bag) override
+  virtual void apply(BaseAdapterVisu * /*_adapter*/,
+                     void * /*_mesh_void*/,
+                     FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     QMessageBox::warning(
         0, "", QObject::tr("To apply this filter, please first <b>open a mesh</b>!"));

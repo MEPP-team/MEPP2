@@ -74,8 +74,8 @@ namespace FEVV {
           Eigen::Matrix<float, Eigen::Dynamic, 3>* pc = c.getPC();
           flann::Index<flann::L2<float>>* tree = c.getTree();
 
-          int n = 0;
-          int inv = 0;
+          //int n = 0;
+          //int inv = 0;
           int nan = 0;
           noise = std::max(noise, noise_min);
 
@@ -164,7 +164,7 @@ namespace FEVV {
           typedef typename boost::property_traits< NormalMap >::value_type Normal;
 
           vi = iterator_pair.first;
-          for(int i = 0; i < normals.size(); ++i){
+          for(size_t i = 0; i < normals.size(); ++i){
             Normal normal(normals[i][0], normals[i][1], normals[i][2]);
             put(normalMap, *vi, normal);
             ++vi;

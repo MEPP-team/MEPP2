@@ -109,7 +109,7 @@ template< typename VertexIterator,
           typename MSDM2NearestMap,
           typename MSDM2Map >
 void
-compute_statistics(const HalfedgeGraph &m_degr,
+compute_statistics(const HalfedgeGraph &/*m_degr*/,
                    const PointMap &pm_degr,
                    const MSDM2NearestMap &nearest_pmap,
                    MSDM2Map &msdm2_map,
@@ -120,7 +120,7 @@ compute_statistics(const HalfedgeGraph &m_degr,
                    std::vector< CGALPoint > &tab_point1,
                    std::vector< CGALPoint > &tab_point2,
                    double radius,
-                   double dim)
+                   double /*dim*/)
 {
   double moyenne1 = 0;
   double variance1 = 0;
@@ -233,7 +233,7 @@ matching_multires_init(const HalfedgeGraph &m_poly_degrad,
       typename CGAL::AABB_face_graph_triangle_primitive< HalfedgeGraph >;
   using AABB_Traits = typename CGAL::AABB_traits< CGALKernel, AABB_Primitive >;
   using AABB_Tree = typename CGAL::AABB_tree< AABB_Traits >;
-  using Object_and_primitive_id = typename AABB_Tree::Object_and_primitive_id;
+  //using Object_and_primitive_id = typename AABB_Tree::Object_and_primitive_id;
   using Point_and_primitive_id = typename AABB_Tree::Point_and_primitive_id;
 
 
@@ -279,8 +279,8 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
                        const HalfedgeGraph &m_poly_original,
                        const PointMap &pm_original,
                        const FaceNormalMap &fnm_original,
-                       FEVV::PMapsContainer &pmaps_original,
-                       const GeometryTraits &gt_original,
+                       FEVV::PMapsContainer &/*pmaps_original*/,
+                       const GeometryTraits &/*gt_original*/,
                        const int nb_level,
                        VertexMSDM2Map &msdm2_pmap,
                        const double maxdim,
@@ -584,9 +584,9 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
                          const CurvatureVertexMap &curv_pmap,
                          const MSDM2NearestMap &nearest_pmap,
                          const MSMD2CurvatureMatchMap &curvmatch_pmap,
-                         const GeometryTraits &gt_degr,
-                         const HalfedgeGraph &m_orig,
-                         const PointMap &pm_orig,
+                         const GeometryTraits &/*gt_degr*/,
+                         const HalfedgeGraph &/*m_orig*/,
+                         const PointMap &/*pm_orig*/,
                          const VertexIterator &p_vertex,
                          double radius,
                          std::vector< double > &tab_distance1,

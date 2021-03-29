@@ -41,7 +41,7 @@ inline int RawCloud::ReadCSV(std::string filepath)
     std::getline ( fin, test, '\n' );
 
     int count = 0;
-    for(int i =0; i<test.size(); ++i)
+    for(size_t i =0; i<test.size(); ++i)
     {
       if(test[i]==',')
         ++count;
@@ -80,7 +80,7 @@ inline int RawCloud::ReadCSV(std::string filepath)
     }
     fin.close();
     pointcloud_ = new Eigen::Matrix<float, Eigen::Dynamic, 3>(res.size(), 3);
-    for(int i = 0; i<res.size(); ++i)
+    for(size_t i = 0; i<res.size(); ++i)
       pointcloud_->row(i) = res[i];
   }
   else

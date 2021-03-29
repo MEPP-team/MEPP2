@@ -13,7 +13,7 @@
 //------------------------------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   new FEVV::DataStructures::AIF::AIFMesh;
 

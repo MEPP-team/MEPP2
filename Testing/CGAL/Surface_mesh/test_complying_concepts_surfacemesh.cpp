@@ -21,7 +21,7 @@ typedef CGAL::Surface_mesh< Kernel::Point_3 > Mesh;
 typedef Mesh G;
 
 int
-main(int narg, char **argv)
+main(void)
 {
   using namespace boost;
   // Assertions are sometimes redundant (IncidenceGraph concept assertion

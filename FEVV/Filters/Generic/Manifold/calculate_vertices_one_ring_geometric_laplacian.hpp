@@ -56,9 +56,9 @@ calculate_vertices_one_ring_geometric_laplacian(
   typedef boost::graph_traits< FaceGraph > GraphTraits;
 
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
-  typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
-  typedef typename boost::property_traits< PointMap >::value_type Point;
-  typedef typename boost::property_traits< PointMap >::reference Reference;
+  //typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+  //typedef typename boost::property_traits< PointMap >::value_type Point;
+  //typedef typename boost::property_traits< PointMap >::reference Reference;
 
   // this code works only for Polyhedron_3, Surface Mesh, OpenMesh and AIF
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair

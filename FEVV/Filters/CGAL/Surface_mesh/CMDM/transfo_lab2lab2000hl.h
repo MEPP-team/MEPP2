@@ -30,7 +30,16 @@ interpolate1_process(std::vector< double > &init_grid,
 {
 
   auto upper = std::upper_bound(init_grid.begin(), init_grid.end(), x);
-  int position = (int)std::distance(init_grid.begin(), upper);
+  size_t position =
+      static_cast< size_t >(std::distance(init_grid.begin(), upper));
+
+  // notes-VVI-ELO on possible bugs:
+  // - std::upper_bound must be applied on a sorted container ; is init_grid
+  //   really sorted?
+  // - if upper is init_grid.begin() (aka the first element of init_grid is
+  //   greater than x), then position equals 0 ; the lines below accessing
+  //   init_grid[position - 1] and val_grid[position - 1] will cause a
+  //   container overflow
 
   if(position < init_grid.size())
   {
@@ -142,13 +151,13 @@ initMatLABCH(std::vector< double > &init_grid_L,
                           size_row, std::make_pair(0.0, 0.0)));
 
   //L_data
-  int cpt = 0; 
+  //int cpt = 0; 
   for(int cpt = 0; cpt < size_L; cpt++)
     grid_L[cpt] = L_data[cpt];
 
 
   // init grid L (from matlab code)
-  for(int i = 0; i < init_grid_L.size(); i++)
+  for(size_t i = 0; i < init_grid_L.size(); i++)
   {
     init_grid_L[i] = i * 0.001;
   }

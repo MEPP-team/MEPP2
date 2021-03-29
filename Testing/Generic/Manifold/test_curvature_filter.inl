@@ -26,7 +26,7 @@ curvature(HalfedgeGraph *mesh)
 
   // ---
 
-  using Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector;
+  //using Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector;
 
   // Face normal map
   // this one is a standard property map

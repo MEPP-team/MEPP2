@@ -99,7 +99,7 @@ read_mesh(
     const std::string &filename,
     FEVV::CGALPointSet &g,
     PMapsContainer &pmaps,
-    bool only_pts = false)
+    bool /*only_pts*/ = false)
 {
 #if 1
   bool success = false;

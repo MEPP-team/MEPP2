@@ -24,7 +24,7 @@ struct CameraPosCallback : public osg::Uniform::Callback
   explicit CameraPosCallback(osg::Camera *camera) : camera{camera} {}
 
   virtual void operator()(osg::Uniform *uniform,
-                          osg::NodeVisitor *nodeVisitor) override
+                          osg::NodeVisitor * /*nodeVisitor*/) override
   {
     uniform->set(osg::Vec3(camera->getInverseViewMatrix().getTrans()));
   }
@@ -37,7 +37,7 @@ struct CameraTargetCallback : public osg::Uniform::Callback
   explicit CameraTargetCallback(osg::Geode *geode) : geode{geode} {}
 
   virtual void operator()(osg::Uniform *uniform,
-                          osg::NodeVisitor *nodeVisitor) override
+                          osg::NodeVisitor * /*nodeVisitor*/) override
   {
     uniform->set(geode->getBound().center());
 
@@ -63,7 +63,7 @@ struct ViewMatrixCallback : public osg::Uniform::Callback
   explicit ViewMatrixCallback(osg::Camera *camera) : camera{camera} {}
 
   virtual void operator()(osg::Uniform *uniform,
-                          osg::NodeVisitor *nodeVisitor) override
+                          osg::NodeVisitor * /*nodeVisitor*/) override
   {
     uniform->set(osg::Matrix(camera->getViewMatrix()));
   }
@@ -76,7 +76,7 @@ struct InverseViewMatrixCallback : public osg::Uniform::Callback
   explicit InverseViewMatrixCallback(osg::Camera *camera) : camera{camera} {}
 
   virtual void operator()(osg::Uniform *uniform,
-                          osg::NodeVisitor *nodeVisitor) override
+                          osg::NodeVisitor * /*nodeVisitor*/) override
   {
     uniform->set(osg::Matrix(camera->getInverseViewMatrix()));
   }
@@ -89,7 +89,7 @@ struct ProjectionMatrixCallback : public osg::Uniform::Callback
   explicit ProjectionMatrixCallback(osg::Camera *camera) : camera{camera} {}
 
   virtual void operator()(osg::Uniform *uniform,
-                          osg::NodeVisitor *nodeVisitor) override
+                          osg::NodeVisitor * /*nodeVisitor*/) override
   {
     uniform->set(osg::Matrix(camera->getProjectionMatrix()));
   }
@@ -284,12 +284,12 @@ template< typename VertexNormalMap,
 inline osg::ref_ptr< osg::Program >
 loadTexturedMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_vertexArrays*/,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_normalsArrays*/,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_tangentsArrays,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
     bool _useSmoothShading,
-    VertexNormalMap *_vt_nm,
+    VertexNormalMap * /*_vt_nm*/,
     VertexTangentMap *_vt_tm,
     FaceMaterialMap *_m_mm,
     std::size_t unit_ii)
@@ -394,10 +394,10 @@ template< typename VertexNormalMap, typename VertexColorMap >
 inline osg::ref_ptr< osg::Program >
 loadColoredMesh(
     const std::vector< osg::ref_ptr< osg::Geometry > > &_geometries,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_vertexArrays*/,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_normalsArrays*/,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
-    VertexNormalMap *_vt_nm,
+    VertexNormalMap * /*_vt_nm*/,
     VertexColorMap *_vt_cm,
     std::size_t unit_ii)
 {
@@ -866,8 +866,8 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_normals,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_vertexArrays_custom_vectors,
     const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_edges,
-    const std::vector< osg::ref_ptr< osg::Vec3Array > > &_normalsArrays_vertices,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_normalsArrays_edges*/,
+    const std::vector< osg::ref_ptr< osg::Vec3Array > > &/*_normalsArrays_vertices*/,
     const std::vector< osg::ref_ptr< osg::Vec2Array > > &_texcoordsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays,
     const std::vector< osg::ref_ptr< osg::Vec4Array > > &_colorsArrays_edges,

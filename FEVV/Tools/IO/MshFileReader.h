@@ -848,7 +848,7 @@ template< typename CoordType,
 							temp_vector_n.push_back(static_cast<CoordNType>(temp3));
 						break;
 					case 2:
-						if (temp_vector_f.size() < index)
+						if (static_cast< long >(temp_vector_f.size()) < index)
 							temp_vector_f.resize(index);
 						temp_vector_f[index-1].push_back(temp1);
 						if (number_param > 1)

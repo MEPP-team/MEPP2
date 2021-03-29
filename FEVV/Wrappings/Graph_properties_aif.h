@@ -243,12 +243,12 @@ put(const boost::vertex_index_t &prop,
 
 //! \brief  Specialization of put(pmap, mesh, key, val) for AIF.
 inline void
-put(const boost::vertex_point_t &prop,
-    const FEVV::DataStructures::AIF::AIFMesh &sm,
+put(const boost::vertex_point_t &/*prop*/,
+    const FEVV::DataStructures::AIF::AIFMesh &/*sm*/,
     const typename boost::graph_traits<
-        FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor k,
+        FEVV::DataStructures::AIF::AIFMesh >::vertex_descriptor /*k*/,
     const typename boost::graph_traits<
-        FEVV::DataStructures::AIF::AIFMesh >::vertex_property_type &vp)
+        FEVV::DataStructures::AIF::AIFMesh >::vertex_property_type &/*vp*/)
 {
   assert(false);
   // auto pos_pm = boost::get(boost::vertex_point, sm);

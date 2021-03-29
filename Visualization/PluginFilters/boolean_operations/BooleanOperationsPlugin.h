@@ -168,8 +168,8 @@ public:
 
   template< typename HalfedgeGraph >
   void applyHG(BaseAdapterVisu *_adapter,
-               HalfedgeGraph *_mesh,
-               FEVV::PMapsContainer *pmaps_bag)
+               HalfedgeGraph * /*_mesh*/,
+               FEVV::PMapsContainer * /*pmaps_bag*/)
   {
     // retrieve the two input meshes in current viewer window,
     // then apply the filter
@@ -315,7 +315,7 @@ public:
     return QStringList() << "BooleanOperationsPlugin";
   }
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X

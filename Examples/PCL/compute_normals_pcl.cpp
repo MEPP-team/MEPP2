@@ -63,9 +63,6 @@ int main(int argc, char *argv[])
 
   //----------------------------------
 
-  // retrieve Point Map
-  auto pm = get(boost::vertex_point, pc);
-
   // create vertex-normal property map
   using VertexNormalMap = typename FEVV::PMap_traits< FEVV::vertex_normal_t,
                                                       PointCloudT >::pmap_type;

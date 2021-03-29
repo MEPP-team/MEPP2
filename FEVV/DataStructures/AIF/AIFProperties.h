@@ -367,7 +367,7 @@ class BasePropertyMap
 public:
   virtual ~BasePropertyMap() {}
   virtual void forcePolymorphic(void) {}
-  virtual void remove(std::size_t idx, std::size_t cLastIdx) {}
+  virtual void remove(std::size_t /*idx*/, std::size_t /*cLastIdx*/) {}
 };
 
 /*

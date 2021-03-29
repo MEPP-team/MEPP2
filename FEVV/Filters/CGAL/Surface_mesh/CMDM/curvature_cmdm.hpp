@@ -67,7 +67,7 @@ triangle_area_cmdm(
     const GeometryTraits &gt)
 {
   typedef typename boost::property_traits< PointMap >::value_type Point3d;
-  using Vector = typename GeometryTraits::Vector;
+  //using Vector = typename GeometryTraits::Vector;
 
   CGAL::Halfedge_around_face_circulator< HalfedgeGraph > p_halfedge(
       halfedge(fd, g), g);
@@ -304,10 +304,11 @@ geodes_principal_curvature_per_vert_cmdm(const HalfedgeGraph &g,
                                               normal2[2] * normal2[2]));
 
                 if(acos == -1) // cos=180 degrees => the 2 normals oppose
-                  double beta =
-                      M_PI /
-                      2; // set to maximum curvature achievable (in radian)
-
+                {
+                  //double beta =
+                  //    M_PI /
+                  //    2; // set to maximum curvature achievable (in radian)
+                }
                 else
                 {
                   // Normal and most common case for all types of distortion
@@ -533,7 +534,7 @@ calculate_curvature_cmdm(const HalfedgeGraph &g,
 {
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
-  typedef typename GraphTraits::vertex_descriptor Vertex_Descriptor;
+  //typedef typename GraphTraits::vertex_descriptor Vertex_Descriptor;
   using Vector = typename GeometryTraits::Vector;
 
   min_nrm_min_curvature = 100000;
@@ -553,7 +554,7 @@ calculate_curvature_cmdm(const HalfedgeGraph &g,
   vertex_iterator vi_end = iterator_pair.second;
 
   // #pragma omp parallel for
-  for(vi; vi != vi_end; ++vi)
+  for(; vi != vi_end; ++vi)
   {
     bool no_val_pro = false;
 

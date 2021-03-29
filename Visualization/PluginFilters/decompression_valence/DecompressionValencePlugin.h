@@ -260,22 +260,22 @@ public:
 
 #ifdef FEVV_USE_CGAL
   void apply(BaseAdapterVisu *_adapter,
-             MeshLCC *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             MeshLCC * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 
   void apply(BaseAdapterVisu *_adapter,
-             MeshSurface *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             MeshSurface * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
 
   void apply(BaseAdapterVisu *_adapter,
-             MeshPolyhedron *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             MeshPolyhedron * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
@@ -284,8 +284,8 @@ public:
 
 #ifdef FEVV_USE_OPENMESH
   void apply(BaseAdapterVisu *_adapter,
-             MeshOpenMesh *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             MeshOpenMesh * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
@@ -294,8 +294,8 @@ public:
 
 #ifdef FEVV_USE_AIF
   void apply(BaseAdapterVisu *_adapter,
-             MeshAIF *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             MeshAIF * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     apply(_adapter, static_cast< void * >(nullptr), nullptr);
   }
@@ -304,8 +304,8 @@ public:
 
   // case where the plugin is applied when no mesh is opened
   void apply(BaseAdapterVisu *_adapter,
-             void *_mesh,
-             FEVV::PMapsContainer *pmaps_bag) override
+             void * /*_mesh*/,
+             FEVV::PMapsContainer * /*pmaps_bag*/) override
   {
     // ask the user for the datastructure
     std::string mesh_type = chooseDatastructureMsgBox();
@@ -372,7 +372,7 @@ public:
     return QStringList() << "DecompressionValencePlugin";
   }
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X

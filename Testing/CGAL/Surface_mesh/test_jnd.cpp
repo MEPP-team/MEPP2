@@ -156,7 +156,7 @@ main(int argc, const char **argv)
 
 
   // apply filter
-  clock_t t_start = clock();
+  //clock_t t_start = clock();
   FEVV::Filters::just_noticeable_distortion_filter(m,
                                                    pm,
                                                    v_nm,

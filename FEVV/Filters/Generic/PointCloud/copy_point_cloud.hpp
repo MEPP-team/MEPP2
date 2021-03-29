@@ -80,7 +80,7 @@ copy_point_cloud(const PointCloudS     &pc_s,
                  PMapsContainer        &pmaps_t,
                  const Parameters      &params,
                  const GeometryTraitsS &gt_s,
-                 const GeometryTraitsT &gt_t)
+                 const GeometryTraitsT &/*gt_t*/)
 {
   // target types
   typedef  typename GeometryTraitsT::Scalar  TScalar;

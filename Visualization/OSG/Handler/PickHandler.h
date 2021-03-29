@@ -42,8 +42,8 @@ public:
   }
 
 protected:
-  osg::ref_ptr< osgText::Text > _updateText;
   FEVV::SimpleViewer *_smpViewer = nullptr;
+  osg::ref_ptr< osgText::Text > _updateText;
 };
 
 

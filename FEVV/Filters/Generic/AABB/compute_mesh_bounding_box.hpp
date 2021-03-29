@@ -44,7 +44,7 @@ compute_mesh_bounding_box(
 {
   typedef typename boost::property_traits< PointMap >::value_type Point;
 
-  typedef boost::graph_traits< PropertyGraph > GraphTraits;
+  //typedef boost::graph_traits< PropertyGraph > GraphTraits;
   auto iterator_pair = vertices(g); // vertices() returns a vertex_iterator pair
   auto vi = iterator_pair.first;
   auto vi_end = iterator_pair.second;

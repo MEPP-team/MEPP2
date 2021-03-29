@@ -43,7 +43,7 @@ typedef CGAL::
 
 //------------------------------------------------------------------------------
 int
-main(int narg, char **argv)
+main(void)
 {
   LCC lcc;
   typedef LCC::Dart_handle Dart_handle;
@@ -51,8 +51,8 @@ main(int narg, char **argv)
   try
   {
 #if 1
-    Dart_handle s1 = lcc.make_segment(
-        Point(1, 0, 10), Point(0, 0, 10)); // add a dangling edge (non-manifold)
+    //Dart_handle s1 = lcc.make_segment(
+    //    Point(1, 0, 10), Point(0, 0, 10)); // add a dangling edge (non-manifold)
 
     Dart_handle t1 =
         lcc.make_triangle(Point(1, 0, 1), Point(0, 0, 0), Point(1, 1, 0));

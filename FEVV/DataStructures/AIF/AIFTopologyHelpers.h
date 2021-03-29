@@ -5393,7 +5393,7 @@ public:
     }
 
     /// opposite of current halfedge (may not be defined when edge is complex)
-    AIFHalfEdge opposite(const AIFMesh &m)
+    AIFHalfEdge opposite(const AIFMesh &/*m*/)
     {
       edge_descriptor good_e = m_edge;
       face_descriptor op_f; // op_f can be null for border edge (not an issue)
@@ -5495,7 +5495,7 @@ public:
    * \param	mesh	The involving mesh
    * \return	The halfedge incident to the face.
    */
-  static halfedge_descriptor halfedge(face_descriptor face, const AIFMesh &mesh)
+  static halfedge_descriptor halfedge(face_descriptor face, const AIFMesh &/*mesh*/)
   {
     auto edgesRange = incident_edges(face);
     if(edgesRange.begin() == edgesRange.end())
@@ -5541,7 +5541,7 @@ public:
    * \param	mesh	The involving mesh
    * \return	The halfedge incident to the face.
    */
-  static halfedge_descriptor halfedge(vertex_descriptor v, const AIFMesh &mesh)
+  static halfedge_descriptor halfedge(vertex_descriptor v, const AIFMesh &/*mesh*/)
   {
     auto edgesRange = incident_edges(v);
     if(edgesRange.begin() == edgesRange.end())
@@ -5633,7 +5633,7 @@ public:
    * \return  The halfedge or a null halfedge.
    */
   static halfedge_descriptor
-  halfedge(vertex_descriptor src, vertex_descriptor target, const AIFMesh &mesh)
+  halfedge(vertex_descriptor src, vertex_descriptor target, const AIFMesh &/*mesh*/)
   {
     edge_descriptor good_e = common_edge(src, target);
     if(good_e == null_edge())
@@ -5724,7 +5724,7 @@ public:
    *
    * \return  The edge or a null edge.
    */
-  static edge_descriptor edge(halfedge_descriptor h, const AIFMesh &mesh)
+  static edge_descriptor edge(halfedge_descriptor h, const AIFMesh &/*mesh*/)
   {
     return h.get_edge();
   }
@@ -5740,7 +5740,7 @@ public:
    * stored within the AIFMesh).
    */
   static void
-  set_target(halfedge_descriptor h, vertex_descriptor target, AIFMesh &mesh)
+  set_target(halfedge_descriptor h, vertex_descriptor target, AIFMesh &/*mesh*/)
   {
     edge_descriptor good_e = h.get_edge();
     if(good_e == null_edge())
@@ -5767,7 +5767,7 @@ public:
    * \param  mesh    The involving mesh
    */
   static void
-  set_halfedge(vertex_descriptor target, halfedge_descriptor h, AIFMesh &mesh)
+  set_halfedge(vertex_descriptor target, halfedge_descriptor h, AIFMesh &/*mesh*/)
   {
     edge_descriptor good_e = h.get_edge();
     if(good_e == null_edge())
@@ -5925,7 +5925,7 @@ public:
    * stored within the AIFMesh).
    */
   static void
-  set_face(halfedge_descriptor h, face_descriptor face, AIFMesh &mesh)
+  set_face(halfedge_descriptor h, face_descriptor face, AIFMesh &/*mesh*/)
   {
     edge_descriptor edge = h.get_edge();
     if(edge == null_edge())
@@ -5959,7 +5959,7 @@ public:
    *           is stored within the AIFMesh).
    */
   static void
-  set_halfedge(face_descriptor face, halfedge_descriptor h, AIFMesh &mesh)
+  set_halfedge(face_descriptor face, halfedge_descriptor h, AIFMesh &/*mesh*/)
   {
     if(face == null_face())
       throw std::invalid_argument(

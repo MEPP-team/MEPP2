@@ -35,7 +35,7 @@ int
 main(int narg, char **argv)
 {
   typedef boost::graph_traits< FEVV::MeshSurface > GraphTraits;
-  typedef typename GraphTraits::vertex_iterator vertex_iterator;
+  //typedef typename GraphTraits::vertex_iterator vertex_iterator;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
   // input and output files
   // std::string inputFilePath =
