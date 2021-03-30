@@ -340,7 +340,7 @@ main(void)
       // so we must not pass here
       assert(false);
     }
-    catch(std::runtime_error)
+    catch(std::runtime_error &)
     {
     }
   }
