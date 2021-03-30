@@ -10,7 +10,16 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
+#if __GNUC__ >= 9
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 #include <osgViewer/ViewerEventHandlers>
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic pop
+#endif
 
 #include "Base/Color.hpp"
 #include "Visualization/BaseViewerOSG.h"
