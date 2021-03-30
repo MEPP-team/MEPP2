@@ -255,7 +255,14 @@ public:
   void EraseIsolatedCell(AIFCellContainer< T > &container, const T &cell)
   {
     std::size_t idx = cell->GetIndex();
-    //if (idx != -1)  // always true because idx is a size_t
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif
+    if (idx != -1) //TODO: FIX THIS WARNING
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     {
       // remove element from container
       std::size_t cLastId = 0; // init to 0 to remove C6001 Warning under VS2019
