@@ -51,6 +51,8 @@ public:
   {
   }
 
+  PCLPointCloudPointMap& operator=(const PCLPointCloudPointMap&) = default;
+
   value_type operator[](key_type k) const
   {
     // 'points' attribute of pcl::PointCloud<>
@@ -150,6 +152,8 @@ public:
   {
   }
 
+  PCLPointCloudNormalMap& operator=(const PCLPointCloudNormalMap&) = default;
+
   value_type operator[](key_type k) const
   {
     // 'points' attribute of pcl::PointCloud<> 
@@ -230,6 +234,8 @@ public:
   PCLPointCloudColorMap(const FEVV::PCLPointCloudColorMap &cm) : m_pc(cm.m_pc)
   {
   }
+
+  PCLPointCloudColorMap& operator=(const PCLPointCloudColorMap&) = default;
 
   value_type operator[](key_type k) const
   {
