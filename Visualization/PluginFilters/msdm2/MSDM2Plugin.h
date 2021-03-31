@@ -250,7 +250,7 @@ public:
         auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
         auto pm2 = properties_maps[1];
 
-        double MSDM2, MSDM2_1_2, MSDM2_2_1;
+        double MSDM2 = 0, MSDM2_1_2 = 0, MSDM2_2_1 = 0;
         if(one_two)
         {
           process(*m2, *pm2, *m1, *pm1, MSDM2_1_2);

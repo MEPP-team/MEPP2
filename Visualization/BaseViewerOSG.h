@@ -14,8 +14,18 @@
 
 #include <osg/Version>
 
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 //#include <osgViewer/CompositeViewer>
 #include <osgViewer/Viewer>
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic pop
+#endif
 
 #include <osgText/Text>
 

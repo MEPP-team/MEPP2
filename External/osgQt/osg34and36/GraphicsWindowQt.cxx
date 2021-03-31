@@ -11,9 +11,19 @@
  * OpenSceneGraph Public License for more details.
 */
 
+#if __GNUC__ >= 9
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 #include <osg/DeleteHandler>
 #include <osgQt/GraphicsWindowQt>
 #include <osgViewer/ViewerBase>
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic pop
+#endif
+
 #include <QInputEvent>
 #include <QPointer>
 

@@ -16,10 +16,22 @@
 #include <cstdlib>
 #include <fstream>
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#if __GNUC__ >= 9
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif //__GNUC__ >= 9
+#endif //__GNUC__
+
 #include "draco/compression/encode.h"
 #include "draco/core/cycle_timer.h"
 #include "draco/io/mesh_io.h"
 #include "draco/io/point_cloud_io.h"
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif //__GNUC__
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 

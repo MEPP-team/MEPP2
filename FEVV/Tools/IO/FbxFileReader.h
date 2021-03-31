@@ -18,7 +18,8 @@
 #include <exception>
 
 // FBX SDK
-#include <fbxsdk.h>
+//#include <fbxsdk.h>
+#include "FEVV/Tools/IO/FbxSdkNoWarning.h"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 #include "FEVV/Tools/IO/StringUtilities.hpp"
@@ -176,7 +177,7 @@ read_fbx_file(const std::string &filePath,
               std::vector< std::vector< coord_type > > &points_coords,
               std::vector< std::vector< coordN_type > > &normals_coords,
               std::vector< std::vector< coordT_type > > &texture_coords,
-              std::vector< std::vector< coordC_type > > &vertex_color_coords,
+              std::vector< std::vector< coordC_type > > & /*vertex_color_coords*/,
               std::vector< std::vector< index_type > > &face_indices,
               std::vector< std::vector< index_type > > &texture_face_indices,
               std::vector< std::vector< index_type > > &normal_face_indices,
@@ -207,7 +208,7 @@ read_fbx_file(const std::string &filePath,
 
   // dbg_display_infos(*scene);
 
-  auto &settings = scene->GetGlobalSettings();
+  //unused auto &settings = scene->GetGlobalSettings();
 
   // Recovering geometry
   for(int meshIndex = 0; meshIndex < scene->GetGeometryCount(); ++meshIndex)
@@ -329,7 +330,7 @@ read_fbx_file(const std::string &filePath,
           texture_face_indices[faceIndex].resize(
               face_indices[faceIndex].size());
 
-          for(int vertIndex = 0; vertIndex < face_indices[faceIndex].size();
+          for(size_t vertIndex = 0; vertIndex < face_indices[faceIndex].size();
               ++vertIndex)
           {
             index_type texIndex{};
@@ -416,7 +417,7 @@ read_fbx_file(const std::string &filePath,
         {
           normal_face_indices[faceIndex].resize(face_indices[faceIndex].size());
 
-          for(int vertIndex = 0; vertIndex < face_indices[faceIndex].size();
+          for(size_t vertIndex = 0; vertIndex < face_indices[faceIndex].size();
               ++vertIndex)
           {
             index_type normIndex{};

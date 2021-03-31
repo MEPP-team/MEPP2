@@ -53,7 +53,14 @@ main(int argc, char **argv)
 {
   bool test = false;
   OpenWith mesh_open_with = OPEN_WITH_ALL;
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
   OpenWith cloud_open_with = OPEN_WITH_ALL;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   std::vector< std::string > mesh_filenames;
   std::vector< std::string > cloud_filenames;
   std::vector< std::string > mesh_extensions = { ".off", ".obj" };
