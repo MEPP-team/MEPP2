@@ -14,7 +14,7 @@ Installation:
 - When you start Docker for the first time, by default you are in 'Linux containers' mode
 ---> if you chose WSL 2 during installation (only if Windows >= 2004), open 'cmd.exe' with administrative privileges: wsl --set-default-version 2
 ---> if you chose Hyper-V (so if you have unchecked WSL 2) during installation, then in menu 'Preferences...' ---> 'Resources / ADVANCED' ---> change CPUs (2) and Memory (4.00 GB)
-- You can switch from 'Linux containers' mode to 'Windows containers' mode using the menu 'Switch to Windows containers...' <---> 'Switch to Linux containers...' (right click on Docker instance) ---> existing containers will continue to run, but you will not be able to manage them until you switch back and no data will be lost.
+- You can switch from 'Linux containers' mode to 'Windows containers' mode using the menu 'Switch to Windows containers...' <---> 'Switch to Linux containers...' (right click on Docker instance) ---> existing containers will continue to run, but you will not be able to manage them until you switch back and no data will be lost
 ---> edit 'C:\Docker\config\daemon.json' and change (or add) the next line: "exec-opts": ["isolation=process"], (with the comma at the end of the line) to activate shared kernel (process) instead of VM (hyperv)
 ---> add also the next line: "storage-opts": ["size=40GB"], (with the comma at the end of the line)
 ---> restart Docker
