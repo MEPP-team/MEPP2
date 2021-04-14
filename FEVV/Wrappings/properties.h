@@ -346,7 +346,7 @@ struct Edge_pmap_traits
   typedef typename boost::graph_traits< MeshT >::edge_descriptor edge_key_type;
   typedef typename FEVV::Assoc_property_map< edge_key_type, ValueT > pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;

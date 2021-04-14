@@ -110,7 +110,7 @@ extract_vertex_star(
         typename boost::graph_traits< FaceGraph >::halfedge_descriptor > &qh)
 {
   typedef boost::graph_traits< FaceGraph > GraphTraits;
-  typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
+  //typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
   typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
   //typedef typename GraphTraits::face_descriptor face_descriptor;
 
@@ -122,7 +122,7 @@ extract_vertex_star(
     // vertex_descriptor new_v = source(h, g), tardeb = target(h, g);
     // assert(v == tardeb);
     qh.push_back(h);
-    vertex_descriptor vs = source(h, g), vt = target(h, g); // debug
+    //vertex_descriptor vs = source(h, g), vt = target(h, g); // debug
     // There is a pb when the next edge is a border edge: we must take into
     // account the vertices while updating correctly the next halfedge
     if(face(opposite(next(h, g), g), g) ==
