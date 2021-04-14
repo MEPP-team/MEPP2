@@ -61,8 +61,15 @@ using namespace FileUtils;
 		if (dimensions(type)==0)
 			throw "MSH Reader: Error there is an unknown element or a not implemented yet element";
 		//If the dimensions of the element is different from the other elements
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif //__GNUC__
 		if (dimensions(type)!=d)
 			throw "MSH Reader: Error there is 2D elements with 3D Elements";
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif //__GNUC__
 
 		//We get the number of nodes composing the element 
 		switch(type)
