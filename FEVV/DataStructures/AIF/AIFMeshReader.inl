@@ -233,12 +233,16 @@ AIFMeshReader::read(const std::string &filePath)
     }
   }
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif
   // check if all faces have a valid material
   if(!face_material.empty())
   {
     for(auto &mtl_id : face_material)
     {
-      if(mtl_id == -1)
+      if(mtl_id == -1) //TODO: FIX THE WARNING HERE
       {
         std::cout << "rAIFMeshReader::read(): found some faces with an invalid material. "
                      "Disabling material for all faces."
@@ -248,6 +252,9 @@ AIFMeshReader::read(const std::string &filePath)
       }
     }
   }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
   // store texture filename
   if(!texture_file_name.empty())
@@ -312,7 +319,7 @@ AIFMeshReader::read(const std::string &filePath)
   bool useCornerTextureCoord = false;
   bool useFaceColor = false;
   bool useFaceNormal = false; // per-face vertices normals
-  bool useLineColor = false;
+  //unused  bool useLineColor = false;
 
   if(!texture_coords.empty())
   {

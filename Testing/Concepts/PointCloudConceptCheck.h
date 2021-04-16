@@ -24,6 +24,11 @@ check_point_cloud_concept(PointCloudT &pc)
   typedef  typename GraphTraits::vertex_descriptor    vertex_descriptor;
   typedef  typename GraphTraits::vertex_iterator      vertex_iterator;
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
   // null_vertex()
   vertex_descriptor vd_null = GraphTraits::null_vertex();
 
@@ -38,6 +43,9 @@ check_point_cloud_concept(PointCloudT &pc)
 
   // num_vertices(pc)
   vertices_size_type n2 = num_vertices(pc);
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
   // add_vertex(pc)
   vertex_descriptor vd = add_vertex(pc);

@@ -16,7 +16,7 @@
 #include "Testing/Concepts/PointCloudConceptCheck.h"
 
 
-int main(int argc, char *argv[])
+int main(void)
 {
   FEVV::PCLPointCloud pc;
   FEVV::check_point_cloud_concept(pc);

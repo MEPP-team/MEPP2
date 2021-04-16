@@ -65,7 +65,7 @@ AIFMeshT extract_vertex_local_neighborhood(IterFaceType begin, IterFaceType end,
 template<typename PointMap>
 AIFMeshT extract_vertex_local_neighborhood(
   typename boost::graph_traits< AIFMeshT >::vertex_descriptor v,
-  const AIFMeshT& g,
+  const AIFMeshT& /*g*/,
   PointMap pm)
 {
   auto face_range = AIFHelpers::incident_faces(v);
@@ -109,6 +109,7 @@ static bool argument_analysis(std::string& arg, const std::string& arg_name, boo
 	return true;
 }
 
+#if 0 // unused
 static void replace(std::string& to_modify, const std::string& substring_to_search, const std::string& substring_to_use)
 {
 	size_t pos = to_modify.find(substring_to_search);
@@ -118,6 +119,8 @@ static void replace(std::string& to_modify, const std::string& substring_to_sear
 		pos = to_modify.find(substring_to_search, pos + substring_to_use.size());
 	}
 }
+#endif
+
 template< typename MutableFaceIncidentGraph >
 typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor
 create_new_edge_with_its_incident_vertices(MutableFaceIncidentGraph &g)
@@ -144,7 +147,7 @@ static void remove_adjacent_edges(MutableFaceIncidentGraph &g,
 
 	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
 	typedef typename GraphTraits::edge_descriptor edge_descriptor;
-	typedef typename GraphTraits::face_descriptor face_descriptor;
+	//typedef typename GraphTraits::face_descriptor face_descriptor;
 
 	removed_edges.clear();
 	std::set< edge_descriptor > set_removed_edges;
@@ -347,7 +350,7 @@ static void replace_vertex_in_incident_edges(MutableFaceIncidentGraph &g,
 }
 template< typename MutableFaceIncidentGraph >
 static void calculate_previous_and_after_vertices(
-	MutableFaceIncidentGraph &g, 
+	MutableFaceIncidentGraph &/*g*/, 
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor e,
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor pe,
 	typename boost::graph_traits<MutableFaceIncidentGraph >::edge_descriptor ae,
@@ -411,7 +414,7 @@ static void replace_edge_by_new_one_and_update_incidency(
 
 	typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
 	typedef typename GraphTraits::edge_descriptor edge_descriptor;
-	typedef typename GraphTraits::face_descriptor face_descriptor;
+	//typedef typename GraphTraits::face_descriptor face_descriptor;
 	///////////////////////////////////////////////////////////////////////////
 	if (!AIFHelpers::are_incident(f, e))
 		return;

@@ -231,8 +231,7 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
       this,
       SLOT(onItemChanged(QListWidgetItem *, QListWidgetItem *)));
 
-  QMenuBar *menuBar = this->menuBar();
-
+  // QMenuBar *menuBar = this->menuBar();
   // QMenu* menu = menuBar->addMenu( "Debug" );
   // menu->addAction( "Add Random Sphere", this, SLOT( onAddBall() ) );
 
@@ -365,10 +364,10 @@ FEVV::SimpleWindow::init(const bool _test, const int _width, const int _height)
 }
 
 inline void
-FEVV::SimpleWindow::setParam(std::string _name,
-                             int *_value,
-                             std::string _pluginName,
-                             Plugin *_plugin)
+FEVV::SimpleWindow::setParam(std::string /*_name*/,
+                             int * /*_value*/,
+                             std::string /*_pluginName*/,
+                             Plugin * /*_plugin*/)
 {
 #if 0
     // @todo missing delete of next line allocation
@@ -394,10 +393,10 @@ FEVV::SimpleWindow::setParam(std::string _name,
 }
 
 inline void
-FEVV::SimpleWindow::setParam(std::string _name,
-                             double *_value,
-                             std::string _pluginName,
-                             Plugin *_plugin)
+FEVV::SimpleWindow::setParam(std::string /*_name*/,
+                             double * /*_value*/,
+                             std::string /*_pluginName*/,
+                             Plugin * /*_plugin*/)
 {
 #if 0
     QLabel* testLabel = new QLabel( ui.listParams );
@@ -420,10 +419,10 @@ FEVV::SimpleWindow::setParam(std::string _name,
 }
 
 inline void
-FEVV::SimpleWindow::setParam(std::string _name,
-                             float *_value,
-                             std::string _pluginName,
-                             Plugin *_plugin)
+FEVV::SimpleWindow::setParam(std::string /*_name*/,
+                             float * /*_value*/,
+                             std::string /*_pluginName*/,
+                             Plugin * /*_plugin*/)
 {
 #if 0
     QLabel* testLabel = new QLabel( ui.listParams );
@@ -446,10 +445,10 @@ FEVV::SimpleWindow::setParam(std::string _name,
 }
 
 inline void
-FEVV::SimpleWindow::setParam(std::string _name,
-                             bool *_value,
-                             std::string _pluginName,
-                             Plugin *_plugin)
+FEVV::SimpleWindow::setParam(std::string /*_name*/,
+                             bool * /*_value*/,
+                             std::string /*_pluginName*/,
+                             Plugin * /*_plugin*/)
 {
 #if 0
     QLabel* testLabel = new QLabel( ui.listParams );
@@ -473,10 +472,10 @@ FEVV::SimpleWindow::setParam(std::string _name,
 }
 
 inline void
-FEVV::SimpleWindow::setParam(std::string _name,
-                             std::string *_value,
-                             std::string _pluginName,
-                             Plugin *_plugin)
+FEVV::SimpleWindow::setParam(std::string /*_name*/,
+                             std::string * /*_value*/,
+                             std::string /*_pluginName*/,
+                             Plugin * /*_plugin*/)
 {
 #if 0
     QLabel* testLabel = new QLabel( ui.listParams );
@@ -523,7 +522,7 @@ FEVV::SimpleWindow::onApplyButton()
 {
   // if no viewer is opened, open one
   if(!isValid())
-    auto viewer = createNewViewer();
+    createNewViewer();
 
   // apply plugin in current viewer
   for(auto funct : stackPlugins)
@@ -1579,7 +1578,14 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer *viewer,
     {
       std::vector< osg::Geode * > geodes = viewer->getGeodes();
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif // __GNUC__
       if(geodes.size() >= 1 && viewer->current_i_time < (geodes.size() - 1))
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif // __GNUC__
       {
         if(t2 == '+')                              // TIME++
           viewer->current_i_time = viewer->i_time; // LAST ONE

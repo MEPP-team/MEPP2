@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
   // compute normals
   std::cout << "compute normals" << std::endl;
-  typedef typename boost::property_traits< VertexNormalMap >::value_type Normal;
+  //typedef typename boost::property_traits< VertexNormalMap >::value_type Normal;
   // Estimates normals direction.
   // Note: pca_estimate_normals() requiresa range of points
   // as well as property maps to access each point's position and normal.

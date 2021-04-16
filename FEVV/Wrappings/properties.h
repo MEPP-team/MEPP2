@@ -251,7 +251,8 @@ public:
   }
 
   // copy constructor (shallow copy !)
-  Assoc_property_map(const Assoc_property_map &other)
+  Assoc_property_map(const Assoc_property_map &other) :
+      boost::associative_property_map< std::map< KeyType, ValueType > >(other)
   {
     // DBG std::cout << __FUNCTION__ << " " << this << " <- copy(" << &other <<
     // ")" << std::endl;
@@ -317,7 +318,7 @@ struct Vertex_pmap_traits
   typedef typename FEVV::Assoc_property_map< vertex_key_type, ValueT >
       pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -331,7 +332,7 @@ struct Face_pmap_traits
   typedef typename boost::graph_traits< MeshT >::face_descriptor face_key_type;
   typedef typename FEVV::Assoc_property_map< face_key_type, ValueT > pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -345,7 +346,7 @@ struct Edge_pmap_traits
   typedef typename boost::graph_traits< MeshT >::edge_descriptor edge_key_type;
   typedef typename FEVV::Assoc_property_map< edge_key_type, ValueT > pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -381,7 +382,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_normal_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -395,7 +396,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_tangent_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -409,7 +410,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_texcoord_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -423,7 +424,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_color_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -437,7 +438,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -451,7 +452,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_color_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -465,7 +466,7 @@ struct _PMap_traits< MeshT, FEVV::vertex_custom_vector_param_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Vertex_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -495,7 +496,7 @@ struct _PMap_traits< MeshT, FEVV::halfedge_texcoord_t >
   typedef
       typename Halfedge_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -509,7 +510,7 @@ struct _PMap_traits< MeshT, FEVV::edge_color_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Edge_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -523,7 +524,7 @@ struct _PMap_traits< MeshT, FEVV::face_normal_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Face_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -537,7 +538,7 @@ struct _PMap_traits< MeshT, FEVV::face_color_t >
   typedef typename FEVV::Geometry_traits< MeshT >::Vector value_type;
   typedef typename Face_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -551,7 +552,7 @@ struct _PMap_traits< MeshT, FEVV::face_material_t >
   typedef size_t value_type;
   typedef typename Face_pmap_traits< MeshT, value_type >::pmap_type pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -569,7 +570,7 @@ struct _PMap_traits< MeshT, FEVV::mesh_materials_t >
   typedef typename boost::vector_property_map< value_type, index_map_type >
       pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -586,7 +587,7 @@ struct _PMap_traits< MeshT, FEVV::mesh_guiproperties_t >
   typedef typename boost::vector_property_map< value_type, index_map_type >
       pmap_type;
 
-  static pmap_type create(const MeshT &m)
+  static pmap_type create(const MeshT &/*m*/)
   {
     pmap_type pmap;
     return pmap;
@@ -626,7 +627,7 @@ using Halfedge_pmap = typename Halfedge_pmap_traits< MeshT, ValueT >::pmap_type;
 /// (refer to \ref GenericPropertyMapConceptPage)
 template< typename PropertyT, typename MeshT >
 typename PMap_traits< PropertyT, MeshT >::pmap_type
-make_property_map(PropertyT p, const MeshT &m)
+make_property_map(PropertyT /*p*/, const MeshT &m)
 {
 #if 0
 	// DBG

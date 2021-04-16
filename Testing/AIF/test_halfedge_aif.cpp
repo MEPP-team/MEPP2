@@ -18,12 +18,12 @@
 //------------------------------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   typedef FEVV::DataStructures::AIF::AIFMesh AIFMesh;
-  typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
-  typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
-  typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
+  //typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
+  //typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
+  //typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
   typedef FEVV::DataStructures::AIF::AIFTopologyHelpers helpers;
   typedef helpers::AIFHalfEdge AIFHalfEdge;
   typedef helpers::smart_ptr_mesh smart_ptr_mesh;
@@ -32,17 +32,17 @@ main(int argc, const char **argv)
   typedef helpers::face_descriptor face_descriptor;
 
 
-  // build mesh
-  //
-  //         v3
-  //        /|\
-  //     e3/ | \e2
-  //   v0 /f0|f1\ v2
-  //      \e4|  /
-  //     e0\ | /e1
-  //        \|/
-  //         v1
-  //
+  /* build mesh
+  
+           v3
+          /|\
+       e3/ | \e2
+     v0 /f0|f1\ v2
+        \e4|  /
+       e0\ | /e1
+          \|/
+           v1
+  */
   smart_ptr_mesh m = AIFMesh::New();
 
   // add vertices

@@ -197,7 +197,7 @@ read_mesh(
     const std::string &filename,
     FEVV::PCLPointCloud &g,
     PMapsContainer &pmaps,
-    bool only_pts = false)
+    bool /*only_pts*/ = false)
 {
 #if 1
   bool success = false;
@@ -240,7 +240,7 @@ read_mesh(
 
       // retrieve all pcl::PointNormal fields
       std::vector<pcl::PCLPointField> fields;
-#if PCL_VERSION_COMPARE(<, 1, 11, 0)
+#if PCL_VERSION_COMPARE(<, 1, 10, 0)
       pcl::getFields< pcl::PointNormal >(fields);
 #else
       fields = pcl::getFields< pcl::PointNormal >();

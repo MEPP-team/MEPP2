@@ -25,9 +25,9 @@ check_point_cloud_NN_search_concept(void)
 {
   // types
   typedef  boost::graph_traits< PointCloudT >         GraphTraits;
-  typedef  typename GraphTraits::vertices_size_type   vertices_size_type;
+  //typedef  typename GraphTraits::vertices_size_type   vertices_size_type;
   typedef  typename GraphTraits::vertex_descriptor    vertex_descriptor;
-  typedef  typename GraphTraits::vertex_iterator      vertex_iterator;
+  //typedef  typename GraphTraits::vertex_iterator      vertex_iterator;
   typedef  FEVV::Geometry_traits< PointCloudT >       Geometry;
   typedef  typename Geometry::Point                   Point;
 

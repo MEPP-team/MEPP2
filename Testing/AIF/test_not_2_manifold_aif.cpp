@@ -40,14 +40,14 @@ const bool VERBOSE = false;
 //------------------------------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   typedef FEVV::DataStructures::AIF::AIFMesh AIFMesh;
-  typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
-  typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
-  typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
+  //typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
+  //typedef FEVV::DataStructures::AIF::AIFEdge AIFEdge;
+  //typedef FEVV::DataStructures::AIF::AIFFace AIFFace;
   typedef FEVV::DataStructures::AIF::AIFTopologyHelpers TopoHelpers;
-  typedef TopoHelpers::AIFHalfEdge AIFHalfEdge;
+  //typedef TopoHelpers::AIFHalfEdge AIFHalfEdge;
   typedef TopoHelpers::smart_ptr_mesh smart_ptr_mesh;
   typedef TopoHelpers::vertex_descriptor vertex_descriptor;
   typedef TopoHelpers::edge_descriptor edge_descriptor;

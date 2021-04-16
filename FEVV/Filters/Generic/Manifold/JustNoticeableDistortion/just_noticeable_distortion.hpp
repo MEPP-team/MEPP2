@@ -58,8 +58,7 @@ compute_visibility(const GeometryTraits &geom,
                    const UserParam &user,
                    const SceneParam &scene,
                    const NWHWD16_Threshold &threshold,
-                   bool both_faces_move = true,
-                   bool data_output = false)
+                   bool both_faces_move = true)
 {
   if(face(halfedge, mesh) ==
          boost::graph_traits< HalfedgeGraph >::null_face() ||
@@ -192,8 +191,7 @@ compute_threshold(const GeometryTraits &geom,
                   const UserParam &user,
                   const SceneParam &scene,
                   const NWHWD16_Threshold &threshold,
-                  double max_displacement,
-                  bool data_output = false)
+                  double max_displacement)
 {
   double tolerence = 0.80;
   double precision = 0.1;
@@ -225,8 +223,7 @@ compute_threshold(const GeometryTraits &geom,
                                         user,
                                         scene,
                                         threshold,
-                                        true,
-                                        data_output);
+                                        true);
     visibility = std::max(visibility, visibility_b);
     if(visibility >= 1.0)
       break;
@@ -244,8 +241,7 @@ compute_threshold(const GeometryTraits &geom,
                                         user,
                                         scene,
                                         threshold,
-                                        false,
-                                        data_output);
+                                        false);
     visibility = std::max(visibility, visibility_b);
     if(visibility >= 1.0)
       break;
@@ -274,8 +270,7 @@ compute_threshold(const GeometryTraits &geom,
                                           user,
                                           scene,
                                           threshold,
-                                          true,
-                                          data_output);
+                                          true);
       visibility = std::max(visibility, visibility_b);
       if(visibility >= 1.0)
         break;
@@ -293,8 +288,7 @@ compute_threshold(const GeometryTraits &geom,
                                           user,
                                           scene,
                                           threshold,
-                                          false,
-                                          data_output);
+                                          false);
       visibility = std::max(visibility, visibility_b);
       if(visibility >= 1.0)
         break;
@@ -353,15 +347,14 @@ just_noticeable_distortion_filter(const HalfedgeGraph &halfedge_graph,
                                   bool use_random = true)
 {
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
-  typedef typename GraphTraits::vertex_iterator vertex_iterator;
+  //typedef typename GraphTraits::vertex_iterator vertex_iterator;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
-  typedef typename GraphTraits::face_descriptor face_descriptor;
+  //typedef typename GraphTraits::face_descriptor face_descriptor;
   typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
-  typedef typename GraphTraits::face_iterator face_iterator;
-  typedef typename boost::property_traits< PointMap >::value_type Point;
+  //typedef typename GraphTraits::face_iterator face_iterator;
   typedef typename boost::property_traits< VertexNormalMap >::value_type Normal;
-  typedef
-      typename boost::property_traits< FaceNormalMap >::value_type FaceNormal;
+  //typedef
+  //    typename boost::property_traits< FaceNormalMap >::value_type FaceNormal;
 
   int counter = 0;
 
@@ -428,15 +421,17 @@ just_noticeable_distortion_filter(const HalfedgeGraph &halfedge_graph,
     counter++;
 
 
-    Point p = get(point_map, vi);
     Normal n = get(vertex_normal_map, vi);
 
     halfedge_descriptor h0 = next(halfedge(vi, halfedge_graph), halfedge_graph);
     halfedge_descriptor h = h0;
 
 #ifndef FEVV_USE_AIF
+    typedef typename boost::property_traits< PointMap >::value_type Point;
+
     if(data_output)
     {
+      Point p = get(point_map, vi);
       std::cout << "processing vertex #" << counter << " : "
                 << geometry_traits.get_x(p) << " " << geometry_traits.get_y(p)
                 << " " << geometry_traits.get_z(p) << std::endl;
@@ -508,8 +503,7 @@ just_noticeable_distortion_filter(const HalfedgeGraph &halfedge_graph,
                                  user,
                                  scene,
                                  threshold,
-                                 0.1 * bbox_diag_len,
-                                 data_output);
+                                 0.1 * bbox_diag_len);
 #ifndef FEVV_USE_AIF
         if(data_output)
           std::cout << "\t" << light << " -> " << T(i) << std::endl;

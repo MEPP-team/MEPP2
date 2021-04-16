@@ -223,7 +223,7 @@ void
 Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     Global_Initialization(HalfedgeGraph &_pMesh,
                           const int &_Qbit,
-                          const char *_File_Name,
+                          const char * /*_File_Name*/,
                           const PointMap *pm,
                           VertexColorMap *v_cm)
 {
@@ -881,7 +881,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
                           const float &_Metric_thread,
                           const bool _Use_forget_metric,
                           const int &_Forget_value,
-                          const int &_Qbit)
+                          const int &/*_Qbit*/)
 {
 
 
@@ -3544,7 +3544,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
                     Arithmetic_Codec &enc,
                     unsigned &Connectivity_size,
                     unsigned &Color_size,
-                    const int &Num_color_base_mesh,
+                    const int &/*Num_color_base_mesh*/,
                     const PointMap *_pm)
 {
 
@@ -4399,7 +4399,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   double L_min = 5000, A_min = 5000, B_min = 5000;
   double L_max = -5000, A_max = -5000, B_max = -5000;
 
-  unsigned int while_loop_cnt = 0;
+  //unsigned int while_loop_cnt = 0;
   while(!vertices.empty())
   {
 #ifdef DBG_Calculate_Edge_Color_Difference_VERBOSE
@@ -4434,7 +4434,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
       CGAL::Halfedge_around_target_circulator< HalfedgeGraph > hvc(v, _pMesh);
       CGAL::Halfedge_around_target_circulator< HalfedgeGraph > phvc(hvc);
 
-      int neighbour_cnt = 0;
+      //int neighbour_cnt = 0;
       double Mean = 0.0;
       int Count = 0;
       CGAL_For_all(hvc, phvc)
@@ -5128,7 +5128,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   {
     if(get(this->vertex_Component_Number, *pVertex) == Component_ID)
     {
-      int Coeff[3];
+      int Coeff[3] = { 0 };
       Get_Coefficient_Up_Quantization(get(this->vertex_Q_Index, *pVertex),
                                       Coeff);
       Point3d pt = get(*_pm, *pVertex);
@@ -6179,7 +6179,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
   {
     if(get(this->vertex_Component_Number, *pVert) == _Component_ID)
     {
-      int Coeff[3];
+      int Coeff[3] = { 0 };
       Get_Coefficient_Up_Quantization(get(this->vertex_Q_Index, *pVert), Coeff);
 
       Color_Unit color = get(this->vertex_color_int, *pVert);
@@ -7242,7 +7242,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
         const typename FEVV::Geometry_traits< HalfedgeGraph >::Point &Q,
         const typename FEVV::Geometry_traits< HalfedgeGraph >::Point &R)
 {
-  typedef typename FEVV::Geometry_traits< HalfedgeGraph >::Point Point3d;
+  //typedef typename FEVV::Geometry_traits< HalfedgeGraph >::Point Point3d;
   typedef typename FEVV::Geometry_traits< HalfedgeGraph >::Vector Vector;
   FEVV::Geometry_traits< HalfedgeGraph > gt(_pMesh);
 
@@ -7820,7 +7820,7 @@ Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     Retriangulation(HalfedgeGraph &pMesh,
                     const halfedge_descriptor &ch,
                     const unsigned &valence,
-                    const unsigned &Vertex_number,
+                    const unsigned &/*Vertex_number*/,
                     const int &Component_ID,
                     const PointMap *_pm)
 {
@@ -8888,7 +8888,7 @@ template< typename HalfedgeGraph, typename PointMap, typename VertexColorMap >
 int
 Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >::
     Regulation(HalfedgeGraph &_pMesh,
-               const bool Normal_flipping,
+               const bool /*Normal_flipping*/,
                const bool Use_metric,
                const float &Metric_thread,
                const bool Use_forget_metric,

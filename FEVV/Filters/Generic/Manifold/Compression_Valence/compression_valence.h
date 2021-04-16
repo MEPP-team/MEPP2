@@ -60,7 +60,7 @@ compression_valence(HalfedgeGraph &g,
                     bool with_adaptative_quantization,
                     int max_vertices,
                     int quantiz_bits,
-                    const GeometryTraits &gt)
+                    const GeometryTraits &/*gt*/)
 {
   Compression_Valence_Component< HalfedgeGraph, PointMap, VertexColorMap >
       compr_valence_component;

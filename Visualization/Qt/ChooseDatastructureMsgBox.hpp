@@ -58,7 +58,7 @@ std::string chooseDatastructureMsgBox(void)
       msgbox.addButton("PCLPointCloud", QMessageBox::ResetRole);
 #endif
 
-  QPushButton *abortButton = msgbox.addButton(QMessageBox::Cancel);
+  msgbox.addButton(QMessageBox::Cancel);
 
   msgbox.exec();
   std::string choice("NONE");

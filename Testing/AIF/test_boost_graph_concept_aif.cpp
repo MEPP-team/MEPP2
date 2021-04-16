@@ -46,7 +46,7 @@ struct GraphConcept
 //------------------------------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   struct GraphConcept< FEVV::DataStructures::AIF::AIFMesh > s;
 

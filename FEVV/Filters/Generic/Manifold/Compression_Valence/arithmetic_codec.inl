@@ -53,13 +53,13 @@
 //
 
 inline
-const unsigned AC__MinLength(void)
+unsigned AC__MinLength(void)
 {
   return 0x01000000U; // threshold for renormalization
 }
 
 inline
-const unsigned AC__MaxLength(void)
+unsigned AC__MaxLength(void)
 {
   return 0xFFFFFFFFU; // maximum AC interval length
 }
@@ -67,13 +67,13 @@ const unsigned AC__MaxLength(void)
 // Maximum values for binary models
 
 inline
-const unsigned BM__LengthShift(void)
+unsigned BM__LengthShift(void)
 {
   return 13; // length bits discarded before mult.
 }
 
 inline
-const unsigned BM__MaxCount(void)
+unsigned BM__MaxCount(void)
 {
   return 1 << BM__LengthShift(); // for adaptive models
 }
@@ -81,13 +81,13 @@ const unsigned BM__MaxCount(void)
 // Maximum values for general models
 
 inline
-const unsigned DM__LengthShift(void)
+unsigned DM__LengthShift(void)
 {
   return 15; // length bits discarded before mult.
 }
 
 inline
-const unsigned DM__MaxCount(void)
+unsigned DM__MaxCount(void)
 {
   return 1 << DM__LengthShift(); // for adaptive models
 }

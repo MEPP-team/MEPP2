@@ -45,7 +45,7 @@ typedef CGAL::
 typedef MeshLcc G;
 
 int
-main(int narg, char **argv)
+main(void)
 {
   using namespace boost;
   // Assertions are sometimes redundant (IncidenceGraph concept assertion
@@ -95,7 +95,7 @@ main(int narg, char **argv)
   // concept indirectly (through MutableGraph) inherits from the
   // EdgeMutableGraph concept that currently fails (refer above).
   { // Technical scope to avoid variable/type collisions with other tests
-    typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
+    //typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
     // G g;
     // boost::concepts::dummy_edge_predicate<edge_descriptor> p;
     // typename boost::graph_traits<G>::vertex_descriptor u;
@@ -117,7 +117,7 @@ main(int narg, char **argv)
   // concept inherits from the EdgeMutableGraph concept that currently fails
   // (refer above).
   { // Technical scope to avoid variable/type collisions with other tests
-    typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
+    //typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
     // G g;
     // boost::concepts::dummy_edge_predicate<edge_descriptor> p;
     // The following assertion fails with message:
@@ -133,7 +133,7 @@ main(int narg, char **argv)
   // the MutableBidirectionalGraph concept inherits from the
   // EdgeMutableGraph concept that currently fails (refer above).
   { // Technical scope to avoid variable/type collisions with other tests
-    typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
+    //typedef typename graph_traits< G >::edge_descriptor edge_descriptor;
     // G g;
     // boost::concepts::dummy_edge_predicate<edge_descriptor> p;
     // typename boost::graph_traits<G>::vertex_descriptor u;

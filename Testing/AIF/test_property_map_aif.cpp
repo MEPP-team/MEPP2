@@ -33,7 +33,7 @@ print_property_map(FEVV::DataStructures::AIF::PropertyMap< T > *pm)
 //----------------------------------------------------------
 
 int
-main(int argc, const char **argv)
+main(void)
 {
   typedef FEVV::DataStructures::AIF::AIFMesh AIFMesh;
   typedef FEVV::DataStructures::AIF::AIFVertex AIFVertex;
@@ -340,7 +340,7 @@ main(int argc, const char **argv)
       // so we must not pass here
       assert(false);
     }
-    catch(std::runtime_error)
+    catch(std::runtime_error &)
     {
     }
   }

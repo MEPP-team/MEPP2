@@ -97,7 +97,7 @@ test_assert(bool expr)
 }
 
 int
-main(int narg, char **argv)
+main(void)
 {
   helpers::smart_ptr_mesh mesh = helpers::mesh_type::New();
 
@@ -328,10 +328,10 @@ main(int narg, char **argv)
         e_range;
     typedef boost::iterator_range< helpers::face_container::const_iterator >
         f_range;
-    typedef helpers::vertex_container_in_edge ve_pair;
-    typedef boost::iterator_range<
-        helpers::face_container_in_edge::const_iterator >
-        fe_range;
+    //typedef helpers::vertex_container_in_edge ve_pair;
+    //typedef boost::iterator_range<
+    //    helpers::face_container_in_edge::const_iterator >
+    //    fe_range;
     e_range r2 = helpers::edges(mesh);
 
     for(e_range::iterator it = r2.begin(); it != r2.end(); ++it)

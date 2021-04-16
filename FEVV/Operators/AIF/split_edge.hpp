@@ -51,7 +51,7 @@ split_edge(
 	    midpoint_vertex)
 {
   typedef FEVV::Geometry_traits< MutableFaceIncidentGraph > GeometryTraits;
-  typedef typename GeometryTraits::Point Point;
+  //typedef typename GeometryTraits::Point Point;
 
   typedef boost::graph_traits< MutableFaceIncidentGraph > GraphTraits;
   typedef typename GraphTraits::edge_descriptor edge_descriptor;

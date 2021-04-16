@@ -712,7 +712,6 @@ FEVV::SimpleViewer::internal_createMesh(
   VertexCustomVectorColorMap *_vt_CVCm = nullptr;
   VertexCustomVectorParamMap *_vt_CVPm = nullptr;
 
-  MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
 
   // textures stuff
@@ -724,7 +723,6 @@ FEVV::SimpleViewer::internal_createMesh(
   if(has_map(*_pmaps, FEVV::mesh_guiproperties))
   {
     m_gpm = get_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps);
-    _m_gpm = &m_gpm;
     // std::cout << "[SimpleViewer] **************get mesh_guiproperties
     // property_map" << std::endl;
   }
@@ -734,10 +732,11 @@ FEVV::SimpleViewer::internal_createMesh(
     FEVV::Types::GuiProperties gui_props;
     put(m_gpm, 0, gui_props);
     put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
-    _m_gpm = &m_gpm;
     // std::cout << "[SimpleViewer] **************make mesh_guiproperties
     // property_map" << std::endl;
   }
+
+  //MeshGuipropertiesMap *_m_gpm = &m_gpm;
 
   // --- face_normal
   if(has_map(*_pmaps, FEVV::face_normal))
@@ -1549,7 +1548,7 @@ FEVV::SimpleViewer::internal_createMesh(
   }
 
   /// Adding vertices - superimpose and 'only_pts' mode only
-  size_t nb_faces = size_of_faces(*_g);
+  //size_t nb_faces = size_of_faces(*_g);
   // if(m_RenderSuperimposedVertices || m_RenderSuperimposedVertices_Big ||
   // (nb_faces==0)) // last test for 'only_pts' mode
   if((!m_redraw) || (m_redraw && m_recreateOSGobj_if_redraw)) // NEW
@@ -2127,14 +2126,12 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   VertexCustomVectorColorMap *_vt_CVCm = nullptr;
   VertexCustomVectorParamMap *_vt_CVPm = nullptr;
 
-  MeshGuipropertiesMap *_m_gpm = nullptr;
   size_t _m_mm_size = 0;
 
   // retrieve or create mesh gui-properties property map
   if(has_map(*_pmaps, FEVV::mesh_guiproperties))
   {
     m_gpm = get_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps);
-    _m_gpm = &m_gpm;
   }
   else
   {
@@ -2142,8 +2139,9 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     FEVV::Types::GuiProperties gui_props;
     put(m_gpm, 0, gui_props);
     put_property_map(FEVV::mesh_guiproperties, *_g, *_pmaps, m_gpm);
-    _m_gpm = &m_gpm;
   }
+
+  //MeshGuipropertiesMap *_m_gpm = &m_gpm;
 
   // --- vertex_normal
   if(has_map(*_pmaps, FEVV::vertex_normal))
@@ -2481,7 +2479,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
   // std::cout << "---------> geometries.push_back" << std::endl;
   size_t mtl_id = 0;
 
-  unsigned int sizeVertex = 0;
+  //unsigned int sizeVertex = 0;
   unsigned int sizeSPoints = 0;
 
   Point p0;
@@ -3123,12 +3121,19 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
   unsigned int position;
   position = getMeshId(static_cast< void * >(_g));
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif // __GNUC__
   if(! Assert::check(position != -1,
         "mesh was not found. Leaving...",
         "SimpleViewer::redrawMesh"))
   {
     return;
   }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif // __GNUC__
 
   // update mesh name during redraw if != ""
   if(_mesh_file != std::string(""))
@@ -3213,12 +3218,19 @@ FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
   unsigned int position;
   position = getMeshId(static_cast< void * >(_g));
 
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wsign-compare"
+#endif // __GNUC__
   if(! Assert::check(position != -1,
         "mesh was not found. Leaving...",
         "SimpleViewer::centerMesh"))
   {
     return;
   }
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif // __GNUC__
 
   // ---
 

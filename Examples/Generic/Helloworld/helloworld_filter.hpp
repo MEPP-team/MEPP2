@@ -32,7 +32,7 @@ helloworld_filter(const HalfedgeGraph &g,
 {
   typedef boost::graph_traits< HalfedgeGraph > GraphTraits;
   typedef typename GraphTraits::vertex_iterator vertex_iterator;
-  typedef typename GraphTraits::face_descriptor face_descriptor;
+  //typedef typename GraphTraits::face_descriptor face_descriptor;
   typedef typename GraphTraits::face_iterator face_iterator;
   typedef typename boost::property_traits< PointMap >::value_type Point;
   typedef typename boost::property_traits< VertexColorMap >::value_type Color;
@@ -66,9 +66,9 @@ helloworld_filter(const HalfedgeGraph &g,
     // write property map data
     Point newpoint(gt.get_x(p) + 1, gt.get_y(p) + 2, gt.get_z(p) + 1);
     put(pm, *vi, newpoint);
-    Color newcolor(0.8, 0.2, 0.1);
+    Color newcolor(c[0]/2.0, c[1]/2.0, c[2]/2.0);
     put(v_cm, *vi, newcolor);
-    Normal newnormal(1.0, 2.0, 3.0);
+    Normal newnormal(n[0]/2.0, n[1]/2.0, n[2]/2.0);
     put(v_nm, *vi, newnormal);
   }
 

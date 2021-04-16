@@ -116,7 +116,6 @@ AIFMeshWriter::write(/*const*/ input_type &inputMesh,
   std::vector<std::string> dfv_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFVertex::ptr >("v:datafield:");
   std::vector<std::string> dff_names = inputMesh.GetPropertyMapNamesStartingWithPrefix< AIFFace::ptr >("f:datafield:");
   
-  unsigned int pointDim = 3;
   long vertexIndex = 0; // to be sure to start to 0
   std::map< helpers::vertex_descriptor, long >
       indexMap; // for correct corresponding between vertex order in file and

@@ -46,7 +46,7 @@ void
 boolean_union(HalfedgeGraph &gA,
               HalfedgeGraph &gB,
               HalfedgeGraph &g_out,
-              const GeometryTraits &gt)
+              const GeometryTraits &/*gt*/)
 {
   BoolPolyhedra< HalfedgeGraph >(gA, gB, g_out, UNION);
 }
@@ -115,7 +115,7 @@ void
 boolean_inter(HalfedgeGraph &gA,
               HalfedgeGraph &gB,
               HalfedgeGraph &g_out,
-              const GeometryTraits &gt)
+              const GeometryTraits &/*gt*/)
 {
   BoolPolyhedra< HalfedgeGraph >(gA, gB, g_out, INTER);
 }
@@ -184,7 +184,7 @@ void
 boolean_minus(HalfedgeGraph &gA,
               HalfedgeGraph &gB,
               HalfedgeGraph &g_out,
-              const GeometryTraits &gt)
+              const GeometryTraits &/*gt*/)
 {
   BoolPolyhedra< HalfedgeGraph >(gA, gB, g_out, MINUS);
 }

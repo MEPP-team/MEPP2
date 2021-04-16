@@ -8,14 +8,12 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include "FEVV/DataStructures/AIF/AIFMesh.hpp"
+#pragma once
 
-//------------------------------------------------------------------------------
+#ifdef __GNUC__
+// disable all GCC warnings in the rest of the current file
+#pragma GCC system_header
+#endif
 
-int
-main(void)
-{
-  new FEVV::DataStructures::AIF::AIFMesh;
+#include <fbxsdk.h>
 
-  return 0;
-}

@@ -165,7 +165,7 @@ public:
     return QStringList() << "WeightedPCAPluginPrivate";
   }
 
-  bool Generic_plugin(const QString &plugin) override
+  bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X

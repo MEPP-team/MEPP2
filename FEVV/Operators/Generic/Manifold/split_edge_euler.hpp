@@ -52,7 +52,7 @@ split_edge_euler(
   typedef boost::graph_traits< MutableFaceGraph > GraphTraits;
   typedef typename GraphTraits::halfedge_descriptor halfedge_descriptor;
   typedef typename GraphTraits::vertex_descriptor vertex_descriptor;
-  typedef typename GraphTraits::face_descriptor face_descriptor;
+  //typedef typename GraphTraits::face_descriptor face_descriptor;
   GeometryTraits gt(g);
 
   if(h == boost::graph_traits< MutableFaceGraph >::null_halfedge())

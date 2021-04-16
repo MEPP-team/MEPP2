@@ -22,7 +22,7 @@ typedef FEVV::DataStructures::AIF::AIFMesh Mesh;
 typedef Mesh G;
 
 int
-main(int narg, char **argv)
+main(void)
 {
   using namespace boost;
 

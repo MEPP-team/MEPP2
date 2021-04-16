@@ -16,7 +16,17 @@
 
 #include <osgQt/GraphicsWindowQt>
 // #include <osgViewer/GraphicsWindow>
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-copy"
+#endif
+
 #include <osgViewer/ViewerEventHandlers>
+
+#if __GNUC__ >= 9
+#pragma GCC diagnostic pop
+#endif
 
 #ifndef Q_MOC_RUN // MT : very important to avoid the error : ' Parse error at
                   // "BOOST_JOIN" ' -> (qt4 pb with boost)
@@ -79,7 +89,7 @@ public:
   // void attachMesh( HalfedgeGraph& _mesh );
 
 protected:
-  virtual void paintEvent(QPaintEvent *event) override
+  virtual void paintEvent(QPaintEvent * /*event*/) override
   {
     static_cast< BaseViewerOSG * >(myViewer)->frame();
   }
