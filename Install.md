@@ -16,7 +16,7 @@ CMake compilation flags short list:
 
 ## Dependencies
 Mandatory dependencies:
- - CMake >= 2.8.11
+ - CMake >= 3.1
    - Note: [Boost 1.64 requires CMake 3.8 or newer](https://stackoverflow.com/questions/42123509/cmake-finds-boost-but-the-imported-targets-not-available-for-boost-version)
  - Boost >= 1.59
  - Eigen 3
@@ -196,7 +196,7 @@ Mandatory dependencies:
 ````
   # CAUTION : if you are under OSX Mojave (10.14), you have to upgrade to 10.14.4 (March 25, 2019) at least in order to avoid black blinking video problem
 
-  # install homebrew package manager (see http://brew.sh/), then
+  # Install homebrew package manager (see http://brew.sh/), then
   $ brew update
 
   # CMake
@@ -213,24 +213,12 @@ Optional dependencies:
 ````
   # CGAL
   $ brew install cgal
-  $ brew info cgal
-
-  # -> ONLY if CGAL version above is 4.14 then you have to patch CGAL (NO MORE PROBLEM with version >= 4.14.1) <- :
-  # ---------------------------------------------------------------------------------------------------------------
-  $ cd /usr/local/include/CGAL/IO
-  $ mv write_ply_points.h write_ply_points.h.old
-  $ wget https://download.gforge.liris.cnrs.fr/meppbin/src/cgal414/write_ply_points.h
-  $ cd
 
   # OpenMesh
   $ brew install open-mesh
 
-  # XQuartz (X.Org X Window System that runs on OS X) -> needed for OpenSceneGraph
-  $ brew install Caskroom/cask/xquartz
-
-  # Qt
-  $ brew tap cartr/qt4
-  $ brew install qt@4
+  # Qt 5
+  $ brew install qt@5
 
   # OpenSceneGraph
   $ brew install open-scene-graph
