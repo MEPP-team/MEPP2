@@ -233,18 +233,14 @@ AIFMeshReader::read(const std::string &filePath)
     }
   }
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic warning "-Wsign-compare"
-#endif
   // check if all faces have a valid material
   if(!face_material.empty())
   {
     for(auto &mtl_id : face_material)
     {
-      if(mtl_id == -1) //TODO: FIX THE WARNING HERE
+      if(mtl_id == static_cast< index_type >(-1))
       {
-        std::cout << "rAIFMeshReader::read(): found some faces with an invalid material. "
+        std::cout << "AIFMeshReader::read(): found some faces with an invalid material. "
                      "Disabling material for all faces."
                   << std::endl;
         face_material.clear();
@@ -252,9 +248,6 @@ AIFMeshReader::read(const std::string &filePath)
       }
     }
   }
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
   // store texture filename
   if(!texture_file_name.empty())
