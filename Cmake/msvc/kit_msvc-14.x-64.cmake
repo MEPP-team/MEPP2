@@ -18,7 +18,7 @@ elseif(MSVC_VERSION GREATER_EQUAL 1910)
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V141) 	# VS2017 x64
 else()
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
-	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2015 x64
+	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
 endif()
 
 set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-5.2.1)
