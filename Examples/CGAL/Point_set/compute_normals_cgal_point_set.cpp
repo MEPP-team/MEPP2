@@ -30,9 +30,17 @@
 #include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
   // for FEVV::Filters::write_mesh< FEVV::CGALPointSet >
 
+#if defined _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4172)
+#endif
+
 #include <CGAL/pca_estimate_normals.h>
 #include <CGAL/mst_orient_normals.h>
 
+#if defined _MSC_VER
+#pragma warning(pop)
+#endif
 
 // main
 int main(int argc, char *argv[])
