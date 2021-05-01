@@ -21,7 +21,7 @@ else()
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
 endif()
 
-set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
+set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-5.2.1)
 # -------
 # for GMP
 set(GMP_INCLUDE_DIR             ${MSVC_KIT_ROOT}/gmp/include)
