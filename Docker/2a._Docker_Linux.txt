@@ -3,7 +3,7 @@
 Use an already existing Docker image and run a Docker container to compile
 - docker pull mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 ---> start a container in interactive mode: docker run -it mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  - export CGAL_DIR="$HOME/CGAL-4.14.3" (or else it is by default "$HOME/CGAL-5.2")
+  - export CGAL_DIR="$HOME/CGAL-4.14.3" (or else it is by default "$HOME/CGAL-5.2.1")
   - export PCL_DIR="$HOME/pcl-1.9.1/share/pcl-1.9" (or else it is by default "$HOME/pcl-1.11.1/share/pcl-1.11")
 - git clone https://github.com/MEPP-team/MEPP2.git
 - cd MEPP2

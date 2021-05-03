@@ -207,16 +207,12 @@ mesh_from_vector_representation(
     }
   }
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic warning "-Wsign-compare"
-#endif
   // check if all faces have a valid material
   if(! mvr.face_material.empty())
   {
     for(auto &mtl_id : mvr.face_material)
     {
-      if(mtl_id == -1) //TODO: FIX THE WARNING HERE
+      if(mtl_id == static_cast< index_type >(-1))
       {
         std::cout << __func__
                   << "(): found some faces with an invalid material. "
@@ -227,9 +223,6 @@ mesh_from_vector_representation(
       }
     }
   }
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
   // store materials in a property map
   if(! mvr.materials.empty())

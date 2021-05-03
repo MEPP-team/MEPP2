@@ -9,8 +9,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # GNUCXX
 #------------------------------------------------------------------------------
 if(CMAKE_COMPILER_IS_GNUCXX)
-  #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror" )
-	message( STATUS "GNUCXX compiler detected" )
+  message( STATUS "GCC compiler detected" )
+  if( (DEFINED ENV{WARN_ERROR_LIN_GCC}) AND ("$ENV{WARN_ERROR_LIN_GCC}" STREQUAL "TRUE") )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror" )
+    message("--> Treat GCC warnings as errors")
+  endif()
 endif()
 #------------------------------------------------------------------------------
 # Clang (export CXX=clang++ CC=clang)
@@ -43,7 +46,7 @@ endif()
 # /MP for multiple compilation units (cl.exe) ; without any value, it is set automatically depending on your number of main threads
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-	if( (DEFINED ENV{WARN_ERROR}) AND ("$ENV{WARN_ERROR}" STREQUAL "TRUE") )
+	if( (DEFINED ENV{WARN_ERROR_WIN}) AND ("$ENV{WARN_ERROR_WIN}" STREQUAL "TRUE") )
 	  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
 	  message("--> /WX ON (Treat linker warnings as errors)")
 	else()

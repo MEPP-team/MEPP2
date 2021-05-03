@@ -37,7 +37,7 @@ inline typename GeometryTraits::Point
 triangle_barycenter(const typename GeometryTraits::Point &a,
                     const typename GeometryTraits::Point &b,
                     const typename GeometryTraits::Point &c,
-                    const GeometryTraits &gt)
+                    const GeometryTraits &/*gt*/)
 {
   typedef typename GeometryTraits::Point Point;
 
