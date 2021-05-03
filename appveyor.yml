@@ -154,6 +154,9 @@ before_build:
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-4.14-hdr-only.7z
   - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
   - IF %CACHE%==FALSE 7z x CGAL-4.14-hdr-only.7z > nul
+  - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-5.2.1.zip
+#TODO MYCORE  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
+  - IF %CACHE%==FALSE 7z x CGAL-5.2.1.zip > nul
 # OpenMesh
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
   #- IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1jyy_J_O7EMXZBPmIo9oV9EftMw1_4GQx" -O OpenMesh-6.2.rar 2> nul
