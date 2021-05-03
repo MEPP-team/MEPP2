@@ -478,18 +478,6 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-16.04-mepp2
 #  <<: *linux_build_definition_0x-clang-qt5-debug
 
-dock-lin18.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-18.04-mepp2
-  <<: *linux_build_definition_0x-gcc-qt4-release
-
-dock-lin18.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-18.04-mepp2
-  <<: *linux_build_definition_0x-clang-qt5-debug
-
 #dock-lin20.10LTS [Release - GCC - QT5 - CONF3 (ALL)]:
 #  tags:
 #    - MEPP2,osx,DOCKER-LIN
