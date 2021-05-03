@@ -21,7 +21,7 @@ else()
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64 (for CGAL 5.2, because needs boost >= 1.66)
 endif()
 
-if( (DEFINED ENV{NEW_CGAL}) AND ("$ENV{NEW_CGAL}" STREQUAL "TRUE") )
+if( (DEFINED ENV{NEW_CGAL_WIN}) AND ("$ENV{NEW_CGAL_WIN}" STREQUAL "TRUE") )
 	set(CGAL_DIR				${MSVC_KIT_ROOT}/CGAL-5.2.1)
 else()
 	set(CGAL_DIR				${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
