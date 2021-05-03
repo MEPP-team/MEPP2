@@ -44,12 +44,17 @@ namespace Filters {
  *            edge whose incident faces are not triangular.
  * \param[in] forbid_edges_that_are_adjacent_to_collapsed_edges Boolean to 
  *            avoid edge adjacent to already selected edges.
- * \param[in] forbid_one_edges_that_are_one_ring_edges_of_collapsed_edge_vertices
+ * \param[in] forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices
  *            Boolean to avoid edge that is onto the one-ring of selected
  *            edges' vertices.
+ * \param[in] forbid_edges_that_are_incident_to_opposite_vertices_of_collapsed_edge_vertices
+              Boolean to avoid edge that is incident to opposite vertices of the collapsed
+ *            edge.
  * \param[in] forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices
               Boolean to avoid edge that is adjacent to edges onto the one-ring
  *            of selected edges' vertices.
+ * \param[in] external_forbidden_edges_to_collapse To take into account external 
+ *            constraints (e.g. to preserve particular edges).
  * \param[in] gt The Geometry Traits object.
  * \return  an std::vector of edge_descriptor corresponding to edges
  *          selected from g.
@@ -65,16 +70,18 @@ namespace Filters {
                                bool forbid_inner_edge, // should be false, except when testing border edges
                                bool forbid_non_triangular_incident_face_to_edge, // most of algorithms can only handle edge collapses if all incident faces are triangular
                                bool forbid_edges_that_are_adjacent_to_collapsed_edges, // should be true most of the time, since local encoding will be tricky otherwise
-                               bool forbid_one_edges_that_are_one_ring_edges_of_collapsed_edge_vertices, // must be true for full independent edges collapses; you should set the same value for next parameter
-                               bool forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices, // must be true for full independent edges collapses; you should set the same value for previous parameter
+                               bool forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices, // must be true for full independent edge collapses; you should set the same value for next parameter
+                               bool forbid_edges_that_are_incident_to_opposite_vertices_of_collapsed_edge_vertices, // must be true for full independent edge collapses  
+                               bool forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices, // must be true to optimize the encoding of zeros in the vertex to split bit buffer
+                               const std::set<typename boost::graph_traits<FaceGraph>::edge_descriptor>& external_forbidden_edges_to_collapse, // must be edges from g
                                const GeometryTraits &gt							   
       )
   {
     typedef FEVV::DataStructures::AIF::AIFTopologyHelpers Helpers;
     std::vector<typename boost::graph_traits<FaceGraph>::edge_descriptor> batch_of_edges_to_collapse;
-    std::set<typename boost::graph_traits<FaceGraph>::edge_descriptor> forbidden_edges_to_collapse;
+    std::set<typename boost::graph_traits<FaceGraph>::edge_descriptor> forbidden_edges_to_collapse(external_forbidden_edges_to_collapse.begin(), external_forbidden_edges_to_collapse.end());
     /////////////////////////////////////////////////////////////////////////////
-	auto pm = get(boost::vertex_point, g);
+    auto pm = get(boost::vertex_point, g);
     auto edge_range_mesh = Helpers::edges(g);
     for (auto edge_it = edge_range_mesh.begin(); edge_it != edge_range_mesh.end(); ++edge_it)
     {
@@ -204,7 +211,7 @@ namespace Filters {
           }
         }
 
-        if (forbid_one_edges_that_are_one_ring_edges_of_collapsed_edge_vertices)
+        if (forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices)
         {
           // remove one-ring edges from edges to collapse
           auto edge_set_v1 = Helpers::get_unordered_one_ring_edges((*edge_it)->get_first_vertex());
@@ -220,7 +227,28 @@ namespace Filters {
             forbidden_edges_to_collapse.insert(*it);
           }
         }
+        
+        if (forbid_edges_that_are_incident_to_opposite_vertices_of_collapsed_edge_vertices)
+        {
+          // remove incident edges to opposite vertices (e.g. incident edges to left and right vertices
+          // in a 2-manifold triangular case)
 
+          // get incident vertices to faces that are incident to the edge *edge_it
+          auto f_range = Helpers::incident_faces(*edge_it);
+          auto iter_f = f_range.begin();
+          for (; iter_f != f_range.end(); ++iter_f)
+          {
+            auto v_range = Helpers::incident_vertices(*iter_f);
+            for (auto iter_v = v_range.begin(); iter_v != v_range.end(); ++iter_v)
+            {
+              if ((*iter_v != (*edge_it)->get_first_vertex()) && (*iter_v != (*edge_it)->get_second_vertex()))
+              {
+                auto e_range = Helpers::incident_edges(*iter_v);
+                forbidden_edges_to_collapse.insert(e_range.begin(), e_range.end());
+              }
+            }
+          }
+        }
         if (forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices)
         {
           // remove incident edges to one-ring vertices
@@ -247,6 +275,72 @@ namespace Filters {
       }
     }
     return batch_of_edges_to_collapse;
+  }
+
+  /*!
+ * \brief Function used for cleaning the topology of mesh g.
+ *        This can be seen as a preprocessing step for some
+ *        geometry processing algorithms.
+ *
+ * \tparam  FaceGraph a Mesh type that provides a Model of the
+ *          FaceGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \tparam GeometryTraits The geometric kernel when available. This is defaulted
+ *         to FEVV::Geometry_traits<FaceGraph>.
+ * \param[in] g The FaceGraph instance.
+ * \param[in] forbid_non_satisfying_link_condition Boolean to avoid edge
+ *            non-satisfaying the link condition.
+ * \param[in] forbid_non_manifold_edge Boolean to avoid non-manifold edge.
+ * \param[in] forbid_edge_collapse_creating_non_manifold_split Boolean to
+ *            avoid edge whose collapse creates a non-manifold vertex split.
+ * \param[in] forbid_border_edge Boolean to avoid border edge.
+ * \param[in] forbid_inner_edge Boolean to avoid inner edge.
+ * \param[in] forbid_non_triangular_incident_face_to_edge Boolean to avoid
+ *            edge whose incident faces are not triangular.
+ * \param[in] forbid_edges_that_are_adjacent_to_collapsed_edges Boolean to
+ *            avoid edge adjacent to already selected edges.
+ * \param[in] forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices
+ *            Boolean to avoid edge that is onto the one-ring of selected
+ *            edges' vertices.
+ * \param[in] forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices
+              Boolean to avoid edge that is adjacent to edges onto the one-ring
+ *            of selected edges' vertices.
+ * \param[in] gt The Geometry Traits object.
+ * \return  an std::vector of edge_descriptor corresponding to edges
+ *          selected from g.
+ */
+  template<typename FaceGraph,
+    typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
+    std::vector<typename boost::graph_traits<FaceGraph>::edge_descriptor>
+    edge_selector_for_collapse( const FaceGraph& g,
+                                bool forbid_non_satisfying_link_condition,
+                                bool forbid_non_manifold_edge,
+                                bool forbid_edge_collapse_creating_non_manifold_split,
+                                bool forbid_border_edge, // border edge processing is usually different from inner edges
+                                bool forbid_inner_edge, // should be false, except when testing border edges
+                                bool forbid_non_triangular_incident_face_to_edge, // most of algorithms can only handle edge collapses if all incident faces are triangular
+                                bool forbid_edges_that_are_adjacent_to_collapsed_edges, // should be true most of the time, since local encoding will be tricky otherwise
+                                bool forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices, // must be true for full independent edge collapses; you should set the same value for next parameter
+                                bool forbid_edges_that_are_incident_to_opposite_vertices_of_collapsed_edge_vertices, // must be true for full independent edge collapses
+                                bool forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices, // must be true for full independent edges collapses; you should set the same value for previous parameter
+                                const GeometryTraits &gt
+                              )
+  {
+    std::set<typename boost::graph_traits<FaceGraph>::edge_descriptor> empty_external_forbidden_edges_to_collapse;
+    
+    return  edge_selector_for_collapse( g, 
+                                        forbid_non_satisfying_link_condition, 
+                                        forbid_non_manifold_edge,
+                                        forbid_edge_collapse_creating_non_manifold_split,
+                                        forbid_border_edge, 
+                                        forbid_inner_edge,
+                                        forbid_non_triangular_incident_face_to_edge, 
+                                        forbid_edges_that_are_adjacent_to_collapsed_edges, 
+                                        forbid_edges_that_are_one_ring_edges_of_collapsed_edge_vertices,
+                                        forbid_edges_that_are_incident_to_opposite_vertices_of_collapsed_edge_vertices,
+                                        forbid_edges_that_are_incident_to_one_ring_of_collapsed_edge_vertices, 
+                                        empty_external_forbidden_edges_to_collapse,
+                                        gt);
   }
 } // namespace Filters
 } // namespace FEVV

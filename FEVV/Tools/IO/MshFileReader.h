@@ -61,7 +61,7 @@ using namespace FileUtils;
 		if (dimensions(type)==0)
 			throw "MSH Reader: Error there is an unknown element or a not implemented yet element";
 		//If the dimensions of the element is different from the other elements
-		if (dimensions(type)!=d)
+		if (dimensions(type)!=static_cast<unsigned long>(d))
 			throw "MSH Reader: Error there is 2D elements with 3D Elements";
 
 		//We get the number of nodes composing the element 
@@ -227,7 +227,7 @@ template< typename CoordType,
 						return false;
 					}
 					//We get the dimension of the element
-					dim = dimensions(number);
+					dim = static_cast<IndexType>(dimensions(number));
 					//If we get a 0 then there is an unexpected element and we explain the error
 					if (dim==0)
 					{
@@ -624,7 +624,7 @@ template< typename CoordType,
 					try
 					{
 						//We get the number of the nodes composing the element
-						std::vector<IndexType> temp = get_index<IndexType>(buffer, dim);
+						std::vector<IndexType> temp = std::move(get_index<IndexType>(buffer, dim));
 						//If it is a 2D file we add it to the 2D elements vector
 						if (dim==2)
 						{
