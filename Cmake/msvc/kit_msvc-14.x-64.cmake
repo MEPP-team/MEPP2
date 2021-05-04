@@ -12,16 +12,20 @@ endif()
 # from https://github.com/Kitware/CMake/blob/master/Modules/Platform/Windows-MSVC.cmake
 if(MSVC_VERSION GREATER_EQUAL 1920)
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2019 x64
-	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V142) 	# VS2019 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V142) 	# VS2019 x64 (for Boost.Beast)
 elseif(MSVC_VERSION GREATER_EQUAL 1910)
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
-	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V141) 	# VS2017 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V141) 	# VS2017 x64 (for Boost.Beast)
 else()
-	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64
-	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_59_0)			# VS2015 x64 (ok with CGAL 4.14)
+	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V140) 	# VS2015 x64 (for CGAL 5.2, because needs boost >= 1.66)
 endif()
 
-set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
+if( (DEFINED ENV{NEW_CGAL_WIN}) AND ("$ENV{NEW_CGAL_WIN}" STREQUAL "TRUE") )
+	set(CGAL_DIR				${MSVC_KIT_ROOT}/CGAL-5.2.1)
+else()
+	set(CGAL_DIR				${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
+endif()
 # -------
 # for GMP
 set(GMP_INCLUDE_DIR             ${MSVC_KIT_ROOT}/gmp/include)

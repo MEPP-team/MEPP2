@@ -11,7 +11,8 @@ endif()
 
 #BOOST_ROOT						see appveyor
 
-set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
+#set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-4.14-hdr-only)
+set(CGAL_DIR					${MSVC_KIT_ROOT}/CGAL-5.2.1)
 # -------
 # for GMP
 set(GMP_INCLUDE_DIR             ${MSVC_KIT_ROOT}/gmp/include)
