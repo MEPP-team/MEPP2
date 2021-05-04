@@ -225,8 +225,7 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 100 brew install cartr/qt4/qt-legacy-formula; fi # but, travis_wait -> in fact : https://github.com/travis-ci/docs-travis-ci-com/pull/439 :-( -> so force Sierra for cartr/qt4 !
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap cartr/qt4; fi
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt@4; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew unlink qt; fi; fi # ---> now unlink qt6
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt@5; fi; fi # ---> now link qt5
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then if [[ "$DOC" == "false" ]]; then brew link qt --force; fi; fi # ---> now link qt5
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install Caskroom/cask/xquartz; fi # only for Yosemite (OS X 10.10) !
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install open-scene-graph --with-qt; fi
 ###  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install eigen; fi # MT - 19/12/18 - now eigen is already installed
@@ -244,6 +243,8 @@ install:
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake --version; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cmake; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info cgal; fi # to show cgal version
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-osx/cmake-3.4.3-Darwin-x86_64.tar.gz; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then tar zxvf cmake-3.4.3-Darwin-x86_64.tar.gz; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cd $TRAVIS_BUILD_DIR; fi
