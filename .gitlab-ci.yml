@@ -555,11 +555,11 @@ dock-lin20.04LTS-cgal_5.0-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
 #  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
 
 # WIP - WARNING(S)
-#dock-lin20.04LTS-cgal_5.2-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
-#  tags:
-#    - MEPP2,osx,DOCKER-LIN
-#  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-#  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
+dock-lin20.04LTS-cgal_5.2-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
+  tags:
+    - MEPP2,osx,DOCKER-LIN
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
 
 dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
