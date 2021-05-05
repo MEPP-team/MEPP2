@@ -191,7 +191,7 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #
 # osx :
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi # first update
 #
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew info boost; fi # to show boost version
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink boost; fi # ---> unlink boost 1.71
