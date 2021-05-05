@@ -126,10 +126,6 @@ public:
     else
       return; // abort applying filter
 
-    for (int i=0; i< 5; i++)
-    {
-    Helpers::SleeperThread::msleep(200);
-
     // apply filter
     scale(_mesh);
 
@@ -139,10 +135,9 @@ public:
     if(viewer)
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
 
-    //reset();
+    reset();
 
     viewer->frame();
-    }
   }
 
 #ifdef FEVV_USE_OPENMESH
