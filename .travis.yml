@@ -222,7 +222,7 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew unlink python@2; fi # TEMP ???
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install open-scene-graph; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install open-mesh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install doxygen graphviz; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install doxygen graphviz; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 100 brew install cartr/qt4/qt-legacy-formula; fi # but, travis_wait -> in fact : https://github.com/travis-ci/docs-travis-ci-com/pull/439 :-( -> so force Sierra for cartr/qt4 !
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap cartr/qt4; fi
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt@4; fi
