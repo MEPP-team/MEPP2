@@ -20,9 +20,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux - 20.04LTS [Debug - CLANG - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+linux - 18.04LTS [Debug - CLANG - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   tags:
-    - MEPP2,linux,20.04LTS
+    - MEPP2,linux,18.04LTS
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -155,9 +155,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux - 20.04LTS [Debug - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+linux - 18.04LTS [Debug - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   tags:
-    - MEPP2,linux,20.04LTS
+    - MEPP2,linux,18.04LTS
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
@@ -290,9 +290,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux - 20.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+linux - 18.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
-    - MEPP2,linux,20.04LTS
+    - MEPP2,linux,18.04LTS
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
