@@ -155,6 +155,70 @@ are_similar_faces(
 }
 
 /*!
+ * \brief   Function determining if a pair of similar/parallel faces exists
+ *          among the incident faces of edge e_to_keep.
+ *
+ * \tparam  FaceIncidentGraph a Mesh type that provides a Model of the
+ *          FaceIncidentGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param	e_to_keep	The involving edge
+ * \param   g The FaceIncidentGraph instance from which the edge is taken.
+ * \return	true if the edge has at least one pair of incident similar
+ *          faces.
+ */
+template< typename FaceIncidentGraph >
+static bool
+contains_similar_incident_faces(
+    const typename boost::graph_traits< FaceIncidentGraph >::edge_descriptor
+        e_to_keep,
+    const FaceIncidentGraph &g)
+{
+  auto face_range_pair = in_edges(e_to_keep, g);
+  auto iter_f = face_range_pair.first;
+  for(; iter_f != face_range_pair.second; ++iter_f)
+  {
+    auto iter_f_bis = iter_f;
+    ++iter_f_bis;
+    for(; iter_f_bis != face_range_pair.second; ++iter_f_bis)
+    {
+      if(Operators::are_similar_faces(*iter_f, *iter_f_bis, g))
+        return true;
+    }
+  }
+  return false;
+}
+
+/*!
+ * \brief   Function determining if a pair of similar/parallel faces exists
+ *          among the incident faces of vertex v_to_keep.
+ *
+ * \tparam  FaceIncidentGraph a Mesh type that provides a Model of the
+ *          FaceIncidentGraph Concept through a boost::graph_traits<>
+ *          specialization.
+ * \param	v_to_keep	The involving vertex
+ * \param   g The FaceIncidentGraph instance from which the edge is taken.
+ * \return	true if the vertex has at least one pair of incident similar
+ *          faces.
+ */
+template< typename FaceIncidentGraph >
+static bool
+contains_similar_incident_faces(
+    const typename boost::graph_traits< FaceIncidentGraph >::vertex_descriptor
+        v_to_keep,
+    const FaceIncidentGraph &g)
+{
+  auto edge_range_pair = in_edges(v_to_keep, g);
+  auto iter_e = edge_range_pair.first;
+  for(; iter_e != edge_range_pair.second; ++iter_e)
+  {
+    if(Operators::contains_similar_incident_faces<FaceIncidentGraph>(*iter_e, g))
+        return true;
+
+  }
+  return false;
+}
+
+/*!
  * \brief Function determining if the incident faces to e are all triangles.
  *
  * \tparam  IncidentMutableFaceGraph a Mesh type that provides a Model of the
