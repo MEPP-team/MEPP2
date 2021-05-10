@@ -228,9 +228,9 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 100 brew install cartr/qt4/qt-legacy-formula; fi # but, travis_wait -> in fact : https://github.com/travis-ci/docs-travis-ci-com/pull/439 :-( -> so force Sierra for cartr/qt4 !
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew tap cartr/qt4; fi
 #STOP QT4  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install qt@4; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link qt --force; fi # ---> now link qt5
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.15.1/mkspecs /usr/local/mkspecs; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.15.1/plugins /usr/local/plugins; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link qt@5; fi # ---> now link qt5
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.15.1/mkspecs /usr/local/mkspecs; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo ln -s /usr/local/Cellar/qt/5.15.1/plugins /usr/local/plugins; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install Caskroom/cask/xquartz; fi # only for Yosemite (OS X 10.10) !
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then travis_wait 60 brew install open-scene-graph --with-qt; fi
 ###  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install eigen; fi # MT - 19/12/18 - now eigen is already installed
