@@ -7,7 +7,9 @@ os:
 sudo: required
 dist: xenial # Ubuntu 16.04 LTS
 
-osx_image: xcode12.2 # Xcode 12.2 under Catalina (OS X 10.15)
+#osx_image: xcode12.5 # Xcode 12.5 under Big Sur (macOS 11.3)
+osx_image: xcode12.4 # Xcode 12.4 under Big Sur (macOS 11.2.1)
+#osx_image: xcode12.2 # Xcode 12.2 under Catalina (OS X 10.15)
 #osx_image: xcode11.6 # Xcode 11.6 under Catalina (OS X 10.15)
 #osx_image: xcode11.3 # Xcode 11.3.1 under Mojave (OS X 10.14)
 #osx_image: xcode11.2 # Xcode 11.2.1 under Mojave (OS X 10.14)
