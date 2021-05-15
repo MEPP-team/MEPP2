@@ -88,11 +88,12 @@ win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -101,11 +102,12 @@ win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -114,11 +116,12 @@ win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -127,11 +130,12 @@ win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 ###########################################################
 # CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
@@ -223,11 +227,12 @@ win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -236,11 +241,12 @@ win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\MSBuild\14.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -249,11 +255,12 @@ win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
   tags:
@@ -262,11 +269,12 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set CMAKE_GENERATOR="Visual Studio 15 2017 Win64"
     - set MSBUILD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin"
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
-    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%PATH%
+    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
     - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
+    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 ############################
 # CONF3 (ALL) - 12 configs #
