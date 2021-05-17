@@ -145,7 +145,7 @@ if( BUILD_USE_PCL )
   if ( PCL_FOUND )
     add_definitions( -DFEVV_USE_PCL )
     if( (DEFINED ENV{VCPKG}) OR (DEFINED VCPKG) ) # TEMP FOR VCPKG 2020.11-1 !
-      set(PCL_LIBRARIES ${PCL_LIBRARIES} "C:\vcpkg\installed\x64-windows\lib\lz4.lib")
+      set(PCL_LIBRARIES ${PCL_LIBRARIES} "optimized;C:/vcpkg/installed/x64-windows/lib/lz4.lib;debug;C:/vcpkg/installed/x64-windows/debug/lib/lz4d.lib")
     endif ()
   else()
     message (FATAL_ERROR "PCL not found. Turn BUILD_USE_PCL to OFF.")
