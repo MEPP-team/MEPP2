@@ -30,7 +30,7 @@ set(MPFR_LIBRARIES              ${MSVC_KIT_ROOT}/lib/mpfr.lib)
 
 set(OPENMESH_DIR				${MSVC_KIT_ROOT})
 
-set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/include)
+set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/include/eigen3)
 
 ### 'addon 01' : Qt4, OpenSceneGraph
 # and
