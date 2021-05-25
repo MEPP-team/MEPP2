@@ -7,7 +7,7 @@
 if [ "$#" != "2" ]
 then
 	echo "Usage: $0  dependencies_file  destination_dir"
-	echo "Example: $0  all.dependencies.cgal ../FEVV"
+	echo "Example: $0  dummy.dependencies.cgal ../External/CGAL-5.2.1"
 	exit 1
 fi
 
