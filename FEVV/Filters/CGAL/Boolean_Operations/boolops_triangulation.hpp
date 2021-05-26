@@ -135,7 +135,12 @@ class Triangulation
    * \typedef typename Itag
    * \brief No intersection tag
    */
+#if( CGAL_VERSION_NR >= CGAL_VERSION_NUMBER(5,1,0) )
+  typedef typename CGAL::No_constraint_intersection_requiring_constructions_tag
+      Itag;
+#else
   typedef typename CGAL::No_intersection_tag                    Itag;
+#endif
   
   /*!
    * \typedef typename Constrained_Delaunay_tri
