@@ -39,7 +39,7 @@ fi
 sed -e 's/ *\\//' -e 's/^ //' -e 's/ /\n/g' <"$OUTRAW" | grep CGAL >"$OUTCGAL"
 
 # find hierarchical headers dependencies
-g++ -H $OPTIONS "$SRCCODE" 2>"$OUTCGALH.tmp" >/dev/null 
+g++ -H $OPTIONS "$SRCCODE" 2>"$OUTCGALH.tmp" >/dev/null
 grep '^\.' "$OUTCGALH.tmp" | grep CGAL | uniq >"$OUTCGALH"
 
 # display result
@@ -50,6 +50,7 @@ echo "- dependencies to CGAL: $OUTCGAL"
 echo "- hierachical dependencies to CGAL: $OUTCGALH"
 
 echo "- files suspected not to be LGPL:"
-while read name ; do grep -L 'GNU Lesser General Public License'  "$name" ; done <"$OUTCGAL"
+#while read name ; do grep -L 'GNU Lesser General Public License'  "$name" ; done <"$OUTCGAL"
+while read name ; do grep -L 'LGPL'  "$name" ; done <"$OUTCGAL"
 echo
 

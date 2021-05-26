@@ -15,7 +15,7 @@ endif()
 # before the user/system install of CGAL. Note that the BEFORE flag is
 # just to make sure to circumvent any possible CGAL black magic.
 
-# include_directories( BEFORE "External/CGAL-4.14" ) # Perhaps to remove: here we want to use CGAL and not our version of Euler operator: TO DISCUSS
+# include_directories( BEFORE "External/CGAL-5.2.1" ) # Perhaps to remove: here we want to use CGAL and not our version of Euler operator: TO DISCUSS
 
 ####
 
