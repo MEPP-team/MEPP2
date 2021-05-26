@@ -159,15 +159,16 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-linux - 18.04LTS [Debug - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  tags:
-    - MEPP2,linux,18.04LTS
-  script:
-    - export CXX=clang++ CC=clang
-    - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
-    - make -j 3
-    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+# Broken because of CGAL 5.2.1
+#linux - 18.04LTS [Debug - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+#  tags:
+#    - MEPP2,linux,18.04LTS
+#  script:
+#    - export CXX=clang++ CC=clang
+#    - mkdir build; cd build
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - make -j 3
+#    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
