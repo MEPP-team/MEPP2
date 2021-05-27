@@ -25,6 +25,8 @@ if( BUILD_USE_CGAL )
   add_definitions( -DFEVV_USE_CGAL )
   # FIXME: used in if and else (see below). Factorize this !
   add_definitions( -DBOOST_ALL_DYN_LINK )
+
+  message( STATUS "Use CGAL version ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION}.${CGAL_BUGFIX_VERSION}" )
 else()
   add_definitions( -DBOOST_ALL_DYN_LINK )
   # Refer to Doc/Devel/CMakeFiles.md entry 003
