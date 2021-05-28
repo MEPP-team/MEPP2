@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -46,7 +46,7 @@ public:
    * \return The Label of the vertex*/
   unsigned long get_Label() {return m_Label;}
 };
-  
+
 /*!
  * \class Enriched_face_base
  * \brief Enriches the faces of a triangulation
@@ -99,7 +99,7 @@ public:
    * \return true if the parameter m_Ext has been determined*/
   bool get_OK() {return m_OK;}
 };
-  
+
 /*!
  * \class Triangulation
  * \brief To subdivide a facet. (the kernel K must be exact)
@@ -112,60 +112,70 @@ class Triangulation
    * \brief 3d point using exact number type
    */
   typedef typename K::Point_3                            Point_3;
-  
+
   /*!
    * \typedef typename Tri_vb
    * \brief Vertex base
    */
         typedef /*typename*/ Enriched_vertex_base<K>                    Tri_vb;
-  
+
   /*!
    * \typedef typename Tri_fb
    * \brief Face base
    */
         typedef /*typename*/ Enriched_face_base<K>                      Tri_fb;
-  
+
   /*!
    * \typedef typename Tri_DS
    * \brief Data structure of the triangulation
    */
   typedef typename CGAL::Triangulation_data_structure_2<Tri_vb,Tri_fb>      Tri_DS;
-  
+
   /*!
    * \typedef typename Itag
    * \brief No intersection tag
    */
-#if( CGAL_VERSION_NR >= CGAL_VERSION_NUMBER(5,1,0) )
+//DBG #define STR(x) #x
+//DBG #define XSTR(x) STR(x)
+//DBG #pragma message("CGAL_VERSION_NR=" XSTR(CGAL_VERSION_NR))
+//DBG #pragma message("CGAL_VERSION_STR=" XSTR(CGAL_VERSION_STR))
+
+// Note: the following test should be
+//          #if( CGAL_VERSION_NR >= CGAL_VERSION_NUMBER(5,1,0) )
+//       but CGAL_VERSION_NUMBER(5,1,0)=1050101000 whereas the version of CGAL
+//       packaged with vcpkg has CGAL_VERSION_NR=1050100900 (it seems that it
+//       is not a public release).
+#if( CGAL_VERSION_NR >= 1050100000 )
   typedef typename CGAL::No_constraint_intersection_requiring_constructions_tag
       Itag;
 #else
   typedef typename CGAL::No_intersection_tag                    Itag;
 #endif
-  
+
   /*!
    * \typedef typename Constrained_Delaunay_tri
    * \brief 2d constrained Delaunay triangulation
    */
   typedef typename CGAL::Constrained_Delaunay_triangulation_2<K, Tri_DS, Itag>  Constrained_Delaunay_tri;
-  
+
   /*!
    * \typedef typename Vertex_handle_tri
    * \brief Vertex handle for the triangulation
    */
   typedef typename Constrained_Delaunay_tri::Vertex_handle            Vertex_handle_tri;
-  
+
   /*!
    * \typedef typename Face_handle_tri
    * \brief Face handle for the triangulation
    */
   typedef typename Constrained_Delaunay_tri::Face_handle              Face_handle_tri;
-  
+
   /*!
    * \typedef typename Point_tri
    * \brief 2d point for the triangulation
    */
   typedef typename Constrained_Delaunay_tri::Point                Point_tri;
-  
+
   /*!
    * \typedef typename Face_iterator_tri
    * \brief Iterator for the faces of the triangulation
@@ -206,14 +216,14 @@ public:
     v3 = add_new_pt(point_to_exact(he->next()->next()->vertex()->point()), he->next()->next()->vertex()->Label);
 
     //if the vertices does not have an Id (Label = OxFFFFFFFF), the labels
-    //of the points in the triangulation is set as follows : 
+    //of the points in the triangulation is set as follows :
     //0xFFFFFFFF for the first point
     //0xFFFFFFFE for the second point
     //0xFFFFFFFD for the third point
     if(v2->get_Label() == 0xFFFFFFFF) v2->set_Label(0xFFFFFFFE);
     if(v3->get_Label() == 0xFFFFFFFF) v3->set_Label(0xFFFFFFFD);
   }
-  
+
   /*!
    * \brief Compute the orthogonal projection of a point to the plane defined by the longest coordinate of the normal vector
    * \param p : the point (in 3d)
@@ -245,12 +255,12 @@ public:
       return Point_tri(p.y(),p.z());
     }
   }
-  
+
   /*!
    * \brief Adds a point in the triangulation
-   * \param p : The point (in 3d : the projection in 2d is done automatically) 
+   * \param p : The point (in 3d : the projection in 2d is done automatically)
    * \param Label : The label of the point
-   * \return The Vertex_handle of the point added 
+   * \return The Vertex_handle of the point added
    */
         Vertex_handle_tri add_new_pt(Point_3 p, unsigned long &Label)   // MT: suppression r�f�rence
   {
@@ -267,7 +277,7 @@ public:
     pts_vertex.push_back(v);
     return v;
   }
-  
+
   /*!
    * \brief Adds a constrained segment in the triangulation
    * \param p1 : The first point (in 3d)
@@ -285,12 +295,12 @@ public:
     // if an other segment is added, we will overwrite c1 and c2
     // what is important is to memorize the handles of the last segment added
   }
-  
+
   /*!
    * \brief Gets the triangles of the triangulation that belongs to the result
    * and deduce for the three neighboring facets if they belong to the result or not
    * \param inv_triangles : must be true if the orientation of the triangles must be inverted
-   * \param IsExt : Pointer on a three-case boolean table. 
+   * \param IsExt : Pointer on a three-case boolean table.
    * \return The list of the triangles belonging to the result.
    * each triangle is defined by a list of three labels
    */
@@ -354,7 +364,7 @@ public:
         if(f->has_vertex(v1,i) && f->neighbor(f->ccw(i))->has_vertex(ct.infinite_vertex())) IsExt[0] = true;
         if(f->has_vertex(v2,i) && f->neighbor(f->ccw(i))->has_vertex(ct.infinite_vertex())) IsExt[1] = true;
         if(f->has_vertex(v3,i) && f->neighbor(f->ccw(i))->has_vertex(ct.infinite_vertex())) IsExt[2] = true;
-        
+
         if(inv_triangles)
         {
           tri.push_back(f->vertex(2)->get_Label());
@@ -379,7 +389,7 @@ public:
     }
     return tris;
   }
-  
+
   /*!
    * \brief Gets all the triangles of the triangulation
    * \param inv_triangles : must be true if the orientation of the triangles must be inverted
@@ -407,7 +417,7 @@ public:
     }
     return tris;
   }
-  
+
 private:
   /*! \brief The triangulation*/
   Constrained_Delaunay_tri ct;
@@ -435,4 +445,4 @@ private:
    */
   int max_coordinate;
 };
-  
+
