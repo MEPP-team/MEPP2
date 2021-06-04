@@ -556,6 +556,15 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
+.linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.2.1"
+    - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
 #dock-lin20.04LTS-cgal_5.0-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
 #  tags:
 #    - MEPP2,osx,DOCKER-LIN
@@ -582,6 +591,12 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
   <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
+
+dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - GCC - QT5 - CONF3 (ALL)]:
+  tags:
+    - MEPP2,osx,DOCKER-LIN
+  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
   script:
@@ -685,4 +700,52 @@ dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v2
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+
+dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2017-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
+
+dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2017-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+
+dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
+
+dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-vcpkg
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+
+dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
+
+dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
+  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+
+dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v3
+  <<: *windows_build_definition_1x-powershell-vcpkg-release
+
+dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v3
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
