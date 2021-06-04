@@ -678,73 +678,73 @@ dock-w2019 - Debug - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v2:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v2
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v2:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v2
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
-dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v2:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v2
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v2:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v2
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
-dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v1:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v1:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
-dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v1:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v1:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
-dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v3:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v3:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
   <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
-dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL but NO VTK) - v3:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v3
   <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK):
+dock_w2019-VCPKG - Debug - QT5 - CONF3 (ALL but NO VTK) - v3:
   tags:
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2-vcpkg-v3
