@@ -148,24 +148,6 @@ public:
           m_original, pm_original, fnm_original);
     }
 
-    // Verify if the original and the degraded meshes have diffuse color maps
-    if(has_map(pmaps_bag_original, FEVV::vertex_color) &&
-       has_map(pmaps_bag_degraded, FEVV::vertex_color))
-    {
-      std::cout << "use existing color maps for original and degraded meshes"
-                << std::endl;
-    }
-    else
-    {
-      QMessageBox::information(
-          0,
-          "",
-          QObject::tr(
-              "CMDM needs 2 meshes with diffuse colors.\nUse MSDM2 Plugin for "
-              "meshes having geometry characteristics only."));
-    }
-
-
     // Using a vertex property map to store the local distortions and visualize
     // them later (color map).
     // vertex_cmdm_map cmdm_pmap;
@@ -245,69 +227,84 @@ public:
         else
           return; // abort applying filter
 
-        // apply filter
+        // retieve meshes and property bags
         auto m1 = static_cast< HalfedgeGraph * >(mixed_meshes[0].first);
         auto pmaps_bag1 = properties_maps[0];
         auto m2 = static_cast< HalfedgeGraph * >(mixed_meshes[1].first);
         auto pmaps_bag2 = properties_maps[1];
 
-        double CMDM = 0, CMDM_1_2 = 0, CMDM_2_1 = 0;
-        vertex_cmdm_map cmdm_pmap_deg, cmdm_pmap_orig;
-        VertexColorMap v_cm_deg, v_cm_orig;
-        if(one_two)
+        // ensure both meshes have diffuse color maps
+        if(has_map(*pmaps_bag1, FEVV::vertex_color) &&
+           has_map(*pmaps_bag2, FEVV::vertex_color))
         {
-          process(*m2, *pmaps_bag2, *m1, *pmaps_bag1, CMDM_1_2, cmdm_pmap_deg,
-                  v_cm_deg);
-          CMDM = CMDM_1_2;
+          // apply filter
+          double CMDM = 0, CMDM_1_2 = 0, CMDM_2_1 = 0;
+          vertex_cmdm_map cmdm_pmap_deg, cmdm_pmap_orig;
+          VertexColorMap v_cm_deg, v_cm_orig;
+          if(one_two)
+          {
+            process(*m2, *pmaps_bag2, *m1, *pmaps_bag1, CMDM_1_2, cmdm_pmap_deg,
+                v_cm_deg);
+            CMDM = CMDM_1_2;
+          }
+          if(two_one)
+          {
+            process(*m1, *pmaps_bag1, *m2, *pmaps_bag2, CMDM_2_1, cmdm_pmap_orig,
+                v_cm_orig);
+            CMDM = CMDM_2_1;
+          }
+          if(one_two && two_one)
+          {
+            CMDM = (CMDM_1_2 + CMDM_2_1) / 2.;
+          }
+          std::cout << "CMDM = " << CMDM << std::endl;
+
+          // Visalize local distortions (LD)
+          if(color)
+          {
+            double max_cmdm_1_2, min_cmdm_1_2, max_cmdm_2_1, min_cmdm_2_1;
+            // 1- LD of the degraded mesh in relation to the original mesh(color
+            // map of cmdm_1_2)
+            FEVV::Filters::compute_min_max_vertices(*((MeshSurface *)(m2)),
+                cmdm_pmap_deg,
+                min_cmdm_1_2,
+                max_cmdm_1_2);
+
+            FEVV::Filters::color_vertices_from_map(*((MeshSurface *)(m2)),
+                cmdm_pmap_deg,
+                v_cm_deg,
+                min_cmdm_1_2,
+                max_cmdm_1_2,
+                LUT_CourbureClust);
+
+            // 2- LD of the original mesh in relation to the degraded mesh(color
+            // map of cmdm_1_2)
+            FEVV::Filters::compute_min_max_vertices(*((MeshSurface *)(m1)),
+                cmdm_pmap_orig,
+                min_cmdm_2_1,
+                max_cmdm_2_1);
+
+            FEVV::Filters::color_vertices_from_map(*((MeshSurface *)(m1)),
+                cmdm_pmap_orig,
+                v_cm_orig,
+                min_cmdm_2_1,
+                max_cmdm_2_1,
+                LUT_CourbureClust);
+          }
+
+          // redraw meshes
+          viewer->draw_or_redraw_mesh(m1, pmaps_bag1, true, false);
+          viewer->draw_or_redraw_mesh(m2, pmaps_bag2, true, false);
         }
-        if(two_one)
+        else
         {
-          process(*m1, *pmaps_bag1, *m2, *pmaps_bag2, CMDM_2_1, cmdm_pmap_orig,
-                  v_cm_orig);
-          CMDM = CMDM_2_1;
+          QMessageBox::information(
+              0,
+              "",
+              QObject::tr(
+                  "CMDM needs 2 meshes with diffuse colors.\nUse MSDM2 Plugin"
+                  "for meshes having geometry characteristics only."));
         }
-        if(one_two && two_one)
-        {
-          CMDM = (CMDM_1_2 + CMDM_2_1) / 2.;
-        }
-        std::cout << "CMDM = " << CMDM << std::endl;
-
-        // Visalize local distortions (LD)
-        if(color)
-        {
-          double max_cmdm_1_2, min_cmdm_1_2, max_cmdm_2_1, min_cmdm_2_1;
-          // 1- LD of the degraded mesh in relation to the original mesh(color
-          // map of cmdm_1_2)
-          FEVV::Filters::compute_min_max_vertices(*((MeshSurface *)(m2)),
-                                                  cmdm_pmap_deg,
-                                                  min_cmdm_1_2,
-                                                  max_cmdm_1_2);
-
-          FEVV::Filters::color_vertices_from_map(*((MeshSurface *)(m2)),
-                                                 cmdm_pmap_deg,
-                                                 v_cm_deg,
-                                                 min_cmdm_1_2,
-                                                 max_cmdm_1_2,
-                                                 LUT_CourbureClust);
-
-          // 2- LD of the original mesh in relation to the degraded mesh(color
-          // map of cmdm_1_2)
-          FEVV::Filters::compute_min_max_vertices(*((MeshSurface *)(m1)),
-                                                  cmdm_pmap_orig,
-                                                  min_cmdm_2_1,
-                                                  max_cmdm_2_1);
-
-          FEVV::Filters::color_vertices_from_map(*((MeshSurface *)(m1)),
-                                                 cmdm_pmap_orig,
-                                                 v_cm_orig,
-                                                 min_cmdm_2_1,
-                                                 max_cmdm_2_1,
-                                                 LUT_CourbureClust);
-        }
-
-        // redraw meshes
-        viewer->draw_or_redraw_mesh(m1, pmaps_bag1, true, false);
-        viewer->draw_or_redraw_mesh(m2, pmaps_bag2, true, false);
       }
       else
       {
