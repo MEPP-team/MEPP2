@@ -166,12 +166,12 @@ install:
 #OFF  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14-src-hdr-only.7z > /dev/null && cd $TRAVIS_BUILD_DIR; fi
 #OFF  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14-hdr-only; fi
 # ---> because under focal, cgal is v5.0.2 !!!
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.3/CGAL-4.14.3.zip > /dev/null 2>&1; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14.3.zip > /dev/null && cd $TRAVIS_BUILD_DIR; fi
-#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14.3; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/CGAL/cgal/releases/download/v5.2.1/CGAL-5.2.1.zip > /dev/null 2>&1; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-5.2.1.zip > /dev/null && cd $TRAVIS_BUILD_DIR; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-5.2.1; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.3/CGAL-4.14.3.zip > /dev/null 2>&1; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-4.14.3.zip > /dev/null && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-4.14.3; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://github.com/CGAL/cgal/releases/download/v5.2.1/CGAL-5.2.1.zip > /dev/null 2>&1; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 7z x CGAL-5.2.1.zip > /dev/null && cd $TRAVIS_BUILD_DIR; fi
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CGAL_DIR=/tmp/CGAL-5.2.1; fi
 #
 # ---> because under xenial libvtk6-dev package has a bug
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libvtkCommonCore-6.2.so /usr/lib/libvtkproj4.so; fi
