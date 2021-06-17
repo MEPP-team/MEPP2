@@ -23,7 +23,8 @@ RUN .\bootstrap-vcpkg.bat
 # Or install last vcpkg (if necessary and instead of release 2019.12 by default in mtola/vs2017-ltsc2019)
 #WORKDIR "C:/"
 #RUN ren vcpkg vcpkg-2019.12
-#RUN git clone https://github.com/Microsoft/vcpkg.git
+# Here it is really IMPORTANT to use your own fork of vcpkg (from https://github.com/microsoft/vcpkg) in order to 'freeze' the version of vcpkg used !
+#RUN git clone https://github.com/mtola/vcpkg.git
 #WORKDIR "C:/vcpkg"
 #RUN .\bootstrap-vcpkg.bat
 
