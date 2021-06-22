@@ -14,6 +14,7 @@
 #include "FEVV/Wrappings/Geometry_traits_cgal_point_set.h"
 #include "FEVV/Wrappings/Graph_properties_cgal_point_set.h"
 #include "FEVV/Wrappings/properties_cgal_point_set.h"
+#include "FEVV/Wrappings/Graph_traits_extension_cgal_point_set.h"
 
 #include "FEVV/Filters/CGAL/Point_set/cgal_point_set_reader.hpp"
 #include "FEVV/Filters/CGAL/Point_set/cgal_point_set_writer.hpp"
@@ -49,12 +50,16 @@ int main(int argc, char *argv[])
   PointCloudT pc;
 
   // load point cloud
+  std::cout << "Reading file " << input_file << "..." << std::endl;
   FEVV::PMapsContainer pmaps_bag;
   FEVV::Filters::read_mesh(input_file, pc, pmaps_bag);
+
+  std::cout << FEVV::size_of_vertices(pc) << " points were successfully read." << std::endl;
 
   //----------------------------------
 
   // save point cloud
+  std::cout << "Saving to file " << output_file << "..." << std::endl;
   FEVV::Filters::write_mesh(output_file, pc, pmaps_bag);
 
   //----------------------------------

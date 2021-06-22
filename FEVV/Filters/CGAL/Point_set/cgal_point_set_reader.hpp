@@ -28,11 +28,13 @@ namespace FEVV {
 // parse PLY header to detect normals and colors
 inline
 void
-parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color)
+parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color,
+    bool &is_binary)
 {
   in.seekg(0); // rewind
   has_normal = false;
   has_color = false;
+  is_binary = false;
 
   std::string line, word;
 
@@ -41,7 +43,7 @@ parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color)
     std::getline(in, line);
     std::istringstream line_ss(line);
 
-    // look for "property ... nx" and "property ... r"
+    // look for line "property ... nx" and "property ... r"
     line_ss >> word;
     if(word == "property")
     {
@@ -55,6 +57,16 @@ parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color)
       else if(word == "red")
       {
         has_color = true;
+      }
+    }
+    // look for line "format ..."
+    else if(word == "format")
+    {
+      line_ss >> word;
+
+      if(word == "binary_little_endian")
+      {
+        is_binary = true;
       }
     }
   }
@@ -109,7 +121,7 @@ read_mesh(
   if(! in)
   {
     throw std::invalid_argument("read_mesh() error: can not open file " +
-                                filename);
+                                filename + ".");
   }
 
   // load point cloud
@@ -134,7 +146,21 @@ read_mesh(
     // parse ply header to detect normals and colors
     bool has_normal;
     bool has_color;
-    parse_ply_header(in, has_normal, has_color);
+    bool is_binary;
+    parse_ply_header(in, has_normal, has_color, is_binary);
+
+    // re-open file in binary mode if needed
+    if(is_binary)
+    {
+      in.close();
+      in.open(filename, std::ios::binary);
+
+      if(! in)
+      {
+        throw std::invalid_argument("read_mesh() error: can not open file " +
+                                    filename + " in binary mode.");
+      }
+    }
 
     // create needed property maps
     using VertexNormalMap =
@@ -205,7 +231,7 @@ read_mesh(
   if(! success)
   {
     throw std::invalid_argument("read_mesh() error: can not read file " +
-                                filename);
+                                filename + ".");
   }
 #else
   // DBG

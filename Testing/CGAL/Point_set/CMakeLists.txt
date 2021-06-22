@@ -25,11 +25,17 @@ if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "5.0" )
             )
 else()
   # CGAL >= 5.0
-  add_test( Test_reader_writer_cgal_point_set
+  add_test( Test_reader_writer_cgal_point_set_1
             test_reader_writer_cgal_point_set
             ${TESTING_DATA_DIR}/tetra.with_normal_and_color.ply
-            test_reader_writer_cgal_point_set.ply
-            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_reader_writer_cgal_point_set.cgal-5.0.2.ref.ply
+            test_reader_writer_cgal_point_set_1.ply
+            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_reader_writer_cgal_point_set_1.cgal-5.0.2.ref.ply
+            )
+  add_test( Test_reader_writer_cgal_point_set_2
+            test_reader_writer_cgal_point_set
+            ${TESTING_DATA_DIR}/longdress.binary.ply
+            test_reader_writer_cgal_point_set_2.ply
+            ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_reader_writer_cgal_point_set_2.ref.ply
             )
 endif()
 
