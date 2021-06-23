@@ -64,7 +64,7 @@ parse_ply_header(std::ifstream &in, bool &has_normal, bool &has_color,
     {
       line_ss >> word;
 
-      if(word == "binary_little_endian")
+      if(word == "binary_little_endian" || word == "binary_big_endian")
       {
         is_binary = true;
       }
