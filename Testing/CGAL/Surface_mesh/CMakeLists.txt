@@ -670,3 +670,13 @@ add_test( Test_copy_graph_surfacemesh_obj_with_multitexture
           ${TESTING_REFOUTPUT_DIR}/Generic/textures/simple-multitexture/simple-multitexture.obj.ref
           )
 
+#####
+add_executable( test_normalize_vector_map_surfacemesh
+                test_normalize_vector_map_surfacemesh.cpp
+				)
+target_link_libraries( test_normalize_vector_map_surfacemesh
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       )
+add_test( Test_normalize_vector_map_surfacemesh
+          test_normalize_vector_map_surfacemesh
+          )
