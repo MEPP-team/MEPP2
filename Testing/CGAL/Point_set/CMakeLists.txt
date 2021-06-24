@@ -33,7 +33,7 @@ else()
             )
   add_test( Test_reader_writer_cgal_point_set_2
             test_reader_writer_cgal_point_set
-            ${TESTING_DATA_DIR}/longdress.binary.ply
+            ${TESTING_DATA_DIR}/tetra.binary.ply
             test_reader_writer_cgal_point_set_2.ply
             ${TESTING_REFOUTPUT_DIR}/CGAL/Point_set/test_reader_writer_cgal_point_set_2.ref.ply
             )
