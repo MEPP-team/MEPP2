@@ -36,6 +36,7 @@
 #include "FEVV/Filters/Generic/Manifold/calculate_vertices_tangent.hpp"
 #include "FEVV/Filters/Generic/Manifold/calculate_halfedges_tangent.hpp"
 #include "FEVV/Filters/Generic/translation.hpp"
+#include "FEVV/Filters/Generic/normalize_vector_map.h"
 
 
 inline
@@ -744,6 +745,7 @@ FEVV::SimpleViewer::internal_createMesh(
     if(!m_redraw)
       std::cout << "[SimpleViewer] using face normal" << std::endl;
     f_nm = get_property_map(FEVV::face_normal, *_g, *_pmaps);
+    FEVV::Filters::normalize_vector_map_faces(*_g, f_nm);
     _f_nm = &f_nm;
   }
   // compute face normals if not provided
@@ -766,6 +768,7 @@ FEVV::SimpleViewer::internal_createMesh(
     if(!m_redraw)
       std::cout << "[SimpleViewer] using vertex normal" << std::endl;
     v_nm = get_property_map(FEVV::vertex_normal, *_g, *_pmaps);
+    FEVV::Filters::normalize_vector_map_vertices(*_g, v_nm);
     _vt_nm = &v_nm;
   }
   // compute vertex normals if not provided
@@ -2149,6 +2152,7 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
     if(!m_redraw)
       std::cout << "[SimpleViewer] using vertex normal" << std::endl;
     v_nm = get_property_map(FEVV::vertex_normal, *_g, *_pmaps);
+    FEVV::Filters::normalize_vector_map_vertices(*_g, v_nm);
     _vt_nm = &v_nm;
   }
 #if 0 //TODO-elo-restore-if-needed
