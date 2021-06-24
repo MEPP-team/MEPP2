@@ -14,7 +14,7 @@
 
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Operators/Generic/Manifold/calculate_face_tangent.hpp"
-#include "FEVV/Filters/Generic/Manifold/normalize_vertices_tangent.hpp"
+#include "FEVV/Filters/Generic/normalize_vector_map.h"
 
 
 namespace FEVV {
@@ -70,7 +70,7 @@ calculate_vertices_tangent(const HalfedgeGraph &g,
     // and to compute tangent with each pair of halfedges
   }
 
-  Filters::normalize_vertices_tangent(g, vtm, gt);
+  Filters::normalize_vector_map_vertices(g, vtm);
 }
 
 } // namespace Filters
