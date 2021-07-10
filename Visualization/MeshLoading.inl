@@ -469,7 +469,8 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
     FaceColorMap *_f_cm,
     VertexUVMap *_vt_uv_m,
     HalfedgeUVMap *_het_uv_m,
-    FaceMaterialMap *_m_mm)
+    FaceMaterialMap *_m_mm,
+    bool has_face_color_map)
 {
   std::cout << "[MeshLoading] Loading using shaders." << std::endl;
 
@@ -837,11 +838,22 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
                       STATIC_OBJECT_DETECTION |
                       BUFFER_OBJECT_SETTINGS*/
 
-#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
-  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
-#else
-  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
-#endif
+  if (has_face_color_map)
+  {
+    #if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+      optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ /*| osgUtil::Optimizer::MERGE_GEOMETRY*/ /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+    #else
+      //optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+    #endif
+  }
+  else
+  {
+    #if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+      optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+    #else
+      optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+    #endif
+  }
 }
 
 template< typename HalfedgeGraph,
@@ -881,7 +893,8 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
     FaceColorMap *_f_cm,
     VertexUVMap *_vt_uv_m,
     HalfedgeUVMap *_het_uv_m,
-    FaceMaterialMap *_m_mm)
+    FaceMaterialMap *_m_mm,
+    bool has_face_color_map)
 {
   std::cout << "[MeshLoading] Loading using legacy rendering." << std::endl;
 
@@ -1110,9 +1123,20 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
 
   osgUtil::Optimizer optimizer; // https://github.com/openscenegraph/OpenSceneGraph/blob/master/include/osgUtil/Optimizer
 
-#if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
-  optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
-#else
-  optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
-#endif
+  if (has_face_color_map)
+  {
+    #if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+      optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ /*| osgUtil::Optimizer::MERGE_GEOMETRY*/ /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+    #else
+      //optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+    #endif
+  }
+  else
+  {
+    #if OSG_MIN_VERSION_REQUIRED(3, 6, 0)
+      optimizer.optimize(_geode, osgUtil::Optimizer::BUFFER_OBJECT_SETTINGS /*| osgUtil::Optimizer::MERGE_GEODES*/ | osgUtil::Optimizer::MERGE_GEOMETRY /*| osgUtil::Optimizer::MAKE_FAST_GEOMETRY*/);
+    #else
+      optimizer.optimize(_geode, osgUtil::Optimizer::MERGE_GEOMETRY);
+    #endif
+  }
 }

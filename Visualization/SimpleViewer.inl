@@ -1976,7 +1976,8 @@ FEVV::SimpleViewer::internal_createMesh(
                             _f_cm,
                             _vt_uv_m,
                             _het_uv_m,
-                            _m_mm);
+                            _m_mm,
+                            has_map(*_pmaps, FEVV::face_color));
 
     if(m_RenderMode == RenderMode::RENDER_SHADERS_INDIRECT_LIGHTING)
     {
@@ -2022,7 +2023,8 @@ FEVV::SimpleViewer::internal_createMesh(
                             _f_cm,
                             _vt_uv_m,
                             _het_uv_m,
-                            _m_mm);
+                            _m_mm,
+                            has_map(*_pmaps, FEVV::face_color));
   }
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);
@@ -2738,7 +2740,8 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             _f_cm,
                             _vt_uv_m,
                             _het_uv_m,
-                            _m_mm);
+                            _m_mm,
+                            has_map(*_pmaps, FEVV::face_color));
 
     if(m_RenderMode == RenderMode::RENDER_SHADERS_INDIRECT_LIGHTING)
     {
@@ -2803,7 +2806,8 @@ FEVV::SimpleViewer::internal_createMesh_pointcloud(
                             _f_cm,
                             _vt_uv_m,
                             _het_uv_m,
-                            _m_mm);
+                            _m_mm,
+                            has_map(*_pmaps, FEVV::face_color));
   }
 
   sw->statusBar()->showMessage(QObject::tr("") /*, 2000*/);

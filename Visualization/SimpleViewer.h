@@ -638,7 +638,8 @@ private:
       FaceColorMap *_f_cm,
       VertexUVMap *_vt_uv_m,
       HalfedgeUVMap *_het_uv_m,
-      FaceMaterialMap *_m_mm);
+      FaceMaterialMap *_m_mm,
+      bool has_face_color_map);
 
   /**
    * Loads a mesh into the scene using old rendering mode.
@@ -734,7 +735,8 @@ private:
       FaceColorMap *_f_cm,
       VertexUVMap *_vt_uv_m,
       HalfedgeUVMap *_het_uv_m,
-      FaceMaterialMap *_m_mm);
+      FaceMaterialMap *_m_mm,
+      bool has_face_color_map);
 
   // List of lights used in the scene
   std::vector< osg::ref_ptr< osg::Light > > lights;
