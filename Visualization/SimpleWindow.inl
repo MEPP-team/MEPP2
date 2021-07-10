@@ -1582,7 +1582,7 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer *viewer,
 #pragma GCC diagnostic push
 #pragma GCC diagnostic warning "-Wsign-compare"
 #endif // __GNUC__
-      if(geodes.size() >= 1 && viewer->current_i_time < (geodes.size() - 1))
+      if(geodes.size() >= 1 && viewer->current_i_time < (int)(geodes.size() - 1))
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif // __GNUC__

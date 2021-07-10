@@ -3122,7 +3122,7 @@ FEVV::SimpleViewer::redrawMesh(HalfedgeGraph *_g,
   m_step = 0.;
   // ---
 
-  unsigned int position;
+  int position;
   position = getMeshId(static_cast< void * >(_g));
 
 #ifdef __GNUC__
@@ -3219,7 +3219,7 @@ template< typename HalfedgeGraph >
 void
 FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
 {
-  unsigned int position;
+  int position;
   position = getMeshId(static_cast< void * >(_g));
 
 #ifdef __GNUC__
