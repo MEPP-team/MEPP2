@@ -398,6 +398,9 @@ public:
   template< typename HalfedgeGraph >
   void centerMesh(HalfedgeGraph *_g);
 
+  osg::Matrix getMatrixVP();
+  void setMatrixVP(osg::Matrix matrix);
+
   template< typename HalfedgeGraph >
   void draw_or_redraw_mesh(/*const */ HalfedgeGraph *_g,
                            /*const */ PMapsContainer *_pmaps,

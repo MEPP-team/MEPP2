@@ -284,6 +284,8 @@ protected slots:
   void on_actionRender_Mode_triggered();
 
   void on_actionShow_Entire_Mesh_triggered();
+  void on_actionCopy_Viewpoint_triggered();
+  void on_actionPaste_Viewpoint_triggered();
 
   void on_actionShow_Axis_triggered();
   void on_actionShow_Grid_triggered();
@@ -390,6 +392,8 @@ public:
 
 private:
   bool clean_closure = false;
+
+  osg::Matrix matrixVP;
 };
 
 } // namespace FEVV

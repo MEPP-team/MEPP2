@@ -1544,6 +1544,14 @@ FEVV::SimpleWindow::actionHG(FEVV::SimpleViewer *viewer,
   {
     viewer->grid->setNodeMask(viewer->m_ShowGrid ? 0xffffffff : 0x0);
   }
+  else if(t == 'C') // 'C'opy matrix ViewPoint
+  {
+    matrixVP = viewer->getMatrixVP();
+  }
+  else if(t == 'P') // 'P'aste matrix ViewPoint
+  {
+    viewer->setMatrixVP(matrixVP);
+  }
   else if(t == '-') // TIME-
   {
     // time
@@ -2050,6 +2058,32 @@ FEVV::SimpleWindow::on_actionShow_Entire_Mesh_triggered()
       centerHG(viewer);
 
     }
+  }
+}
+
+inline void
+FEVV::SimpleWindow::on_actionCopy_Viewpoint_triggered()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    bavQt->getViewer()->m_ShowAxis = !(bavQt->getViewer()->m_ShowAxis);
+    pre_actionHG(bavQt->getViewer(), 'C');
+  }
+}
+
+inline void
+FEVV::SimpleWindow::on_actionPaste_Viewpoint_triggered()
+{
+  if(activeMdiChild())
+  {
+    BaseAdapterVisuQt *bavQt =
+        dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
+
+    bavQt->getViewer()->m_ShowGrid = !(bavQt->getViewer()->m_ShowGrid);
+    pre_actionHG(bavQt->getViewer(), 'P');
   }
 }
 

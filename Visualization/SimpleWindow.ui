@@ -168,6 +168,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionShow_Entire_Mesh"/>
+   <addaction name="separator"/>
+   <addaction name="actionCopy_Viewpoint"/>
+   <addaction name="actionPaste_Viewpoint"/>
   </widget>
   <widget class="QToolBar" name="toolBarViewer">
    <property name="windowTitle">
@@ -444,6 +447,24 @@
    </property>
    <property name="text">
     <string>Show Entire Mesh (reset viewpoint)</string>
+   </property>
+  </action>
+  <action name="actionCopy_Viewpoint">
+   <property name="icon">
+    <iconset resource="Applications/mepp-gui.qrc">
+     <normaloff>:/icons/resources/Icons/_CopyViewpoint.png</normaloff>:/icons/resources/Icons/_CopyViewpoint.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy Viewpoint</string>
+   </property>
+  </action>
+  <action name="actionPaste_Viewpoint">
+   <property name="icon">
+    <iconset resource="Applications/mepp-gui.qrc">
+     <normaloff>:/icons/resources/Icons/_PasteViewpoint.png</normaloff>:/icons/resources/Icons/_PasteViewpoint.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste Viewpoint</string>
    </property>
   </action>
   <action name="actionShow_Axis">

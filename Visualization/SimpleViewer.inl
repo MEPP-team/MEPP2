@@ -3275,6 +3275,41 @@ FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
   }
 }
 
+inline
+osg::Matrix
+FEVV::SimpleViewer::getMatrixVP()
+{
+  osg::Matrix matrix;
+
+  // std::cout << "getNumViews() : " << getNumViews() << std::endl;
+  // osgViewer::View* _osgView = getView(0); // for osgViewer::CompositeViewer
+  osgViewer::View *_osgView =
+      dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
+  // osgViewer::View* _osgView = getViewWithFocus();
+
+  if(_osgView)
+  {
+    matrix = _osgView->getCameraManipulator()->getMatrix();
+  }
+
+  return matrix;
+}
+
+inline
+void
+FEVV::SimpleViewer::setMatrixVP(osg::Matrix matrix)
+{
+  // std::cout << "getNumViews() : " << getNumViews() << std::endl;
+  // osgViewer::View* _osgView = getView(0); // for osgViewer::CompositeViewer
+  osgViewer::View *_osgView =
+      dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
+  // osgViewer::View* _osgView = getViewWithFocus();
+
+  if(_osgView)
+  {
+    _osgView->getCameraManipulator()->setByMatrix(matrix);
+  }
+}
 
 inline
 osg::Matrix
