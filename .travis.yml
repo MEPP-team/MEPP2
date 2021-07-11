@@ -181,9 +181,9 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-8.1.tar.gz; cd OpenMesh-8.1; mkdir build && cd build; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-focal/OpenMesh-8.1.travis-focal.tgz > /dev/null 2>&1; fi
-   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-8.1.travis-focal.tgz; cd OpenMesh-8.1/build; fi
-   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-focal/OpenMesh-8.1.travis-focal.tgz > /dev/null 2>&1; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf OpenMesh-8.1.travis-focal.tgz; cd OpenMesh-8.1/build; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/OpenMesh-8.1/; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
