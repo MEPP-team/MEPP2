@@ -146,7 +146,7 @@ addons:
       - libflann-dev
       - libproj-dev
 #      - libqhull-dev # no longer useful
-      - libpcl-dev # 1) CAUTION -> is LINKED with QT5, so BOOM with QT4 & clang ! - 2) For DISABLE_LIBUSB-1.0 warning pb, see : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
+#      - libpcl-dev # 1) CAUTION -> is LINKED with QT5, so BOOM with QT4 & clang ! - 2) For DISABLE_LIBUSB-1.0 warning pb, see : https://github.com/SergioRAgostinho/pcl/commit/72faf34aeaeedb0e45ccb81258fddd38869355b9
       - libpcl-dev
       - p7zip-full
       - xvfb
@@ -193,9 +193,9 @@ install:
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-1.9.1.tar.gz; cd pcl-pcl-1.9.1; mkdir build && cd build; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc -DCMAKE_RULE_MESSAGES=OFF -DPCL_ONLY_CORE_POINT_TYPES=ON -DBUILD_global_tests=OFF; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2 && sudo make install && cd $TRAVIS_BUILD_DIR; fi
-#OFF  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-focal/pcl-pcl-1.9.1.travis-focal.tgz > /dev/null 2>&1; fi
-#OFF  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.9.1.travis-focal.tgz; cd pcl-pcl-1.9.1/build; fi
-#OFF  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd /tmp; wget --no-check-certificate https://download.gforge.liris.cnrs.fr/meppbin/travis-focal/pcl-pcl-1.9.1.travis-focal.tgz > /dev/null 2>&1; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar zxf pcl-pcl-1.9.1.travis-focal.tgz; cd pcl-pcl-1.9.1/build; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install && cd $TRAVIS_BUILD_DIR; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make -j2; cd ..; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then rsync -azv --delete --delete-after -e 'ssh -oStrictHostKeyChecking=no -i /home/travis/build/mtola/MEPP2/.travis/mepp-public-mt' . mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/travis/pcl-pcl-1.9.1/; fi
 #  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; sudo make install && cd $TRAVIS_BUILD_DIR; fi
