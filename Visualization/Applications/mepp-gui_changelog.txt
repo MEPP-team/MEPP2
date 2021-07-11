@@ -1,3 +1,7 @@
+v0.14.3 (TAGGED) - 11/07/2021 :
+ - fix : meshes with vertex colors and face colors are now displayed correctly
+ - add support for copy/paste of viewpoint
+
 v0.14.2 - 16/02/2021 :
  - add help for all plugins
  - add support for CGAL-5.0.x/CGAL-5.1.x/CGAL-5.2.x
