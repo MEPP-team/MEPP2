@@ -339,12 +339,25 @@ calculate_curvature(const HalfedgeGraph &g,
   std::cout << "Real radius = " << radius << std::endl;
 #endif
 
+  unsigned int skipped = 0; // number of skipped vertices
+
   const auto iterator_pair =
       vertices(g); // vertices() returns a vertex_iterator pair
   vertex_iterator vi = iterator_pair.first;
   vertex_iterator vi_end = iterator_pair.second;
   for(; vi != vi_end; ++vi)
   {
+    // skip isolated vertex
+    if(halfedge(*vi, g) == GraphTraits::null_halfedge())
+    {
+      v_cm[*vi].VKmaxCurv = gt.NULL_VECTOR;
+      v_cm[*vi].VKminCurv = gt.NULL_VECTOR;
+      v_cm[*vi].KmaxCurv = 0;
+      v_cm[*vi].KminCurv = 0;
+      skipped++;
+      continue;
+    }
+
     bool no_val_pro = false;
 
     double pp_matrix_sum[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
@@ -468,6 +481,13 @@ calculate_curvature(const HalfedgeGraph &g,
         std::min< double >(min_nrm_max_curvature, v_cm[*vi].KmaxCurv);
     max_nrm_max_curvature =
         std::max< double >(max_nrm_max_curvature, v_cm[*vi].KmaxCurv);
+  }
+
+  if(skipped > 0)
+  {
+    std::cout << "Curvature warning: "
+              << skipped << " isolated vertices were skipped."
+              << std::endl;
   }
 
   // ---
