@@ -74,6 +74,7 @@ init:
 #  - echo %BOOST_ROOT%
   - dir C:\Libraries
   - dir C:\Libraries\boost_1_67_0
+#  - dir C:\Libraries\boost_1_73_0
 #
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" set QT5_DIR=C:\Qt\5.9\msvc2015_64 # vs_2015
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2017" set QT5_DIR=C:\Qt\5.12\msvc2017_64 # vs_2017
@@ -81,6 +82,7 @@ init:
 #  - echo %QT5_DIR%
   - dir C:\Qt
   - dir C:\Qt\5.12
+#  - dir C:\Qt\5.15
 #
   - set PATH=%KIT_ROOT%\wget;%BOOST_ROOT%\lib;%KIT_ROOT%\CGAL-4.11-bug-patched\build\bin;%KIT_ROOT%\CGAL-4.11-bug-patched\auxiliary\gmp\lib;%KIT_ROOT%\gmp\lib;%KIT_ROOT%\Qt\qt-4.8.7-x64-msvc2015\bin;%QT5_DIR%\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin;%KIT_ROOT%\osg\OpenSceneGraph-3.6.4\bin\osgPlugins-3.6.4;%KIT_ROOT%\PCL\pcl-1.9.1\bin;%KIT_ROOT%\PCL\flann-1.9.1\bin;%KIT_ROOT%\osg-3rdparty-runtime;%KIT_ROOT%\kitware\VTK-7.0.0\build\bin\Release;%KIT_ROOT%\FBX_SDK\2019.0\lib\release;%PATH%
 #  - set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin # for vs_2015 dumpbin (todo: check path for vs_2017 dumpbin)
