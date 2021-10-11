@@ -247,11 +247,12 @@ FEVV::SimpleAdapterVisu::createGraphicsWindow(
 ////////////////////////
 
 
+#if 0
 inline
 void
 FEVV::SimpleAdapterVisu::keyPressEvent(QKeyEvent *event)
 {
-  /*QString keyString = event->text();
+  QString keyString = event->text();
   const char *keyData = keyString.toLocal8Bit().data();
 
   if(event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_S)
@@ -262,7 +263,7 @@ FEVV::SimpleAdapterVisu::keyPressEvent(QKeyEvent *event)
     return;
   }
 
-  this->getEventQueue()->keyPress(osgGA::GUIEventAdapter::KeySymbol(*keyData));*/
+  this->getEventQueue()->keyPress(osgGA::GUIEventAdapter::KeySymbol(*keyData));
 }
 
 
@@ -270,12 +271,13 @@ inline
 void
 FEVV::SimpleAdapterVisu::keyReleaseEvent(QKeyEvent *event)
 {
-  /*QString keyString = event->text();
+  QString keyString = event->text();
   const char *keyData = keyString.toLocal8Bit().data();
 
   this->getEventQueue()->keyRelease(
-      osgGA::GUIEventAdapter::KeySymbol(*keyData));*/
+      osgGA::GUIEventAdapter::KeySymbol(*keyData));
 }
+#endif
 
 
 #if 0

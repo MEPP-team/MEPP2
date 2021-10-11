@@ -102,8 +102,8 @@ protected:
    * Without this, we can't capture keyPress event.
    **/
   bool eventFilter(QObject *obj, QEvent *event) override;
-  virtual void keyPressEvent(QKeyEvent *event) override;
-  virtual void keyReleaseEvent(QKeyEvent *event) override;
+  //virtual void keyPressEvent(QKeyEvent *event) override; // not used ?
+  //virtual void keyReleaseEvent(QKeyEvent *event) override; // not used ?
   virtual bool event(QEvent *event) override;
 
   // Qt4&5
