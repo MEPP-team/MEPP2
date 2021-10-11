@@ -14,8 +14,10 @@
 #include <QMdiArea>
 #include <QTimer>
 
-#include <osgQt/GraphicsWindowQt>
+#include <osgQt/GraphicsWindowQt> // Qt4&5
 // #include <osgViewer/GraphicsWindow>
+
+//#include <osgQOpenGL/osgQOpenGLWidget> // Qt6
 
 #if __GNUC__ >= 9
 #pragma GCC diagnostic push
@@ -54,9 +56,9 @@ public:
    *
    * @param[in]   _parent   Pointer to the QWidget parent of this QWidget (used
    * by Qt) (Default value = 0).
-   * @param[in]   _f        Windows flags (used by Qt) (Default value = 0).
+   * @param[in]   _f        Windows flags (used by Qt) (Default value = Qt::Widget).
    */
-  SimpleAdapterVisu(QWidget *_parent = 0, Qt::WindowFlags _f = 0);
+  SimpleAdapterVisu(QWidget *_parent = 0, Qt::WindowFlags _f = Qt::Widget);
 
   ~SimpleAdapterVisu()
   {
@@ -104,19 +106,22 @@ protected:
   virtual void keyReleaseEvent(QKeyEvent *event) override;
   virtual bool event(QEvent *event) override;
 
+  // Qt4&5
   void addViewWidget(osg::ref_ptr< osgQt::GraphicsWindowQt > _gw,
                      osg::ref_ptr< osg::Node > _scene);
   osg::ref_ptr< osgQt::GraphicsWindowQt >
+  // Qt4&5
   createGraphicsWindow(int _x,
                        int _y,
                        int _w,
                        int _h,
                        const std::string &_name = "",
                        bool _windowDecoration = false) const;
-  osgGA::EventQueue *getEventQueue() const;
+  // not used ?
+  //osgGA::EventQueue *getEventQueue() const;
 
 protected:
-  osgQt::GraphicsWindowQt *myGraphicsWindow = nullptr;
+  osgQt::GraphicsWindowQt *myGraphicsWindow = nullptr; // Qt4&5
 
   QTimer timerUpdate;
 

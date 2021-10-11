@@ -15,17 +15,17 @@ message(STATUS "")
 option( BUILD_USE_QT5 "Using Qt5." OFF )
 
 if( BUILD_USE_QT5 )
-  set( LIST_OPTION ${LIST_OPTION} [QT5]\ )
+  set( LIST_OPTION ${LIST_OPTION} [QT5]\ ) # ??
   message(STATUS "   BUILD_USE_QT5  true   (Using of Qt5 instead of Qt4)")
 else()
   message(STATUS "   BUILD_USE_QT5  false  (Using of Qt5 instead of Qt4)")
 endif()
 
 if( BUILD_USE_GUI )
-  set( LIST_OPTION ${LIST_OPTION} [UI]\ )
+  set( LIST_OPTION ${LIST_OPTION} [UI]\ ) # ??
   message(STATUS "   BUILD_USE_GUI  true   (Build user interface)")
 else()
-  message(STATUS "   BUILD_USE_GUI  false  (Don't build User interface (cli only))")
+  message(STATUS "   BUILD_USE_GUI  false  (Don't build user interface)")
 endif()
 
 # -----------------------------------------------------------------------------
@@ -200,10 +200,11 @@ if( BUILD_USE_GUI )
   endif()
 
   # Find osgQt - caution, no more 'osgQt' module embedded by default since openscenegraph 3.5.5 !
+  # --> With Qt6, the new module is 'osgQOpenGL'
   message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
-    set( OSGQT_INCLUDE_DIR
-      "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+    set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+    #set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     include_directories(${OSGQT_INCLUDE_DIR})
   elseif( APPLE )
     if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )

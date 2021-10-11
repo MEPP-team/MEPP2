@@ -34,9 +34,9 @@ public:
    *
    * @param[in]   _parent   Pointer to the QWidget parent of this QWidget (used
    * by Qt) (Default value = 0).
-   * @param[in]   _flags    Windows flags (used by Qt) (Default value = 0).
+   * @param[in]   _flags    Windows flags (used by Qt) (Default value = Qt::Window).
    */
-  BaseWindowQt(QWidget *_parent = 0, Qt::WindowFlags _flags = 0)
+  BaseWindowQt(QWidget *_parent = 0, Qt::WindowFlags _flags = Qt::Window)
       : QMainWindow(_parent, _flags), BaseWindow()
   {
 #ifdef DEBUG_VISU2

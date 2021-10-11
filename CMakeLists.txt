@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1) # 3.16 for Qt6
 project( MEPP2 )
 
 ### Building configuration OPTIONs
