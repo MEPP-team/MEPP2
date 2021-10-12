@@ -15,7 +15,11 @@
 #include <QMenuBar>
 
 #include <QSettings>
-#include <QDesktopWidget>
+#if(FEVV_USE_QT5) // Qt6 in fact...
+  #include <QScreen>
+#else
+  #include <QDesktopWidget>
+#endif
 
 #include <QCloseEvent>
 
@@ -27,7 +31,7 @@
 #include <QFileInfo>
 
 #if(FEVV_USE_QT5)
-#include <QScreen> // for grabWindow
+//#include <QScreen> // for grabWindow (no more need here now, it was before Qt6...)
 #endif
 
 #include <QPluginLoader>
@@ -2495,14 +2499,19 @@ FEVV::SimpleWindow::readSettings()
   saveLocation = settings.value("saveLocation", QDir::currentPath()).toString();
 
   settings.beginGroup("MainWindow");
+#if(FEVV_USE_QT5) // Qt6 in fact...
+    QScreen *screen = QGuiApplication::primaryScreen();
+    QRect screen_size = screen->availableGeometry();
+#else
     QRect screen_size = QDesktopWidget().availableGeometry();
+#endif
     int win_w = screen_size.width() * 0.9;
     int win_h = screen_size.height() * 0.8;
     int pos_x = (screen_size.width() - win_w) / 2;
     int pos_y = (screen_size.height() - win_h) / 2;
 
     move(settings.value("pos", QPoint(pos_x, pos_y)).toPoint());
-    resize(settings.value("size", QSize(win_w, win_h)).toSize()); // resize(QDesktopWidget().availableGeometry().size() * 0.7);
+    resize(settings.value("size", QSize(win_w, win_h)).toSize());
 
     if(!settings.value("state").isNull())
       restoreState(settings.value("state").toByteArray());

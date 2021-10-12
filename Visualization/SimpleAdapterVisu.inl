@@ -84,8 +84,11 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
   // myGraphicsWindow = new osgViewer::GraphicsWindowEmbedded( this->x(),
   // this->y(), this->width(),   this->height() );
 
+  // Qt4&5
   addViewWidget(createGraphicsWindow(0, 0, 500, 500, "Viewer"),
                 static_cast< BaseViewerOSG * >(myViewer)->getRootNode());
+
+  //osgQOpenGLWidget widget(/*&arguments*/); // TODO -> DEL &arguments // Qt6
 
   // @todo Setting Camera, lights, etc.
 
@@ -109,6 +112,7 @@ FEVV::SimpleAdapterVisu::isValid() const
 }
 
 
+#if 1 // Qt4&5
 inline
 void
 FEVV::SimpleAdapterVisu::addViewWidget(
@@ -202,6 +206,7 @@ FEVV::SimpleAdapterVisu::createGraphicsWindow(
 
   return new osgQt::GraphicsWindowQt(traits.get());
 }
+#endif
 
 // template< typename HalfedgeGraph >
 // void
@@ -242,6 +247,7 @@ FEVV::SimpleAdapterVisu::createGraphicsWindow(
 ////////////////////////
 
 
+#if 0
 inline
 void
 FEVV::SimpleAdapterVisu::keyPressEvent(QKeyEvent *event)
@@ -271,8 +277,10 @@ FEVV::SimpleAdapterVisu::keyReleaseEvent(QKeyEvent *event)
   this->getEventQueue()->keyRelease(
       osgGA::GUIEventAdapter::KeySymbol(*keyData));
 }
+#endif
 
 
+#if 0
 inline
 osgGA::EventQueue *
 FEVV::SimpleAdapterVisu::getEventQueue() const
@@ -292,6 +300,7 @@ FEVV::SimpleAdapterVisu::getEventQueue() const
     throw std::runtime_error("Unable to obtain valid event queue");
   }
 }
+#endif
 
 
 inline

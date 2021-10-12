@@ -37,8 +37,10 @@ set(MPFR_LIBRARIES              ${MSVC_KIT_ROOT}/gmp/lib/libmpfr-4.lib)
 message("--> CGAL_DIR used : ${CGAL_DIR}")
 
 set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-6.2)
+#set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-8.1) # for Qt6
 
 set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.2.8)
+#set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.3.9)  # for Qt6
 
 # ---------------------------------------------------------------------------------
 set(IMG_DIR_3rdParty            ${MSVC_KIT_ROOT}/img-3rdparty)
@@ -67,6 +69,8 @@ set(TIFF_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/libtiff.li
 if(BUILD_USE_QT5)
 	# with qt5
 	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)
+	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.12.11/5.12.11/msvc2017_64) # temp
+	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt6.2.0/6.2.0/msvc2019_64)     # temp
 else(BUILD_USE_QT5)
 	# with qt4
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)

@@ -35,9 +35,9 @@ public:
    *
    * @param[in]   _parent   Pointer to the QWidget parent of this QWidget (used
    * by Qt) (Default value = 0).
-   * @param[in]   _f        Windows flags (used by Qt) (Default value = 0).
+   * @param[in]   _f        Windows flags (used by Qt) (Default value = Qt::Widget).
    */
-  BaseAdapterVisuQt(QWidget *_parent = 0, Qt::WindowFlags _f = 0)
+  BaseAdapterVisuQt(QWidget *_parent = 0, Qt::WindowFlags _f = Qt::Widget)
       : QWidget(_parent, _f), BaseAdapterVisu()
   {
 #ifdef DEBUG_VISU2

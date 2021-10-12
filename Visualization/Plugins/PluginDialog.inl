@@ -90,7 +90,8 @@ FEVV::PluginDialog::populateTreeWidget(QObject *plugin, const QString &text)
 {
   QTreeWidgetItem *pluginItem = new QTreeWidgetItem(treeWidget);
   pluginItem->setText(0, text);
-  treeWidget->setItemExpanded(pluginItem, true);
+  //treeWidget->setItemExpanded(pluginItem, true); // deprecated !!!
+  pluginItem->setExpanded(true);
 
   QFont boldFont = pluginItem->font(0);
   boldFont.setBold(true);
