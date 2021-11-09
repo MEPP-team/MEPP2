@@ -36,17 +36,19 @@ set(EIGEN_INCLUDE_DIR			${MSVC_KIT_ROOT}/include/eigen3)
 # ---------------------------------------------------------------------------------
 set(IMG_DIR_3rdParty            ${MSVC_KIT_ROOT})
 
-set(JPEG_INCLUDE_DIR            ${IMG_DIR_3rdParty})
+set(JPEG_INCLUDE_DIR            ${IMG_DIR_3rdParty}/include)
 set(JPEG_LIBRARY                optimized ${IMG_DIR_3rdParty}/lib/jpeg.lib debug ${IMG_DIR_3rdParty}/debug/lib/jpegd.lib)
 
 # for PNG
-set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty})
-set(ZLIB_LIBRARY                optimized ${IMG_DIR_3rdParty}/lib/zlib.lib debug ${IMG_DIR_3rdParty}/debug/lib/zlibd.lib)
+set(ZLIB_INCLUDE_DIR            ${IMG_DIR_3rdParty}/include)
+#set(ZLIB_LIBRARY                optimized ${IMG_DIR_3rdParty}/lib/zlib.lib debug ${IMG_DIR_3rdParty}/debug/lib/zlibd.lib)
+set(ZLIB_LIBRARY                ${IMG_DIR_3rdParty}/lib/zlib.lib) # because of VTK 9...
 
-set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty})
+set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/include)
+#set(PNG_PNG_INCLUDE_DIR         ${IMG_DIR_3rdParty}/include/libpng16) # maybe for a future version of VCPKG ?
 set(PNG_LIBRARY                 optimized ${IMG_DIR_3rdParty}/lib/libpng16.lib debug ${IMG_DIR_3rdParty}/debug/lib/libpng16d.lib)
 
-set(TIFF_INCLUDE_DIR            ${IMG_DIR_3rdParty})
+set(TIFF_INCLUDE_DIR            ${IMG_DIR_3rdParty}/include)
 set(TIFF_LIBRARY                optimized ${IMG_DIR_3rdParty}/lib/tiff.lib debug ${IMG_DIR_3rdParty}/debug/lib/tiffd.lib)
 # ---------------------------------------------------------------------------------
 

@@ -55,7 +55,7 @@ using namespace FileUtils;
 inline std::string
 get_line_containing_dataset(std::string file_path)
 {
-  ifstream myfile(file_path);
+  std::ifstream myfile(file_path);
   if(myfile.is_open())
   {
     std::string line;
@@ -186,7 +186,7 @@ read_vtk_poly_data(
 
     vtkSmartPointer< vtkCellArray > ptr_cell_polygons = poly_data->GetPolys();
     vtkIdType npts;
-    vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+    const vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
 
     ptr_cell_polygons->InitTraversal();
     while(ptr_cell_polygons->GetNextCell(
@@ -210,7 +210,7 @@ read_vtk_poly_data(
 
     vtkSmartPointer< vtkCellArray > ptr_cell_lines = poly_data->GetLines();
     vtkIdType npts;
-    vtkIdType *pts_line = new vtkIdType[ptr_cell_lines->GetMaxCellSize()];
+    const vtkIdType *pts_line = new vtkIdType[ptr_cell_lines->GetMaxCellSize()];
 
     ptr_cell_lines->InitTraversal();
     while(ptr_cell_lines->GetNextCell(
@@ -558,7 +558,7 @@ read_vtk_unstructured_grid(
     vtkSmartPointer< vtkCellArray > ptr_cell_polygons =
         unstructured_grid->GetCells();
     vtkIdType npts;
-    vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+    const vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
 
     ptr_cell_polygons->InitTraversal();
     vtkIdType cell_id = 0;
