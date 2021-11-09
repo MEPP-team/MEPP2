@@ -41,6 +41,7 @@ endif()
 find_package(Boost COMPONENTS thread system filesystem chrono REQUIRED)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
+  add_definitions( -DBOOST_BIND_GLOBAL_PLACEHOLDERS ) # for Boost >= 1.73, silence a warning about a deprecated use of boost bind
 else()
   message(FATAL_ERROR "Boost not found. Please install it.")
 endif(Boost_FOUND)
