@@ -24,6 +24,8 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 #endif
+#include <vtkVersion.h>
+
 #include <vtkSmartPointer.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
@@ -186,7 +188,11 @@ read_vtk_poly_data(
 
     vtkSmartPointer< vtkCellArray > ptr_cell_polygons = poly_data->GetPolys();
     vtkIdType npts;
+#if (VTK_MAJOR_VERSION >= 9) # not tested with VTK 8...
     const vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+#else
+    vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+#endif
 
     ptr_cell_polygons->InitTraversal();
     while(ptr_cell_polygons->GetNextCell(
@@ -210,7 +216,11 @@ read_vtk_poly_data(
 
     vtkSmartPointer< vtkCellArray > ptr_cell_lines = poly_data->GetLines();
     vtkIdType npts;
+#if (VTK_MAJOR_VERSION >= 9) # not tested with VTK 8...
     const vtkIdType *pts_line = new vtkIdType[ptr_cell_lines->GetMaxCellSize()];
+#else
+    vtkIdType *pts_line = new vtkIdType[ptr_cell_lines->GetMaxCellSize()];
+#endif
 
     ptr_cell_lines->InitTraversal();
     while(ptr_cell_lines->GetNextCell(
@@ -558,7 +568,11 @@ read_vtk_unstructured_grid(
     vtkSmartPointer< vtkCellArray > ptr_cell_polygons =
         unstructured_grid->GetCells();
     vtkIdType npts;
+#if (VTK_MAJOR_VERSION >= 9) # not tested with VTK 8...
     const vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+#else
+    vtkIdType *pts_poly = new vtkIdType[ptr_cell_polygons->GetMaxCellSize()];
+#endif
 
     ptr_cell_polygons->InitTraversal();
     vtkIdType cell_id = 0;
