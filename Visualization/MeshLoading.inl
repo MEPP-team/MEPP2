@@ -221,10 +221,9 @@ loadMaterialStandard(const osg::ref_ptr< osg::Geometry > &geometry,
     if(!texture_filename.empty())
       texture = createTexture(texture_filename);
     else
-      texture = createDefaultTexture(
-          (map_index == 3 ? 0
-                          : 255)); // Little hack here: for emissive map, create
-                                   // a black texture instead of a white
+      texture = createDefaultTexture((map_index == 3 ? 0 : 255));
+        // Little hack here: for emissive map, create
+        // a black texture instead of a white
 
     geometry->getOrCreateStateSet()->setTextureAttribute(
         map_index,
@@ -265,10 +264,9 @@ loadMaterialPBR(const osg::ref_ptr< osg::Geometry > &geometry,
     if(!texture_filename.empty())
       texture = createTexture(texture_filename);
     else
-      texture = createDefaultTexture(
-          (map_index == 4 ? 0
-                          : 255)); // Little hack here: for emissive map, create
-                                   // a black texture instead of a white
+      texture = createDefaultTexture((map_index == 4 ? 0 : 255));
+        // Little hack here: for emissive map, create
+        // a black texture instead of a white
 
     geometry->getOrCreateStateSet()->setTextureAttribute(
         map_index,
