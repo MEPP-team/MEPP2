@@ -130,6 +130,7 @@ add_executable( test_calculate_scaling_aif
                 test_calculate_scaling_aif.cpp)
 target_link_libraries(test_calculate_scaling_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test( Calculate_scaling_aif
          test_calculate_scaling_aif
@@ -189,6 +190,7 @@ add_executable( test_collapse_edge_aif
                 test_collapse_edge_aif.cpp)
 target_link_libraries(test_collapse_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Collapse_edge_aif_1
          test_collapse_edge_aif
@@ -206,6 +208,7 @@ add_executable( test_collapse_edge_Euler_aif
                 test_collapse_edge_euler_aif.cpp)
 target_link_libraries(test_collapse_edge_Euler_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Collapse_edge_Euler_aif_1
          test_collapse_edge_Euler_aif
@@ -227,6 +230,7 @@ add_executable( test_flip_edge_aif
                 )
 target_link_libraries(test_flip_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Flip_edge_aif_1
          test_flip_edge_aif
@@ -246,6 +250,7 @@ add_executable( test_split_edge_aif
                 )
 target_link_libraries(test_split_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Split_edge_aif_1
          test_split_edge_aif
@@ -427,6 +432,7 @@ add_executable( test_generic_writer_aif
 				        )
 target_link_libraries(test_generic_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test( Generic_writer_aif_obj_simple
           test_generic_writer_aif  ${TESTING_DATA_DIR}/CubeTriangleFaces.obj  test_generic_writer_obj_simple.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFaces.writer-output.obj.ref)
@@ -566,6 +572,7 @@ add_executable( test_copy_graph_aif
 				)
 target_link_libraries( test_copy_graph_aif
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test( Test_copy_graph_aif_off_with_face-color
           test_copy_graph_aif

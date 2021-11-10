@@ -227,6 +227,29 @@ mesh_from_vector_representation(
   // store materials in a property map
   if(! mvr.materials.empty())
   {
+    // load texture images for all materials
+    for(size_t i = 0; i < mvr.materials.size(); i++)
+    {
+      auto &material = mvr.materials[i];
+
+      for(const auto &texture_filename : { material.ambient_texture_filename,
+                                           material.diffuse_texture_filename,
+                                           material.specular_texture_filename,
+                                           material.emissive_texture_filename,
+                                           material.transparency_texture_filename,
+                                           material.normal_map_filename,
+                                           material.metallic_map_filename,
+                                           material.roughness_map_filename })
+      {
+        if(texture_filename.empty())
+          continue;
+
+        material.images[texture_filename] =
+            std::shared_ptr< FEVV::Types::Image >(
+                new FEVV::Types::Image(texture_filename.c_str()));
+      }
+    }
+
     // create a property map to store the material
     auto mtl_pm = make_property_map(FEVV::mesh_materials, g);
 

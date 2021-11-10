@@ -14,6 +14,7 @@
 #include <iostream>
 #include <cmath>
 
+#undef NEAR
 #define NEAR(val1, val2, epsilon)   (fabs((val1)-(val2)) <= (epsilon))
 
 #undef NDEBUG // enable assert in release mode

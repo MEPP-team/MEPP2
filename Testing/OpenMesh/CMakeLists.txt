@@ -122,6 +122,7 @@ add_executable( test_generic_writer_openmesh
 target_link_libraries( test_generic_writer_openmesh
                        ${OPENMESH_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test( Generic_writer_openmesh_obj_simple
@@ -163,6 +164,7 @@ add_executable( test_compression_valence_openmesh
 target_link_libraries( test_compression_valence_openmesh
                        ${OPENMESH_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_COMPRESSION_VALENCE_OPENMESH_TOLERANCE 2e-5)
@@ -552,6 +554,7 @@ add_executable( test_copy_graph_openmesh
 target_link_libraries( test_copy_graph_openmesh
                        ${OPENMESH_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test( Test_copy_graph_openmesh_off_with_face-color
           test_copy_graph_openmesh

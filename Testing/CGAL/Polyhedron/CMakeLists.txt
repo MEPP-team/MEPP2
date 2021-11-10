@@ -4,6 +4,7 @@ add_executable( test_flip_edge_polyhedron
 target_link_libraries( test_flip_edge_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test(Flip_edge_polyhedron_1
@@ -25,6 +26,7 @@ add_executable( test_split_edge_polyhedron
 target_link_libraries( test_split_edge_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test(Split_edge_polyhedron_1
@@ -70,6 +72,7 @@ add_executable( test_split_edge_Euler_polyhedron
 target_link_libraries( test_split_edge_Euler_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test(Split_edge_Euler_polyhedron_1
@@ -113,7 +116,9 @@ add_test(Split_edge_Euler_polyhedron_6
 add_executable( test_collapse_edge_polyhedron
                 test_collapse_edge_polyhedron.cpp )
 target_link_libraries( test_collapse_edge_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 add_test(Collapse_edge_polyhedron_1
          test_collapse_edge_polyhedron
@@ -138,7 +143,9 @@ add_test(Collapse_edge_polyhedron_4
 add_executable( test_collapse_edge_Euler_polyhedron
                 test_collapse_edge_polyhedron.cpp )
 target_link_libraries( test_collapse_edge_Euler_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 add_test(Collapse_edge_Euler_polyhedron_1
          test_collapse_edge_Euler_polyhedron
@@ -153,7 +160,10 @@ add_test(Collapse_edge_Euler_polyhedron_2
 
 #####
 add_executable( test_polyhedron test_polyhedron.cpp )
-target_link_libraries( test_polyhedron ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries( test_polyhedron
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 add_test(Test_polyhedron
          test_polyhedron
@@ -164,7 +174,9 @@ add_test(Test_polyhedron
 add_executable( test_euler_add_center_vertex_polyhedron
                 test_euler_add_center_vertex_polyhedron.cpp )
 target_link_libraries( test_euler_add_center_vertex_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(Euler_add_center_vertex_polyhedron
          test_euler_add_center_vertex_polyhedron
          ${TESTING_DATA_DIR}/flat.off
@@ -174,7 +186,9 @@ add_test(Euler_add_center_vertex_polyhedron
 add_executable( test_calculate_scaling_polyhedron
                 test_calculate_scaling_polyhedron.cpp )
 target_link_libraries( test_calculate_scaling_polyhedron
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test( Calculate_scaling_polyhedron
           test_calculate_scaling_polyhedron
          ${TESTING_DATA_DIR}/flat.off )
@@ -183,7 +197,9 @@ add_test( Calculate_scaling_polyhedron
 add_executable( test_geometry_concept_polyhedron
                 test_geometry_concept_polyhedron.cpp )
 target_link_libraries( test_geometry_concept_polyhedron
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test( Test_geometry_concept_polyhedron
           test_geometry_concept_polyhedron )
 
@@ -191,7 +207,9 @@ add_test( Test_geometry_concept_polyhedron
 add_executable( test_complying_concepts_polyhedron
   test_complying_concepts_polyhedron.cpp )
 target_link_libraries( test_complying_concepts_polyhedron
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 #####
 add_executable( test_smoothing_polyhedron
@@ -199,6 +217,7 @@ add_executable( test_smoothing_polyhedron
 target_link_libraries( test_smoothing_polyhedron
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test( Smoothing_polyhedron
@@ -212,13 +231,14 @@ add_test( Smoothing_polyhedron_border
 add_executable( test_curvature_filter_polyhedron
                 test_curvature_filter_polyhedron.cpp
                 )
-target_link_libraries(test_curvature_filter_polyhedron
-                      ${CGAL_LIBRARY}
-                      ${CGAL_3RD_PARTY_LIBRARIES}
-                      ${Boost_LIBRARIES}
-                      ${FBX_LIBRARY}
-                      ${VTK_LIBRARIES}
-                      )
+target_link_libraries( test_curvature_filter_polyhedron
+                       ${CGAL_LIBRARY}
+                       ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       ${FBX_LIBRARY}
+                       ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
+                       )
 
 #####
 add_executable( test_generic_writer_polyhedron
@@ -226,6 +246,7 @@ add_executable( test_generic_writer_polyhedron
 				)
 target_link_libraries( test_generic_writer_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/polyhedron)
@@ -258,6 +279,7 @@ add_executable( test_compression_valence_polyhedron
 				)
 target_link_libraries( test_compression_valence_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_COMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -470,6 +492,7 @@ add_executable( test_decompression_valence_polyhedron
 				)
 target_link_libraries( test_decompression_valence_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_DECOMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -584,6 +607,7 @@ add_executable( test_boolean_operations_polyhedron
 				        )
 target_link_libraries( test_boolean_operations_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 # test UNION
 add_test( Test_boolean_operations_polyhedron_union
@@ -616,6 +640,7 @@ add_executable( test_copy_graph_polyhedron
 				)
 target_link_libraries( test_copy_graph_polyhedron
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test( Test_copy_graph_polyhedron_off_with_face-color
           test_copy_graph_polyhedron

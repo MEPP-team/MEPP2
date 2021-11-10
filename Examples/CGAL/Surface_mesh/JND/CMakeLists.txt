@@ -42,6 +42,7 @@ add_executable( example_just_noticeable_distortion
 target_link_libraries( example_just_noticeable_distortion
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 if( BUILD_USE_VTK )
 	target_link_libraries( example_just_noticeable_distortion

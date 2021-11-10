@@ -16,6 +16,8 @@
 #include <memory>
 
 #include "Visualization/SimpleWindow.h"
+#include "FEVV/Types/Material.h"
+
 
 // TODO : REVOIR les osg::StateAttribute::OVERRIDE et les vérifier !!!
 
@@ -153,13 +155,186 @@ createDefaultTexture(uint8_t value = 255) // white by default
   return texture;
 }
 
+
+/**
+ * Print information about an OSG image in the console.
+ */
+inline
+void
+print_osg_img_info(const osg::Image &osgimg)
+{
+  const unsigned char *imgdata = osgimg.data();
+  unsigned int channels =
+      osgimg.getTotalDataSize() / (osgimg.s() * osgimg.t() * osgimg.r());
+
+  std::cout << "----------------------------\n";
+  std::cout << "OSG image info:\n";
+  std::cout << "  width    " << osgimg.s()                << '\n';
+  std::cout << "  height   " << osgimg.t()                << '\n';
+  std::cout << "  depth    " << osgimg.r()                << '\n';
+  std::cout << "  channels " << channels                  << '\n';
+  std::cout << "  contig.  " << osgimg.isDataContiguous() << '\n';
+  std::cout << "  dataSz   " << osgimg.getTotalDataSize() << '\n';
+  std::cout << "  data()   " << static_cast< const void* >(osgimg.data())
+                                                          << '\n';
+  std::cout << "  data[]  ";
+  // print the two 1st pixels of the two 1st lines
+  for(unsigned int l = 0; l < 2; l++)
+  {
+    const unsigned char *linedata = imgdata + l*osgimg.s()*channels;
+    
+    for(unsigned int i = 0; i < 2*channels; i++) // 2x RGB[A] tuples
+    {
+      std::cout << ' ' << (int)linedata[i];
+    }
+
+    std::cout << "...\n" << "          ";
+  }
+  std::cout << " ...\n";
+  std::cout << "----------------------------\n";
+}
+
+
+/**
+ * Print information about a CImg image in the console.
+ */
+inline
+void
+print_cimg_info(const cimg_library::CImg< unsigned char > &cimg)
+{
+  const unsigned char *imgdata = cimg.data();
+
+  std::cout << "----------------------------\n";
+  std::cout << "CImg image info:\n";
+  std::cout << "  width    " << cimg.width()    << '\n';
+  std::cout << "  height   " << cimg.height()   << '\n';
+  std::cout << "  depth    " << cimg.depth()    << '\n';
+  std::cout << "  channels " << cimg.spectrum() << '\n';
+  std::cout << "  data()   " << static_cast< const void* >(cimg.data())
+                                                << '\n';
+  std::cout << "  data[]  ";
+  // print the 1st pixels of the two 1st lines (of the 1st channel,
+  // because data are in planar order with CImg)
+  for(unsigned int l = 0; l < 2; l++)
+  {
+    const unsigned char *linedata = imgdata + l*cimg.width();
+    
+    for(unsigned int i = 0; i < 3; i++) // 3x R values
+    {
+      std::cout << ' ' << (int)linedata[i];
+    }
+
+    std::cout << "...\n" << "          ";
+  }
+  std::cout << " ...\n";
+  std::cout << "----------------------------\n";
+}
+
+
+/**
+ * Convert a CImg image into an OSG image.
+ * The caller must release memory after use.
+ */
+inline
+osg::Image*
+cimg_to_osgimg(const cimg_library::CImg< unsigned char > &cimg)
+{
+  // CImg pixels are in planar order (RRR..GGG..BBB..AAA..) and image data
+  // start at the upper-left corner of the image, see
+  // https://cimg.eu/reference/storage.html.
+  // OSG/OpenGL texture image pixels are in interleaved order (RGBARGBA..) and
+  // image data start at the bottom-left corner of the image.
+
+  // sanity checks
+  if(cimg.depth() != 1)
+  {
+    std::cout << "WARNING: cimg_to_osgimg: unsupported image depth = "
+              << cimg.depth() << "." << std::endl;
+    return nullptr;
+  }
+  else if(cimg.spectrum() != 3 && cimg.spectrum() != 4)
+  {
+    std::cout << "WARNING: cimg_to_osgimg: unsupported image channels = "
+              << cimg.spectrum() << "." << std::endl;
+    return nullptr;
+  }
+
+  // retrieve CImg input image data
+  bool alpha = (cimg.spectrum() == 4);
+  const unsigned char *cimg_r_ptr = cimg.data(0, 0, 0, 0); // R plan
+  const unsigned char *cimg_g_ptr = cimg.data(0, 0, 0, 1); // G plan
+  const unsigned char *cimg_b_ptr = cimg.data(0, 0, 0, 2); // B plan
+  const unsigned char *cimg_a_ptr =
+      (alpha) ? cimg.data(0, 0, 0, 3) : nullptr;           // A plan
+
+  // create OSG output image
+  osg::Image *osgimg = new osg::Image;
+  auto osg_pix_format = (alpha) ? GL_RGBA : GL_RGB;
+  osgimg->allocateImage(cimg.width(), cimg.height(), cimg.depth(),
+                        osg_pix_format, GL_UNSIGNED_BYTE);
+  unsigned char *osg_data = osgimg->data();
+
+  // copy CImg pixels into OSG image
+
+  unsigned int w  = cimg.width();
+  unsigned int h  = cimg.height();
+  unsigned int ch = cimg.spectrum(); // number of channels
+
+  for(unsigned int l = 0; l < h; l++) // loop over lines
+  {
+    // beginning of the line in OSG Image storage (reversed line order
+    // compared to CImg)
+    unsigned char *osg_ptr = osg_data + w*(h-1-l)*ch;
+
+    for(unsigned int c = 0; c < w; c++) // loop over columns
+    {
+      // copy pixel
+      *osg_ptr = *cimg_r_ptr;
+      osg_ptr++;
+      *osg_ptr = *cimg_g_ptr;
+      osg_ptr++;
+      *osg_ptr = *cimg_b_ptr;
+      osg_ptr++;
+
+      if(alpha)
+      {
+        *osg_ptr = *cimg_a_ptr;
+        osg_ptr++;
+        cimg_a_ptr++;
+      }
+
+      // the inner loop is over columns ; the data are in the right order
+      // in CImg, so increasing CImg pointers is enough
+      cimg_r_ptr++;
+      cimg_g_ptr++;
+      cimg_b_ptr++;
+    }
+  }
+
+  return osgimg;
+}
+
+
 inline osg::ref_ptr< osg::Texture2D >
-createTexture(const std::string &filename)
+createTexture(const std::string &filename,
+              const FEVV::Types::Material &material)
 {
   osg::ref_ptr< osg::Texture2D > texture;
 
-  // load an image by reading a file
-  const osg::ref_ptr< osg::Image > image = osgDB::readImageFile(filename);
+  //DBG std::cout << "##########################" << std::endl;
+  //DBG std::cout << "#  READ TEXTURE IMAGE 1  #" << std::endl;
+  //DBG std::cout << "##########################" << std::endl;
+
+  // retrieve texture image from material
+  auto &cimg = material.images.at(filename);
+    // note: can not use material.images[filename] here because it would
+    //       discard the constness
+  //DBG print_cimg_info(*cimg);
+
+  // convert CImg image to OSG image
+  osg::ref_ptr< osg::Image > image = cimg_to_osgimg(*cimg);
+  //DBG print_osg_img_info(*image);
+
   if(image)
   {
     // std::cout << "[MeshLoading] Texture file '" << _texture_file << "'
@@ -219,7 +394,7 @@ loadMaterialStandard(const osg::ref_ptr< osg::Geometry > &geometry,
     osg::ref_ptr< osg::Texture2D > texture;
 
     if(!texture_filename.empty())
-      texture = createTexture(texture_filename);
+      texture = createTexture(texture_filename, material);
     else
       texture = createDefaultTexture((map_index == 3 ? 0 : 255));
         // Little hack here: for emissive map, create
@@ -262,7 +437,7 @@ loadMaterialPBR(const osg::ref_ptr< osg::Geometry > &geometry,
     osg::ref_ptr< osg::Texture2D > texture;
 
     if(!texture_filename.empty())
-      texture = createTexture(texture_filename);
+      texture = createTexture(texture_filename, material);
     else
       texture = createDefaultTexture((map_index == 4 ? 0 : 255));
         // Little hack here: for emissive map, create
@@ -854,6 +1029,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
   }
 }
 
+
 template< typename HalfedgeGraph,
           typename VertexNormalMap,
           typename VertexColorMap,
@@ -941,9 +1117,18 @@ FEVV::SimpleViewer::internal_loadLegacyMesh(
 
       if(!material.diffuse_texture_filename.empty())
       {
-        // load an image by reading a file
-        const osg::ref_ptr< osg::Image > image =
-            osgDB::readImageFile(material.diffuse_texture_filename);
+        //DBG std::cout << "##########################" << std::endl;
+        //DBG std::cout << "#  READ TEXTURE IMAGE 2  #" << std::endl;
+        //DBG std::cout << "##########################" << std::endl;
+        
+        // retrieve texture image from material
+        auto &cimg = material.images[material.diffuse_texture_filename];
+        //DBG print_cimg_info(*cimg);
+
+        // convert CImg image to OSG image
+        osg::ref_ptr< osg::Image > image = cimg_to_osgimg(*cimg);
+        //DBG print_osg_img_info(*image);
+
         if(image)
         {
           // std::cout << "[MeshLoading] Texture file '" << _texture_file << "'

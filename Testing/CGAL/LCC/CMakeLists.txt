@@ -1,7 +1,9 @@
 #####
 add_executable( test_linear_cell_complex test_linear_cell_complex.cpp )
 target_link_libraries( test_linear_cell_complex
-   ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES})
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(Test_linear_cell_complex
          test_linear_cell_complex
          ${TESTING_DATA_DIR}/flat.off
@@ -9,7 +11,10 @@ add_test(Test_linear_cell_complex
 
 #####
 add_executable( test_not_2_manifold_linear_cell_complex test_not_2_manifold_linear_cell_complex.cpp )
-target_link_libraries( test_not_2_manifold_linear_cell_complex ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries( test_not_2_manifold_linear_cell_complex
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(Test_not_2_manifold_linear_cell_complex
          test_not_2_manifold_linear_cell_complex
          )
@@ -18,7 +23,9 @@ add_test(Test_not_2_manifold_linear_cell_complex
 add_executable( test_geometry_concept_lcc
                 test_geometry_concept_lcc.cpp )
 target_link_libraries( test_geometry_concept_lcc
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test( Test_geometry_concept_lcc
           test_geometry_concept_lcc )
 
@@ -26,7 +33,9 @@ add_test( Test_geometry_concept_lcc
 add_executable( test_complying_concepts_linear_cell_complex
   test_complying_concepts_linear_cell_complex.cpp )
 target_link_libraries( test_complying_concepts_linear_cell_complex
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 #####
 add_executable( test_compression_valence_lcc
@@ -34,6 +43,7 @@ add_executable( test_compression_valence_lcc
 				)
 target_link_libraries( test_compression_valence_lcc
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_COMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -246,6 +256,7 @@ add_executable( test_decompression_valence_lcc
 				)
 target_link_libraries( test_decompression_valence_lcc
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_DECOMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -363,6 +374,7 @@ add_executable( test_copy_graph_lcc
 				)
 target_link_libraries( test_copy_graph_lcc
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test( Test_copy_graph_lcc_off_with_face-color
           test_copy_graph_lcc
