@@ -157,7 +157,7 @@ before_build:
   - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
   - IF %CACHE%==FALSE 7z x CGAL-4.14-hdr-only.7z > nul
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/CGAL-5.2.1.zip
-#TODO MYCORE  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
+#TODO MYCORE HERE  - IF %FTP_MYCORE%==TRUE IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/uI6jKznZy5XbGdn/download -O CGAL-4.14-hdr-only.7z 2> nul
   - IF %CACHE%==FALSE 7z x CGAL-5.2.1.zip > nul
 # OpenMesh
   - IF %FTP_MYCORE%==FALSE IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/OpenMesh-6.2.rar
@@ -189,6 +189,17 @@ before_build:
   - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL-1.9.1.7z
   - IF %FTP_MYCORE%==TRUE IF %CONFIGURATION%==Release IF %CACHE%==FALSE wget --no-check-certificate https://mycore.core-cloud.net/index.php/s/CXDvf7G3MoLXpRI/download -O PCL-1.9.1.7z 2> nul
   - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCL-1.9.1.7z > nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE cd %KIT_ROOT%\PCL\pcl-1.9.1\include\pcl-1.9\pcl
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE ren PCLPointCloud2.h PCLPointCloud2_org.h
+  - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL_1.9.1_if_BOOST_1_73/PCLPointCloud2.rar
+#TODO MYCORE HERE
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x PCLPointCloud2.rar > nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE cd %KIT_ROOT%\PCL\pcl-1.9.1\include\pcl-1.9\pcl\io\ply
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE ren byte_order.h byte_order_org.h
+  - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Release IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/PCL_1.9.1_if_BOOST_1_73/byte_order.rar
+#TODO MYCORE HERE
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE 7z x byte_order.rar > nul
+  - IF %CONFIGURATION%==Release IF %CACHE%==FALSE cd %KIT_ROOT%
 # VTK
   - IF %FTP_MYCORE%==FALSE IF %CONFIGURATION%==Debug IF %CACHE%==FALSE curl -k --connect-timeout 60 --max-time 1800 -s -O https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2015/MEPP/packages/clean/kitware-VTK-7.0.0.7z
   #- IF %CONFIGURATION%==Debug IF %CACHE%==FALSE wget --no-check-certificate "https://docs.google.com/uc?export=download&id=1dyNslEtQrkf2I1YwVvXDZNOezZoh7YDi" -O kitware-VTK-7.0.0.7z 2> nul

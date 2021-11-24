@@ -13,6 +13,9 @@ endif()
 if(MSVC_VERSION GREATER_EQUAL 1920)
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2019 x64
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V142) 	# VS2019 x64 (for Boost.Beast)
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_73_0_V142)		# VS2019 x64 (--> need a double patch for pcl 1.9.1 !)
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_75_0_V142)		# boost/function_output_iterator.hpp - This header is deprecated. Use <boost/iterator/function_output_iterator.hpp> instead
+	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_77_0_V142)		# boost/function_output_iterator.hpp - This header is deprecated. Use <boost/iterator/function_output_iterator.hpp> instead
 elseif(MSVC_VERSION GREATER_EQUAL 1910)
 	set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_67_0_V141) 	# VS2017 x64
 	#set(BOOST_ROOT				${MSVC_KIT_ROOT}/boost_1_71_0_V141) 	# VS2017 x64 (for Boost.Beast)
