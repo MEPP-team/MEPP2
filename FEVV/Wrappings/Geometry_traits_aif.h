@@ -120,7 +120,6 @@ public:
   static Scalar length2(const Vector &v)
   {
     return dot_product(v, v);
-    ;
   }
 
   static Scalar length(const Vector &v) { return sqrt(length2(v)); }
@@ -148,7 +147,7 @@ public:
   {
     Vector result(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]);
     return result;
-  };
+  }
 
   static Point add_pv(
       const Point &p,
@@ -157,20 +156,26 @@ public:
   {
     Point result(p[0] + v[0], p[1] + v[1], p[2] + v[2]);
     return result;
-  };
+  }
 
   static Point sub_pv(const Point &p1,
                       const Vector &v) // subP to be consistent with addP
   {
     Point result(p1[0] - v[0], p1[1] - v[1], p1[2] - v[2]);
     return result;
-  };
+  }
 
   static Vector sub_p(const Point &p1, const Point &p2)
   {
     Vector result(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
     return result;
-  };
+  }
+
+  static Vector sub_v(const Vector &v1, const Vector &v2)
+  {
+    Vector result(v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]);
+    return result;
+  }
 
   static Vector scalar_mult(const Vector &v, Scalar s)
   {

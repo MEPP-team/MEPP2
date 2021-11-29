@@ -254,6 +254,11 @@ public:
   Vector sub_p(const Point &p, const Point &q);
 
   /**
+   * \brief Returns the subtraction of vector v from vector u.
+   */
+  Vector sub_v(const Vector &u, const Vector &v);
+
+  /**
    * \brief Returns the multiplication of vector v by scalar s.
    */
   Vector scalar_mult(const Vector &v, Scalar s);

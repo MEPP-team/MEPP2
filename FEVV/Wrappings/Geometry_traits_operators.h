@@ -26,7 +26,7 @@ add_v(const typename GeometryTraits::Vector &v1,
   typedef typename GeometryTraits::Vector Vector;
   Vector result(v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]);
   return result;
-};
+}
 
 /**
  * \brief  Returns the sum of point P and vector V.
@@ -39,7 +39,7 @@ add_pv(const typename GeometryTraits::Point &p,
   typedef typename GeometryTraits::Point Point;
   Point result(p[0] + v[0], p[1] + v[1], p[2] + v[2]);
   return result;
-};
+}
 
 /**
  * \brief  Returns point P minus vector V.
@@ -52,7 +52,7 @@ sub_pv(const typename GeometryTraits::Point &p,
   typedef typename GeometryTraits::Point Point;
   Point result(p[0] - v[0], p[1] - v[1], p[2] - v[2]);
   return result;
-};
+}
 
 /**
  * \brief  Returns point P1 minus point P2.
@@ -65,7 +65,20 @@ sub_p(const typename GeometryTraits::Point &p1,
   typedef typename GeometryTraits::Vector Vector;
   Vector result(p1[0] - p2[0], p1[1] - p2[1], p1[2] - p2[2]);
   return result;
-};
+}
+
+/**
+ * \brief  Returns vector V1 minus vector V2.
+ */
+template< typename GeometryTraits >
+typename GeometryTraits::Vector
+sub_v(const typename GeometryTraits::Vector &v1,
+      const typename GeometryTraits::Vector &v2)
+{
+  typedef typename GeometryTraits::Vector Vector;
+  Vector result(v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]);
+  return result;
+}
 
 /**
  * \brief  Returns the dot product of vectors V1 and V2.
@@ -76,7 +89,7 @@ dot_product(const typename GeometryTraits::Vector &v1,
             const typename GeometryTraits::Vector &v2)
 {
   return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
-};
+}
 
 } // namespace GeometryTraits
 } // namespace FEVV

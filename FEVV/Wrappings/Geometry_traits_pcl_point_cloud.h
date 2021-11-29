@@ -141,6 +141,11 @@ public:
   {
     return p - q; // Eigen
   };
+  
+  static Vector sub_v(const Vector &v1, const Vector &v2)
+  {
+    return v1 - v2; // Eigen
+  };  
 
 
   static Vector scalar_mult(const Vector &v, Scalar s)

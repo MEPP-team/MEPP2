@@ -187,6 +187,8 @@ public:
     return GeometryTraits::sub_p< Self >(p1, p2);
 #endif
   }
+  
+  static Vector sub_v(const Vector &v1, const Vector &v2) { return v1 - v2; }  
 
   static Vector scalar_mult(const Vector &v, Scalar s) { return v * s; }
 
