@@ -574,9 +574,9 @@ public:
   static boost::iterator_range< vertex_container::const_iterator >
   sort_vertices(ptr_mesh mesh, const ComparatorType &cmp)
   {
-    std::sort(mesh->GetVertices().begin(),
-              mesh->GetVertices().end(),
-              cmp); // here std::sort ok (no issue detected)
+    sort(mesh->GetVertices().begin(),
+         mesh->GetVertices().end(),
+         cmp);
     return mesh->GetVertices();
   }
 
@@ -1457,9 +1457,9 @@ public:
   static boost::iterator_range< edge_container::const_iterator >
   sort_edges(ptr_mesh mesh, const ComparatorType &cmp)
   {
-    std::sort(mesh->GetEdges().begin(),
-              mesh->GetEdges().end(),
-              cmp); // here std::sort ok (no issue detected)
+    sort(mesh->GetEdges().begin(),
+         mesh->GetEdges().end(),
+         cmp); // here std::sort is not ok (issue detected in some code)
     return mesh->GetEdges();
   }
 

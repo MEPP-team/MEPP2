@@ -67,6 +67,7 @@ defined in the `Wrappings/Geometry_traits_....h` files.
 | `gt.unit_normal(p, q, r)`| `Vector` | Returns a unit vector that is normal to the plane passing through points `p`, `q` and `r`.|
 | `gt.add_v(u, v)`         | `Vector` | Returns the sum of vectors `u` and `v`.|
 | `gt.add_pv(p, v)`        | `Point`  | Returns the sum of point `p` and vector `v`.|
+| `gt.sub_v(u, v)`         | `Vector` | Returns the sum of vector `u` and the opposite of vector `v`.|
 | `gt.sub_pv(p, v)`        | `Point`  | Returns the sum of point `p` and the opposite of vector `v`.|
 | `gt.sub_p(p, q)`         | `Vector` | Returns the vector from point `q` to point `p`.|
 | `gt.scalar_mult(v, s)`   | `Vector` | Returns the multiplication of vector `v` by scalar `s`.|

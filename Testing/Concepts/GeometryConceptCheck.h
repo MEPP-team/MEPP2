@@ -98,6 +98,7 @@ struct GeometryConcept
     s  = gt.length2(v);
     s  = gt.length(v);
     v = gt.add_v(v1, v2);
+    v = gt.sub_v(v1, v2);
     gt.dot_product(v1, v2);
     gt.cross_product(v1, v2);
 
@@ -125,9 +126,10 @@ struct GeometryConcept
 #endif
 
     // Not recommendable because the notation is too heavy
-    v1 = GeometryTraits::sub< G >(p, p);
+    v1 = GeometryTraits::sub_p< G >(p, p);
     v1 = GeometryTraits::add_v< G >(v1, v2);
-    p = GeometryTraits::add_p< G >(p, v1);
+    v1 = GeometryTraits::sub_v< G >(v1, v2);
+    p = GeometryTraits::add_pv< G >(p, v1);
 
 /////////////////////////////////////////////////////////////
 // Only working for some data structures and thus not generic
