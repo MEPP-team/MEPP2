@@ -147,7 +147,7 @@ add_test( Generic_writer_surfacemesh_obj_with_vertex-normals_and_vertex-color
 add_test( Generic_writer_surfacemesh_obj_with_vertex-normals_and_vertex-texture
           test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  surfacemesh/test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
 add_test( Generic_writer_surfacemesh_obj_with_halfedge-texture
-          test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/textures/usb/usb.obj  surfacemesh/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
+          test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/textures/kip/kip.obj  surfacemesh/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
 add_test( Generic_writer_surfacemesh_off_flat
           test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/flat.off  surfacemesh/test_generic_writer_off_flat.off  ${TESTING_DATA_DIR}/flat.off)
 add_test( Generic_writer_surfacemesh_off_aircraft
@@ -671,7 +671,7 @@ add_test( Test_copy_graph_surfacemesh_obj_with_vertex-normals_and_vertex-texture
           )
 add_test( Test_copy_graph_surfacemesh_obj_with_halfedge-texture
           test_copy_graph_surfacemesh
-          ${TESTING_DATA_DIR}/textures/usb/usb.obj
+          ${TESTING_DATA_DIR}/textures/kip/kip.obj
           test_copy_graph_obj_with_halfedge-texture.obj
           ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref
           )

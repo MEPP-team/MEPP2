@@ -134,7 +134,7 @@ add_test( Generic_writer_openmesh_obj_with_vertex-normals_and_vertex-color
 add_test( Generic_writer_openmesh_obj_with_vertex-normals_and_vertex-texture
           test_generic_writer_openmesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
 add_test( Generic_writer_openmesh_obj_with_halfedge-texture
-          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/usb/usb.obj  test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
+          test_generic_writer_openmesh  ${TESTING_DATA_DIR}/textures/kip/kip.obj  test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.openmesh.ref)
 add_test( Generic_writer_openmesh_off_flat
           test_generic_writer_openmesh  ${TESTING_DATA_DIR}/flat.off  test_generic_writer_off_flat.off  ${TESTING_DATA_DIR}/flat.off)
 add_test( Generic_writer_openmesh_off_aircraft
