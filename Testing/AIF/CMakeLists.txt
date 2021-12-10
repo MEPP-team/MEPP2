@@ -50,6 +50,7 @@ add_executable( test_reader_writer_aif
 				        )
 target_link_libraries(test_reader_writer_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 
 add_test( AIFReader_and_Writer
@@ -293,6 +294,7 @@ add_executable( test_non_manifold_split_edge_aif
                 test_non_manifold_split_edge_aif.cpp)
 target_link_libraries(test_non_manifold_split_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Non_manifold_split_edge_aif_1
          test_non_manifold_split_edge_aif
@@ -347,6 +349,7 @@ add_executable( test_non_manifold_collapse_edge_aif
                 test_non_manifold_collapse_edge_aif.cpp)
 target_link_libraries(test_non_manifold_collapse_edge_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test(Non_manifold_collapse_edge_aif_1
          test_non_manifold_collapse_edge_aif
@@ -390,6 +393,7 @@ add_executable( test_smoothing_aif
 
 target_link_libraries(test_smoothing_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 
 if (BUILD_USE_VTK )
@@ -469,6 +473,7 @@ add_executable( test_mesh_defects_aif
 				)
 target_link_libraries(test_mesh_defects_aif
                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                      ${IMG-3RDPARTY_LIBRARIES}
                       )
 add_test( Test_mesh_defects_aif
           test_mesh_defects_aif  ${TESTING_DATA_DIR}/TriangleMeshCutVertices.off n)

@@ -376,6 +376,7 @@ add_executable( test_decompression_valence_openmesh
 target_link_libraries( test_decompression_valence_openmesh
                        ${OPENMESH_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_DECOMPRESSION_VALENCE_OPENMESH_TOLERANCE 2e-5)
