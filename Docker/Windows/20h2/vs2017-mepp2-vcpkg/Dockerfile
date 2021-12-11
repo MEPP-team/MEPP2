@@ -83,6 +83,17 @@ ADD https://download.gforge.liris.cnrs.fr/meppbin/windows/v14x-x64/tags/patchs/v
 RUN 7z x -y C:/TEMP/PCL-pcl-1.11.1__include__pcl-1.11__pcl__io__boost.h.rar
 RUN del C:/TEMP/PCL-pcl-1.11.1__include__pcl-1.11__pcl__io__boost.h.rar
 
+# Patch for VTK from VCPKG (LIRIS host - cmake patches)
+WORKDIR "C:/vcpkg/installed/x64-windows/share/vtk"
+ADD https://download.gforge.liris.cnrs.fr/meppbin/windows/v14x-x64/tags/patchs/vcpkg-2020.11-1/vtk_for_installed.rar C:/TEMP/vtk_for_installed.rar
+RUN 7z x -y C:/TEMP/vtk_for_installed.rar
+RUN del C:/TEMP/vtk_for_installed.rar
+# Patch for netcdf-c (VTK module) from VCPKG (LIRIS host - cmake patches)
+WORKDIR "C:/vcpkg/installed/x64-windows/share/netcdf-c"
+ADD https://download.gforge.liris.cnrs.fr/meppbin/windows/v14x-x64/tags/patchs/vcpkg-2020.11-1/netcdf-c_for_installed.rar C:/TEMP/netcdf-c_for_installed.rar
+RUN 7z x -y C:/TEMP/netcdf-c_for_installed.rar
+RUN del C:/TEMP/netcdf-c_for_installed.rar
+
 # Temp WORKDIR
 WORKDIR "C:/"
 
