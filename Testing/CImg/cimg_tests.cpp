@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   }
 
 #ifdef FEVV_USE_JPEG
-  //CImg<unsigned char> image_j(argv[1]); // pb avec vcpkg en Release uniquement, why ?
+  CImg<unsigned char> image_j(argv[1]); // pb avec vcpkg en Release uniquement, why ?
 #endif
 
 #ifdef FEVV_USE_PNG
