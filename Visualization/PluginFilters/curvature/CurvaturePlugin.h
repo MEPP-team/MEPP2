@@ -1170,7 +1170,13 @@ public:
 
     auto viewer = dynamic_cast< SimpleViewer * >(_adapter->getViewer());
     if(viewer)
+    {
+      // sample/nothing to do with curvature - change GUI flags before draw
+      //viewer->m_Lighting = false;
+      //viewer->m_SmoothFlat_Shading = false;
+
       viewer->draw_or_redraw_mesh(_mesh, pmaps_bag, true, false);
+    }
 
     //reset();
 
