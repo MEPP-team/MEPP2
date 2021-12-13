@@ -596,19 +596,17 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
 
-# Reduce the time 1
-#dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
-#  tags:
-#    - MEPP2,osx,DOCKER-LIN
-#  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
-
-# Coherence after both 'Reduce the time 1' above
-dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - GCC - QT5 - CONF3 (ALL)]:
+dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
+  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
+
+#dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - GCC - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
 
 ########################################
 # DOCKER_WIN - CONF3 (ALL) - 4 configs #
