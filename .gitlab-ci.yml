@@ -453,9 +453,9 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 3 doc
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
-#####################################
-# DOCKER - CONF3 (ALL) - 10 configs #
-#####################################
+########################################
+# DOCKER_LIN - CONF3 (ALL) - 2 configs #
+########################################
 #
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
   script:
@@ -596,6 +596,10 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #    - MEPP2,osx,DOCKER-LIN
 #  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
+
+########################################
+# DOCKER_WIN - CONF3 (ALL) - 8 configs #
+########################################
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
   script:
