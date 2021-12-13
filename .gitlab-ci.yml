@@ -453,9 +453,9 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 3 doc
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
-########################################
-# DOCKER_LIN - CONF3 (ALL) - 2 configs #
-########################################
+#######################################
+# DOCKER_LIN - CONF3 (ALL) - 1 config #
+#######################################
 #
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
   script:
@@ -579,11 +579,12 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
 
-dock-lin20.04LTS-cgal_5.2-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
+# Reduce the time 1
+#dock-lin20.04LTS-cgal_5.2-pcl_1.10 [Debug - GCC - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
 
 dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
@@ -598,7 +599,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
 
 ########################################
-# DOCKER_WIN - CONF3 (ALL) - 8 configs #
+# DOCKER_WIN - CONF3 (ALL) - 4 configs #
 ########################################
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
@@ -639,29 +640,31 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-dock-w2017 - Release - QT4 - CONF3 (ALL):
+# Reduce the time 2
+#dock-w2017 - Release - QT4 - CONF3 (ALL):
+#  tags:
+#    - MEPP2,windows,DOCKER-WIN
+#  image: mtola/vs2017-ltsc2019-mepp2
+#  <<: *windows_build_definition_0x-powershell-qt4-release
+
+#dock-w2017 - Debug - QT4 - CONF3 (ALL):
+#  tags:
+#    - MEPP2,windows,DOCKER-WIN
+#  image: mtola/vs2017-ltsc2019-mepp2
+#  <<: *windows_build_definition_0x-powershell-qt4-debug
+
+# Coherence (switch to QT4) after 'Reduce the time 2' above
+dock-w2019 - Release - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2017-ltsc2019-mepp2
+  image: mtola/vs2019-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt4-release
 
-dock-w2017 - Debug - QT4 - CONF3 (ALL):
+dock-w2019 - Debug - QT4 - CONF3 (ALL):
   tags:
     - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2017-ltsc2019-mepp2
+  image: mtola/vs2019-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt4-debug
-
-dock-w2019 - Release - QT5 - CONF3 (ALL):
-  tags:
-    - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2019-ltsc2019-mepp2
-  <<: *windows_build_definition_0x-powershell-qt5-release
-
-dock-w2019 - Debug - QT5 - CONF3 (ALL):
-  tags:
-    - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2019-ltsc2019-mepp2
-  <<: *windows_build_definition_0x-powershell-qt5-debug
 #
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
   script:
@@ -681,17 +684,18 @@ dock-w2019 - Debug - QT5 - CONF3 (ALL):
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
-dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
-  tags:
-    - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
-  <<: *windows_build_definition_1x-powershell-vcpkg-release
+# Reduce the time 2_bis
+#dock_w2017-VCPKG - Release - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
+#  tags:
+#    - MEPP2,windows,DOCKER-WIN
+#  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
+#  <<: *windows_build_definition_1x-powershell-vcpkg-release
 
-dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
-  tags:
-    - MEPP2,windows,DOCKER-WIN
-  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
-  <<: *windows_build_definition_1x-powershell-vcpkg-debug
+#dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
+#  tags:
+#    - MEPP2,windows,DOCKER-WIN
+#  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
+#  <<: *windows_build_definition_1x-powershell-vcpkg-debug
 
 dock_w2019-VCPKG - Release - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
   tags:
