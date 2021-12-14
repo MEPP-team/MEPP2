@@ -657,6 +657,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #  image: mtola/vs2017-ltsc2019-mepp2
 #  <<: *windows_build_definition_0x-powershell-qt4-release
 
+# Reduce the time 2
 #dock-w2017 - Debug - QT4 - CONF3 (ALL):
 #  tags:
 #    - MEPP2,windows,DOCKER-WIN
@@ -701,6 +702,7 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
 #  image: mtola/vs2017-ltsc2019-mepp2-vcpkg-v3
 #  <<: *windows_build_definition_1x-powershell-vcpkg-release
 
+# Reduce the time 2_bis
 #dock_w2017-VCPKG - Debug - QT5 - CONF3 (ALL with VTK NOW OK) -v3:
 #  tags:
 #    - MEPP2,windows,DOCKER-WIN
