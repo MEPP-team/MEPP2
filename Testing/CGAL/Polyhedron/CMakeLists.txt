@@ -623,3 +623,27 @@ add_test( Test_copy_graph_polyhedron_off_with_face-color
           test_copy_graph_off_with_face-color.off
           ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
           )
+		  
+#####
+add_executable( test_spanning_tree_comparator_polyhedron test_spanning_tree_comparator_polyhedron.cpp)
+target_link_libraries(test_spanning_tree_comparator_polyhedron ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES})
+
+add_test( Test_spanning_tree_comparator_polyhedron
+          test_spanning_tree_comparator_polyhedron
+         ${TESTING_DATA_DIR}/flat.off )	    
+#####
+
+if( NOT BUILD_USE_DRACO OR NOT draco_FOUND )
+  return()
+endif()
+
+add_executable( test_progressive_comp_decomp_polyhedron
+                test_progressive_comp_decomp_polyhedron.cpp
+				)
+target_link_libraries( test_progressive_comp_decomp_polyhedron
+                       ${draco_LIBRARIES} ${Boost_LIBRARIES}
+                       )
+add_test(Test_progressive_comp_decomp_polyhedron
+         test_progressive_comp_decomp_polyhedron
+         ${TESTING_DATA_DIR}/flat.off
+         )		  

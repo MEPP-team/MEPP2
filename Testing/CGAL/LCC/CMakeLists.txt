@@ -370,3 +370,29 @@ add_test( Test_copy_graph_lcc_off_with_face-color
           test_copy_graph_off_with_face-color.off
           ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
           )
+		 
+#####
+add_executable( test_spanning_tree_comparator_lcc test_spanning_tree_comparator_lcc.cpp)
+target_link_libraries(test_spanning_tree_comparator_lcc ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES})
+
+add_test( Test_spanning_tree_comparator_lcc
+          test_spanning_tree_comparator_lcc
+         ${TESTING_DATA_DIR}/flat.off )	    
+#####
+
+if( NOT BUILD_USE_DRACO OR NOT draco_FOUND )
+  return()
+endif()
+
+add_executable( test_progressive_comp_decomp_lcc 
+                test_progressive_comp_decomp_lcc.cpp			
+				)
+target_link_libraries( test_progressive_comp_decomp_lcc 
+                       ${draco_LIBRARIES} ${Boost_LIBRARIES} 
+                       )
+add_test(Test_progressive_comp_decomp_lcc
+         test_progressive_comp_decomp_lcc
+         ${TESTING_DATA_DIR}/flat.off
+         )				 
+		 
+#####		 

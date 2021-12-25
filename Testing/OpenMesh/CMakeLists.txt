@@ -559,3 +559,12 @@ add_test( Test_copy_graph_openmesh_off_with_face-color
           test_copy_graph_off_with_face-color.off
           ${TESTING_DATA_DIR}/CubeNonTriangleFacesWithFaceColor.off
           )
+		  
+#####
+add_executable( test_spanning_tree_comparator_openmesh test_spanning_tree_comparator_openmesh.cpp)
+target_link_libraries(test_spanning_tree_comparator_openmesh ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES})
+
+add_test( Test_spanning_tree_comparator_openmesh
+          test_spanning_tree_comparator_openmesh
+         ${TESTING_DATA_DIR}/flat.off )	    
+#####		  
