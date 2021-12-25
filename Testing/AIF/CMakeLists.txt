@@ -576,9 +576,9 @@ add_test( Test_copy_graph_aif_off_with_face-color
 		  
 #####
 add_executable( test_spanning_tree_comparator_aif test_spanning_tree_comparator_aif.cpp)
-target_link_libraries(test_spanning_tree_comparator_aif ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES})
+target_link_libraries(test_spanning_tree_comparator_aif ${Boost_LIBRARIES})
 
 add_test( Test_spanning_tree_comparator_aif
           test_spanning_tree_comparator_aif
-         ${TESTING_DATA_DIR}/flat.off )	    
+          ${TESTING_DATA_DIR}/flat.off )	  
 #####		  

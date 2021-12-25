@@ -562,9 +562,9 @@ add_test( Test_copy_graph_openmesh_off_with_face-color
 		  
 #####
 add_executable( test_spanning_tree_comparator_openmesh test_spanning_tree_comparator_openmesh.cpp)
-target_link_libraries(test_spanning_tree_comparator_openmesh ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES})
+target_link_libraries(test_spanning_tree_comparator_openmesh ${OPENMESH_LIBRARIES} ${Boost_LIBRARIES})
 
 add_test( Test_spanning_tree_comparator_openmesh
           test_spanning_tree_comparator_openmesh
-         ${TESTING_DATA_DIR}/flat.off )	    
+         ${TESTING_DATA_DIR}/flat.off )	    		 
 #####		  

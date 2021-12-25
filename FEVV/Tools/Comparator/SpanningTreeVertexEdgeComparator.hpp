@@ -3,6 +3,9 @@
 #include "FEVV/Tools/Comparator/VertexComparators.hpp"
 #include "FEVV/Operators/Geometry/triangles.hpp"
 
+#include <CGAL/boost/graph/iterator.h>
+#include <CGAL/boost/graph/helpers.h>
+
 #include <limits>
 #include <iterator>
 #include <map>
@@ -123,9 +126,9 @@ namespace Comparator
       nb_bit_quantization = 32;
     size_t two_power_nb_bit = std::pow(2, nb_bit_quantization);
     double delta = (max_res - min_res) / two_power_nb_bit;
-    //std::cout << "res avant = " << res << std::endl;
+
     res = std::floor(res / delta) * delta + 0.5 * delta;
-    //std::cout << "res apres = " << res << std::endl;
+
     return res;
   }
 
