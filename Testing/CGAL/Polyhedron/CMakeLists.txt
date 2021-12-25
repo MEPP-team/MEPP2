@@ -626,7 +626,8 @@ add_test( Test_copy_graph_polyhedron_off_with_face-color
 		  
 #####
 add_executable( test_spanning_tree_comparator_polyhedron test_spanning_tree_comparator_polyhedron.cpp)
-target_link_libraries(test_spanning_tree_comparator_polyhedron ${Boost_LIBRARIES})
+target_link_libraries(test_spanning_tree_comparator_polyhedron 
+                      ${Boost_LIBRARIES})
 
 add_test( Test_spanning_tree_comparator_polyhedron
           test_spanning_tree_comparator_polyhedron
@@ -641,7 +642,8 @@ add_executable( test_progressive_comp_decomp_polyhedron
                 test_progressive_comp_decomp_polyhedron.cpp
 				)
 target_link_libraries( test_progressive_comp_decomp_polyhedron
-                       ${draco_LIBRARIES} ${Boost_LIBRARIES}
+                       ${draco_LIBRARIES} 
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                        )
 add_test(Test_progressive_comp_decomp_polyhedron
          test_progressive_comp_decomp_polyhedron

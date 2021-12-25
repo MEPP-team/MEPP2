@@ -74,12 +74,6 @@ public:
   
   bool get_reverse() const { return _reverse; }
   
-  const std::list< bool >& get_source_regions() const { return _source_regions; }
-  std::list< bool >& source_regions() { return _source_regions; }
-    const std::list< bool >& get_target_regions() const { return _target_regions; }
-  std::list< bool >& target_regions() { return _target_regions; }
-  std::map< face_descriptor, bool >& local_regions() { return _local_regions; }
-
   int get_num_collapse() const { return _num_collapse; }
   void set_num_collapse(int nb) { _num_collapse = nb; }
 

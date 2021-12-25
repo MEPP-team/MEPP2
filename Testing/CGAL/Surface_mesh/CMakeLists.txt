@@ -683,7 +683,8 @@ add_test( Test_normalize_vector_map_surfacemesh
 
 #####
 add_executable( test_spanning_tree_comparator_surfacemesh test_spanning_tree_comparator_surfacemesh.cpp)
-target_link_libraries(test_spanning_tree_comparator_surfacemesh ${Boost_LIBRARIES})
+target_link_libraries(test_spanning_tree_comparator_surfacemesh 
+                      ${Boost_LIBRARIES})
 
 add_test( Test_spanning_tree_comparator_surfacemesh
           test_spanning_tree_comparator_surfacemesh
@@ -698,7 +699,8 @@ add_executable( test_progressive_comp_decomp_surfacemesh
                 test_progressive_comp_decomp_surfacemesh.cpp
 				)
 target_link_libraries( test_progressive_comp_decomp_surfacemesh
-                       ${draco_LIBRARIES} ${Boost_LIBRARIES}
+                       ${draco_LIBRARIES} 
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
                        )
 add_test(Test_progressive_comp_decomp_surfacemesh
          test_progressive_comp_decomp_surfacemesh

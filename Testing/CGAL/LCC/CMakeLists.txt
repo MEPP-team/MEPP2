@@ -388,7 +388,8 @@ add_executable( test_progressive_comp_decomp_lcc
                 test_progressive_comp_decomp_lcc.cpp			
 				)
 target_link_libraries( test_progressive_comp_decomp_lcc 
-                       ${draco_LIBRARIES} ${Boost_LIBRARIES} 
+                       ${draco_LIBRARIES} 
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES} 
                        )
 add_test(Test_progressive_comp_decomp_lcc
          test_progressive_comp_decomp_lcc
