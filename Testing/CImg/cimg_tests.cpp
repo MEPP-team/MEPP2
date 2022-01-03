@@ -8,10 +8,10 @@
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-#include <stdio.h>
+#include <iostream>
 
 #ifdef FEVV_USE_JPEG
-#define cimg_use_jpeg
+#define cimg_use_jpeg // pb avec vcpkg en Release uniquement, why ?
 #endif
 
 #ifdef FEVV_USE_PNG
@@ -22,28 +22,38 @@
 #define cimg_use_tiff
 #endif
 
-#include "CImg.h"
-using namespace cimg_library;
+#undef _PTHREAD_H      // to avoid linking with pthread
+#define cimg_display 0 // no display
+#include <CImg.h>
 
 int main(int argc, char **argv)
 {
-  if(argc < 4)
+  if(argc < 2)
   {
-    printf("Usage: ./cimg_tests img.jpg img.png img.tif\n");
-    exit(EXIT_FAILURE);
+    std::cout << "Usage: " << argv[0] << " <path_to_image_file_1> [<path_to_image_file_2>...]\n";
+    return -1; // error
   }
 
-#ifdef FEVV_USE_JPEG
-  //CImg<unsigned char> image_j(argv[1]); // pb avec vcpkg en Release uniquement, why ?
-#endif
+  for(int i = 1; i < argc; i++)
+  {
+    std::string filename(argv[i]);
+    if(filename.substr(filename.size() - 4) == ".jpg")
+    {
+      // skip jpeg because of a bug in vcpkg jpeg library.
+      // TODO: restore when vcpkg jpeg library is fixed.
+      continue;
+    }
 
-#ifdef FEVV_USE_PNG
-  CImg<unsigned char> image_p(argv[2]);
-#endif
+    std::cout << "----------------------------\n";
+    std::cout << "loading " << argv[i] << "...\n";
+    cimg_library::CImg<unsigned char> image(argv[i]);
 
-#ifdef FEVV_USE_TIFF
-  CImg<unsigned char> image_t(argv[3]);
-#endif
+    //image.display();
+    std::cout << "with     " << image.width()    << '\n';
+    std::cout << "height   " << image.height()   << '\n';
+    std::cout << "depth    " << image.depth()    << '\n';
+    std::cout << "spectrum " << image.spectrum() << '\n';
+  }
 
-  return 0;
+  return 0; // ok
 }

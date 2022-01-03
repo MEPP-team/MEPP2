@@ -83,8 +83,10 @@ write_mtl_file(const std::string &mtl_file_name,
           get_file_full_name(material.diffuse_texture_filename);
       mtl_file << "    map_Kd " << texture_filename << std::endl;
 
-      copy_file(material.diffuse_texture_filename,
-                texture_filepath_base + texture_filename);
+      // write texture image to file
+      const auto &img =
+          *(material.images.at(material.diffuse_texture_filename));
+      img.save((texture_filepath_base + texture_filename).c_str());
     }
 
     // Ambient/ambient occlusion map
@@ -94,8 +96,10 @@ write_mtl_file(const std::string &mtl_file_name,
           get_file_full_name(material.ambient_texture_filename);
       mtl_file << "    map_Ka " << texture_filename << std::endl;
 
-      copy_file(material.ambient_texture_filename,
-                texture_filepath_base + texture_filename);
+      // write texture image to file
+      const auto &img =
+          *(material.images.at(material.ambient_texture_filename));
+      img.save((texture_filepath_base + texture_filename).c_str());
     }
 
     // Normal/bump map
@@ -110,8 +114,10 @@ write_mtl_file(const std::string &mtl_file_name,
                << ' ';
       mtl_file << texture_filename << std::endl;
 
-      copy_file(material.normal_map_filename,
-                texture_filepath_base + texture_filename);
+      // write texture image to file
+      const auto &img =
+          *(material.images.at(material.normal_map_filename));
+      img.save((texture_filepath_base + texture_filename).c_str());
     }
 
     if(material.type == Types::MaterialType::MATERIAL_TYPE_PBR)
@@ -123,8 +129,10 @@ write_mtl_file(const std::string &mtl_file_name,
             get_file_full_name(material.metallic_map_filename);
         mtl_file << "    map_Pm " << texture_filename << std::endl;
 
-        copy_file(material.metallic_map_filename,
-                  texture_filepath_base + texture_filename);
+        // write texture image to file
+        const auto &img =
+            *(material.images.at(material.metallic_map_filename));
+        img.save((texture_filepath_base + texture_filename).c_str());
       }
 
       // Roughness map
@@ -134,8 +142,10 @@ write_mtl_file(const std::string &mtl_file_name,
             get_file_full_name(material.roughness_map_filename);
         mtl_file << "    map_Pr " << texture_filename << std::endl;
 
-        copy_file(material.roughness_map_filename,
-                  texture_filepath_base + texture_filename);
+        // write texture image to file
+        const auto &img =
+            *(material.images.at(material.roughness_map_filename));
+        img.save((texture_filepath_base + texture_filename).c_str());
       }
     }
     else
@@ -147,8 +157,10 @@ write_mtl_file(const std::string &mtl_file_name,
             get_file_full_name(material.specular_texture_filename);
         mtl_file << "    map_Ks " << texture_filename << std::endl;
 
-        copy_file(material.specular_texture_filename,
-                  texture_filepath_base + texture_filename);
+        // write texture image to file
+        const auto &img =
+            *(material.images.at(material.specular_texture_filename));
+        img.save((texture_filepath_base + texture_filename).c_str());
       }
 
       // Transparency map
@@ -158,8 +170,10 @@ write_mtl_file(const std::string &mtl_file_name,
             get_file_full_name(material.transparency_texture_filename);
         mtl_file << "    map_d " << texture_filename << std::endl;
 
-        copy_file(material.transparency_texture_filename,
-                  texture_filepath_base + texture_filename);
+        // write texture image to file
+        const auto &img =
+            *(material.images.at(material.transparency_texture_filename));
+        img.save((texture_filepath_base + texture_filename).c_str());
       }
     }
 

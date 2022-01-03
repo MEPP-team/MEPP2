@@ -5,6 +5,7 @@
 #pragma GCC system_header
 #endif //__GNUC__
 
+#pragma push_macro("ERROR")
 #undef ERROR
 
 #include <draco/compression/decode.h>
@@ -25,3 +26,5 @@
 
 #include <draco/attributes/point_attribute.h>
 #include <draco/attributes/geometry_indices.h>
+
+#pragma pop_macro("ERROR")
