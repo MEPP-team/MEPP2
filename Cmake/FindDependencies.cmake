@@ -79,6 +79,12 @@ if( BUILD_USE_AIF )
   add_definitions( -DFEVV_USE_AIF )
 endif()
 
+##### CImg is mandatory for texture image management
+include_directories( "${PROJECT_SOURCE_DIR}/External/CImg/CImg-2.4.2" )
+if( MSVC )
+  set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /IGNORE:4098" )
+endif()
+
 ##### IMG-3RDPARTY libraries finding
 if( BUILD_USE_IMG-3RDPARTY )
   FIND_PACKAGE(JPEG)

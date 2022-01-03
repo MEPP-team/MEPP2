@@ -94,6 +94,12 @@ if ( BUILD_USE_VTK )
 endif()
 ### VTK ###
 
+### CImg related libraries ###
+set( GUILIB_DEMO
+      ${GUILIB_DEMO}
+      ${IMG-3RDPARTY_LIBRARIES} )
+### CImg ###
+
 include_directories( "${MEPP_GUI_INC}" )
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 

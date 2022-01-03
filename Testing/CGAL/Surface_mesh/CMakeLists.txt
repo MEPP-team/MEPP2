@@ -5,6 +5,7 @@ add_executable( test_msdm2
 target_link_libraries( test_msdm2
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test(Test_MSDM2_Cow
          test_msdm2
@@ -21,6 +22,7 @@ add_executable( test_cmdm
 target_link_libraries( test_cmdm
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test(Test_CMDM_Monkey
          test_cmdm
@@ -37,6 +39,7 @@ add_executable( test_jnd
 target_link_libraries( test_jnd
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test(Test_Just_Noticeable_Distortion_Cow
          test_jnd
@@ -46,7 +49,10 @@ add_test(Test_Just_Noticeable_Distortion_Cow
 
 #####
 add_executable( test_surface_mesh test_surface_mesh.cpp )
-target_link_libraries( test_surface_mesh ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries( test_surface_mesh
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(Test_surface_mesh
          test_surface_mesh
          ${TESTING_DATA_DIR}/flat.off
@@ -56,7 +62,9 @@ add_test(Test_surface_mesh
 add_executable( test_euler_add_center_vertex_surfacemesh
                 test_euler_add_center_vertex_surfacemesh.cpp )
 target_link_libraries( test_euler_add_center_vertex_surfacemesh
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test(Euler_add_center_vertex_surfacemesh
          test_euler_add_center_vertex_surfacemesh
          ${TESTING_DATA_DIR}/flat.off
@@ -66,7 +74,9 @@ add_test(Euler_add_center_vertex_surfacemesh
 add_executable( test_calculate_scaling_surfacemesh
                 test_calculate_scaling_surfacemesh.cpp )
 target_link_libraries( test_calculate_scaling_surfacemesh
-                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 add_test( Calculate_scaling_surfacemesh
           test_calculate_scaling_surfacemesh
          ${TESTING_DATA_DIR}/flat.off )
@@ -85,7 +95,9 @@ add_test( Test_geometry_concept_surfacemesh
 add_executable( test_complying_concepts_surfacemesh
   test_complying_concepts_surfacemesh.cpp )
 target_link_libraries( test_complying_concepts_surfacemesh
-  ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES} ${Boost_LIBRARIES} )
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       )
 
 #####
 add_executable( test_smoothing_surfacemesh
@@ -93,6 +105,7 @@ add_executable( test_smoothing_surfacemesh
 target_link_libraries( test_smoothing_surfacemesh
                        ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 add_test( Smoothing_surfacemesh
@@ -106,13 +119,14 @@ add_test( Smoothing_surfacemesh_border
 add_executable( test_curvature_filter_surfacemesh
                 test_curvature_filter_surfacemesh.cpp
                 )
-target_link_libraries(test_curvature_filter_surfacemesh
-                      ${CGAL_LIBRARY}
-                      ${CGAL_3RD_PARTY_LIBRARIES}
-                      ${Boost_LIBRARIES}
-                      ${FBX_LIBRARY}
-                      ${VTK_LIBRARIES}
-                      )
+target_link_libraries( test_curvature_filter_surfacemesh
+                       ${CGAL_LIBRARY}
+                       ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES}
+                       ${FBX_LIBRARY}
+                       ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
+                       )
 
 #####
 add_executable( test_generic_writer_surfacemesh
@@ -120,6 +134,7 @@ add_executable( test_generic_writer_surfacemesh
 				)
 target_link_libraries( test_generic_writer_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/surfacemesh)
@@ -132,7 +147,7 @@ add_test( Generic_writer_surfacemesh_obj_with_vertex-normals_and_vertex-color
 add_test( Generic_writer_surfacemesh_obj_with_vertex-normals_and_vertex-texture
           test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/CubeTriangleFacesWithVertexNormalsAndTexture.obj  surfacemesh/test_generic_writer_obj_with_vertex-normals_and_vertex-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/CubeTriangleFacesWithVertexNormalsAndTexture.writer-output.obj.ref)
 add_test( Generic_writer_surfacemesh_obj_with_halfedge-texture
-          test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/textures/usb/usb.obj  surfacemesh/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
+          test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/textures/kip/kip.obj  surfacemesh/test_generic_writer_obj_with_halfedge-texture.obj  ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref)
 add_test( Generic_writer_surfacemesh_off_flat
           test_generic_writer_surfacemesh  ${TESTING_DATA_DIR}/flat.off  surfacemesh/test_generic_writer_off_flat.off  ${TESTING_DATA_DIR}/flat.off)
 add_test( Generic_writer_surfacemesh_off_aircraft
@@ -154,6 +169,7 @@ add_executable( test_compression_valence_surfacemesh
 				)
 target_link_libraries( test_compression_valence_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_COMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -366,6 +382,7 @@ add_executable( test_decompression_valence_surfacemesh
 				)
 target_link_libraries( test_decompression_valence_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 
 set(TEST_DECOMPRESSION_VALENCE_TOLERANCE 2e-5)
@@ -626,6 +643,7 @@ add_executable( test_copy_graph_surfacemesh
 				)
 target_link_libraries( test_copy_graph_surfacemesh
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
 add_test( Test_copy_graph_surfacemesh_off_aircraft
           test_copy_graph_surfacemesh
@@ -653,7 +671,7 @@ add_test( Test_copy_graph_surfacemesh_obj_with_vertex-normals_and_vertex-texture
           )
 add_test( Test_copy_graph_surfacemesh_obj_with_halfedge-texture
           test_copy_graph_surfacemesh
-          ${TESTING_DATA_DIR}/textures/usb/usb.obj
+          ${TESTING_DATA_DIR}/textures/kip/kip.obj
           test_copy_graph_obj_with_halfedge-texture.obj
           ${TESTING_REFOUTPUT_DIR}/Generic/textures/usb/usb.writer-output.obj.ref
           )

@@ -28,4 +28,14 @@ add_executable( helloworld_filter_openmesh
 target_link_libraries( helloworld_filter_openmesh
                        ${OPENMESH_LIBRARIES}
                        ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
+                       )
+
+#####
+add_executable( texture_image_demo_filter_openmesh
+                texture_image_demo_filter_openmesh.cpp )
+target_link_libraries( texture_image_demo_filter_openmesh
+                       ${OPENMESH_LIBRARIES}
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
                        )
