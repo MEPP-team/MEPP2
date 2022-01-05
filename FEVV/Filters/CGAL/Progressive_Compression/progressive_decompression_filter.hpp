@@ -19,16 +19,14 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Butterfly.h"
 
 
-/**
- * \brief Refer \ref progressive_decompression_filter
- * Takes a binary file as an input, will decode the coarse mesh, the 
- * compression settings and refine the mesh until the end of file is reached. 
- * The final mesh will be saved in progressive_decompressionFilterOutput.obj
- */
 namespace FEVV {
 namespace Filters {
 
-
+/**
+ * \brief  Takes a binary file as an input, will decode the coarse mesh, the 
+ * compression settings and refine the mesh until the end of file is reached. 
+ * The final mesh will be saved in progressive_decompressionFilterOutput.obj
+ */
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,

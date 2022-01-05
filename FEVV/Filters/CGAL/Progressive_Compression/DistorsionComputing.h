@@ -3,7 +3,7 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/BatchCollapser.h"
-#include "FEVV/Filters/CGAL/geometric_metrics.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/preprocessingLD.h"

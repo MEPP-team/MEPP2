@@ -13,18 +13,12 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/DeltaPredictor.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/HeaderHandler.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/BinaryBatchEncoder.h"
-#include "FEVV/Filters/CGAL/geometric_metrics.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/preprocessingLD.h"
 #include "FEVV/Filters/Generic/minmax_map.h"
 #include "FEVV/Filters/Generic/color_mesh.h"
-
-/**
- * \brief Refer \ref progressive_compression_filter 
- * Simplifies a mesh and encodes the necessary information to restore it to its
- * original state.
- */
 
 template< typename HalfedgeGraph,
           typename PointMap,
@@ -49,9 +43,14 @@ preprocess_mesh(
  
   preprocess.process_mesh_after_quantization();
 }
-// For a given mesh g, applies batches of simplification until either the 
-// number of max batches or the minimum number of vertices is reached.  After 
-// that, encodes the coarse mesh and the refinement data to a binary file
+/**
+ * \brief Simplifies a mesh and encodes the necessary information to restore it to its
+ * original state.
+ *
+ * For a given mesh g, applies batches of simplification until either the 
+ * number of max batches or the minimum number of vertices is reached.  After 
+ * that, encodes the coarse mesh and the refinement data to a binary file.
+ */
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,

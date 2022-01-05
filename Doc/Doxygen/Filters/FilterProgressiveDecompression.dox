@@ -1,0 +1,36 @@
+/**
+
+@page FilterProgressiveDecompression  Progressive Decompression Filter
+
+
+@section FilterProgressiveDecompressionOverviewSection       Overview
+
+The Progressive Decompression filter decompresses a binary file produced by the @ref FilterProgressiveCompression. \n
+
+For the time being, it can only decompress all the levels of details (LoDs) contained in the binary file. 
+
+@section FilterProgressiveDecompressionParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Mesh | Mesh to decode. |
+| Point map | Point map which associated vertices to their positions. |
+| Vertex color map | Vertex color map used for debugging. |
+| Edge color map | Edge color map used for debugging. |
+| Geometry trait | Geometry trait object to apply geometry-based operations. |
+| Inpute file name | Name of the (binary) file to decompress. |
+| Dequantize | Dequantize is a boolean, when true apply a vertex position dequantization after decoding termination. |
+
+@section FilterProgressiveDecompressionDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC, OpenMesh. AIF is not yet supported.
+
+@section FilterProgressiveDecompressionRestrictionsSection   Restrictions
+
+Applies to manifold triangular meshes only.
+
+@section FilterProgressiveDecompressionReferencesSection     References
+
+See @ref FilterProgressiveCompression.
+
+*/

@@ -24,7 +24,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/HeaderHandler.h"
 
-#include "FEVV/Filters/CGAL/geometric_metrics.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
 
 #include <iostream>
 #include <fstream>
