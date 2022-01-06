@@ -1,6 +1,15 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
-//#include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
 #include "FEVV/Filters/CGAL/Surface_mesh/Progressive_Compression_ld/progressive_decompression_filter.hpp"
@@ -29,7 +38,6 @@ progressive_decompression_main(int argc, const char **argv)
   // read mesh from file
   MeshT m;
   FEVV::PMapsContainer pmaps_bag;
-  //FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
 
   // Note: the property maps must be extracted from the
   //       property maps bag, and explicitely passed as

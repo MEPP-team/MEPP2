@@ -1,3 +1,14 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
 
 #include "FEVV/Wrappings/Geometry_traits.h"
@@ -55,14 +66,12 @@ template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,
           typename EdgeColorMap,
-          //typename VertexNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
 progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                PointMap &pm, /// Vertex positions property map
                                VertexColorMap &v_cm, /// Vertex colors property map
                                EdgeColorMap &e_cm, /// Edge colors property map
-                               //VertexNormalMap &/*v_nm*/, /// Vertex normals property map
                                const GeometryTraits &gt, /// Geometry trait object
                                const FEVV::Filters::Parameters &params, /// Progressive compression parameters 
                                const std::string &output_path, /// needed by paths automatically set (e.g. measure_path,
@@ -439,14 +448,12 @@ template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,
           typename EdgeColorMap,
-          //typename VertexNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
 progressive_compression_filter(HalfedgeGraph &g, /// input mesh
                                PointMap &pm, /// its vertex position map
                                VertexColorMap &v_cm, /// its vertex color map
                                EdgeColorMap &e_cm, /// its edge color map
-                               //VertexNormalMap &v_nm, /// its vertex normal map
                                const FEVV::Filters::Parameters &params, /// input progressive compression param
                                const std::string &output_path,
                                std::string &binary_path,

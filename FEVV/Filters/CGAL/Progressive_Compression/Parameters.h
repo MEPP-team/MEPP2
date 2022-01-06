@@ -1,9 +1,17 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
-#ifndef PARAMETERS_CPP
-#define PARAMETERS_CPP
+
 #include <iostream>
-
-
 
 namespace FEVV {
 namespace Filters {
@@ -141,48 +149,5 @@ public:
   }
 };
 
-// FEVV::Filters::PREDICTION_TYPE
-// StringToPredictionType(std::string prediction)
-//{
-//  if(prediction.compare("position") == 0)
-//    return PREDICTION_TYPE::POSITION;
-//  if(prediction.compare("delta") == 0)
-//    return PREDICTION_TYPE::DELTA;
-//  if(prediction.compare("barycentre_predictor") == 0)
-//    return PREDICTION_TYPE::BARYCENTER_PREDICTOR;
-//  if(prediction.compare("barycentre") == 0)
-//    return PREDICTION_TYPE::BARYCENTER;
-//  if(prediction.compare("simple_barycentre_half_ring") == 0)
-//    return PREDICTION_TYPE::HALFRING;
-//  if(prediction.compare("butterfly") == 0)
-//    return PREDICTION_TYPE::BUTTERFLY;
-//  return PREDICTION_TYPE::BUTTERFLY; // cas par défaut
-//}
-//
-// FEVV::Filters::VKEPT_POSITION
-// StringToVkept(std::string vkept)
-//{
-//  if(vkept.compare("halfedge") == 0)
-//    return VKEPT_POSITION::HALFEDGE;
-//  if(vkept.compare("midpoint") == 0)
-//    return VKEPT_POSITION::MIDPOINT;
-//  if(vkept.compare("fulledge") == 0)
-//    return VKEPT_POSITION::FULLEDGE;
-//  return VKEPT_POSITION::MIDPOINT;
-//}
-// FEVV::Filters::METRIC_TYPE
-// StringToMetricType(std::string metric)
-//{
-//  if(metric.compare("qem") == 0)
-//    return METRIC_TYPE::QEM;
-//  if(metric.compare("no_metric") == 0)
-//    return METRIC_TYPE::NO_METRIC;
-//  if(metric.compare("edge_length") == 0)
-//    return METRIC_TYPE::EDGE_LENGTH;
-//  if(metric.compare("volume_preserving") == 0)
-//    return METRIC_TYPE::VOLUME_PRESERVING;
-//  return METRIC_TYPE::NO_METRIC;
-//}
 } // namespace Filters
 } // namespace FEVV
-#endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2019 University of Lyon and CNRS (France).
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify

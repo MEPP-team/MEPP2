@@ -1,3 +1,14 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
 
 #include <boost/graph/graph_traits.hpp>
@@ -41,9 +52,7 @@ private:
 
   Point _pos_v_removed;
 
-  bool _reverse; // bit de reverse: doit-on inverser les deux résiduels ou pas?
-                 // (avec le tri topologique plutôt que géométrique, plus rapide
-                 // de le stocker que de le recalculer)
+  bool _reverse; // reverse the delta or not
 
   Point _pos_vkept; /// used to store the initial position of vkept in case we
                     /// choose midpoint placement

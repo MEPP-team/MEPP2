@@ -1,3 +1,14 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
 
 #include <boost/graph/graph_traits.hpp>
@@ -126,10 +137,9 @@ namespace FEVV {
 					}
 				
 					//_quantization_step = _max_length.first /( pow(2.0, _nb_bits) - 1);
-          _quantization_step = _max_length.first / pow(2.0, _nb_bits);
+                    _quantization_step = _max_length.first / pow(2.0, _nb_bits);
 					///std::cout << "max length : " << _max_length.first << std::endl;
 					///std::cout << _quantization_step << std::endl;
-
 				}
 
 				double get_quantization_step() const { return _quantization_step; }
@@ -137,8 +147,7 @@ namespace FEVV {
 
 				void point_quantization()
 				{
-					
-          Geometry gt(_g);
+                    Geometry gt(_g);
 					double p_min_x = gt.get_x(_p_min);
 					double p_min_y = gt.get_y(_p_min);
 					double p_min_z = gt.get_z(_p_min);
@@ -160,7 +169,7 @@ namespace FEVV {
 							pq_y = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 						uint32_t pq_z = static_cast<uint32_t>(round((pz - p_min_z) / _quantization_step));
 						if( pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
-              pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
+                            pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 
 						Point new_position = Point(pq_x, pq_y, pq_z);
 						//std::cout << new_position << std::endl;
@@ -201,8 +210,7 @@ namespace FEVV {
 
 				std::vector<double> get_bb_dimension() const
 				{
-          Geometry gt(_g);
-
+                    Geometry gt(_g);
 					double l = gt.length(_bb.vl);
 					double p = gt.length(_bb.vp);
 					double h = gt.length(_bb.vh);
@@ -213,7 +221,7 @@ namespace FEVV {
 
 				std::vector<double> get_init_coord() const
 				{
-          Geometry gt(_g);
+                    Geometry gt(_g);
 					double x = gt.get_x(_p_min);
 					double y = gt.get_y(_p_min);
 					double z = gt.get_z(_p_min);

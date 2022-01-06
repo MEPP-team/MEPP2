@@ -1,3 +1,14 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
 
 #include <boost/graph/graph_traits.hpp>
@@ -288,15 +299,6 @@ public:
     ref_settings.set_bitMask(spanningtree); // set vertex to split bitmask
     ref_settings.set_error_prediction();
     ref_settings.set_reverse_bool();
-    /*auto sizes = ref_settings.get_sizes_neighbourhoods();
-    std::ofstream size_output_file;
-    size_output_file.open("C:/Users/ldubouch/Documents/TestHeader/sizes" +
-                          std::to_string(_batch_id) + ".txt");
-    for(size_t i = 0; i < sizes.size(); i++)
-    {
-      size_output_file << sizes[i] << std::endl;
-    }
-    size_output_file.close();*/
     _refinements.push_back(ref_settings);
 #ifdef _DEBUG
     std::cout << "batch nb " << _batch_id << " done" << std::endl;
@@ -362,7 +364,6 @@ public:
 
         Vector face_normal, face_normal_after_collapse;
         // get the normal of the current face
-        // DBOUT("face normal ");
         // check if the current face is not null
         bool b = FEVV::Math::Vector::are_collinear< Geometry >(
             _gt.sub_p(p0, p1), _gt.sub_p(pvertex, p1));
@@ -382,8 +383,7 @@ public:
           // return false;
         }
         // simulation of the new face after collapse and check if its
-        // normal has the same sign DBOUT( " face normal after collapse
-        // ");
+        // normal has the same sign 
         auto cross = _gt.cross_product(p0 - p1, p0 - pos_vkept);
         if(cross != Vector(0, 0, 0))
         {

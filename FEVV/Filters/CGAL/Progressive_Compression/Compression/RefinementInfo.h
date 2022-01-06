@@ -1,3 +1,14 @@
+// Copyright (c) 2012-2022 University of Lyon and CNRS (France).
+// All rights reserved.
+//
+// This file is part of MEPP2; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 3 of
+// the License, or (at your option) any later version.
+//
+// This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+// WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
 #pragma once
 
 #pragma push_macro("ERROR")
@@ -54,7 +65,7 @@ public:
     return static_cast< int >(nb_vertices);
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   /// Creates a vertex bitmask according to a vertex spanning tree and 
   /// a list of CollapseInfo objects (initialized at construction).
   void set_bitMask(
@@ -138,21 +149,9 @@ public:
                               list_memory, 
                               _connectivity, 
                               st 
-                              //, neighbours_bitmasks
                               );
   }
   
-  //std::vector< int > get_sizes_neighbourhoods() const 
-  //{
-  //  std::vector< int > sizes;
-  //  size_t i = 0, nbe = neighbours_bitmasks.size();
-  //  for( ; i < nbe; ++i)
-  //  {
-  //    sizes.push_back(static_cast< int >(neighbours_bitmasks[i].size()));
-  //  }
-  //  return sizes;
-  //}
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   void set_error_prediction()
   {
@@ -199,7 +198,6 @@ private:
   std::list< bool > _connectivity; /// edge bit mask (which incident edge to a 
                                    /// vertex to split is a pivot edge to expand)
   std::list< bool > _other_info_bits;
-  //std::vector< std::vector< bool > > neighbours_bitmasks;
   std::list< std::vector< Vector > > _error_prediction;
   std::list< bool > _reverse_bool;
 };
