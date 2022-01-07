@@ -32,6 +32,8 @@ linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  rules:
+    - !reference [.no-linux_rules, rules]
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -41,6 +43,8 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  rules:
+    - !reference [.no-linux_rules, rules]
   tags:
     - MEPP2,linux,18.04LTS
   script:
@@ -168,6 +172,8 @@ win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 ###########################################################
 #
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  rules:
+    - !reference [.no-linux_rules, rules]  
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -177,6 +183,8 @@ linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  rules:
+    - !reference [.no-linux_rules, rules]
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -330,6 +338,8 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
+  rules:
+    - !reference [.no-linux_rules, rules]
   tags:
     - MEPP2,linux,18.04LTS
   script:
