@@ -47,6 +47,7 @@
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
