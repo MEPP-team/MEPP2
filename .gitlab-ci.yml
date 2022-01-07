@@ -16,6 +16,12 @@
       when: never
     - when: always
 
+.no-doc_rules:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-doc|no-doc ci)]/
+      when: never
+    - when: always
+
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
@@ -514,6 +520,8 @@ osx - Release - QT5 - CONF3 (ALL):
 #####################
 #
 DOC - osx [Release - QT5 - CONF3 (ALL)]:
+  rules:
+    - !reference [.no-doc_rules, rules]
   tags:
     - MEPP2,osx,Mojave # not MojaveVM for the documentation (because of rsync)
   script:
