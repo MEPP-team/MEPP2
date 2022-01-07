@@ -10,3 +10,5 @@ include( "${CMAKE_CURRENT_LIST_DIR}/PointCloudCurvature/point_cloud_curvature.cm
 include( "${CMAKE_CURRENT_LIST_DIR}/scaling/scaling.cmake" )
 include( "${CMAKE_CURRENT_LIST_DIR}/weightedPCA/weightedPCA.cmake" )
 include( "${CMAKE_CURRENT_LIST_DIR}/CMDM/cmdm.cmake" )
+include( "${CMAKE_CURRENT_LIST_DIR}/ProgressiveCompression/progressivecompression.cmake" )
+include( "${CMAKE_CURRENT_LIST_DIR}/ProgressiveDecompression/progressivedecompression.cmake" )

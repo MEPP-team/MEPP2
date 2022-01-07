@@ -698,3 +698,30 @@ target_link_libraries( test_normalize_vector_map_surfacemesh
 add_test( Test_normalize_vector_map_surfacemesh
           test_normalize_vector_map_surfacemesh
           )
+
+#####
+add_executable( test_spanning_tree_comparator_surfacemesh test_spanning_tree_comparator_surfacemesh.cpp)
+target_link_libraries(test_spanning_tree_comparator_surfacemesh 
+                      ${Boost_LIBRARIES})
+
+add_test( Test_spanning_tree_comparator_surfacemesh
+          test_spanning_tree_comparator_surfacemesh
+         ${TESTING_DATA_DIR}/flat.off )	    
+#####
+
+if( NOT BUILD_USE_DRACO OR NOT draco_FOUND )
+  return()
+endif()
+
+add_executable( test_progressive_comp_decomp_surfacemesh
+                test_progressive_comp_decomp_surfacemesh.cpp
+				)
+target_link_libraries( test_progressive_comp_decomp_surfacemesh
+                       ${draco_LIBRARIES} 
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+					   ${IMG-3RDPARTY_LIBRARIES}
+                       )
+add_test(Test_progressive_comp_decomp_surfacemesh
+         test_progressive_comp_decomp_surfacemesh
+         ${TESTING_DATA_DIR}/flat.off
+         )

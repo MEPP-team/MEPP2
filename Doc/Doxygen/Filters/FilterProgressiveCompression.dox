@@ -1,0 +1,56 @@
+/**
+
+@page FilterProgressiveCompression  Progressive Compression Filter
+
+
+@section FilterProgressiveCompressionOverviewSection       Overview
+
+ The Progressive Compression filter implements the paper
+ "Compressed Progressive Meshes, Pajarola and Rossignac, IEEE Transactions on Visualization and 
+ Computer Graphics (2000)" with minor differences. \n
+ The progressive compression method simplifies iteratively the input mesh to
+ generate differents levels of details (LoDs). \n
+ These LoDs can then be transmitted progressively in a coarse-to-fine way at the
+ decompression. \n
+ The methods uses a fixed quantization for vertex coordinates. \n \n
+
+ See the @ref FilterProgressiveDecompression for the decompression step.
+
+@section FilterProgressiveCompressionParametersSection     Parameters
+
+| Parameter | Description |
+|---------------------------|---------------------------|
+| Mesh | Mesh to encode. |
+| Point map | Point map which associated vertices to their positions. |
+| Vertex color map | Vertex color map used for debugging. |
+| Edge color map | Edge color map used for debugging. |
+| Geometry trait | Geometry trait object to apply geometry-based operations. |
+| Parameters | Parameters are the progressive compression parameters. |
+| Output path | Output path is needed to generate measure path and binary path (when set to ""). |
+| Binary path | Binary path i the name of the output (binary) file. It is either set by the user or automatically set using output path, predictor, metric, keptposition and quantization information. |
+| Nb max batches | Maximum number of batches to apply to get the final (the coarsest) mesh. |
+| Nb min vertices | Minimum number that the final (the coarsest) mesh must have. |
+| Batch condition | Batch condition (stopping criterion) must be either ALL_EDGES or REACH_THRESHOLD. |
+| Preprocess | Preprocess is a boolean, when true removes isolated vertices and edges and then remove vertex position duplicates. |
+| Dequantif | Dequantif is a boolean, when true apply a vertex position dequantization after encoding termination. |
+| Save preprocess | Save proprocess is a boolean, when true save a mesh after te proprocess step and before the encoding starts. |                              
+| Output file path save preprocess | Output file path save preprocess is the file name given to the mesh saved when Save proprocess is true. |
+
+@section FilterProgressiveCompressionDataStructuresSection Supported data structures
+
+The supported data structures are: CGAL Polyhedron3, CGAL Surface_mesh, CGAL LCC. OpenMesh and AIF are not yet supported.
+
+@section FilterProgressiveCompressionRestrictionsSection   Restrictions
+
+Applies to manifold triangular meshes only.
+
+@section FilterProgressiveCompressionReferencesSection     References
+
+@subsection Progressive compression
+R. Pajarola, J. Rossignac, \n
+Compressed progressive meshes, \n
+IEEE Transactions on Visualization and Computer Graphics, 2000.
+\n
+\n
+
+*/
