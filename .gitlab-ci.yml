@@ -20,7 +20,7 @@
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-doc|no-doc ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-dock-lin_rules:
   rules:
@@ -38,7 +38,7 @@
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-all|no-all ci)]/
       when: never
-    - when: always
+#    - when: always
 
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
