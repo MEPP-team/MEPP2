@@ -59,6 +59,7 @@ linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FB
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -70,6 +71,7 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,18.04LTS
   script:
@@ -207,6 +209,7 @@ win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -218,6 +221,7 @@ linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -386,6 +390,7 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
   rules:
     - !reference [.no-linux_rules, rules]
     - !reference [.no-all_rules, rules]
+    - when: always
   tags:
     - MEPP2,linux,18.04LTS
   script:
