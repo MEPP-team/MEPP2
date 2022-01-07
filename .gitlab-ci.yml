@@ -2,19 +2,19 @@
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-linux|no-linux ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-osx_rules:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-osx|no-osx ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-win_rules:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-win|no-win ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-doc_rules:
   rules:
@@ -26,13 +26,13 @@
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-dock-lin|no-dock-lin ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-dock-win_rules:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-dock-win|no-dock-win ci)]/
       when: never
-    - when: always
+#    - when: always
 
 .no-all_rules:
   rules:
