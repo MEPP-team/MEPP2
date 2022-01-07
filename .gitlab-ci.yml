@@ -709,6 +709,8 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 ########################################
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
@@ -720,6 +722,8 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
       - build/Visualization/Applications/Release
 
 .windows_build_template_0x - MSBuild - Debug - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-debug
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
@@ -728,6 +732,8 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - ctest -j 3 --output-on-failure
 
 .windows_build_template_0x - MSBuild - Release - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-release
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
@@ -739,6 +745,8 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
       - build/Visualization/Applications/Release
 
 .windows_build_template_0x - MSBuild - Debug - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-debug
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
@@ -774,6 +782,8 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
   <<: *windows_build_definition_0x-powershell-qt4-debug
 #
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - $env:VCPKG='YES'
@@ -783,6 +793,8 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
     - ctest -j 3 --output-on-failure
 
 .windows_build_template_1x - MSBuild - Debug - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-debug
+  rules:
+    - !reference [.no-dock-win_rules, rules]
   script:
     - $env:DOCKER_RUN='YES'
     - $env:VCPKG='YES'
