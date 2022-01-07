@@ -1,8 +1,28 @@
+.no-linux_rules:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-linux|no-linux ci)]/
+      when: never
+    - when: always
+
+.no-osx_rules:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-osx|no-osx ci)]/
+      when: never
+    - when: always
+
+.no-win_rules:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-win|no-win ci)]/
+      when: never
+    - when: always
+
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
 #
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  rules:
+    - !reference [.no-linux_rules, rules]
   tags:
     - MEPP2,linux,20.04LTS
   script:
@@ -64,6 +84,8 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
 #    - ctest -j 3 --output-on-failure
 
 osx - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-osx_rules, rules]
   tags:
     - MEPP2,osx,MojaveVM
   script:
@@ -84,6 +106,8 @@ osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - ctest -j 3 --output-on-failure
 
 win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2015
   script:
