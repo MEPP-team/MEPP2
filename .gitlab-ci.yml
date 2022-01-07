@@ -128,6 +128,8 @@ win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]  
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -142,6 +144,8 @@ win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -156,6 +160,8 @@ win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -264,6 +270,8 @@ osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - ctest -j 3 --output-on-failure
 
 win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -278,6 +286,8 @@ win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -292,6 +302,8 @@ win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -306,6 +318,8 @@ win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+  rules:
+    - !reference [.no-win_rules, rules]
   tags:
     - MEPP2,windows,VS2017
   script:
