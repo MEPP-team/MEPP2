@@ -1,7 +1,7 @@
 #
-############################################################################
-# RULES (no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all) #
-############################################################################
+###############################################################################
+# RULES (no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all-on) #
+###############################################################################
 #
 .no-linux_rules:
   rules:
@@ -39,9 +39,9 @@
       when: never
 #    - when: always
 
-.no-all_rules:
+.no-all-on_rules:
   rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-all|no-all ci)]/
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-all-on|no-all-on ci)]/
       when: never
 #    - when: always
 
@@ -406,7 +406,7 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
   rules:
     - !reference [.no-linux_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   tags:
     - MEPP2,linux,18.04LTS
@@ -465,7 +465,7 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
 osx - Release - QT5 - CONF3 (ALL):
   rules:
     - !reference [.no-osx_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   tags:
     - MEPP2,osx,MojaveVM
@@ -566,7 +566,7 @@ osx - Release - QT5 - CONF3 (ALL):
 DOC - osx [Release - QT5 - CONF3 (ALL)]:
   rules:
     - !reference [.no-doc_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   tags:
     - MEPP2,osx,Mojave # not MojaveVM for the documentation (because of rsync)
@@ -584,7 +584,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - mkdir build; cd build
@@ -598,7 +598,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_0x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt5-release
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - mkdir build; cd build
@@ -609,7 +609,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_0x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_0x-clang-qt5-debug
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CXX=clang++ CC=clang
@@ -657,7 +657,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_50-pcl_110
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.0.4"
@@ -670,7 +670,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.1.3"
@@ -684,7 +684,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
@@ -697,7 +697,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
@@ -711,7 +711,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
   rules:
     - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
@@ -761,7 +761,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
@@ -776,7 +776,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 .windows_build_template_0x - MSBuild - Debug - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-debug
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
@@ -788,7 +788,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 .windows_build_template_0x - MSBuild - Release - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-release
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
@@ -803,7 +803,7 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 .windows_build_template_0x - MSBuild - Debug - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-debug
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
@@ -842,7 +842,7 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
@@ -855,7 +855,7 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
 .windows_build_template_1x - MSBuild - Debug - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-debug
   rules:
     - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all_rules, rules]
+    - !reference [.no-all-on_rules, rules]
     - when: always
   script:
     - $env:DOCKER_RUN='YES'
