@@ -1,18 +1,8 @@
 #
 ########################################################################################
-# RULES (no-gui - no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all-on) #
+# RULES (no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all-on - no-gui) #
 ########################################################################################
 #
-variables:
-  GUI: "ON"
-
-.no-gui_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
-      variables:
-        GUI: "OFF"
-#    - when: always
-
 .no-linux_rules:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-linux|no-linux ci)]/
@@ -84,9 +74,13 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+  variables:
+    GUI: "ON"
   rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
+      variables:
+        GUI: "OFF"
     - !reference [.no-linux_rules, rules]
-    - !reference [.no-gui_rules, rules]
     - when: always
   tags:
     - MEPP2,linux,18.04LTS
@@ -415,10 +409,14 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
+  variables:
+    GUI: "ON"
   rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
+      variables:
+        GUI: "OFF"
     - !reference [.no-linux_rules, rules]
     - !reference [.no-all-on_rules, rules]
-    - !reference [.no-gui_rules, rules]
     - when: always
   tags:
     - MEPP2,linux,18.04LTS
