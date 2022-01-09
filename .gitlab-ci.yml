@@ -11,6 +11,7 @@ workflow:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
       variables:
         GUI: "OFF"
+    - when: always
 
 .no-linux_rules:
   rules:
