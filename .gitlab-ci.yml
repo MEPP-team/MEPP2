@@ -1,17 +1,17 @@
 #
-###############################################################################
-# RULES (no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all-on) #
-###############################################################################
+########################################################################################
+# RULES (no-gui - no-linux/no-osx/no-win/no-doc - no-dock-lin/no-dock-win - no-all-on) #
+########################################################################################
 #
 variables:
   GUI: "ON"
 
-workflow:
+.no-gui_rules:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
       variables:
         GUI: "OFF"
-    - when: always # TMP
+#    - when: always
 
 .no-linux_rules:
   rules:
@@ -86,6 +86,7 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
   rules:
     - !reference [.no-linux_rules, rules]
+    - !reference [.no-gui_rules, rules]
     - when: always
   tags:
     - MEPP2,linux,18.04LTS
@@ -417,6 +418,7 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
   rules:
     - !reference [.no-linux_rules, rules]
     - !reference [.no-all-on_rules, rules]
+    - !reference [.no-gui_rules, rules]
     - when: always
   tags:
     - MEPP2,linux,18.04LTS
