@@ -4,13 +4,13 @@
 ##########################################################################################
 #
 variables:
-  GUI: "ON"
+  GUI: 'ON'
 
 workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
       variables:
-        GUI: "OFF"
+        GUI: 'OFF'
     - when: always
 
 .no-all-on_rules:
