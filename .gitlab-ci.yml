@@ -5,7 +5,7 @@
 #
 variables:
   GUI: "ON"
-
+#
 workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
