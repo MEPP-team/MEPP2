@@ -98,6 +98,9 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
@@ -109,6 +112,9 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -120,6 +126,9 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -253,6 +262,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 # Broken because of CGAL 5.2.1
 #linux - 18.04LTS [Debug - CLANG - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,18.04LTS
 #  script:
@@ -264,6 +276,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
@@ -275,6 +290,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -286,6 +304,9 @@ linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRAC
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -395,6 +416,10 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #
 # Reduce the time 4
 #linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF3 (ALL)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
@@ -405,6 +430,10 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 
 # Reduce the time 4
 #linux - GCC_20.04LTS [Release - GCC - QT5 - CONF3 (ALL)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
@@ -429,6 +458,10 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF3 (ALL)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
@@ -440,6 +473,10 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -451,6 +488,10 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -462,6 +503,10 @@ linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
 
 # Reduce the time 5
 #osx - Debug - QT5 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-osx_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
@@ -488,6 +533,10 @@ osx - Release - QT5 - CONF3 (ALL):
 
 # Reduce the time 6
 #win2015 - Debug - QT4 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-win_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2015
 #  script:
@@ -503,6 +552,10 @@ osx - Release - QT5 - CONF3 (ALL):
 
 # Reduce the time 6
 #win2015 - Release - QT4 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-win_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2015
 #  script:
@@ -518,6 +571,10 @@ osx - Release - QT5 - CONF3 (ALL):
 
 # Reduce the time 6
 #win2017 - Debug - QT5 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-win_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2017
 #  script:
@@ -533,6 +590,10 @@ osx - Release - QT5 - CONF3 (ALL):
 
 # Reduce the time 6
 #win2017 - Release - QT5 - CONF3 (ALL):
+#  rules:
+#    - !reference [.no-win_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2017
 #  script:
@@ -551,6 +612,10 @@ osx - Release - QT5 - CONF3 (ALL):
 ################################################################
 #
 #linux - 16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,16.04LTS
 #  script:
@@ -561,6 +626,10 @@ osx - Release - QT5 - CONF3 (ALL):
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 #linux - 16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
+#  rules:
+#    - !reference [.no-linux_rules, rules]
+#    - !reference [.no-all-on_rules, rules]
+#    - when: always
 #  tags:
 #    - MEPP2,linux,16.04LTS
 #  script:
