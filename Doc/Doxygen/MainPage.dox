@@ -16,10 +16,10 @@
      - \ref FilterJND                   "JND"
      - \ref FilterMSDM2                 "MSDM2"
      - \ref FilterPointCloudCurvature   "Point Cloud Curvature"
+     - \ref FilterProgressiveCompression    "Progressive Compression Filter"
+     - \ref FilterProgressiveDecompression  "Progressive Decompression Filter"
      - \ref FilterScaling               "Scaling"
      - \ref FilterWeightedPCA           "Weighted PCA"
-     - \ref FilterProgressiveCompression  "Progressive Compression Filter"
-     - \ref FilterProgressiveDecompression  "Progressive Decompression Filter"	 
  - For the developer
    - \ref DevelopersInceptionPage    "Add a new mesh processing filter"
    - \ref CategorizedExamplesPage    "A mesh processing filter example"
