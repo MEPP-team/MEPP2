@@ -1,173 +1,89 @@
-#
-#####################################################################################################################################################
-# RULES (available options: [ci no-gui] - [ci no-all-on] - [ci no-doc] - [ci no-linux]/[ci no-osx]/[ci no-win] - [ci no-dock-lin]/[ci no-dock-win]) #
-#####################################################################################################################################################
-#
-variables:
-  GUI: "ON"
-#
-workflow:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-gui|no-gui ci)]/
-      variables:
-        GUI: "OFF"
-    - when: always
-
-.no-all-on_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-all-on|no-all-on ci)]/
-      when: never
-#    - when: always
-
-.no-doc_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-doc|no-doc ci)]/
-      when: never
-#    - when: always
-
-.no-linux_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-linux|no-linux ci)]/
-      when: never
-#    - when: always
-
-.no-osx_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-osx|no-osx ci)]/
-      when: never
-#    - when: always
-
-.no-win_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-win|no-win ci)]/
-      when: never
-#    - when: always
-
-.no-dock-lin_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-dock-lin|no-dock-lin ci)]/
-      when: never
-#    - when: always
-
-.no-dock-win_rules:
-  rules:
-    - if: $CI_COMMIT_MESSAGE =~ /\[(ci no-dock-win|no-dock-win ci)]/
-      when: never
-#    - when: always
-
 ###################################################################
 # CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF) - 12 configs #
 ###################################################################
 #
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,18.04LTS
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
 #    - export CXX=clang++ CC=clang
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - ctest -j 3 --output-on-failure
 
 osx - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-osx_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,MojaveVM
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - ctest -j 3 --output-on-failure
 
 osx - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-osx_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,MojaveVM
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - ctest -j 3 --output-on-failure
 
 win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -176,15 +92,12 @@ win2015 - Debug - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -193,15 +106,12 @@ win2015 - Release - QT4 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -210,15 +120,12 @@ win2017 - Debug - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -227,7 +134,7 @@ win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=OFF -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
@@ -237,115 +144,88 @@ win2017 - Release - QT5 - CONF1 (OPENMESH/AIF=OFF and PCL/VTK/FBX/DRACO=OFF):
 ###########################################################
 #
 linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - GCC_20.04LTS [Release - GCC - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,20.04LTS
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # Broken because of CGAL 5.2.1
 #linux - 18.04LTS [Debug - CLANG - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,18.04LTS
 #  script:
 #    - export CXX=clang++ CC=clang
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
 #    - export CXX=clang++ CC=clang
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
 #    - make -j 3
 #    - ctest -j 3 --output-on-failure
 
 osx - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-osx_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,MojaveVM
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - ctest -j 3 --output-on-failure
 
 osx - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-osx_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,MojaveVM
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3
     - ctest -j 3 --output-on-failure
 
 win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -354,15 +234,12 @@ win2015 - Debug - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2015
   script:
@@ -371,15 +248,12 @@ win2015 - Release - QT4 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -388,15 +262,12 @@ win2017 - Debug - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
-  rules:
-    - !reference [.no-win_rules, rules]
-    - when: always
   tags:
     - MEPP2,windows,VS2017
   script:
@@ -405,7 +276,7 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
     - set MSVC_KIT_ROOT=E:\local_vs2015_64
     - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
     - mkdir build & cd build
-    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
+    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=OFF -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=OFF -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
@@ -416,127 +287,91 @@ win2017 - Release - QT5 - CONF2 (CGAL=OFF and PCL/VTK/FBX/DRACO=OFF):
 #
 # Reduce the time 4
 #linux - GCC_20.04LTS [Debug - GCC - QT5 - CONF3 (ALL)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # Reduce the time 4
 #linux - GCC_20.04LTS [Release - GCC - QT5 - CONF3 (ALL)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 linux - 18.04LTS [Debug - CLANG - QT4 - CONF3 (ALL)]:
-  rules:
-    - !reference [.no-linux_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   tags:
     - MEPP2,linux,18.04LTS
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # TEMP BEFORE NEW SERVER
 #linux - 20.04LTS [Release - CLANG - QT5 - CONF3 (ALL)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,20.04LTS
 #  script:
 #    - export CXX=clang++ CC=clang
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Debug - QT4 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - ctest -j 3 --output-on-failure
 
 # Reduce the time 3
 #osx - Release - QT4 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew link qt@4
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - ctest -j 3 --output-on-failure
 
 # Reduce the time 5
 #osx - Debug - QT5 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-osx_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,osx,MojaveVM
 #  script:
 #    - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - ctest -j 3 --output-on-failure
 
 # Reduce the time 5 - TODO ?
 osx - Release - QT5 - CONF3 (ALL):
-  rules:
-    - !reference [.no-osx_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,MojaveVM
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - ctest -j 3 --output-on-failure
 
 # Reduce the time 6
 #win2015 - Debug - QT4 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-win_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2015
 #  script:
@@ -545,17 +380,13 @@ osx - Release - QT5 - CONF3 (ALL):
 #    - set MSVC_KIT_ROOT=E:\local_vs2015_64
 #    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
 #    - mkdir build & cd build
-#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - MSBuild /m MEPP2.sln
 #    - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 # Reduce the time 6
 #win2015 - Release - QT4 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-win_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2015
 #  script:
@@ -564,17 +395,13 @@ osx - Release - QT5 - CONF3 (ALL):
 #    - set MSVC_KIT_ROOT=E:\local_vs2015_64
 #    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
 #    - mkdir build & cd build
-#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - MSBuild /m MEPP2.sln
 #    - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 # Reduce the time 6
 #win2017 - Debug - QT5 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-win_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2017
 #  script:
@@ -583,17 +410,13 @@ osx - Release - QT5 - CONF3 (ALL):
 #    - set MSVC_KIT_ROOT=E:\local_vs2015_64
 #    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
 #    - mkdir build & cd build
-#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - MSBuild /m MEPP2.sln
 #    - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
 
 # Reduce the time 6
 #win2017 - Release - QT5 - CONF3 (ALL):
-#  rules:
-#    - !reference [.no-win_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,windows,VS2017
 #  script:
@@ -602,7 +425,7 @@ osx - Release - QT5 - CONF3 (ALL):
 #    - set MSVC_KIT_ROOT=E:\local_vs2015_64
 #    - set PATH=%MSBUILD_PATH%;%MSVC_KIT_ROOT%\_bin_;%MSVC_KIT_ROOT%\_bin_\cmake\bin;%MSVC_KIT_ROOT%\_bin_\_sync;"C:\Program Files\Hidden Start";%PATH%
 #    - mkdir build & cd build
-#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=%GUI% -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake -G%CMAKE_GENERATOR% .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - MSBuild /m MEPP2.sln
 #    - ctest -j 3 --output-on-failure
 #    - hstart64.exe /NOCONSOLE /NOUAC sync-pause.bat
@@ -612,29 +435,21 @@ osx - Release - QT5 - CONF3 (ALL):
 ################################################################
 #
 #linux - 16.04LTS [Debug - CLANG - QT5 - CONF3 (ALL)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,16.04LTS
 #  script:
 #    - export CXX=clang++ CC=clang
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 #linux - 16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
-#  rules:
-#    - !reference [.no-linux_rules, rules]
-#    - !reference [.no-all-on_rules, rules]
-#    - when: always
 #  tags:
 #    - MEPP2,linux,16.04LTS
 #  script:
 #    - mkdir build; cd build
-#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+#    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
 #    - make -j 2 # now freeze with -j 3 !
 #    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
@@ -643,16 +458,12 @@ osx - Release - QT5 - CONF3 (ALL):
 #####################
 #
 DOC - osx [Release - QT5 - CONF3 (ALL)]:
-  rules:
-    - !reference [.no-doc_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   tags:
     - MEPP2,osx,Mojave # not MojaveVM for the documentation (because of rsync)
   script:
     - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 3 doc
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
@@ -661,13 +472,9 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #######################################
 #
 .linux_build_template_0x - GCC - Release - QT4 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt4-release
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 #  artifacts:
@@ -675,25 +482,17 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #      - build/Visualization/Applications
 
 .linux_build_template_0x - GCC - Release - QT5 - CONF3 (ALL): &linux_build_definition_0x-gcc-qt5-release
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 .linux_build_template_0x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_0x-clang-qt5-debug
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
@@ -734,69 +533,49 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  <<: *linux_build_definition_0x-clang-qt5-debug
 #
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_50-pcl_110
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.0.4"
     - export PCL_DIR="$HOME/pcl-1.10.1/share/pcl-1.10"
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 .linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_51-pcl_111
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.1.3"
     - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
     - export PCL_DIR="$HOME/pcl-1.10.1/share/pcl-1.10"
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 .linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
     - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
     - export CXX=clang++ CC=clang
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
-  rules:
-    - !reference [.no-dock-lin_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - export CGAL_DIR="$HOME/CGAL-5.2.1"
     - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
     - mkdir build; cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
@@ -838,15 +617,10 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 ########################################
 #
 .windows_build_template_0x - MSBuild - Release - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-release
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
   artifacts:
@@ -854,28 +628,18 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
       - build/Visualization/Applications/Release
 
 .windows_build_template_0x - MSBuild - Debug - QT4 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt4-debug
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=OFF -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
 .windows_build_template_0x - MSBuild - Release - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-release
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
   artifacts:
@@ -883,15 +647,10 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
       - build/Visualization/Applications/Release
 
 .windows_build_template_0x - MSBuild - Debug - QT5 - CONF3 (ALL): &windows_build_definition_0x-powershell-qt5-debug
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
@@ -923,30 +682,20 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
   <<: *windows_build_definition_0x-powershell-qt4-debug
 #
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - $env:VCPKG='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
 .windows_build_template_1x - MSBuild - Debug - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-debug
-  rules:
-    - !reference [.no-dock-win_rules, rules]
-    - !reference [.no-all-on_rules, rules]
-    - when: always
   script:
     - $env:DOCKER_RUN='YES'
     - $env:VCPKG='YES'
     - md build; cd build
-    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
-    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
