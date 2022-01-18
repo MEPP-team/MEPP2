@@ -9,7 +9,7 @@
  "Compressed Progressive Meshes, Pajarola and Rossignac, IEEE Transactions on Visualization and 
  Computer Graphics (2000)" with minor differences. \n
  The progressive compression method simplifies iteratively the input mesh to
- generate differents levels of details (LoDs). \n
+ generate different levels of details (LoDs). \n
  These LoDs can then be transmitted progressively in a coarse-to-fine way at the
  decompression. \n
  The methods uses a fixed quantization for vertex coordinates. \n \n
@@ -27,7 +27,7 @@
 | Geometry trait | Geometry trait object to apply geometry-based operations. |
 | Parameters | Parameters are the progressive compression parameters. |
 | Output path | Output path is needed to generate measure path and binary path (when set to ""). |
-| Binary path | Binary path i the name of the output (binary) file. It is either set by the user or automatically set using output path, predictor, metric, keptposition and quantization information. |
+| Binary path | Binary path is the name of the output (binary) file. It is either set by the user or automatically set using output path, predictor, metric, keptposition and quantization information. |
 | Nb max batches | Maximum number of batches to apply to get the final (the coarsest) mesh. |
 | Nb min vertices | Minimum number that the final (the coarsest) mesh must have. |
 | Batch condition | Batch condition (stopping criterion) must be either ALL_EDGES or REACH_THRESHOLD. |
