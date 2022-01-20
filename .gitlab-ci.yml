@@ -3,6 +3,7 @@
 # RULES (available options: [ci no-gui] - [ci no-all-on] - [ci no-doc] - [ci no-linux]/[ci no-osx]/[ci no-win] - [ci no-dock-lin]/[ci no-dock-win]) #
 #####################################################################################################################################################
 #
+
 variables:
   GUI: "ON"
 
