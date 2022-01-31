@@ -132,6 +132,12 @@ progressive_decompression_filter(HalfedgeGraph &g,
         HalfedgeGraph,
         PointMap>(g, KP, pm);
   }
+  else if (_pred == FEVV::Filters::PREDICTION_TYPE::POSITION)
+  {
+    std::cout << "position" << std::endl;
+    predictor = new FEVV::Filters::RawPositions< HalfedgeGraph,
+      PointMap >(g, KP, pm);
+  }
   else
   {
     delete KP;

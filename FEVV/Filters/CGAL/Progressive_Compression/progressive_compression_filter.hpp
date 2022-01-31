@@ -242,14 +242,17 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   if(params.getPrediction() == FEVV::Filters::PREDICTION_TYPE::BUTTERFLY)
   {
     predict = new FEVV::Filters::
-        Butterfly< HalfedgeGraph, PointMap >(
-            g, KP, pm);
+        Butterfly< HalfedgeGraph, PointMap >(g, KP, pm);
   }
   else if(params.getPrediction() == FEVV::Filters::PREDICTION_TYPE::DELTA)
   {
     predict = new FEVV::Filters::DeltaPredictor< HalfedgeGraph,
-                                                 PointMap >(
-        g, KP, pm);
+                                                 PointMap >(g, KP, pm);
+  }
+  else if (params.getPrediction() == FEVV::Filters::PREDICTION_TYPE::POSITION)
+  {
+    predict = new FEVV::Filters::RawPositions< HalfedgeGraph,
+                                                PointMap >(g, KP, pm);
   }
   else
   {

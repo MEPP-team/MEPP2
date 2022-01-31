@@ -70,10 +70,9 @@ public:
               ) = 0;
 
   virtual FEVV::Filters::PREDICTION_TYPE getType() const { return _type; }
-  virtual const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const = 0;
   
-  virtual void set_bit_info(bool /*b1*/, bool /*b2*/, bool /*b3*/, bool /*b4*/) = 0;
-  
+  //virtual const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const = 0;
+  //virtual void set_bit_info(bool /*b1*/, bool /*b2*/, bool /*b3*/, bool /*b4*/) = 0;
   virtual void set_rev(bool /*b*/) = 0;
   
   virtual const Point& get_kept_position() const { return _kept_position; }

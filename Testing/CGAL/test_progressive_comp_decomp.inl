@@ -68,8 +68,8 @@ test_automatic_progressive_compression_decompression(int argc,
     measurepath = "Other_mesh_type_";
   }
   std::string compressed_mesh_binary_file = measurepath + FEVV::FileUtils::get_file_name(input_file_path);
-  output_file_path_save_preprocess = "progressive_compression_ld_" + compressed_mesh_binary_file + "_original_mesh_after_preprocess.off"; // default value
-  output_file_path_decomp = "progressive_decompression_ld_" + compressed_mesh_binary_file + "_output.off"; // default value
+  output_file_path_save_preprocess = "progressive_compression_" + compressed_mesh_binary_file + "_original_mesh_after_preprocess.off"; // default value
+  output_file_path_decomp = "progressive_decompression_" + compressed_mesh_binary_file + "_output.off"; // default value
   compressed_mesh_binary_file = compressed_mesh_binary_file + ".bin";
   /////////////////////////////////////////////////////////////////////////////
   if (argc > 2)
@@ -82,7 +82,7 @@ test_automatic_progressive_compression_decompression(int argc,
   }
   if (argc > 4)
   {
-    std::cout << "test_automatic_progressive_compression_decompression_ld needs at maximum 3 input parameters: input mesh filename, output filename for the preprocessed mesh, and an output filename for the decompressed mesh." << std::endl;
+    std::cout << "test_automatic_progressive_compression_decompression needs at maximum 3 input parameters: input mesh filename, output filename for the preprocessed mesh, and an output filename for the decompressed mesh." << std::endl;
     return -1;
   }
   /////////////////////////////////////////////////////////////////////////////
@@ -102,6 +102,41 @@ test_automatic_progressive_compression_decompression(int argc,
                                    true,
                                    false,
                                    12);
+
+  //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
+  //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  true,
+  //                                  false,
+  //                                  12);
+
+  //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::DELTA,
+  //                                  FEVV::Filters::VKEPT_POSITION::MIDPOINT,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  true,
+  //                                  false,
+  //                                  12);
+
+  //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::DELTA,
+  //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  true,
+  //                                  false,
+  //                                  12);
+
+  //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::POSITION,
+  //                                  FEVV::Filters::VKEPT_POSITION::MIDPOINT,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  true,
+  //                                  false,
+  //                                  12);
+
+  //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::POSITION,
+  //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  true,
+  //                                  false,
+  //                                  12);
   auto pm = get(boost::vertex_point, m);
   auto gt_ = FEVV::Geometry_traits< MeshT >(m);
   /////////////////////////////////////////////////////////////////////////////

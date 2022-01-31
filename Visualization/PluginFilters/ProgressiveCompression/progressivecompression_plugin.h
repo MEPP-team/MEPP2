@@ -224,7 +224,7 @@ public:
     std::string filepath = "";
     std::string batch_string = "";
     if(dialog.exec() == QDialog::Accepted)
-      dialog.getParameters(_quantization, _nb_batches,_minimum_vertices, metr, vkept, pred,filepath, batch_string);
+      dialog.getParameters(_quantization, _nb_batches, _minimum_vertices, metr, vkept, pred, filepath, batch_string);
     else
       return; // abort applying filter
 
@@ -232,26 +232,29 @@ public:
     _predictor = FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
         _batch_stop = FEVV::Filters::BATCH_CONDITION::ALL_EDGES;
 
-	if(pred.compare("Butterfly") == 0)
+	  if(pred.compare("Butterfly") == 0)
     {
       _predictor = FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
     }
-    if(pred.compare("Delta") == 0)
+    else if(pred.compare("Delta") == 0)
     {
       _predictor =  FEVV::Filters::PREDICTION_TYPE::DELTA;
     }
-    
+    else if (pred.compare("Position") == 0)
+    {
+      _predictor = FEVV::Filters::PREDICTION_TYPE::POSITION;
+    }
 
 	_metric = FEVV::Filters::METRIC_TYPE::QEM;
 	 if(metr.compare("QEM") == 0)
     {
       _metric = FEVV::Filters::METRIC_TYPE::QEM;
     }
-    if(metr.compare("Volume Preserving") == 0)
+    else if(metr.compare("Volume Preserving") == 0)
     {
       _metric =  FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING;
     }
-    if(metr.compare("EdgeLength") == 0)
+    else if(metr.compare("EdgeLength") == 0)
     {
       _metric = FEVV::Filters::METRIC_TYPE::EDGE_LENGTH;
     }
@@ -260,21 +263,24 @@ public:
     {
           _batch_stop = FEVV::Filters::BATCH_CONDITION::ALL_EDGES;
     }
-    if(batch_string.compare("Reach Threshold") == 0)
+    else if(batch_string.compare("Reach Threshold") == 0)
     {
       _batch_stop = FEVV::Filters::BATCH_CONDITION::REACH_THRESHOLD;
     }
 
 	_operator = FEVV::Filters::VKEPT_POSITION::MIDPOINT;
-	if(vkept.compare("MidPoint") == 0)
+	  if(vkept.compare("MidPoint") == 0)
     {
       _operator = FEVV::Filters::VKEPT_POSITION::MIDPOINT;
     }
-    if(vkept.compare("Halfedge") == 0)
+    else if(vkept.compare("Halfedge") == 0)
     {
       _operator = FEVV::Filters::VKEPT_POSITION::HALFEDGE;
     }
-   
+    //else if (vkept.compare("Fulledge") == 0)
+    //{
+    //  _operator = FEVV::Filters::VKEPT_POSITION::FULLEDGE;
+    //}
 
     // apply filter
     process(_mesh, pmaps_bag);

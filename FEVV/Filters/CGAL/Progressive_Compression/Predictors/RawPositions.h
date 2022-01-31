@@ -46,35 +46,36 @@ public:
 
   std::vector< Vector > ComputeResiduals(vertex_descriptor v1,
                                          vertex_descriptor v2, 
-                                         Point /*kept_position*/) override
+                                         Point /*kept_position*/)
   {
-
-	const Point& p1 =  get(SuperClass::_pm, v1);
-	const Point& p2 =  get(SuperClass::_pm, v2);
+    const Point& p1 =  get(SuperClass::_pm, v1);
+    const Point& p2 =  get(SuperClass::_pm, v2);
 
     Vector vec1 = SuperClass::_gt.sub_p(p1,SuperClass::_gt.ORIGIN);
-	Vector vec2 = SuperClass::_gt.sub_p(p2, SuperClass::_gt.ORIGIN);
-	std::vector<Vector> residuals;
-	residuals.reserve(2);
-	residuals.push_back(std::move(vec1));
+    Vector vec2 = SuperClass::_gt.sub_p(p2, SuperClass::_gt.ORIGIN);
+    std::vector<Vector> residuals;
+    residuals.reserve(2);
+    residuals.push_back(std::move(vec1));
     residuals.push_back(std::move(vec2));
-	return residuals;
+
+	  return residuals;
   }
 
   std::vector< Vector > ComputeResiduals(CollapseInfo<HalfedgeGraph, PointMap> &mem) override
   {
-    Vector vec1 = SuperClass::_gt.sub_p(mem._pos_v1, SuperClass::_gt.ORIGIN);
-    Vector vec2 = SuperClass::_gt.sub_p(mem._pos_v2, SuperClass::_gt.ORIGIN);
+    Vector vec1 = SuperClass::_gt.sub_p(mem.get_pos_v1(), SuperClass::_gt.ORIGIN);
+    Vector vec2 = SuperClass::_gt.sub_p(mem.get_pos_v2(), SuperClass::_gt.ORIGIN);
     std::vector< Vector > residuals;
     residuals.reserve(2);
     residuals.push_back(std::move(vec1));
     residuals.push_back(std::move(vec2));
-    if(mem._reverse)
+    if(mem.get_reverse())
     {
       Vector save = std::move(residuals[0]);
       residuals[0] = std::move(residuals[1]);
       residuals[1] = std::move(save);
-	}
+	  }
+    mem.record_error_prediction(residuals);
     return residuals;
   }
 
@@ -89,13 +90,16 @@ public:
     return std::make_pair(p1,p2);
   }
 
-  std::vector<Vector> Reverse() override { 
+  std::vector<Vector> Reverse() { 
     Vector save = std::move(SuperClass::_residuals[0]); 
     SuperClass::_residuals[0] = std::move(SuperClass::_residuals[1]);
     SuperClass::_residuals[1] = std::move(save);
     return SuperClass::_residuals;
   }
 
+  void set_rev(bool /*b*/){}
+
+  std::string getMethodasString() const override { return "position"; }
 };
 }
 }

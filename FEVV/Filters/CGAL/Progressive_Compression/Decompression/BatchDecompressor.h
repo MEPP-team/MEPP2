@@ -221,7 +221,10 @@ public:
         decoder(buffer, _header.getQuantization());
     decoder.DecodeBitmask(_bitmask);
     decoder.DecodeBitmask(_edge_bitmask);
-    decoder.DecodeResiduals(_positions, 1);
+    if(_predictor->getType() == FEVV::Filters::PREDICTION_TYPE::POSITION)
+      decoder.DecodeResiduals(_positions, 2);
+    else
+      decoder.DecodeResiduals(_positions, 1);
     if(_vkept->getType() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
     {
       decoder.DecodeBitmask(_other_info_bits);
