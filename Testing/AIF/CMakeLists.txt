@@ -510,67 +510,6 @@ add_test( Test_load_dangling_edge_aif_off_3
 #TODO-elo-off  					             )
 
 
-##TODO-elo make a function
-## variables to be exported to external projects
-
-# include dirs
-get_property( INCLUDE_DIRECTORIES_TMP
-              DIRECTORY
-              PROPERTY INCLUDE_DIRECTORIES
-              )
-set( MEPP2_AIF_INCLUDE_DIRECTORIES
-     "${INCLUDE_DIRECTORIES_TMP}"
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-# system include dirs
-get_property( SYSTEM_INCLUDE_DIRECTORIES_TMP
-              DIRECTORY
-              PROPERTY SYSTEM_INCLUDE_DIRECTORIES
-              )
-set( MEPP2_AIF_SYSTEM_INCLUDE_DIRECTORIES
-     "${SYSTEM_INCLUDE_DIRECTORIES_TMP}"
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-# libraries to link with
-set( MEPP2_AIF_LIBRARIES
-     ${Boost_LIBRARIES}
-     ${FBX_LIBRARY}
-     ${VTK_LIBRARIES}
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-# link libraries (to link all target with, silently!)
-get_property( LINK_LIBRARIES_TMP
-              DIRECTORY
-              PROPERTY LINK_LIBRARIES
-              )
-set( MEPP2_AIF_LINK_LIBRARIES
-     "${LINK_LIBRARIES_TMP}"
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-# link dirs
-get_property( LINK_DIRECTORIES_TMP
-              DIRECTORY
-              PROPERTY LINK_DIRECTORIES
-              )
-set( MEPP2_AIF_LINK_DIRECTORIES
-     "${LINK_DIRECTORIES_TMP}"
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
-# compilation flags and define
-get_property( COMPILE_DEFINITIONS_TMP
-              DIRECTORY
-              PROPERTY COMPILE_DEFINITIONS
-              )
-set( MEPP2_AIF_COMPILE_DEFINITIONS
-     ${COMPILE_DEFINITIONS_TMP}
-     CACHE INTERNAL "no-desc" FORCE
-     )
-
 #####
 add_executable( test_copy_graph_aif
                 test_copy_graph_aif.cpp
