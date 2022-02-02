@@ -4920,22 +4920,127 @@ public:
             }
           }
         }
-        else if(is_2_manifold_vertex(get_source()))
-        { // we try to get the next halfedge by going though
-          // the border in the other direction using prev
-          AIFHalfEdge h(get_source(), get_target(), m_face, false);
-          do
+        else {
+#if 1
+          // We know that the previous edge belongs to another face if the
+          // vertex is a cut-vertex
+          if(is_cut_vertex(get_target()))
           {
-            h = h.prev(m);
-          } while(get_target() != h.get_source());
-          ptrVn = h.get_target();
-          edge = h.m_edge;
-          found = true;
-        }
-        else
+            auto currentFaces = incident_faces(m_edge);
+            auto facesRange = incident_faces(get_target());
+            auto itF = facesRange.begin();
+            int cpt = 0;
+            face_descriptor rightFaceContainingNextHalfEdge;
+            for(; itF != facesRange.end(); ++itF)
+            {
+              if(*itF == currentFaces[0])
+                break;
+            }
+            ++itF;
+            if(itF == facesRange.end())
+              itF = facesRange.begin();
+			rightFaceContainingNextHalfEdge = *itF;
+            ++cpt;
+            if(cpt == 1)
+            {
+              auto edgesRange = incident_edges(rightFaceContainingNextHalfEdge);
+              auto itE = edgesRange.begin();
+              edge_descriptor candidate1, candidate2;
+              for(; itE != edgesRange.end(); ++itE)
+              {
+                if(((*itE)->get_first_vertex() == get_target()) ||
+                   ((*itE)->get_second_vertex() == get_target()))
+                {
+                  if(candidate1 == null_edge())
+                    candidate1 = *itE;
+                  else if(candidate2 == null_edge())
+                    candidate2 = *itE;
+                  else
+                    throw std::runtime_error(
+                        "Error in AIFHalfEdge::next(): next halfedge cannot be "
+                        "found in a non-manifold context. Get unkown case "
+                        "while processing a cut-vertex.");
+                }
+              }
+              found = true;
+              if(is_surface_border_edge(candidate1))
+              {
+                if(is_surface_border_edge(candidate2))
+                {
+                  AIFHalfEdge h(candidate1->get_first_vertex(),
+                                candidate1->get_second_vertex(),
+                                rightFaceContainingNextHalfEdge,
+                                true);
+                  if(h.prev(m).get_edge() == candidate2)
+                  {
+                    ptrVn = opposite_vertex(candidate1, get_target());
+                    edge = candidate1;
+                  }
+                  else if(h.next(m).get_edge() == candidate2)
+                  {
+                    ptrVn = opposite_vertex(candidate2, get_target());
+                    edge = candidate2;
+                  }
+                }
+                else
+                {
+                  ptrVn = opposite_vertex(candidate1, get_target());
+                  edge = candidate1;
+                }
+              }
+              else if(is_surface_border_edge(candidate2))
+              {
+                ptrVn = opposite_vertex(candidate2, get_target());
+                edge = candidate2;
+              }
+              else
+              {
+                found = false;
+                throw std::runtime_error(
+                    "Error in AIFHalfEdge::next(): next halfedge cannot be "
+                    "found in a non-manifold context. Get unkown case while "
+                    "processing a cut-vertex.");
+              }
+            }
+            else
+              throw std::runtime_error(
+                  "Error in AIFHalfEdge::next(): next halfedge cannot be found "
+                  "in a non-manifold context. Current vertex is a cut-vertex.");
+          }
+
+          if(is_degenerated_vertex(get_target()))
+            throw std::runtime_error(
+                "Error in AIFHalfEdge::next(): next halfedge cannot be found "
+                "in a non-manifold context. Current vertex is degenerated.");
+
+          if(is_isolated_vertex(get_target()))
+            throw std::runtime_error(
+                "Error in AIFHalfEdge::next(): next halfedge cannot be found "
+                "in a non-manifold context. Current vertex is isolated.");
+
           throw std::runtime_error(
               "Error in AIFHalfEdge::next(): next halfedge cannot be found in "
-              "a non-manifold context.");
+              "a non-manifold context. An incident edge is non-manifold.");
+#else
+			
+		  if(is_2_manifold_vertex(get_source()))
+          { // we try to get the next halfedge by going though
+            // the border in the other direction using prev
+            AIFHalfEdge h(get_source(), get_target(), m_face, false);
+            do
+            {
+              h = h.prev(m);
+            } while(get_target() != h.get_source());
+            ptrVn = h.get_target();
+            edge = h.m_edge;
+            found = true;
+          }
+          else
+            throw std::runtime_error(
+                "Error in AIFHalfEdge::next(): next halfedge cannot be found in "
+                "a non-manifold context.");
+#endif
+		}
       }
       else
       {
@@ -5151,13 +5256,16 @@ public:
             auto itF = facesRange.begin();
             int cpt = 0;
             face_descriptor rightFaceContainingPrevHalfEdge;
-            for(; itF != facesRange.end(); ++itF)
+		    for(; itF != facesRange.end(); ++itF)
             {
               if(*itF == currentFaces[0])
-                continue;
-              rightFaceContainingPrevHalfEdge = *itF;
-              ++cpt;
+                break;
             }
+            if(itF == facesRange.begin())
+              itF = facesRange.end();
+		    --itF;
+			rightFaceContainingPrevHalfEdge = *itF;
+            ++cpt;	
             if(cpt == 1)
             {
               auto edgesRange = incident_edges(rightFaceContainingPrevHalfEdge);
