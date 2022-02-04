@@ -16,6 +16,7 @@
 #include <exception>
 #include <utility>
 #include <algorithm>
+#include <stack>
 #include <iostream>
 #include <type_traits>
 
@@ -1640,6 +1641,73 @@ public:
     return true;
   }
 
+ /*!
+  * Function determining if the argument face is on a border (one of
+  * its incident edges is on border)
+  *
+  * \param  face  The involving face
+  *
+  * \return  true if the argument face is on a border, false otherwise.
+  */
+  static bool is_surface_border_face(face_descriptor face)
+  {
+    auto edges_range = incident_edges(face);
+    auto it = edges_range.begin();
+    for (; it != edges_range.end(); ++it)
+    {
+      if (is_surface_border_edge(*it))
+        return true;
+    }
+    return false;
+  }
+  
+   /*!
+  * Function determining if the argument face is on a border (one of
+  * its incident edges is on border)
+  *
+  * \param  face  The involving face
+  * \param  v  The involving vertex  
+  * \param  border_edge_before_v  the border edge must be before v in face  
+  *
+  * \return  true if the argument face is on a border through v
+  *          (the border edge being before v if border_edge_before_v is true), 
+  *          false otherwise.
+  */
+  static bool is_surface_border_face_through_vertex(face_descriptor face, vertex_descriptor v, bool border_edge_before_v)
+  {
+    auto edges_range = incident_edges(face);
+    auto it = edges_range.begin();
+    for (; it != edges_range.end(); ++it)
+    {
+      if (is_surface_border_edge(*it) && are_incident(*it, v))
+	  {
+		auto it2 = it;
+        ++it2;
+        if(it2==edges_range.end())	
+          it2 = edges_range.begin();
+        if(are_incident(*it2, v)){
+          return border_edge_before_v || is_surface_border_edge(*it2);
+		}
+        else if(!border_edge_before_v) // because *it is after v
+			return true;
+	  }
+    }
+    return false;
+  }
+
+ /*!
+  * Function determining if the argument face is an interior face (none of
+  * its incident edges is on border)
+  *
+  * \param  face  The involving face
+  *
+  * \return  true if the argument face is an interior face, false otherwise.
+  */
+  static bool is_surface_interior_face(face_descriptor face)
+  {
+    return !is_surface_border_face(face);
+  }
+
   /*!
    * \brief  Function determining if the argument face shares an incidence
    *         relation with the argument vertex.
@@ -1834,6 +1902,63 @@ public:
         adFaces.begin(),
         adFaces.end()); // note that it is a non-sens to manage a memory caching
                         // as adjacent faces can be quickly computed
+  }
+
+  /*!
+   * 			Function determining if two faces are part
+   *       of the same piece of surface.
+   * \param	face1	The involving face
+   * \param	face2	The second involving face
+   * \return	True when the 2 faces share at least one vertex
+   *            and when there is a path of edge-connected faces  
+   *            between f1 and f2   
+   */
+  static bool
+  are_locally_edge_connected(face_descriptor face1,
+                             face_descriptor face2)
+  {
+    if(are_adjacent(face1, face2))
+      return true;
+	
+	vertex_descriptor shared = null_vertex();
+	auto vRange1 = incident_vertices(face1);
+	auto vRange2 = incident_vertices(face2);
+    for(auto vIt1 = vRange1.begin(); vIt1 != vRange1.end(); ++vIt1){
+      for(auto vIt2 = vRange2.begin(); vIt2 != vRange2.end(); ++vIt2){
+		if(*vIt1 == *vIt2)
+		{
+			shared = *vIt1;
+			break;
+		}
+	  }
+      if(shared != null_vertex())
+      {
+        break;
+      }
+	}
+	if(shared == null_vertex()) // if the 2 faces do not share any vertex
+      return false;             // there are not locally connected
+    
+	auto facesRange = incident_faces(shared); 
+  std::stack<face_descriptor> s;
+  std::map< face_descriptor, bool> already_met;
+	s.push(face1);
+	while(!s.empty()){
+		face_descriptor current = s.top();
+    already_met[current] = true;
+		s.pop();
+		
+    auto itF = facesRange.begin();
+    for(; itF != facesRange.end(); ++itF){
+        if(are_adjacent(current, *itF)){
+            if(*itF==face2)
+              return true;
+            if(already_met.find(*itF)== already_met.end()) // not yet met
+              s.push(*itF);
+			  }
+		}
+	}
+	return false;
   }
 
   /*!
@@ -4939,7 +5064,15 @@ public:
             ++itF;
             if(itF == facesRange.end())
               itF = facesRange.begin();
-			rightFaceContainingNextHalfEdge = *itF;
+            rightFaceContainingNextHalfEdge = *itF;          
+            // make sure the selected face is a border face with the right orientation
+            while (!is_surface_border_face_through_vertex(rightFaceContainingNextHalfEdge, get_target(), true)
+                   || are_locally_edge_connected(currentFaces[0], rightFaceContainingNextHalfEdge)) { 
+              ++itF;
+              if (itF == facesRange.end())
+                itF = facesRange.begin();
+              rightFaceContainingNextHalfEdge = *itF;
+            }
             ++cpt;
             if(cpt == 1)
             {
@@ -4967,19 +5100,34 @@ public:
               {
                 if(is_surface_border_edge(candidate2))
                 {
-                  AIFHalfEdge h(candidate1->get_first_vertex(),
-                                candidate1->get_second_vertex(),
+                  bool same_orientation = true;
+                  auto vertices_range1 = incident_vertices(rightFaceContainingNextHalfEdge);
+                  auto it1 = vertices_range1.begin();
+                  for (; it1 != vertices_range1.end(); ++it1) {
+                    if (*it1 == get_target()) {
+                      auto it2 = it1;
+                      ++it2;
+                      if (it2 == vertices_range1.end())
+                        it2 = vertices_range1.begin();
+                      if (*it2 == opposite_vertex(candidate1, get_target()))
+                        same_orientation = false;
+                      break;
+                    }
+                  }
+
+                  AIFHalfEdge h(opposite_vertex(((same_orientation)?candidate1:candidate2), get_target()),
+                                get_target(),
                                 rightFaceContainingNextHalfEdge,
                                 true);
-                  if(h.prev(m).get_edge() == candidate2)
+                  if(h.prev(m).get_edge() == ((same_orientation)?candidate2:candidate1))
                   {
-                    ptrVn = opposite_vertex(candidate1, get_target());
-                    edge = candidate1;
+                    ptrVn = opposite_vertex(((same_orientation) ? candidate2 : candidate1), get_target());
+                    edge = ((same_orientation) ? candidate2 : candidate1);
                   }
-                  else if(h.next(m).get_edge() == candidate2)
+                  else if(h.next(m).get_edge() == ((same_orientation) ? candidate2 : candidate1))
                   {
-                    ptrVn = opposite_vertex(candidate2, get_target());
-                    edge = candidate2;
+                    ptrVn = opposite_vertex(((same_orientation) ? candidate1 : candidate2), get_target());
+                    edge = ((same_orientation) ? candidate1 : candidate2);
                   }
                 }
                 else
@@ -5017,10 +5165,6 @@ public:
             throw std::runtime_error(
                 "Error in AIFHalfEdge::next(): next halfedge cannot be found "
                 "in a non-manifold context. Current vertex is isolated.");
-
-          throw std::runtime_error(
-              "Error in AIFHalfEdge::next(): next halfedge cannot be found in "
-              "a non-manifold context. An incident edge is non-manifold.");
 #else
 			
 		  if(is_2_manifold_vertex(get_source()))
@@ -5256,15 +5400,23 @@ public:
             auto itF = facesRange.begin();
             int cpt = 0;
             face_descriptor rightFaceContainingPrevHalfEdge;
-		    for(; itF != facesRange.end(); ++itF)
+            for(; itF != facesRange.end(); ++itF)
             {
               if(*itF == currentFaces[0])
                 break;
             }
             if(itF == facesRange.begin())
               itF = facesRange.end();
-		    --itF;
-			rightFaceContainingPrevHalfEdge = *itF;
+            --itF;
+            rightFaceContainingPrevHalfEdge = *itF;
+            // make sure the selected face is a border face with the right orientation
+            while (!is_surface_border_face_through_vertex(rightFaceContainingPrevHalfEdge, get_source(), false)
+                   || are_locally_edge_connected(currentFaces[0], rightFaceContainingPrevHalfEdge)){ 
+              if (itF == facesRange.begin())
+                itF = facesRange.end();
+              --itF;
+              rightFaceContainingPrevHalfEdge = *itF;
+            }
             ++cpt;	
             if(cpt == 1)
             {
@@ -5292,19 +5444,34 @@ public:
               {
                 if(is_surface_border_edge(candidate2))
                 {
-                  AIFHalfEdge h(candidate1->get_first_vertex(),
-                                candidate1->get_second_vertex(),
+                  bool same_orientation = true;
+                  auto vertices_range1 = incident_vertices(rightFaceContainingPrevHalfEdge);
+                  auto it1 = vertices_range1.begin();
+                  for (; it1 != vertices_range1.end(); ++it1) {
+                    if (*it1 == get_source()) {
+                      auto it2 = it1;
+                      ++it2;
+                      if (it2 == vertices_range1.end())
+                        it2 = vertices_range1.begin();
+                      if (*it2 == opposite_vertex(candidate1, get_source()))
+                        same_orientation = false;
+                      break;
+                    }
+                  }
+
+                  AIFHalfEdge h(opposite_vertex(((same_orientation) ? candidate1 : candidate2), get_source()),
+                                get_source(),
                                 rightFaceContainingPrevHalfEdge,
                                 true);
                   if(h.prev(m).get_edge() == candidate2)
                   {
-                    ptrVn = opposite_vertex(candidate2, get_source());
-                    edge = candidate2;
+                    ptrVn = opposite_vertex(candidate1, get_source());
+                    edge = candidate1;
                   }
                   else if(h.next(m).get_edge() == candidate2)
                   {
-                    ptrVn = opposite_vertex(candidate1, get_source());
-                    edge = candidate1;
+                    ptrVn = opposite_vertex(candidate2, get_source());
+                    edge = candidate2;
                   }
                 }
                 else
@@ -5342,10 +5509,6 @@ public:
             throw std::runtime_error(
                 "Error in AIFHalfEdge::prev(): prev halfedge cannot be found "
                 "in a non-manifold context. Current vertex is isolated.");
-
-          throw std::runtime_error(
-              "Error in AIFHalfEdge::prev(): prev halfedge cannot be found in "
-              "a non-manifold context. An incident edge is non-manifold.");
         }
       }
       else
