@@ -234,11 +234,6 @@ public:
     return Ds;
   }
 
-
-  void set_rev(bool b) override {
-	  _rev = b; _delta_for_borders.set_rev(b);
-  }
-
   std::pair< Point, Point > PlacePoints(const std::vector< Vector > &residuals,
                                         vertex_descriptor vkept,
                                         halfedge_descriptor h1,
@@ -360,14 +355,16 @@ public:
 	}
   }
 
-  void set_bit_info(bool b1, bool b2, bool b3, bool b4) override
+  const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const
+  {
+    return _round_midpoint;
+  }
+  void set_bit_info(bool b1, bool b2, bool b3, bool b4)
   {
     _round_midpoint = std::make_tuple(b1, b2, b3, b4);
   }
-
-  const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const override
-  {
-    return _round_midpoint;
+  void set_rev(bool b) {
+	  _rev = b; _delta_for_borders.set_rev(b);
   }
 
   std::string getMethodasString() const override { return "butterfly"; }

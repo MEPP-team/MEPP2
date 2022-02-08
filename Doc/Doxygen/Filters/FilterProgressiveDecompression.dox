@@ -14,12 +14,12 @@ For the time being, it can only decompress all the levels of details (LoDs) cont
 | Parameter | Description |
 |---------------------------|---------------------------|
 | Mesh | Mesh to decode. |
-| Point map | Point map which associated vertices to their positions. |
+| Point map | Point map which associates vertices with their positions. |
 | Vertex color map | Vertex color map used for debugging. |
 | Edge color map | Edge color map used for debugging. |
 | Geometry trait | Geometry trait object to apply geometry-based operations. |
 | Inpute file name | Name of the (binary) file to decompress. |
-| Dequantize | Dequantize is a boolean, when true apply a vertex position dequantization after decoding termination. |
+| Dequantize | Dequantize is a boolean, when true applies a vertex position dequantization after decoding termination. |
 
 @section FilterProgressiveDecompressionDataStructuresSection Supported data structures
 

@@ -153,16 +153,15 @@ public:
    
 
 
-  const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const override
+  const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const
   {
     return _round_midpoint;
   }
-
-  void set_bit_info(bool b1, bool b2, bool b3, bool b4) override
+  void set_bit_info(bool b1, bool b2, bool b3, bool b4) 
   {
     _round_midpoint = std::make_tuple(b1, b2, b3, b4);
   }
-  void set_rev(bool b) override { _rev = b; }
+  void set_rev(bool b)  { _rev = b; }
 
   std::string getMethodasString() const override { return "delta"; }
 

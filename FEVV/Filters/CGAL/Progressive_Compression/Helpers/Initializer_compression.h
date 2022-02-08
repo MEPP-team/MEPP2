@@ -90,7 +90,7 @@ progressive_compression_main(int argc, const char **argv)
   int max_number_vertices = 0;
   int bits_quantization = 12;
   std::string output_file_path_save_preprocess = 
-  "progressive_compression_ld_original_mesh_after_preprocess.off"; // not used in this file
+  "progressive_compression_original_mesh_after_preprocess.off"; // not used in this file
   if(argc < 2)
   {
     std::cout << "Apply a dummy filter to the input mesh." << std::endl;
