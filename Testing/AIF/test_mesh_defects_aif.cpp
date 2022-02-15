@@ -1427,7 +1427,7 @@ decomplexification:
 int
 main(int narg, char **argv)
 {
-  if(narg < 2 || narg > 6)
+  if(narg < 3 || narg > 6)
   {
 	  std::cerr << "Cannot proceed arguments. Please use " << argv[0]
 		  << " meshfilename_or_meshfolder colorize_mesh [remove_isolated_elements "
