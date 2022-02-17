@@ -537,9 +537,49 @@ mesh_from_vector_representation(
       // DBG  counter ++;
       // DBG  std::cout << "call CGAL::Euler::add_face(face_vertices, g) #" <<
       // counter << std::endl;
+
       face_descriptor current_face = CGAL::Euler::add_face(face_vertices, g);
+
       if(current_face == GraphTraits::null_face())
       {
+        // helper lambda function to duplicate a vertex and its attributes
+        auto duplicate_v = [ &face_vertices,
+                             &g,
+                             &dup_v_nbr,
+                             &pmaps,
+                             &use_vertex_normal,
+                             &use_vertex_color,
+                             &use_vertex_texture_coord ](size_t i) -> void
+        {
+          vertex_descriptor vold = face_vertices[i];
+
+          // create new vertex
+          vertex_descriptor vnew = add_vertex(g);
+          face_vertices[i] = vnew;
+          dup_v_nbr++;
+
+          // set new vertex geometry
+          auto point_pm = get(boost::vertex_point, g);
+          put(point_pm, vnew, get(point_pm, vold));
+
+          // set new vertex attributes
+          if(use_vertex_normal)
+          {
+            auto vn_pm = get_property_map(FEVV::vertex_normal, g, pmaps);
+            put(vn_pm, vnew, get(vn_pm, vold));
+          }
+          if(use_vertex_color)
+          {
+            auto vc_pm = get_property_map(FEVV::vertex_color, g, pmaps);
+            put(vc_pm, vnew, get(vc_pm, vold));
+          }
+          if(use_vertex_texture_coord)
+          {
+            auto vt_pm = get_property_map(FEVV::vertex_texcoord, g, pmaps);
+            put(vt_pm, vnew, get(vt_pm, vold));
+          }
+        };
+
         // the code in this section addresses the two
         // first reasons why Euler::add_face(vr, g)
         // returns null_face():
@@ -553,6 +593,7 @@ mesh_from_vector_representation(
         // try to add face by duplicating vertices
 
         // duplicate faulty vertices
+        bool face_vertex_duplicated = false;
         size_t n = face_vertices.size();
         for(size_t i = 0, ii = 1; i < n; ++i, ++ii, ii %= n)
         // the loop above and the 'faulty vertex' conditions below
@@ -571,35 +612,24 @@ mesh_from_vector_representation(
             // the vertex must be duplicated to work with
             // non-manifold datastructures
 
-            // DBG  std::cout << "DUPLICATE A VERTEX" << std::endl;
+            // DBG  std::cout << "DUPLICATE ONE VERTEX" << std::endl;
 
-            vertex_descriptor vold = face_vertices[i];
+            duplicate_v(i);
+            face_vertex_duplicated = true;
+          }
+        }
 
-            // create new vertex
-            vertex_descriptor vnew = add_vertex(g);
-            face_vertices[i] = vnew;
-            dup_v_nbr++;
+        // duplicate all face vertices if necessary
 
-            // set new vertex geometry
-            auto point_pm = get(boost::vertex_point, g);
-            put(point_pm, vnew, get(point_pm, vold));
+        if(! face_vertex_duplicated)
+        {
+          // no faulty vertex found, let's duplicate all face vertices
 
-            // set new vertex attributes
-            if(use_vertex_normal)
-            {
-              auto vn_pm = get_property_map(FEVV::vertex_normal, g, pmaps);
-              put(vn_pm, vnew, get(vn_pm, vold));
-            }
-            if(use_vertex_color)
-            {
-              auto vc_pm = get_property_map(FEVV::vertex_color, g, pmaps);
-              put(vc_pm, vnew, get(vc_pm, vold));
-            }
-            if(use_vertex_texture_coord)
-            {
-              auto vt_pm = get_property_map(FEVV::vertex_texcoord, g, pmaps);
-              put(vt_pm, vnew, get(vt_pm, vold));
-            }
+          // DBG  std::cout << "DUPLICATE ALL FACE-VERTICES" << std::endl;
+
+          for(size_t i = 0; i < n; ++i)
+          {
+            duplicate_v(i);
           }
         }
 
