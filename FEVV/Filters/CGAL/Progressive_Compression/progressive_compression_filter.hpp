@@ -296,7 +296,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
     nb_vertices_current_last = nb_vertices_current;
 
-    if(nb_vertices_current < nb_min_vertices)
+    if(static_cast<int>(nb_vertices_current) < nb_min_vertices)
     {
       break;
     }
