@@ -250,7 +250,7 @@ progressive_compression_main(int argc, const char **argv)
           for(size_t l = 0; l < tested_quantizations.size(); l++)
           {
             MeshT mesh;
-            number_batches = 50;
+            number_batches = 70;
             FEVV::PMapsContainer pmaps_bag_second;
             FEVV::Filters::read_mesh(input_file_path, mesh, pmaps_bag_second);
 

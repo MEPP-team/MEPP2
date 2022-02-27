@@ -176,7 +176,7 @@ public:
     // apply filter
     // B) call the filter corresponding to your operation
     FEVV::Filters::Parameters params(_predictor,_operator,_metric,true,false,_quantization);
-    std::string filepath = "null";
+    std::string filepath = ""; // output_path
 	
     std::string result;
     try {

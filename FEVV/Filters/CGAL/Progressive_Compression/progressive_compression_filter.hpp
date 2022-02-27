@@ -276,8 +276,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
       EdgeColorMap,
       VertexColorMap >
       batch(g, pm, EM, predict, index, v_cm, e_cm, batch_condition);
-  auto current_vertices_pair = vertices(g);
-  auto nb_vertices_current_last = std::distance(current_vertices_pair.first, current_vertices_pair.second);
+  auto nb_vertices_current_last = FEVV::size_of_vertices(g);
   for(int i = 0; i < nb_max_batches; i++)
   {
     batch.collapse_batch(); // simplify mesh (fine to coarse)
@@ -287,9 +286,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
       bool skip = ((i % 5) != 0);
       batch.compute_distorsion_l2(g_metric, HH, length, first_call, skip);
     }
-    current_vertices_pair = vertices(g);
-    auto nb_vertices_current = std::distance(current_vertices_pair.first,
-                                             current_vertices_pair.second);
+    auto nb_vertices_current = FEVV::size_of_vertices(g);
     //std::cout << nb_vertices_current << " " << nb_min_vertices << std::endl;
 
     if (nb_vertices_current_last == nb_vertices_current)
@@ -309,7 +306,6 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   FEVV::Filters::
       BinaryBatchEncoder< HalfedgeGraph, PointMap>
           binaryencode; // binary file encoding (lightweight)	
-
 
   std::string measure_path = // used when measure is set to true (Generate csv 
                              // data file for encoded mesh)

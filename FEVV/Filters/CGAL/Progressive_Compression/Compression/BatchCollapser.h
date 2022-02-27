@@ -112,9 +112,8 @@ public:
     _forbidden = 0;
     _link_condition = 0;
     _nb_collapse = 0;
-    auto vertices_pair = vertices(_g);
-    _number_vertices_original =
-        std::distance(vertices_pair.first, vertices_pair.second);
+    _number_vertices_original = FEVV::size_of_vertices(_g);
+    _number_vertices_last = _number_vertices_original;
     _batch_stop = batch_stop;
   }
   ~BatchCollapser() {}
@@ -254,21 +253,18 @@ public:
         _nb_collapse += 1;
       }
     }
+    int64_t number_current_vertices = FEVV::size_of_vertices(_g);
 #ifdef _DEBUG
     // Compute percentage of removed vertices compared to original mesh
-    auto vertices_pair = vertices(_g);
-    int64_t number_current_vertices =
-        std::distance(vertices_pair.first, vertices_pair.second);
-    float percentage_vertices = (1 - ((float)number_current_vertices) /
-                                         ((float)_number_vertices_original)) *
-                                100;
+    double percentage_vertices = (1 - (double)number_current_vertices /
+                                         (double)_number_vertices_original) * 100;
+    std::cout << "Percentage vertices removed from start " << percentage_vertices << std::endl;
 
-    std::cout << "Percentage vertices removed " << percentage_vertices
-              << std::endl;
-
-    //std::cout << _nb_collapse << std::endl;
+    percentage_vertices = (1 - (double)number_current_vertices / (double)_number_vertices_last) * 100;
+    std::cout << "Percentage vertices removed from last " << percentage_vertices << std::endl;
 #endif
-    //int i = 0;
+    _number_vertices_last = number_current_vertices;
+
     FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                                         PointMap > spanningtree(_g, _pm, true);
 
@@ -659,7 +655,7 @@ private:
   std::vector< std::vector< bool > > _list_edge_bitmask;
   int _link_condition;
   int _forbidden;
-  int64_t _number_vertices_original;
+  int64_t _number_vertices_original, _number_vertices_last;
   BATCH_CONDITION _batch_stop;
 };
 
