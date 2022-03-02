@@ -127,25 +127,13 @@ if( BUILD_USE_PCL )
                            ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
                            ${PCL_LIBRARIES}
                            )
-    if( ${CGAL_MAJOR_VERSION}.${CGAL_MINOR_VERSION} VERSION_LESS "5.0" )
-      # CGAL < 5.0
-      add_test( Test_point_cloud_wpca_cgal_point_set
-                test_point_cloud_normal_wpca_cgal_point_set
-                ${TESTING_DATA_DIR}/tetra.xyz
-                test_point_cloud_wpca_cgal_point_set_tetra.ply
-                3
-                0
-                0.1
-                )
-    else()
-      # CGAL >= 5.0
-      add_test( Test_point_cloud_wpca_cgal_point_set
-                test_point_cloud_normal_wpca_cgal_point_set
-                ${TESTING_DATA_DIR}/casting_with_normals.ply
-                test_point_cloud_wpca_cgal_point_set_casting.ply
-                15
-                0
-                0.1
-                )
-    endif()
+    # non-crashing test only because of reproducibility issue, cf issue #543
+    add_test( Test_point_cloud_wpca_cgal_point_set
+              test_point_cloud_normal_wpca_cgal_point_set
+              ${TESTING_DATA_DIR}/tetra.xyz
+              test_point_cloud_wpca_cgal_point_set_tetra.ply
+              3
+              0
+              0.1
+              )
 endif()
