@@ -282,7 +282,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     batch.collapse_batch(); // simplify mesh (fine to coarse)
     if(measure)
     {
-      bool first_call = (i == 0) ? true : false;
+      bool first_call = (i == 0);
       bool skip = ((i % 5) != 0);
       batch.compute_distortion_l2(g_metric, HH, length, first_call, skip);
     }
@@ -301,8 +301,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
       break;
     }
   }
-  auto refinements = batch.getRefinements(); // get refinements in reverse order
-                                             // (coarse to fine)
+  auto refinements = batch.getRefinements(); // get refinements 
+
   FEVV::Filters::
       BinaryBatchEncoder< HalfedgeGraph, PointMap>
           binaryencode; // binary file encoding (lightweight)	
@@ -393,11 +393,10 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
         size_other_info = refinements[i].get_reverse_bool().size();
       }
 
-
-      cumulative_bitmask += (data_bitmask.first) * 8;
-      cumulative_residuals += (data_residuals.first) * 8;
-      cumulative_connectivity += (data_connectivity.first) * 8;
-      cumulative_otherinfo += (data_other_info.first) * 8;	
+      cumulative_bitmask += (data_bitmask.first);
+      cumulative_residuals += (data_residuals.first);
+      cumulative_connectivity += (data_connectivity.first);
+      cumulative_otherinfo += (data_other_info.first);	
 
       for(auto buf_it = buffer.buffer()->begin();
           buf_it != buffer.buffer()->end();
@@ -412,15 +411,15 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
         binaryencode.AddLineMeasureFile(
             measure_path,
             num_batch,
-            data_bitmask,
-            data_connectivity,
-            data_residuals,
-            data_other_info,
+            data_bitmask, // in bits
+            data_connectivity, // in bits
+            data_residuals, // in bits
+            data_other_info, // in bits
             dist[i],
-            refinements[i].get_bitmask().size(),
-            refinements[i].get_connectivity().size(),
-            size_other_info,
-            header_size,
+            refinements[i].get_bitmask().size(), // in bits
+            refinements[i].get_connectivity().size(), // in bits
+            size_other_info, // in bits
+            header_size, // in bits
             num_vertices);
       }
       num_batch++;

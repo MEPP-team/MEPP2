@@ -81,7 +81,7 @@ public:
                           std::pair< int, double > &data_connectivity,// returned by BinaryBatchEncoder::EncodeBitmask
                           std::pair< int, int64_t > &data_residuals,// returned by BinaryBatchEncoder::EncodeBitmaskResiduals
                           std::pair< int, double > &data_other_info,// returned by BinaryBatchEncoder::EncodeBitmask
-                          double dist, //Distorsion value
+                          double dist, // Distortion value
                           size_t num_values_bitmask, 
                           size_t num_values_connectivity,
                           size_t num_values_other_info,
@@ -285,7 +285,7 @@ public:
       delete[] p_in;
 
 
-      // on encode la prediction
+      // encode the prediction
       draco::SymbolBitEncoder symbolBitEncoder;
       symbolBitEncoder.StartEncoding();
       for(size_t count = 0; count < residuals.size() * nb_residuals * 3; count++)
