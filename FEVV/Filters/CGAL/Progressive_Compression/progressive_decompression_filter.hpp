@@ -22,7 +22,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/BatchDecompressor.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/RawPositions.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/DeltaPredictor.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/HeaderHandler.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/BinaryBatchDecoder.h"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"

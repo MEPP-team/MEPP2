@@ -31,7 +31,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/ApplyColor.h"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/HeaderHandler.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h" // needed for the compilation
 

@@ -33,7 +33,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Stencil.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/RefinementInfo.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/HeaderHandler.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
 
