@@ -284,7 +284,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     {
       bool first_call = (i == 0) ? true : false;
       bool skip = ((i % 5) != 0);
-      batch.compute_distorsion_l2(g_metric, HH, length, first_call, skip);
+      batch.compute_distortion_l2(g_metric, HH, length, first_call, skip);
     }
     auto nb_vertices_current = FEVV::size_of_vertices(g);
     //std::cout << nb_vertices_current << " " << nb_min_vertices << std::endl;

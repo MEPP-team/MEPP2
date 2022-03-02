@@ -180,7 +180,7 @@ public:
   }
 
    /// computes the L2 distorsion between the original mesh and the current LOD
-  void compute_distorsion_l2(
+  void compute_distortion_l2(
       FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > &g_metric, /// object containing the original mesh
       HeaderHandler &header, /// header containing every compression info (used to dequantize the mesh)
       double diag, /// diagonal of the mesh bounding box (to normalize)
@@ -190,7 +190,7 @@ public:
   {
     if(!skip)
     {
-      std::cout << "computing symmetric l2" << std::endl;
+      std::cout << "computing symmetrical L2 (max L2/Hausdorff or apprimated mean L2)" << std::endl;
       HalfedgeGraph current_graph = _g;
       PointMap current_pm = get(boost::vertex_point, current_graph);
       UniformDequantization< HalfedgeGraph, PointMap > dq(
@@ -203,7 +203,7 @@ public:
       dq.set_quantization_step();
       dq.point_dequantization();
       double geometric_error =
-          g_metric.compute_symetric_L2(current_graph, first_call);
+          g_metric.compute_symmetric_L2(current_graph, first_call);
       _distorsion_per_batch.push_back(geometric_error / diag);
     }
     else
