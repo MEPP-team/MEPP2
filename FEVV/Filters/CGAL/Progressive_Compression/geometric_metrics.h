@@ -43,7 +43,7 @@ namespace FEVV {
 			typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
 			typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point>
 
-        class GeometricMetrics
+    class GeometricMetrics
 		{
 		public:
             //typedef typename FEVV::Geometry_traits<HalfedgeGraph>::Kernel K;

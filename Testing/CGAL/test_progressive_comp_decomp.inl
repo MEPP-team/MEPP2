@@ -199,7 +199,7 @@ test_automatic_progressive_compression_decompression(int argc,
                                        output_file_path_decomp,
                                        false,
                                        0,
-	  0,
+                                       0,
                                        true);
   if(equal_or_not)
   {

@@ -15,7 +15,7 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/progressive_compression_filter.hpp"
-#include "FEVV/Filters/CGAL/Progressive_Compression/DistorsionComputing.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/DistortionComputing.h"
 
 template< typename MeshT >
 void
@@ -87,7 +87,7 @@ progressive_compression_main(int argc, const char **argv)
   int mode = 0;
 
   int number_batches = 15;
-  int max_number_vertices = 0;
+  int min_number_vertices = -1;
   int bits_quantization = 12;
   std::string output_file_path_save_preprocess = 
   "progressive_compression_original_mesh_after_preprocess.off"; // not used in this file
@@ -161,7 +161,7 @@ progressive_compression_main(int argc, const char **argv)
   }
   if(argc > 9)
   {
-    max_number_vertices = atoi(argv[9]);
+    min_number_vertices = atoi(argv[9]);
   }
   if(argc > 10)
   {
@@ -179,6 +179,10 @@ progressive_compression_main(int argc, const char **argv)
   // read mesh from file
   FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
 
+  if (min_number_vertices == -1) {
+    // set it to 5% of init mesh vertices as in CPM
+    min_number_vertices = std::round(FEVV::size_of_vertices(m)*0.05);
+  }
 
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type v_cm;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
@@ -209,7 +213,7 @@ progressive_compression_main(int argc, const char **argv)
                                    output_path,
                                    path_binary,
                                    number_batches,
-                                   max_number_vertices,
+                                   min_number_vertices,
                                    batch_stop,
                                    true,
                                    true,
@@ -230,7 +234,8 @@ progressive_compression_main(int argc, const char **argv)
     std::cout << "Measure mode, all metrics being tested" << std::endl;
     std::vector< FEVV::Filters::PREDICTION_TYPE > available_predictions = {
         FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
-        FEVV::Filters::PREDICTION_TYPE::DELTA};
+        FEVV::Filters::PREDICTION_TYPE::DELTA,
+        FEVV::Filters::PREDICTION_TYPE::POSITION};
     std::vector< FEVV::Filters::VKEPT_POSITION > available_operators = {
         FEVV::Filters::VKEPT_POSITION::MIDPOINT,
         FEVV::Filters::VKEPT_POSITION::HALFEDGE};
@@ -239,7 +244,7 @@ progressive_compression_main(int argc, const char **argv)
         FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING,
         FEVV::Filters::METRIC_TYPE::QEM};
 
-    std::vector< int > tested_quantizations = {12};
+    std::vector< int > tested_quantizations = {10, 12, 16};
 
     for(size_t i = 0; i < available_predictions.size(); i++)
     {
@@ -291,7 +296,7 @@ progressive_compression_main(int argc, const char **argv)
                                            output_path,
                                            path_binary,
                                            number_batches,
-                                           max_number_vertices,
+                                           min_number_vertices,
                                            batch_stop,
                                            true,
                                            true,
@@ -305,12 +310,9 @@ progressive_compression_main(int argc, const char **argv)
 
   if(mode == 2)
   {
-    ComputeDistorsions(
+    ComputeDistortions(
         m, pm, v_cm, e_cm, v_nm, FEVV::Geometry_traits< MeshT >(m), argv[3]);
   }
-
-  //// write mesh to file
-  // FEVV::Filters::write_mesh("de"+output_file_path, m, pmaps_bag);
 
   return 0;
 }
