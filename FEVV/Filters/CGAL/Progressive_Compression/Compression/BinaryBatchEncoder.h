@@ -79,7 +79,7 @@ public:
                           int num_batch,
                           std::pair< int, double > &data_bitmask, // returned by BinaryBatchEncoder::EncodeBitmask (gives the the actual size of the bitmask and the entropy)
                           std::pair< int, double > &data_connectivity,// returned by BinaryBatchEncoder::EncodeBitmask
-                          std::pair< int, int64_t > &data_residuals,// returned by BinaryBatchEncoder::EncodeBitmaskResiduals
+                          std::pair< int, double > &data_residuals,// returned by BinaryBatchEncoder::EncodeBitmaskResiduals
                           std::pair< int, double > &data_other_info,// returned by BinaryBatchEncoder::EncodeBitmask
                           double dist, // Distortion value
                           size_t num_values_bitmask, 
@@ -230,7 +230,7 @@ public:
                           bitmask_entropy);
   }
   /// Encodes a set of residuals with draco's entropy coder (SymbolBitEncoder)
-  std::pair< int, int64_t >
+  std::pair< int, double >
   EncodeResiduals(const std::list< std::vector< Vector > > &residuals,
                   draco::EncoderBuffer &buffer,
                   int bit_quantization)
@@ -265,7 +265,6 @@ public:
       draco::ConvertSignedIntsToSymbols(
           p_in, static_cast< int >(residuals.size() * nb_residuals * 3), p_out);
       // entropy computation
-      int num_unique_symbols = 0;
       uint32_t max = 0;
       for(size_t i = 0; i < residuals.size() * nb_residuals * 3; i++)
       {
@@ -278,7 +277,7 @@ public:
           p_out,
           static_cast< int >(residuals.size() * nb_residuals * 3),
           max,
-          &num_unique_symbols);
+          nullptr);
 
 
       // delete pointers in
@@ -306,14 +305,10 @@ public:
       draco::EncodeSymbols(p_out, num_values_int, 1, opt, &buffer_max_comp);
       int size_original_method =
           (static_cast< int >(buffer.size()) - size_buffer) * 8;
-      //int size_max_comp = (static_cast< int >(buffer_max_comp.size())) * 8;
-      //double ratio =
-      //    ((double)stream_2_entropy_bits / (double)size_original_method) * 100.0;
-
 
       delete opt;
       delete[] p_out;
-      return std::make_pair(size_original_method, stream_2_entropy_bits);
+      return std::make_pair(size_original_method, stream_2_entropy_bits / static_cast<double>(residuals.size() * nb_residuals * 3));
     }
     return std::make_pair(0, 0);
   }

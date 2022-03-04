@@ -122,9 +122,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
   // keeping the original mesh (to measure distorsion with the right scale)
 
-  auto vertices_pair = vertices(g);
-  size_t num_vertices =
-      std::distance(vertices_pair.first, vertices_pair.second);
+  size_t num_vertices = FEVV::size_of_vertices(g);
   FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > g_metric(g, pm);
   g_metric.initialize_AABB_tree_for_init_LoD();
   g_metric.subsample_LoD_init();

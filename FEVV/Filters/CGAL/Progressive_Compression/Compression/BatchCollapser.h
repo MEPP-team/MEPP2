@@ -190,7 +190,7 @@ public:
   {
     if(!skip)
     {
-      std::cout << "computing symmetrical L2 (max L2/Hausdorff or apprimated mean L2)" << std::endl;
+      std::cout << "computing symmetrical L2 (max L2/Hausdorff or approximated mean L2)" << std::endl;
       HalfedgeGraph current_graph = _g;
       PointMap current_pm = get(boost::vertex_point, current_graph);
       UniformDequantization< HalfedgeGraph, PointMap > dq(
@@ -234,10 +234,8 @@ public:
 	// manifold
     _forbidden = 0;
     _link_condition = 0;
-    _metric->ComputeError();
+    _metric->ComputeError(); // compute edge costs for current batch
 
-    //double thresh =
-        _metric->getThreshold(); // the threshold is the mean of every weight
     bool collapse_possible = true;
     _nb_collapse = 0;
 

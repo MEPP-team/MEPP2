@@ -43,7 +43,7 @@ namespace FEVV {
 			typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
 			typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point>
 
-    class GeometricMetrics
+        class GeometricMetrics
 		{
 		public:
             //typedef typename FEVV::Geometry_traits<HalfedgeGraph>::Kernel K;
@@ -64,7 +64,7 @@ namespace FEVV {
 			{
 				return CGAL::Polygon_mesh_processing::approximate_Hausdorff_distance<TAG>(_LoD_init, 
 				                                                                          LoD, 
-																						  CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(4000));
+																						  CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(100));
 			}
 
 			void initialize_AABB_tree_for_init_LoD()
@@ -81,8 +81,8 @@ namespace FEVV {
 			{
 				CGAL::Polygon_mesh_processing::sample_triangle_mesh(_LoD_init, 
                                                             std::back_inserter(_samples_LoD_init), 
-                                                            CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(4000)
-                                                            //CGAL::Polygon_mesh_processing::parameters::number_of_points_on_faces(10)
+                                                            //CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(100) // too costly for large meshes
+                                                            CGAL::Polygon_mesh_processing::parameters::number_of_points_on_faces(10)
                                                             );
 			}
 
@@ -103,8 +103,8 @@ namespace FEVV {
 						std::list<Point> samples;
 						CGAL::Polygon_mesh_processing::sample_triangle_mesh(mesh_to_sample, 
                                                                 std::back_inserter(samples), 
-                                                                CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(4000)
-                                                                //CGAL::Polygon_mesh_processing::parameters::number_of_points_on_faces(100000)
+                                                                CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(100)
+                                                                //CGAL::Polygon_mesh_processing::parameters::number_of_points_on_faces(100)
                                                                );
 
 						// 2) compute distance between points and init surface (mesh_AABB_tree)

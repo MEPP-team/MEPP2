@@ -46,6 +46,7 @@ public:
       std::swap(SuperClass::_queue, empty2);
     }
     SuperClass::_edges_cost.clear();
+    std::swap(SuperClass::_edges_cost, SuperClass::edge2cost_map());
     if(SuperClass::_edges_cost.empty())
     {
       //std::cout << "Volume Metric" << std::endl;

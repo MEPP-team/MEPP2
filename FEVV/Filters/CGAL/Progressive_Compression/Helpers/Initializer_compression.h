@@ -122,23 +122,23 @@ progressive_compression_main(int argc, const char **argv)
     output_path = typeid(m).name();
     if (output_path.find("Surface_mesh") != std::string::npos)
     {
-      output_path = "Surface_mesh_";
+      output_path = "./Surface_mesh_";
     }
     else if (output_path.find("Polyhedron_3") != std::string::npos)
     {
-      output_path = "Polyhedron_3_";
+      output_path = "./Polyhedron_3_";
     }
     else if (output_path.find("Linear_cell_complex") != std::string::npos)
     {
-      output_path = "LCC_";
+      output_path = "./LCC_";
     }
     else if (output_path.find("AIF") != std::string::npos)
     {
-      output_path = "AIF_";
+      output_path = "./AIF_";
     }
     else
     {
-      output_path = "Other_mesh_type_";
+      output_path = "./Other_mesh_type_";
     }
   }
 
@@ -177,17 +177,20 @@ progressive_compression_main(int argc, const char **argv)
   std::string output_file_path = "progressive_compressionFilteroutput.obj";
 
   // read mesh from file
-  FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
+  if (mode != 1) {
+      FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
 
-  if (min_number_vertices == -1) {
-    // set it to 5% of init mesh vertices as in CPM
-    min_number_vertices = std::round(FEVV::size_of_vertices(m)*0.05);
+      if (min_number_vertices == -1) {
+          // set it to 5% of init mesh vertices as in CPM
+          min_number_vertices = std::round(FEVV::size_of_vertices(m) * 0.05);
+      }
   }
 
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type v_cm;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
   typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type f_nm;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type v_nm;
+
   // create or retrieve property maps. 
   set_mesh_and_properties(
       m, pmaps_bag, v_cm, e_cm, f_nm, v_nm);
@@ -233,19 +236,26 @@ progressive_compression_main(int argc, const char **argv)
   {
     std::cout << "Measure mode, all metrics being tested" << std::endl;
     std::vector< FEVV::Filters::PREDICTION_TYPE > available_predictions = {
-        FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
-        FEVV::Filters::PREDICTION_TYPE::DELTA,
-        FEVV::Filters::PREDICTION_TYPE::POSITION};
+                                FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
+                                FEVV::Filters::PREDICTION_TYPE::DELTA
+                                //,FEVV::Filters::PREDICTION_TYPE::POSITION
+                           };
     std::vector< FEVV::Filters::VKEPT_POSITION > available_operators = {
-        FEVV::Filters::VKEPT_POSITION::MIDPOINT,
-        FEVV::Filters::VKEPT_POSITION::HALFEDGE};
+                                FEVV::Filters::VKEPT_POSITION::MIDPOINT,
+                                FEVV::Filters::VKEPT_POSITION::HALFEDGE
+                           };
     std::vector< FEVV::Filters::METRIC_TYPE > available_metrics = {
-        FEVV::Filters::METRIC_TYPE::EDGE_LENGTH,
-        FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING,
-        FEVV::Filters::METRIC_TYPE::QEM};
+                                FEVV::Filters::METRIC_TYPE::EDGE_LENGTH,
+                                FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING,
+                                FEVV::Filters::METRIC_TYPE::QEM
+                           };
 
-    std::vector< int > tested_quantizations = {10, 12, 16};
-
+    std::vector< int > tested_quantizations = { //10, 
+                                                12 
+                                                //,16
+                                               };
+    bool first = true;
+    int cpt = 0;
     for(size_t i = 0; i < available_predictions.size(); i++)
     {
       for(size_t j = 0; j < available_operators.size(); j++)
@@ -259,6 +269,12 @@ progressive_compression_main(int argc, const char **argv)
             FEVV::PMapsContainer pmaps_bag_second;
             FEVV::Filters::read_mesh(input_file_path, mesh, pmaps_bag_second);
 
+            if (first && (min_number_vertices == -1)) {
+                // set it to 5% of init mesh vertices as in CPM
+                min_number_vertices = std::round(FEVV::size_of_vertices(mesh) * 0.05);
+                first = false;
+            }
+
             typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type
                 v_cm2;
             typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type
@@ -267,8 +283,7 @@ progressive_compression_main(int argc, const char **argv)
                 f_nm2;
             typename FEVV::PMap_traits< FEVV::vertex_normal_t,
                                         MeshT >::pmap_type v_nm2;
-            set_mesh_and_properties(
-                m, pmaps_bag, v_cm, e_cm, f_nm, v_nm);
+
             set_mesh_and_properties(mesh,
                                     pmaps_bag_second,
                                     v_cm2,
@@ -286,6 +301,7 @@ progressive_compression_main(int argc, const char **argv)
                                              true,
                                              false,
                                              tested_quantizations[l]);
+            
             progressive_compression_filter(mesh,
                                            pm2,
                                            v_cm2,
@@ -302,6 +318,9 @@ progressive_compression_main(int argc, const char **argv)
                                            true,
                                            false,
                                            output_file_path_save_preprocess);
+
+            ++cpt;
+            std::cout << "finished = " << static_cast<double>(cpt)/(available_predictions.size() * available_operators.size() * available_metrics.size() * tested_quantizations.size()) << std::endl;
           }
         }
       }
