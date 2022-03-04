@@ -42,7 +42,14 @@ target_link_libraries( texture_image_demo_filter_cgal_surface_mesh
                        ${IMG-3RDPARTY_LIBRARIES}
                       )
 
-######			  
+######
+add_subdirectory( JND )
+
+######		
+if( NOT BUILD_USE_DRACO OR NOT draco_FOUND )
+  return()
+endif()
+
 add_executable( progressive_compression_filter_cgal_surface_mesh
                 progressive_compression_filter_cgal_surface_mesh.cpp )
 target_link_libraries( progressive_compression_filter_cgal_surface_mesh
@@ -52,5 +59,4 @@ target_link_libraries( progressive_compression_filter_cgal_surface_mesh
                        ${draco_LIBRARIES}
                        )
 
-######
-add_subdirectory( JND )
+
