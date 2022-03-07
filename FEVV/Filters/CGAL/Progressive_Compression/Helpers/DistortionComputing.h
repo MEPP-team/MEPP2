@@ -63,8 +63,6 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
 {
   //initialize AABB tree for the original mesh
   FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > g_metric(g, pm);
-  g_metric.initialize_AABB_tree_for_init_LoD();
-  g_metric.subsample_LoD_init();
 
   // PREPROCESS: get quantization parameters
   FEVV::Filters::PreprocessingLD< HalfedgeGraph, PointMap, VertexColorMap >
@@ -103,7 +101,7 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
 
 	// compute distortion
     _distortion_per_batch[i] = 
-	    g_metric.compute_symmetric_L2(current_mesh, false);
+	    g_metric.compute_symmetric_L2(current_mesh, true);
   }
   // create distortion column in	a new .csv file
   std::ofstream dist_file;

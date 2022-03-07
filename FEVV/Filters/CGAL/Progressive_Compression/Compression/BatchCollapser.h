@@ -184,7 +184,6 @@ public:
       FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > &g_metric, /// object containing the original mesh
       HeaderHandler &header, /// header containing every compression info (used to dequantize the mesh)
       double diag, /// diagonal of the mesh bounding box (to normalize)
-      bool first_call, /// if true, the original mesh will go through a preprocess. To be used only the first time
       bool skip /// we can choose to skip distorsion computation (the value will be -1). For example, we can choose to only compute L2 distorsion on 1 LOD out of 5 to save time
                              )
   {
@@ -203,7 +202,7 @@ public:
       dq.set_quantization_step();
       dq.point_dequantization();
       double geometric_error =
-          g_metric.compute_symmetric_L2(current_graph, first_call);
+          g_metric.compute_symmetric_L2(current_graph, true);
       _distorsion_per_batch.push_back(geometric_error / diag);
     }
     else
@@ -269,8 +268,6 @@ public:
     sort_list_memory(spanningtree); /// sort _list_memory according to vertex st traversal
 
     // Store refinement info as bitstreams and residuals
-
-
     RefinementInfo< HalfedgeGraph,
                     Index,
                     PointMap,

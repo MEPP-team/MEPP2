@@ -124,8 +124,6 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
   size_t num_vertices = FEVV::size_of_vertices(g);
   FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > g_metric(g, pm);
-  g_metric.initialize_AABB_tree_for_init_LoD();
-  g_metric.subsample_LoD_init();
 
   // PREPROCESS
 
@@ -280,9 +278,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     batch.collapse_batch(); // simplify mesh (fine to coarse)
     if(measure)
     {
-      bool first_call = (i == 0);
       bool skip = ((i % 5) != 0);
-      batch.compute_distortion_l2(g_metric, HH, length, first_call, skip);
+      batch.compute_distortion_l2(g_metric, HH, length, skip);
     }
     auto nb_vertices_current = FEVV::size_of_vertices(g);
     //std::cout << nb_vertices_current << " " << nb_min_vertices << std::endl;

@@ -250,9 +250,9 @@ progressive_compression_main(int argc, const char **argv)
                                 FEVV::Filters::METRIC_TYPE::QEM
                            };
 
-    std::vector< int > tested_quantizations = { //10, 
+    std::vector< int > tested_quantizations = { 10, 
                                                 12 
-                                                //,16
+                                                ,16
                                                };
     bool first = true;
     int cpt = 0;
