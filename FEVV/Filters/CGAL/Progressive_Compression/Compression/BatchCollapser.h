@@ -189,7 +189,7 @@ public:
   {
     if(!skip)
     {
-      std::cout << "computing symmetrical L2 (max L2/Hausdorff or approximated mean L2)" << std::endl;
+      std::cout << "computing symmetrical L2 (max L2/Hausdorff and RMSE)" << std::endl;
       HalfedgeGraph current_graph = _g;
       PointMap current_pm = get(boost::vertex_point, current_graph);
       UniformDequantization< HalfedgeGraph, PointMap > dq(
@@ -203,10 +203,16 @@ public:
       dq.point_dequantization();
       double geometric_error =
           g_metric.compute_symmetric_L2(current_graph, true);
-      _distorsion_per_batch.push_back(geometric_error / diag);
+      _RMSE_distorsion_per_batch.push_back(geometric_error / diag);
+      geometric_error =
+          g_metric.compute_symmetric_L2(current_graph, false);
+      _hausdorff_distorsion_per_batch.push_back(geometric_error / diag);
     }
     else
-      _distorsion_per_batch.push_back(-1);
+    {
+      _RMSE_distorsion_per_batch.push_back(-1);
+      _hausdorff_distorsion_per_batch.push_back(-1);
+    }
   }
 
   private:
@@ -621,8 +627,8 @@ public:
     return _refinements;
   }
 
-  const std::vector< double >& getDistorsion() const { return _distorsion_per_batch; }
-
+  const std::vector< double >& getRMSEDistorsion() const { return _RMSE_distorsion_per_batch; }
+  const std::vector< double >& getHausdorffDistorsion() const { return _hausdorff_distorsion_per_batch; }
 private:
   HalfedgeGraph &_g; /// the mesh being simplified
   PointMap &_pm; 
@@ -646,7 +652,7 @@ private:
       _refinements;
 
 
-  std::vector< double > _distorsion_per_batch;
+  std::vector< double > _RMSE_distorsion_per_batch, _hausdorff_distorsion_per_batch;
   std::vector< std::vector< bool > > _list_edge_bitmask;
   int _link_condition;
   int _forbidden;

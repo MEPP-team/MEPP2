@@ -74,7 +74,7 @@ namespace FEVV {
 				face_iterator orig_begin = f_range_it.first;
 				face_iterator orig_end = f_range_it.second;
 
-        _LoD_init_tree.clear();
+                _LoD_init_tree.clear();
 
 				_LoD_init_tree.insert(orig_begin, orig_end, _LoD_init);
 				_LoD_init_tree.accelerate_distance_queries();
@@ -82,25 +82,25 @@ namespace FEVV {
 
 			void subsample_LoD_init()
 			{
-        _vec_distorsion.clear();
-        std::vector<double> empty_vector;
-        std::swap(_vec_distorsion, empty_vector);
-        _vec_distorsion.push_back(0.0);
+              _vec_distorsion.clear();
+              std::vector<double> empty_vector;
+              std::swap(_vec_distorsion, empty_vector);
+              _vec_distorsion.push_back(0.0);
 
-        _samples_LoD_init.clear();
-        std::list<Point> empty_list;
-        std::swap(_samples_LoD_init, empty_list);
+              _samples_LoD_init.clear();
+              std::list<Point> empty_list;
+              std::swap(_samples_LoD_init, empty_list);
 
-        // We assume the input mesh has enough points on its surface for a distance
-        // computation, therefore default parameters are used
-				CGAL::Polygon_mesh_processing::sample_triangle_mesh(_LoD_init, 
+              // We assume the input mesh has enough points on its surface for a distance
+              // computation, therefore default parameters are used
+              CGAL::Polygon_mesh_processing::sample_triangle_mesh(_LoD_init, 
                                                             std::back_inserter(_samples_LoD_init), 
                                                             CGAL::parameters::all_default()
                                                             );
-        // the value of this attribute depends on
-        // the selected parameters for sample_triangle_mesh
-        number_of_points_per_area_unit_LoD_init = FEVV::size_of_vertices(_LoD_init) / std::max(0.001, CGAL::Polygon_mesh_processing::area(_LoD_init)) ;
-        std::cout << "area = " << CGAL::Polygon_mesh_processing::area(_LoD_init) << " ; number_of_points_per_area_unit_LoD_init = " << number_of_points_per_area_unit_LoD_init << std::endl;
+              // the value of this attribute depends on
+              // the selected parameters for sample_triangle_mesh
+              number_of_points_per_area_unit_LoD_init = FEVV::size_of_vertices(_LoD_init) / std::max(0.001, CGAL::Polygon_mesh_processing::area(_LoD_init)) ;
+              //std::cout << "area = " << CGAL::Polygon_mesh_processing::area(_LoD_init) << " ; number_of_points_per_area_unit_LoD_init = " << number_of_points_per_area_unit_LoD_init << std::endl;
 			}
     public:
 			double compute_L2(HalfedgeGraph& mesh_AABB_tree, 

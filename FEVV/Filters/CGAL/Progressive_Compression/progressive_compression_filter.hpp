@@ -163,7 +163,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
   // PREPROCESS DONE HERE
 
-  bool measure = false; // Generate csv data file for encoded mesh
+  bool measure = true; // Generate csv data file for encoded mesh
 
   // Getting compression parameters (informations for the bounding box)
 
@@ -341,7 +341,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   //coarse_mesh.close();
 
   std::ofstream binary_output_file;
-  binary_output_file.open(binary_path, std::fstream::binary);
+  binary_output_file.open(binary_path, std::fstream::binary | std::ofstream::out | std::ofstream::trunc);
   binary_output_file.write(buffercoarsemesh.data(), buffercoarsemesh.size());
   binary_output_file.close();
 
@@ -354,7 +354,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   // write refinement info into both binary and text files (binary for real use,
   // text for debug)
   int num_batch = 0;
-  auto dist = batch.getDistorsion();
+  auto dist_RMSE = batch.getRMSEDistorsion();
+  auto dist_hausdorff = batch.getHausdorffDistorsion();
   int cumulative_bitmask = 0;
   int cumulative_residuals = 0;
   int cumulative_connectivity = 0;
@@ -410,7 +411,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
             data_connectivity, // in bits
             data_residuals, // in bits
             data_other_info, // in bits
-            dist[i],
+            dist_RMSE[i],
+            dist_hausdorff[i],
             refinements[i].get_bitmask().size(), // in bits
             refinements[i].get_connectivity().size(), // in bits
             size_other_info, // in bits

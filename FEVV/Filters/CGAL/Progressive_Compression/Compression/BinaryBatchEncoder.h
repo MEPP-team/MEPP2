@@ -67,8 +67,8 @@ public:
     csv_file.open(csv_file_path);
     csv_file
         << "NUM_BATCH,SIZE_BITMASK,SIZE_CONNECTIVITY,SIZE_RESIDUALS,BITMASK_"
-           "ENTROPY,CONNECTIVITY_ENTROPY,RESIDUALS_ENTROPY,DISTORTION,"
-           "NBVALUESBITMASK,NBVALUESCONNECTIVITY,NBVALUESOTHERINFO,"
+           "ENTROPY,CONNECTIVITY_ENTROPY,RESIDUALS_ENTROPY,DISTORTION_RMSE,"
+           "DISTORTION_HAUSDORFF,NBVALUESBITMASK,NBVALUESCONNECTIVITY,NBVALUESOTHERINFO,"
            "SIZEOTHERINFO,ENTROPYOTHERINFO,SIZE_HEADER,NUM_VERTICES"
         << "\n";
 
@@ -81,7 +81,8 @@ public:
                           std::pair< int, double > &data_connectivity,// returned by BinaryBatchEncoder::EncodeBitmask
                           std::pair< int, double > &data_residuals,// returned by BinaryBatchEncoder::EncodeBitmaskResiduals
                           std::pair< int, double > &data_other_info,// returned by BinaryBatchEncoder::EncodeBitmask
-                          double dist, // Distortion value
+                          double dist_RMSE, // Distortion value
+                          double dist_hausdorff, // Distortion value
                           size_t num_values_bitmask, 
                           size_t num_values_connectivity,
                           size_t num_values_other_info,
@@ -94,7 +95,7 @@ public:
     csv_file << num_batch << "," << data_bitmask.first << ","
              << data_connectivity.first << "," << data_residuals.first << ","
              << data_bitmask.second << "," << data_connectivity.second << ","
-             << data_residuals.second << "," << dist << ","
+             << data_residuals.second << "," << dist_RMSE << "," << dist_hausdorff << ","
              << num_values_bitmask << "," << num_values_connectivity << ","
              << num_values_other_info << "," << data_other_info.first << ","
              << data_other_info.second << "," << size_header << ","
@@ -125,7 +126,7 @@ public:
     draco::PointCloud *out_point_cloud_ =
         static_cast< draco::PointCloud * >(&g_draco);
     out_point_cloud_->set_num_points(
-        3 * static_cast<unsigned int>(num_faces_)); // Vincent: Why not use point number?
+        3 * static_cast<unsigned int>(num_faces_)); // Why not use point number?
 
     draco::GeometryAttribute va;
     va.Init(draco::GeometryAttribute::POSITION,
