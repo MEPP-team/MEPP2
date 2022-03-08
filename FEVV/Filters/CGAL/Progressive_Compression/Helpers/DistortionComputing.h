@@ -15,7 +15,7 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/BatchCollapser.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/quantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/preprocessingLD.h"
 #include "boost/filesystem.hpp"
@@ -70,9 +70,6 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
   preprocess.process_mesh_before_quantization();
   
   FEVV::Filters::UniformQuantization< HalfedgeGraph, PointMap > pq(g, pm, 12);
-  pq.find_min_and_max();
-  pq.set_bounding_box();
-  pq.set_quantization_step();
 
   std::vector< double > bb = pq.get_bb_dimension();
   std::vector< double > init = pq.get_init_coord();
@@ -95,8 +92,7 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
         12,
         pq.get_bb_dimension(),
         pq.get_init_coord());
-    dq.set_max_length();
-    dq.set_quantization_step();
+
     dq.point_dequantization();
 
 	// compute distortion

@@ -39,7 +39,7 @@ namespace FEVV {
 			typename vertex_iterator =
 			typename boost::graph_traits< HalfedgeGraph >::vertex_iterator >
 
-    class UniformDequantization
+        class UniformDequantization
 		{
 
 		public:
@@ -51,8 +51,11 @@ namespace FEVV {
 				: _g(g), _pm(pm), _nb_bits_quantization(nb_bits_quantization),
 				_bb_dimension(bb_dimension), _init_point(init_point)
 			{
+				this->set_max_length();
+                //this->set_boundingBox();
+				this->set_quantization_step();
 			}
-
+		protected:
 			struct boundingBox
 			{
 				Point starting_point;
@@ -61,20 +64,20 @@ namespace FEVV {
 				Vector vp;
 			};
 
-			void set_boundingBox()
-			{
-				_bb.starting_point = Point(_init_point[0], _init_point[1], _init_point[2]);
-				_bb.vp = Vector(_bb_dimension[0], 0, 0);
-				_bb.vl = Vector(0, _bb_dimension[1], 0);
-				_bb.vh = Vector(0, 0, _bb_dimension[2]);
-			}
+			//void set_boundingBox()
+			//{
+			//	_bb.starting_point = Point(_init_point[0], _init_point[1], _init_point[2]);
+			//	_bb.vp = Vector(_bb_dimension[0], 0, 0);
+			//	_bb.vl = Vector(0, _bb_dimension[1], 0);
+			//	_bb.vh = Vector(0, 0, _bb_dimension[2]);
+			//}
 
 			void set_max_length()
 			{
 				_max_length = _bb_dimension[0];
-				if (_bb_dimension[0] < _bb_dimension[1])
+				if (_max_length < _bb_dimension[1])
 					_max_length = _bb_dimension[1];
-				if (_bb_dimension[1] < _bb_dimension[2])
+				if (_max_length < _bb_dimension[2])
 					_max_length = _bb_dimension[2];
 			}
 
@@ -84,7 +87,7 @@ namespace FEVV {
 				_quantization_step = _max_length / pow(2.0, _nb_bits_quantization);
 				std::cout << "quantization step : " << _quantization_step << std::endl;
 			}
-
+		public:
 			Point dequantize_vertex(vertex_descriptor v)
 			{
 				const Point& pq = get(_pm, v);
@@ -148,7 +151,7 @@ namespace FEVV {
 			const int _nb_bits_quantization;
 			std::vector< double > _bb_dimension;
 			std::vector< double > _init_point;
-			boundingBox _bb;
+			//boundingBox _bb;
 			double _max_length;
 			double _quantization_step;
 		};

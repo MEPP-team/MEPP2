@@ -25,7 +25,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/BinaryBatchEncoder.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/quantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/preprocessingLD.h"
 #include "FEVV/Filters/Generic/minmax_map.h"
@@ -47,10 +47,7 @@ preprocess_mesh(
   preprocess.process_mesh_before_quantization();
 
   // vertex positions part
-  pq.find_min_and_max();
-  pq.set_bounding_box();
-  pq.set_quantization_step();
-  pq.point_quantization();
+  pq.point_quantization(true);
  
   preprocess.process_mesh_after_quantization();
 }
@@ -135,8 +132,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   // the result (so we can compare it to the decompressed mesh)
   if(preprocess)
   {
-    preprocess_mesh(g, pm, v_cm, pq); // quantize vertex positions and 
-                                                 // UV coordinates
+    preprocess_mesh(g, pm, v_cm, pq); // quantize vertex positions
   }
   if(save_preprocess)
   {
@@ -157,9 +153,6 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
       params.getQuantization(),
       pq.get_bb_dimension(),
       pq.get_init_coord());
-
-  dq.set_max_length();
-  dq.set_quantization_step();
 
   // PREPROCESS DONE HERE
 

@@ -302,6 +302,7 @@ progressive_compression_main(int argc, const char **argv)
                                              false,
                                              tested_quantizations[l]);
             
+            path_binary = ""; // must be "empty" in order to be set automatically
             progressive_compression_filter(mesh,
                                            pm2,
                                            v_cm2,

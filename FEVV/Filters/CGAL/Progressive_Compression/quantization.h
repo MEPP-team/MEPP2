@@ -44,27 +44,31 @@ namespace FEVV {
 			class UniformQuantization {
 
 			public:
-				UniformQuantization(const HalfedgeGraph& g, PointMap& pm, int nb_bits) : _g(g), _pm(pm), _nb_bits(nb_bits) {}
+				UniformQuantization(const HalfedgeGraph& g, PointMap& pm, int nb_bits) : _g(g), _pm(pm), _nb_bits(nb_bits) {
+					this->find_min_and_max();
+					this->set_bounding_box();
+					this->set_quantization_step();
+				}
 
-
+			protected:
 				void find_min_and_max()
 				{
-          Geometry gt(_g);
-					vertex_iterator vi = vertices(_g).first;
-          if (vertices(_g).first == vertices(_g).second)
-            return;
-					_p_min = get(_pm, *vi);
-					_p_max = _p_min;
-          ++vi;
-          double x_min = gt.get_x(_p_min);
-          double y_min = gt.get_y(_p_min);
-          double z_min = gt.get_z(_p_min);
-          double x_max = gt.get_x(_p_max);
-          double y_max = gt.get_y(_p_max);
-          double z_max = gt.get_z(_p_max);
-          double x_current;
-          double y_current;
-          double z_current;
+                  Geometry gt(_g);
+                  vertex_iterator vi = vertices(_g).first;
+                  if (vertices(_g).first == vertices(_g).second)
+                    return;
+                  _p_min = get(_pm, *vi);
+                  _p_max = _p_min;
+                  ++vi;
+                  double x_min = gt.get_x(_p_min);
+                  double y_min = gt.get_y(_p_min);
+                  double z_min = gt.get_z(_p_min);
+                  double x_max = gt.get_x(_p_max);
+                  double y_max = gt.get_y(_p_max);
+                  double z_max = gt.get_z(_p_max);
+                  double x_current;
+                  double y_current;
+                  double z_current;
 					for (; vi != vertices(_g).second; ++vi)
 					{
 						Point p_current = get(_pm, *vi);
@@ -90,8 +94,8 @@ namespace FEVV {
 						if (z_current > z_max)
 							z_max = z_current;
 					}
-          _p_min = Point(x_min, y_min, z_min);
-          _p_max = Point(x_max, y_max, z_max);
+                  _p_min = Point(x_min, y_min, z_min);
+                  _p_max = Point(x_max, y_max, z_max);
 				}
 
 				
@@ -106,7 +110,7 @@ namespace FEVV {
 
 				void set_bounding_box()
 				{
-          Geometry gt(_g);
+                    Geometry gt(_g);
 
 					_bb.starting_point = _p_min;
 					_bb.vl = Vector(0, gt.get_y(_p_max)-gt.get_y(_p_min), 0);
@@ -117,10 +121,10 @@ namespace FEVV {
 
 				void set_quantization_step()
 				{
-          Geometry gt(_g);
+                    Geometry gt(_g);
 					double l = gt.length(_bb.vl);
 					double h = gt.length(_bb.vh);
-          double p = gt.length(_bb.vp);
+                    double p = gt.length(_bb.vp);
 
 					_max_length.first = l;
 					_max_length.second = 'y';
@@ -141,13 +145,19 @@ namespace FEVV {
 					///std::cout << "max length : " << _max_length.first << std::endl;
 					///std::cout << _quantization_step << std::endl;
 				}
-
+			public:
 				double get_quantization_step() const { return _quantization_step; }
 
-
-				void point_quantization()
+				void point_quantization(bool recompute_quanti_param = false)
 				{
                     Geometry gt(_g);
+					///////////////////////////////////////////////////////////
+					if (recompute_quanti_param) {
+						this->find_min_and_max();
+						this->set_bounding_box();
+						this->set_quantization_step();
+					}
+					///////////////////////////////////////////////////////////
 					double p_min_x = gt.get_x(_p_min);
 					double p_min_y = gt.get_y(_p_min);
 					double p_min_z = gt.get_z(_p_min);
@@ -176,8 +186,6 @@ namespace FEVV {
 						put(_pm, *vi, new_position);
 
 					}
-
-
 				}
 
 				Point quantize_point(const Point& p)
@@ -231,11 +239,11 @@ namespace FEVV {
 				}
 
 				double getDiagonal()
-                                {
-                                  Geometry gt(_g);
-                                  Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
-                                  return gt.length(diagonal);
-                                }
+                {
+                  Geometry gt(_g);
+                  Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
+                  return gt.length(diagonal);
+                }
 				
 
 			private:

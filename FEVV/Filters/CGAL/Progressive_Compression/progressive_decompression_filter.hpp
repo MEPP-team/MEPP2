@@ -25,7 +25,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/BinaryBatchDecoder.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/quantification.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/quantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Butterfly.h"
 
@@ -167,8 +167,6 @@ progressive_decompression_filter(HalfedgeGraph &g,
     FEVV::Filters::UniformDequantization< HalfedgeGraph, PointMap > dq(
         g, pm, HH.getQuantization(), HH.getDimension(), HH.getInitCoord());
 
-    dq.set_max_length();
-    dq.set_quantization_step();
     dq.point_dequantization();
   }
 }

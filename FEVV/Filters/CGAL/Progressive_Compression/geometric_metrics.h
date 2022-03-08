@@ -54,9 +54,9 @@ namespace FEVV {
 
 			GeometricMetrics(const HalfedgeGraph& LoD_init, const PointMap& pm_init) : _LoD_init(LoD_init), _pm_init(pm_init)
 			{
-        initialize_AABB_tree_for_init_LoD();
+              initialize_AABB_tree_for_init_LoD();
 
-        subsample_LoD_init();
+              subsample_LoD_init();
 			}
 			
 			// Computes the approximate Hausdorff distance from tm1 to tm2 by returning the distance of the farthest point from tm2 
@@ -103,10 +103,10 @@ namespace FEVV {
               //std::cout << "area = " << CGAL::Polygon_mesh_processing::area(_LoD_init) << " ; number_of_points_per_area_unit_LoD_init = " << number_of_points_per_area_unit_LoD_init << std::endl;
 			}
     public:
-			double compute_L2(HalfedgeGraph& mesh_AABB_tree, 
-                        HalfedgeGraph& mesh_to_sample, 
-                        int cas,
-                        bool compute_RMSE_instead_of_max // note that mean is different from root mean square
+			double compute_L2(const HalfedgeGraph& mesh_AABB_tree, 
+                              const HalfedgeGraph& mesh_to_sample, 
+                              int cas,
+                              bool compute_RMSE_instead_of_max // note that mean is different from root mean square
                         )
 			{
 				FEVV::Geometry_traits<HalfedgeGraph> gt(_LoD_init);
@@ -118,14 +118,14 @@ namespace FEVV {
 					{
 						// 1) subsampling of the current LoD
 						std::list<Point> samples;
-            CGAL::Polygon_mesh_processing::sample_triangle_mesh(mesh_to_sample,
-              std::back_inserter(samples),
-              CGAL::Polygon_mesh_processing::parameters::use_random_uniform_sampling(true)
-              .do_sample_faces(true)
-              .do_sample_edges(true)
-              .number_of_points_per_area_unit(number_of_points_per_area_unit_LoD_init)
+                        CGAL::Polygon_mesh_processing::sample_triangle_mesh(mesh_to_sample,
+                          std::back_inserter(samples),
+                          CGAL::Polygon_mesh_processing::parameters::use_random_uniform_sampling(true)
+                          .do_sample_faces(true)
+                          .do_sample_edges(true)
+                          .number_of_points_per_area_unit(number_of_points_per_area_unit_LoD_init)
                                                   );
-            std::cout << "L2 cas 0: " << samples.size() << " samples" << std::endl;
+                        std::cout << "L2 cas 0: " << samples.size() << " samples" << std::endl;
 						// 2) compute distance between points and init surface (mesh_AABB_tree)
 						for (auto it = samples.begin(); it != samples.end(); ++it)
 						{
@@ -133,17 +133,17 @@ namespace FEVV {
 							Point_and_primitive_id pp = _LoD_init_tree.closest_point_and_primitive(*it);
 							// get euclidean distance from point *it to surface mesh mesh_AABB_tree
 							Vector d = gt.sub_p(pp.first, *it);
-              if(compute_RMSE_instead_of_max)
-                L2_error += gt.length2(d); 
-              else
-              { // max is better than either mean or min
-                auto dist = gt.length(d);
-                if (dist > L2_error)
-                  L2_error = dist;
-              }
+                            if(compute_RMSE_instead_of_max)
+                              L2_error += gt.length2(d); 
+                            else
+                            { // max is better than either mean or min
+                              auto dist = gt.length(d);
+                              if (dist > L2_error)
+                                L2_error = dist;
+                            }
 						}
-            if (compute_RMSE_instead_of_max)
-              L2_error = std::sqrt( L2_error / (double)samples.size() ); // RMSE
+                        if (compute_RMSE_instead_of_max)
+                          L2_error = std::sqrt( L2_error / (double)samples.size() ); // RMSE
 					}
 					else // opposite case
 					{
@@ -153,47 +153,47 @@ namespace FEVV {
 
 						AABB_Tree tree(orig_begin, orig_end, mesh_to_sample);
 						tree.accelerate_distance_queries();
-            std::cout << "L2 cas 1: " << _samples_LoD_init.size() << " init samples" << std::endl;
+                        std::cout << "L2 cas 1: " << _samples_LoD_init.size() << " init samples" << std::endl;
 						// Searching for the closest point and facet for each vertex and compute L2
 						for (auto it = _samples_LoD_init.begin(); it != _samples_LoD_init.end(); ++it)
 						{
 							// computes closest point and primitive id
 							Point_and_primitive_id pp = tree.closest_point_and_primitive(*it);
-              // get euclidean distance from point *it to surface mesh mesh_to_sample
+                            // get euclidean distance from point *it to surface mesh mesh_to_sample
 							Vector d = gt.sub_p(pp.first, *it);
-              if (compute_RMSE_instead_of_max)
-                L2_error += gt.length2(d); 
-              else
-              { // max is better than either mean or min
-                auto dist = gt.length(d);
-                if (dist > L2_error)
-                  L2_error = dist;
-              }
+                            if (compute_RMSE_instead_of_max)
+                              L2_error += gt.length2(d); 
+                            else
+                            { // max is better than either mean or min
+                              auto dist = gt.length(d);
+                              if (dist > L2_error)
+                                L2_error = dist;
+                            }
 						}
-            if (compute_RMSE_instead_of_max)
-              L2_error = std::sqrt( L2_error / (double)_samples_LoD_init.size( )); // RMSE
+                        if (compute_RMSE_instead_of_max)
+                          L2_error = std::sqrt( L2_error / (double)_samples_LoD_init.size( )); // RMSE
 					}
 					return L2_error;
 			}
 
-			double compute_symmetric_L2(HalfedgeGraph& LoD, bool compute_RMSE_instead_of_max)
+			double compute_symmetric_L2(const HalfedgeGraph& LoD, bool compute_RMSE_instead_of_max)
 			{
 				double d_LoD_to_mesh_init = this->compute_L2(_LoD_init, LoD, 0, compute_RMSE_instead_of_max);
 				double d_mesh_init_to_LoD = this->compute_L2(LoD, _LoD_init, 1, compute_RMSE_instead_of_max);
 
-        // Hausdorf or RMSE distances: the symmetrical distance takes the max
-        double d_max = (d_LoD_to_mesh_init < d_mesh_init_to_LoD) ? d_mesh_init_to_LoD : d_LoD_to_mesh_init;
+                // Hausdorf or RMSE distances: the symmetrical distance takes the max
+               double d_max = (d_LoD_to_mesh_init < d_mesh_init_to_LoD) ? d_mesh_init_to_LoD : d_LoD_to_mesh_init;
 
-        // save distorsion values
-        _vec_distorsion.push_back(d_max);
+              // save distorsion values
+              _vec_distorsion.push_back(d_max);
 
-        return d_max;
+              return d_max;
 			}
 
 			const std::vector<double>& get_vec_distorsion() const { return _vec_distorsion; }
 
 		private:
-			HalfedgeGraph _LoD_init; // copy of init mesh
+			HalfedgeGraph _LoD_init; // copy of init mesh: cannot be const (error with AABB otherwise)
 			PointMap _pm_init; // copy of init pm
 			AABB_Tree _LoD_init_tree;
 			std::list<Point> _samples_LoD_init;

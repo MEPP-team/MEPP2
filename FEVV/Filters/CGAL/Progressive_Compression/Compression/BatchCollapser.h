@@ -190,7 +190,7 @@ public:
     if(!skip)
     {
       std::cout << "computing symmetrical L2 (max L2/Hausdorff and RMSE)" << std::endl;
-      HalfedgeGraph current_graph = _g;
+      HalfedgeGraph current_graph = _g; // needs a copy 
       PointMap current_pm = get(boost::vertex_point, current_graph);
       UniformDequantization< HalfedgeGraph, PointMap > dq(
           current_graph,
@@ -198,8 +198,7 @@ public:
           header.getQuantization(),
           header.getDimension(),
           header.getInitCoord());
-      dq.set_max_length();
-      dq.set_quantization_step();
+
       dq.point_dequantization();
       double geometric_error =
           g_metric.compute_symmetric_L2(current_graph, true);
