@@ -654,10 +654,11 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,Mojave # not MojaveVM for the documentation (because of rsync)
   script:
-    - brew unlink qt@4; export QT5_DIR=/opt/local/qt5
     - mkdir build; cd build
-    - cmake .. -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - nix-shell --pure -p cmake boost175 gmp mpfr cgal_5 eigen libjpeg_original libpng12 libtiff libsForQt515.qt5.qtbase openscenegraph doxygen graphviz clang libGL git rsync openssh vtk_9 draco
+    - cmake .. -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=OFF -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=OFF -DBUILD_USE_IMG-3RDPARTY=ON -DBUILD_USE_DRACO=OFF -DBUILD_EXAMPLES=ON
     - make -j 3 doc
+    - exit # tmp, because of ssh key... (for automatic login)
     - if [ $CI_COMMIT_REF_NAME == "master" ] ; then rsync -azv --delete --delete-after -e 'ssh -o StrictHostKeyChecking=no' Doc/Doxygen/html/ mepp@connect.liris.cnrs.fr:/home-projets/mepp/public_html/doc/nightly/ ; fi
 
 #######################################
