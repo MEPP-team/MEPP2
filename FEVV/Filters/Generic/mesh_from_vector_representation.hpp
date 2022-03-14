@@ -26,6 +26,43 @@
 namespace FEVV {
 namespace Filters {
 
+/**
+ * Create and return a 256x256 "no tex" image.
+ */
+inline
+FEVV::Types::Image* make_no_texture_image(void)
+{
+  FEVV::Types::Image *cimg = new FEVV::Types::Image(256, 256, 1, 3);
+
+  // draw gradient
+
+  // loop over pixels
+  for(int row = 0; row < (*cimg).height(); row++)
+  {
+    for(int col = 0; col < (*cimg).width(); col++)
+    {
+      // (*cimg)(x, y, z, channel)
+      (*cimg)(col, row, 0, 0) = col; // R = x = col
+      (*cimg)(col, row, 0, 1) = row; // G = y = row
+      (*cimg)(col, row, 0, 2) = 0;   // B = constant
+    }
+  }
+
+  // draw text
+
+  const unsigned char gray[] = { 128, 128, 128 };
+
+  int size1 = 72;
+  (*cimg).draw_text(20, 128-(size1/2), "NO TEX", gray, 0, 1.0, size1);
+
+  int size2 = 32;
+  (*cimg).draw_text(     2,         0, "(0;0)", gray, 0, 1.0, size2);
+  (*cimg).draw_text(255-50,         0, "(1;0)", gray, 0, 1.0, size2);
+  (*cimg).draw_text(     2, 255-size2, "(0;1)", gray, 0, 1.0, size2);
+  (*cimg).draw_text(255-50, 255-size2, "(1;1)", gray, 0, 1.0, size2);
+
+  return cimg;
+}
 
 /**
  * Helper type for vertex descriptors vector.
@@ -244,9 +281,19 @@ mesh_from_vector_representation(
         if(texture_filename.empty())
           continue;
 
-        material.images[texture_filename] =
-            std::shared_ptr< FEVV::Types::Image >(
-                new FEVV::Types::Image(texture_filename.c_str()));
+        try
+        {
+          material.images[texture_filename] =
+              std::shared_ptr< FEVV::Types::Image >(
+                  new FEVV::Types::Image(texture_filename.c_str()));
+        }
+        catch(const cimg_library::CImgIOException &/*e*/)
+        {
+          material.images[texture_filename] =
+              std::shared_ptr< FEVV::Types::Image >(
+                  make_no_texture_image()
+                  );
+        }
       }
     }
 
