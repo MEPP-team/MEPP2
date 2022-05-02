@@ -97,7 +97,7 @@ init:
 # build Configuration, i.e. Debug, Release, etc
 configuration:
   - Debug
-  - Release
+#  - Release
 
 # MSBuild verbosity level
 #  verbosity: quiet|minimal|normal|detailed
