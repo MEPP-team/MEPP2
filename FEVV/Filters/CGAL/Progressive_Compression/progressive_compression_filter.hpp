@@ -83,8 +83,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                                 /// and vertex duplicates (several compression steps
                                                 /// cannot handle these configurations)
                                bool dequantif,
-                               bool save_preprocess,
-                               const std::string& output_file_path_save_preprocess)
+                               bool save_preprocess = false,
+                               const std::string& output_file_path_save_preprocess = "")
 {
   if (!CGAL::is_triangle_mesh(g))
     throw std::runtime_error("progressive_compression_filter cannot handle non-pure triangular mesh, exiting (nothing is done).");
@@ -156,7 +156,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
   // PREPROCESS DONE HERE
 
-  bool measure = true; // Generate csv data file for encoded mesh
+  bool measure = false; // Generate csv data file for encoded mesh
 
   // Getting compression parameters (informations for the bounding box)
 
@@ -424,6 +424,13 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   if(dequantif)
   {
     dq.point_dequantization();
+    //{
+    //  FEVV::PMapsContainer pmaps_bag_empty;
+
+    //  put_property_map(FEVV::edge_color, g, pmaps_bag_empty, e_cm);
+    //  put_property_map(FEVV::vertex_color, g, pmaps_bag_empty, v_cm);
+    //  FEVV::Filters::write_mesh("coase_mesh.obj", g, pmaps_bag_empty);
+    //}
   }
   delete KP;
   delete EM;
@@ -450,8 +457,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// input mesh
                                FEVV::Filters::BATCH_CONDITION batch_condition, /// batch stopping criterion for its edge collapses
                                bool preprocess,
                                bool dequantif,
-                               bool save_preprocess,
-                               const std::string& output_file_path_save_preprocess)
+                               bool save_preprocess = false,
+                               const std::string& output_file_path_save_preprocess = "")
 
 {
   GeometryTraits gt(g);

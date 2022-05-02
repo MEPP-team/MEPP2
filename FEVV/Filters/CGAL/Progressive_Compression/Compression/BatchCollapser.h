@@ -168,6 +168,7 @@ public:
       file_encode << _gt.get_x(pt) << " " << _gt.get_y(pt) << " "
                   << _gt.get_z(pt) << " " << list_v_around.size() << std::endl;
     }
+    file_encode.close();
   }
 
   void sort_list_memory(
