@@ -29,6 +29,11 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Butterfly.h"
 
+//#define TIMING
+#ifdef TIMING
+#include <chrono>
+using namespace std::chrono;
+#endif
 
 namespace FEVV {
 namespace Filters {
@@ -52,6 +57,9 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                  std::string &input_file_path,
                                  bool dequantize)
 {
+#ifdef TIMING
+  auto time_point_before_decomp = high_resolution_clock::now();
+#endif
   FEVV::HeaderHandler HH;
   std::fstream filebin;
   filebin.open(input_file_path, std::fstream::in | std::fstream::binary);
@@ -169,6 +177,11 @@ progressive_decompression_filter(HalfedgeGraph &g,
 
     dq.point_dequantization();
   }
+#ifdef TIMING
+  auto time_point_after_decomp = high_resolution_clock::now();
+  auto duration_decomp = duration_cast<milliseconds>(time_point_after_decomp - time_point_before_decomp);
+  std::cout << "Decompression time: " << duration_decomp.count() << " milliseconds" << std::endl;
+#endif
 }
 
 // Helper function to simplify (syntactic sugar) the call to

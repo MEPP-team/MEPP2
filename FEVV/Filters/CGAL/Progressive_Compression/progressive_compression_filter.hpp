@@ -31,6 +31,12 @@
 #include "FEVV/Filters/Generic/minmax_map.h"
 #include "FEVV/Filters/Generic/color_mesh.h"
 
+//#define TIMING
+#ifdef TIMING
+#include <chrono>
+using namespace std::chrono;
+#endif
+
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap >
@@ -86,6 +92,9 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                bool save_preprocess = false,
                                const std::string& output_file_path_save_preprocess = "")
 {
+#ifdef TIMING
+  auto time_point_before_comp = high_resolution_clock::now();
+#endif
   if (!CGAL::is_triangle_mesh(g))
     throw std::runtime_error("progressive_compression_filter cannot handle non-pure triangular mesh, exiting (nothing is done).");
 
@@ -284,7 +293,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
 
     nb_vertices_current_last = nb_vertices_current;
 
-    if(static_cast<int>(nb_vertices_current) < nb_min_vertices)
+    if(static_cast<int>(nb_vertices_current) <= nb_min_vertices)
     {
       break;
     }
@@ -435,6 +444,12 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   delete KP;
   delete EM;
   delete predict;
+
+#ifdef TIMING
+  auto time_point_after_comp = high_resolution_clock::now();
+  auto duration_comp = duration_cast<milliseconds>(time_point_after_comp - time_point_before_comp);
+  std::cout << "Compression time: " << duration_comp.count() << " milliseconds" << std::endl;
+#endif
 }
 
 // Helper function to simplify (syntactic sugar) the call to
