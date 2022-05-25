@@ -24,7 +24,6 @@ set_mesh_and_properties(
     FEVV::PMapsContainer &pmaps_bag,
     typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type &v_cm,
     typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type &e_cm,
-    typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type &/*f_nm*/,
     typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type &v_nm)
 
 {
@@ -188,12 +187,11 @@ progressive_compression_main(int argc, const char **argv)
 
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type v_cm;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
-  typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type f_nm;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type v_nm;
 
   // create or retrieve property maps. 
   set_mesh_and_properties(
-      m, pmaps_bag, v_cm, e_cm, f_nm, v_nm);
+      m, pmaps_bag, v_cm, e_cm, v_nm);
 
   // retrieve point property map (aka geometry)
   auto pm = get(boost::vertex_point, m);
@@ -279,8 +277,6 @@ progressive_compression_main(int argc, const char **argv)
                 v_cm2;
             typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type
                 e_cm2;
-            typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type
-                f_nm2;
             typename FEVV::PMap_traits< FEVV::vertex_normal_t,
                                         MeshT >::pmap_type v_nm2;
 
@@ -288,7 +284,6 @@ progressive_compression_main(int argc, const char **argv)
                                     pmaps_bag_second,
                                     v_cm2,
                                     e_cm2,
-                                    f_nm2,
                                     v_nm2);
 
 

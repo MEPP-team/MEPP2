@@ -285,7 +285,6 @@ public:
     // decompression step)
     ref_settings.set_connectivity_topology(spanningtree, 
                                            _pm, 
-                                           //_ecm, 
                                            //_vcm, 
                                            _list_memory); // set one-ring bitmask
     // Compute Predictions

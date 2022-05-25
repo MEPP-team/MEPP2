@@ -73,7 +73,6 @@ enum class TOPOLOGYCASES {
  */
 template< typename HalfedgeGraph,
           typename PointMap,
-          typename EdgeColorMap,
           typename VertexColorMap >
 class BatchDecompressor
 {
@@ -93,12 +92,12 @@ public:
   /**
    * \brief BatchDecompressor
    * @param[in,out] g empty halfedge graph
-   * @param[in,out] pm empty pointmap
+   * @param[in,out] pm empty pointmap associated with g
    * @param predictor pointer to a predictor object (butterfly or delta)
    * @param vkept pointer to a mid midpoint or halfedge object
    * @param header[in] header object (contains refinement info: quantization for example)
-   * @param[in,out] vcm empty vertex color map associated with g
-   * @param[in,out] ecm empty edge color map associated with g      
+   * @param[in,out] vcm empty vertex color map associated with g, used to debug
+   *                topological issues during the decoding   
    * @param[in] bit_quantization bits of quantization
   */
   BatchDecompressor(
@@ -111,10 +110,9 @@ public:
                                    Geometry > *vkept,
       const FEVV::HeaderHandler &header,
       VertexColorMap &vcm,
-      EdgeColorMap &ecm,
       int bit_quantization)
       : _g(g), _pm(pm), _gt(Geometry(g)), _predictor(predictor), _vkept(vkept),
-        _header(header), _vcm(vcm), _ecm(ecm)
+        _header(header), _vcm(vcm)
   {
     _bit_quantization = bit_quantization;
     _batch_id = 0;
@@ -208,8 +206,7 @@ public:
   }
  
   /** 
-   * \brief decompressBinaryBatch(draco::DecoderBuffer &buffer): Decompresses
-   *        a batch thanks to a draco buffer
+   * \brief Decompresses a batch using a draco buffer
    * @param[in] a draco decoderbuffer with refinement info
    */
   void decompressBinaryBatch(draco::DecoderBuffer &buffer)
@@ -271,7 +268,6 @@ private:
   std::list< bool > _other_info_bits;
   const FEVV::HeaderHandler &_header;
   VertexColorMap &_vcm;
-  EdgeColorMap &_ecm;
 
   bool SplitVertices(std::list< halfedge_descriptor > &h_extent)
   {

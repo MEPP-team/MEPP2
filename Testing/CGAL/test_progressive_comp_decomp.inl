@@ -91,10 +91,9 @@ test_automatic_progressive_compression_decompression(int argc,
 
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type v_cm;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
-  typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type f_nm;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type v_nm;
   set_mesh_and_properties(
-      m, pmaps_bag, v_cm, e_cm, f_nm, v_nm);
+      m, pmaps_bag, v_cm, e_cm, v_nm);
 
   FEVV::Filters::Parameters params(FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
                                    FEVV::Filters::VKEPT_POSITION::MIDPOINT,
@@ -163,8 +162,6 @@ test_automatic_progressive_compression_decompression(int argc,
       v_cm_decomp;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type
       e_cm_decomp;
-  typename FEVV::PMap_traits< FEVV::face_normal_t, MeshT >::pmap_type
-      f_nm_decomp;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type
       v_nm_decomp;
   auto pm_decomp = get(boost::vertex_point, m_decomp);
@@ -172,7 +169,6 @@ test_automatic_progressive_compression_decompression(int argc,
                           pmaps_bag_decomp,
                           v_cm_decomp,
                           e_cm_decomp,
-                          f_nm_decomp,
                           v_nm_decomp);
 
 
@@ -181,8 +177,6 @@ test_automatic_progressive_compression_decompression(int argc,
   FEVV::Filters::progressive_decompression_filter(m_decomp,
                                                   pm_decomp,
                                                   v_cm_decomp,
-                                                  //v_nm_decomp,
-                                                  e_cm_decomp,
                                                   compressed_mesh_binary_file,
                                                   false);
   // write mesh to file

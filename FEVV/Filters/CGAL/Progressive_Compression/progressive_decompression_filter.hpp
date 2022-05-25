@@ -41,18 +41,26 @@ namespace Filters {
 /**
  * \brief  Takes a binary file as an input, will decode the coarse mesh, the 
  * compression settings and refine the mesh until the end of file is reached. 
- * The final mesh will be saved in progressive_decompressionFilterOutput.obj
+ *
+ * @param[in,out] g empty halfedge graph that is used to reconstruct to
+ *                decoded mesh topology
+ * @param[in,out] pm empty pointmap associated with g that is used to 
+ *                reconstruct the decoded mesh geometry (vertex positions)
+ * @param[in,out] vcm empty vertex color map associated with g, used to debug
+ *                topological issues during the decoding
+ * @param[in] input_file_path the binary file full name to read and decode
+ * @param[in] dequantize true to dequantize the vertex positions at
+ *            the end of the decompression, else vertex positions remain 
+ *            quantized
  */
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,
-          typename EdgeColorMap,
-          typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
+          typename GeometryTraits >
 void
 progressive_decompression_filter(HalfedgeGraph &g,
                                  PointMap &pm,
                                  VertexColorMap &v_cm,
-                                 EdgeColorMap &e_cm,
                                  const GeometryTraits &/*gt*/,
                                  std::string &input_file_path,
                                  bool dequantize)
@@ -155,7 +163,6 @@ progressive_decompression_filter(HalfedgeGraph &g,
   FEVV::Filters::BatchDecompressor<
       HalfedgeGraph,
       PointMap,
-      EdgeColorMap,
       VertexColorMap>
       _batch(g,
              pm,
@@ -163,7 +170,6 @@ progressive_decompression_filter(HalfedgeGraph &g,
              KP,
              HH,
              v_cm,
-             e_cm,
              HH.getQuantization());
   //refine mesh until complete
   while(buffer.remaining_size() != 0)
@@ -189,20 +195,21 @@ progressive_decompression_filter(HalfedgeGraph &g,
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap,
-          typename EdgeColorMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
 progressive_decompression_filter(HalfedgeGraph &g,
                                  PointMap &pm,
                                  VertexColorMap &v_cm,
-                                 EdgeColorMap &e_cm,
                                  std::string &input_file_path,
                                  bool dequantize)
 
 {
   GeometryTraits gt(g);
-  progressive_decompression_filter(
-      g, pm, v_cm, /*v_nm,*/ e_cm, gt, input_file_path, dequantize);
+  progressive_decompression_filter< HalfedgeGraph, 
+                                    PointMap, 
+                                    VertexColorMap, 
+                                    GeometryTraits>(
+      g, pm, v_cm, gt, input_file_path, dequantize);
 }
 } // namespace Filters
 } // namespace FEVV
