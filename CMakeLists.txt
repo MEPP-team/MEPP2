@@ -6,7 +6,6 @@ option( BUILD_DOCUMENTATION                  "Build the documentation (MEPP2)." 
 option( BUILD_USE_CGAL                       "CGAL usage toggle." ON )
 option( BUILD_USE_OPENMESH                   "OpenMesh usage toggle." ON )
 option( BUILD_USE_AIF                        "Adjacency and Incidence Framework toggle." OFF )
-option( BUILD_USE_IMG-3RDPARTY               "Img-3rdparty (jpeg, png, tiff) usage toggle." ON )
 option( BUILD_USE_GUI                        "Using User Interface." ON )
 option( BUILD_USE_PCL                        "PCL usage toggle." OFF )
 option( BUILD_USE_VTK                        "VTK usage toggle." OFF )
@@ -15,6 +14,13 @@ option( BUILD_USE_DRACO                      "Draco usage toggle." OFF )
 option( BUILD_EXAMPLES                       "Build the examples (MEPP2)." ON )
 option( BUILD_TESTS                          "Build the tests (MEPP2)." ON )
 option( BUILD_ADVANCED_TESTS_COMPR_VALENCE   "Build advanced compression-decompression valence tests (MEPP2)." OFF )
+
+#####
+# CImg and the related image libraries are now required, so
+# BUILD_USE_IMG-3RDPARTY is no more a build option ; nevertheless it is kept
+# as a variable to easily be disabled for testing purpose ; warning: some tests
+# will fail if it is turned off
+set( BUILD_USE_IMG-3RDPARTY TRUE )
 
 #####
 # Set CMAKE module path unless provided by user
