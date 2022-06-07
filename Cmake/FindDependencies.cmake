@@ -137,7 +137,7 @@ if( BUILD_USE_IMG-3RDPARTY )
   endif ()
 
   if ( NOT FEVV_HAS_ONE_IMG_LIBRARY )
-    message (FATAL_ERROR "None of Jpeg or Png (or Zlib) or Tiff library found. Turn BUILD_USE_IMG-3RDPARTY to OFF.")
+    message (FATAL_ERROR "None of Jpeg or Png (or Zlib) or Tiff library found.")
   else ()
     if ( NOT MSVC )
         add_definitions( -Dcimg_display=0 ) # Flags used to disable display capablities of CImg (for Linux and Mac OS)
