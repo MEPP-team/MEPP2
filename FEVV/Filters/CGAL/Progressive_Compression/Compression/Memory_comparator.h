@@ -12,7 +12,7 @@
 #pragma once
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Collapse_info.h"
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp"
 
 namespace FEVV {
 namespace Filters {
@@ -25,7 +25,7 @@ template<typename HalfedgeGraph,
 class Memory_comparator
 {
 	private:
-      const FEVV::Comparator::SpanningTreeVertexEdgeComparator<HalfedgeGraph,PointMap> &_st;
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator<HalfedgeGraph,PointMap> &_st;
 	public:
         bool operator()(const FEVV::Filters::Collapse_info<HalfedgeGraph,PointMap> &mem1,
                         const FEVV::Filters::Collapse_info<HalfedgeGraph,PointMap> &mem2) const
@@ -33,7 +33,7 @@ class Memory_comparator
           return _st.operator()(mem1.get_vkept(), mem2.get_vkept());
         }
         Memory_comparator(
-              const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+              const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                                   PointMap >
                   &st)
                       : _st(st)
@@ -48,10 +48,10 @@ template<typename HalfedgeGraph,
 class Vertex_span_comparator
 {
 	private:
-	  const FEVV::Comparator::SpanningTreeVertexEdgeComparator<HalfedgeGraph,PointMap> &_st;
+	  const FEVV::Comparator::Spanning_tree_vertex_edge_comparator<HalfedgeGraph,PointMap> &_st;
 	public:
 	  Vertex_span_comparator(
-              const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+              const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                                   PointMap >
                   &st)
                       : _st(st)

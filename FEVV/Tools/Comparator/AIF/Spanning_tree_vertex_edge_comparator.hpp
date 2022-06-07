@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp"
 
 #include <limits>
 #include <iterator>

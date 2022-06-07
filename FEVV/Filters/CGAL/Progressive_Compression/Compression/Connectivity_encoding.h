@@ -14,7 +14,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Memory_comparator.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/apply_color.h"
@@ -142,7 +142,7 @@ encode_connectivity_bitmask(
 	                                                                   /// but non-const reference
 																	   /// due to Collapse_info updates
     std::list< bool > &edge_bitmask,
-    const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+    const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap,
                                                         Geometry >& spanningtree /// computed st
     //, std::vector< std::vector< bool > > &neighbours_bitmask /// for debug

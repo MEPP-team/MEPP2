@@ -99,7 +99,7 @@ public:
     return Super_class::_residuals;
   }
 
-  void set_rev(bool /*b*/){}
+  void set_rev(bool /*b*/) override {}
 
   std::string get_as_string() const override { return "position"; }
 };

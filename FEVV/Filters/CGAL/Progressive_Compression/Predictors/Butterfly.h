@@ -362,7 +362,7 @@ public:
   {
     _round_midpoint = std::make_tuple(b1, b2, b3, b4);
   }
-  void set_rev(bool b) 
+  void set_rev(bool b) override 
   {
 	  _rev = b; _delta_for_borders.set_rev(b);
   }

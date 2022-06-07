@@ -22,7 +22,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/Volume_preserving.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/QEM_3D.h"
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Memory_comparator.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Raw_positions.h"
@@ -146,7 +146,7 @@ public:
   /// the order of the spanning tree (useful for comparing spanning trees 
   /// between compression and decompression).
   void save_spanning_tree(
-      const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                           PointMap >
           &spanningtree)
   {
@@ -168,7 +168,7 @@ public:
   }
 
   void sort_list_memory(
-      const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                           PointMap >
           &spanningtree)
   {
@@ -213,7 +213,7 @@ public:
 
   private:
     void setup_prediction(
-      FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+      FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
       PointMap >
     /*&spanningtree*/)
     {
@@ -264,7 +264,7 @@ public:
 #endif
     _number_vertices_last = number_current_vertices;
 
-    FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+    FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap > spanningtree(_g, _pm, true);
 
     sort_list_memory(spanningtree); /// sort _list_memory according to vertex st traversal
@@ -452,11 +452,11 @@ public:
           ColorEdge(_g, _pm, _ecm, _vcm, v3target, green);
 
 
-          FEVV::Filters::ComputeSimpleStencil< HalfedgeGraph,
+          FEVV::Filters::compute_simple_stencil< HalfedgeGraph,
                                                vertex_descriptor,
                                                halfedge_descriptor >(
               _g, vt, _forbidden_edges, edges_to_color);
-          FEVV::Filters::ComputeSimpleStencil< HalfedgeGraph,
+          FEVV::Filters::compute_simple_stencil< HalfedgeGraph,
                                                vertex_descriptor,
                                                halfedge_descriptor >(
               _g, vs, _forbidden_edges, edges_to_color);

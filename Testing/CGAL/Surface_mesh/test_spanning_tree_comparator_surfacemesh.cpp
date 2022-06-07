@@ -14,7 +14,7 @@
 #include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp" 
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp" 
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 

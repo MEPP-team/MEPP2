@@ -16,7 +16,7 @@
 
 #include <OpenMesh/Core/IO/MeshIO.hh>
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp" 
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp" 
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
 

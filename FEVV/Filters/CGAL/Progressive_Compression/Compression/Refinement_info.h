@@ -66,7 +66,7 @@ public:
   /// Creates a vertex bitmask according to a vertex spanning tree and 
   /// a list of Collapse_info objects (initialized at construction).
   void set_bitMask(
-                   const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+                   const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                              PointMap > &st /// spanning tree of current LOD
                    )
   {
@@ -125,7 +125,7 @@ public:
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// Creates the edge bitmask
   void set_connectivity_topology(
-      const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                           PointMap > &st, /// spanning tree of current LOD
                                 PointMap &pm, /// pointmap of current LOD
       std::list< Collapse_info< HalfedgeGraph, PointMap > > &list_memory /// sorted list of Collapse_info objects

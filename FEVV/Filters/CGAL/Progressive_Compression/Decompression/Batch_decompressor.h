@@ -22,7 +22,7 @@
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/Edge_length_metric.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/Volume_preserving.h"
 
-#include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
+#include "FEVV/Tools/Comparator/Spanning_tree_vertex_edge_comparator.hpp"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Memory_comparator.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Raw_positions.h"
@@ -165,7 +165,7 @@ public:
 
   /// saves spanning tree (useful for debugging)
   void save_spanning_tree(
-      const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                           PointMap >
           &spanningtree)
   {
@@ -193,9 +193,9 @@ public:
     Uniform_dequantization< HalfedgeGraph, PointMap > dq(
         _g,
         _pm,
-        _header.getQuantization(),
-        _header.getDimension(),
-        _header.getInitCoord());
+        _header.get_quantization(),
+        _header.get_dimension(),
+        _header.get_init_coord());
 
     dq.point_dequantization();
   }
@@ -235,7 +235,7 @@ public:
     // Build a spanning tree for halfedge graph _g with vertex positions in _pm
     // Implements line 15 of Algorithm 2.
     FEVV::Comparator::
-        SpanningTreeVertexEdgeComparator< HalfedgeGraph, PointMap, Geometry >
+        Spanning_tree_vertex_edge_comparator< HalfedgeGraph, PointMap, Geometry >
             spanningtree(_g, _pm, true);// "true"(=tie-break detection and avoidance)
                                         // as for Batch_collapser to get
                                         // the same adjacency ordering (and not
@@ -357,7 +357,7 @@ private:
   /// This function implements line 16 of Algorithm 2.
   void fill_h_extent_list_no_sort(
       const FEVV::Comparator::
-          SpanningTreeVertexEdgeComparator< HalfedgeGraph, PointMap, Geometry >
+          Spanning_tree_vertex_edge_comparator< HalfedgeGraph, PointMap, Geometry >
               &spanningtree,
       std::list< halfedge_descriptor > &h_extent)
 

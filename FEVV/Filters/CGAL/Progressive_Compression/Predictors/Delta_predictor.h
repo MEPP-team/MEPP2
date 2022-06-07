@@ -161,7 +161,7 @@ public:
   {
     _round_midpoint = std::make_tuple(b1, b2, b3, b4);
   }
-  void set_rev(bool b) { _rev = b; }
+  void set_rev(bool b) override { _rev = b; }
 
   std::string get_as_string() const override { return "delta"; }
 

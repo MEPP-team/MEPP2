@@ -14,7 +14,7 @@
 #include "FEVV/Wrappings/Geometry_traits_aif.h"
 #include "FEVV/Wrappings/properties_aif.h"
 
-#include "FEVV/Tools/Comparator/AIF/SpanningTreeVertexEdgeComparator.hpp" 
+#include "FEVV/Tools/Comparator/AIF/Spanning_tree_vertex_edge_comparator.hpp" 
 
 #include "FEVV/DataStructures/AIF/AIFMeshReader.hpp"
 #include "FEVV/Tools/IO/FileUtilities.hpp"
