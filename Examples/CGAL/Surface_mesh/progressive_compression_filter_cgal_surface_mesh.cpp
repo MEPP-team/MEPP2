@@ -5,7 +5,7 @@
 #include "FEVV/Wrappings/Geometry_traits_cgal_surface_mesh.h"
 #include "FEVV/Wrappings/properties_surface_mesh.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/Initializer_compression.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/initializer_compression.h"
 
 
 // Main: load a mesh, apply the filter, write the mesh
