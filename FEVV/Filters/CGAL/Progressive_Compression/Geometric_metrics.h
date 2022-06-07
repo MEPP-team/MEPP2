@@ -36,23 +36,22 @@
 namespace FEVV {
 	namespace Filters {
 
+template <typename HalfedgeGraph,
+          typename PointMap,
+          typename face_iterator = typename boost::graph_traits<HalfedgeGraph>::face_iterator,
+          typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
+          typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point>
 
-		template <typename HalfedgeGraph,
-			typename PointMap,
-			typename face_iterator = typename boost::graph_traits<HalfedgeGraph>::face_iterator,
-			typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
-			typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point>
-
-    class GeometricMetrics
-		{
+class Geometric_metrics
+{
 		public:
       //typedef typename FEVV::Geometry_traits<HalfedgeGraph>::Kernel K;
 			typedef CGAL::Exact_predicates_inexact_constructions_kernel     K;
-			typedef CGAL::AABB_face_graph_triangle_primitive<HalfedgeGraph> AABB_Primitive;
-			typedef CGAL::AABB_traits<CGALKernel, AABB_Primitive>           AABB_Traits;
-			typedef CGAL::AABB_tree<AABB_Traits>                            AABB_Tree;
+			typedef CGAL::AABB_face_graph_triangle_primitive<HalfedgeGraph> AABB_primitive;
+			typedef CGAL::AABB_traits<CGALKernel, AABB_primitive>           AABB_traits;
+			typedef CGAL::AABB_tree<AABB_traits>                            AABB_tree;
 
-			GeometricMetrics(const HalfedgeGraph& LoD_init, const PointMap& pm_init) : _LoD_init(LoD_init), _pm_init(pm_init)
+			Geometric_metrics(const HalfedgeGraph& LoD_init, const PointMap& pm_init) : _LoD_init(LoD_init), _pm_init(pm_init)
 			{
               initialize_AABB_tree_for_init_LoD();
 
@@ -61,7 +60,8 @@ namespace FEVV {
 			
 			double compute_hausdorff(const HalfedgeGraph& LoD, int cas)
 			{
-        if (cas == 0) {
+        if(cas == 0) 
+		{
           return CGAL::Polygon_mesh_processing::approximate_Hausdorff_distance<TAG>(LoD,
                                                                                     _LoD_init,
                  CGAL::Polygon_mesh_processing::parameters::number_of_points_per_area_unit(_number_of_points_per_area_unit_LoD_init));
@@ -130,10 +130,10 @@ namespace FEVV {
 			{
 				FEVV::Geometry_traits<HalfedgeGraph> gt(_LoD_init);
 
-				using Point_and_primitive_id = typename AABB_Tree::Point_and_primitive_id;
+				using Point_and_primitive_id = typename AABB_tree::Point_and_primitive_id;
 
 					double L2_error = 0.0;
-					if (cas == 0) // use AABB_tree of init mesh (the finest one) and sample the mesh_to_sample mesh 
+					if(cas == 0) // use AABB_tree of init mesh (the finest one) and sample the mesh_to_sample mesh 
 					{ // distance D(mesh_to_sample, _LoD_init) = min/mean/max over all samples p of min ||p - p_LoD_init||
 						// 1) subsampling of the current LoD
 						std::list<Point> samples;
@@ -152,7 +152,7 @@ namespace FEVV {
                                                   );
                         std::cout << "L2 cas 0: " << samples.size() << " samples" << std::endl;
 						// 2) compute distance between points and init surface (_LoD_init)
-						for (auto it = samples.begin(); it != samples.end(); ++it)
+						for(auto it = samples.begin(); it != samples.end(); ++it)
 						{
 							// computes closest point and primitive id
 							Point_and_primitive_id pp = _LoD_init_tree.closest_point_and_primitive(*it);
@@ -163,11 +163,11 @@ namespace FEVV {
               else
               { // max is better than either mean or min
                 auto dist = gt.length(d);
-                if (dist > L2_error)
+                if(dist > L2_error)
                   L2_error = dist;
               }
 						}
-            if (compute_RMSE_instead_of_max)
+            if(compute_RMSE_instead_of_max)
               L2_error = std::sqrt( L2_error / (double)samples.size() ); // RMSE
 					}
 					else // opposite case
@@ -176,26 +176,26 @@ namespace FEVV {
 						face_iterator orig_begin = f_range_it.first;
 						face_iterator orig_end = f_range_it.second;
 
-						AABB_Tree tree(orig_begin, orig_end, mesh_to_sample);
+						AABB_tree tree(orig_begin, orig_end, mesh_to_sample);
 						tree.accelerate_distance_queries();
             std::cout << "L2 cas 1: " << _samples_LoD_init.size() << " init samples" << std::endl;
 						// Searching for the closest point and facet for each vertex and compute L2
-						for (auto it = _samples_LoD_init.begin(); it != _samples_LoD_init.end(); ++it)
+						for(auto it = _samples_LoD_init.begin(); it != _samples_LoD_init.end(); ++it)
 						{
 							// computes closest point and primitive id
 							Point_and_primitive_id pp = tree.closest_point_and_primitive(*it);
                             // get euclidean distance from point *it to surface mesh mesh_to_sample
 							Vector d = gt.sub_p(pp.first, *it);
-              if (compute_RMSE_instead_of_max)
+              if(compute_RMSE_instead_of_max)
                 L2_error += gt.length2(d); 
               else
               { // max is better than either mean or min
                 auto dist = gt.length(d);
-                if (dist > L2_error)
+                if(dist > L2_error)
                   L2_error = dist;
               }
 						}
-            if (compute_RMSE_instead_of_max)
+            if(compute_RMSE_instead_of_max)
               L2_error = std::sqrt( L2_error / (double)_samples_LoD_init.size() ); // RMSE
 					}
           //std::cout << "computer L2 error = " << L2_error << " ; CGAL Hausdorff value = " << compute_hausdorff(mesh_to_sample, cas) << std::endl;
@@ -222,7 +222,7 @@ namespace FEVV {
 		private:
 			HalfedgeGraph _LoD_init; // copy of init mesh: cannot be const (error with AABB otherwise)
 			PointMap _pm_init; // copy of init pm
-			AABB_Tree _LoD_init_tree;
+			AABB_tree _LoD_init_tree;
 			std::list<Point> _samples_LoD_init;
 
       double _number_of_points_per_area_unit_LoD_init;
@@ -230,6 +230,6 @@ namespace FEVV {
 
 			std::vector<double> _vec_distorsion; // distortion values for all batches
 
-		};
-	}
-}
+};
+} // namespace Filters
+} // namespace FEVV

@@ -19,24 +19,24 @@
 #include "CGAL/boost/graph/Euler_operations.h"
 
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/EdgeLengthMetric.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/VolumePreserving.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/Edge_length_metric.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Metrics/Volume_preserving.h"
 
 #include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/MemoryComparator.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/RawPositions.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Memory_comparator.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Raw_positions.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Predictors/Butterfly.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/ApplyColor.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/apply_color.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/HeaderHandler.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Uniform_dequantization.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/Header_handler.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h" // needed for the compilation
+#include "FEVV/Filters/CGAL/Progressive_Compression/Geometric_metrics.h" // needed for the compilation
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/BinaryBatchDecoder.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/coarsemeshdecoder.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/Binary_batch_decoder.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Decompression/Coarse_mesh_decoder.h"
 
 #include "FEVV/DataStructures/DataStructures_cgal_linear_cell_complex.h" // to test is_isomorphic_to method
 #include "FEVV/Wrappings/Geometry_traits_cgal_linear_cell_complex.h"
@@ -53,7 +53,7 @@
 namespace FEVV {
 namespace Filters {
 
-enum class TOPOLOGYCASES {
+enum class TOPOLOGY_CASE {
 
   CASE11 = 0,
   CASE12,
@@ -68,13 +68,13 @@ enum class TOPOLOGYCASES {
 
 
 /**
- * \brief BatchDecompressor: Given a draco buffer, will decompress a non-textured (or not) mesh.
- * @param Input, coarse mesh and its corresponding map, draco buffer containing the refinement info. 
+ * \brief Batch_decompressor: Given a draco buffer, will decompress a 
+ *        non-textured (or not) mesh.
  */
 template< typename HalfedgeGraph,
           typename PointMap,
           typename VertexColorMap >
-class BatchDecompressor
+class Batch_decompressor
 {
 
 
@@ -90,50 +90,49 @@ public:
   using Geometry = typename FEVV::Geometry_traits< HalfedgeGraph >;
 
   /**
-   * \brief BatchDecompressor
-   * @param[in,out] g empty halfedge graph
-   * @param[in,out] pm empty pointmap associated with g
-   * @param predictor pointer to a predictor object (butterfly or delta)
-   * @param vkept pointer to a mid midpoint or halfedge object
-   * @param header[in] header object (contains refinement info: quantization for example)
-   * @param[in,out] vcm empty vertex color map associated with g, used to debug
+   * \brief Batch_decompressor
+   * @param[in,out] g Empty halfedge graph that is used to reconstruct the
+   *                decoded mesh topology.
+   * @param[in,out] pm Empty pointmap associated with g that is used to
+   *                reconstruct the decoded mesh geometry (vertex positions).
+   * @param[in] predictor Pointer to a predictor object (e.g. butterfly).
+   * @param[in] vkept Pointer to a mid midpoint or halfedge object.
+   * @param[in] header Header object (contains refinement info: quantization 
+   *            for example).
+   * @param[in,out] vcm vertex color map associated with g, used to debug
    *                topological issues during the decoding   
    * @param[in] bit_quantization bits of quantization
   */
-  BatchDecompressor(
+  Batch_decompressor(
       HalfedgeGraph &g,
       PointMap &pm,
-      Predictor< HalfedgeGraph, PointMap >
-          *predictor,
-      FEVV::Filters::KeptPosition< HalfedgeGraph,
+      Predictor< HalfedgeGraph, PointMap > *predictor,
+      FEVV::Filters::Kept_position< HalfedgeGraph,
                                    PointMap,
                                    Geometry > *vkept,
-      const FEVV::HeaderHandler &header,
-      VertexColorMap &vcm,
-      int bit_quantization)
+      const FEVV::Header_handler &header,
+      VertexColorMap &vcm)
       : _g(g), _pm(pm), _gt(Geometry(g)), _predictor(predictor), _vkept(vkept),
         _header(header), _vcm(vcm)
   {
-    _bit_quantization = bit_quantization;
     _batch_id = 0;
   }
-  ~BatchDecompressor() {}
+  ~Batch_decompressor() {}
 
   /**
-   * \brief PredictPositions : Given a list of halfedges, will predict every 
-   *        pair of vertices of a split
-   * @param[in] h_extent: list of halfedges to expand to faces
-   * @param[out] new_points: empty list of pair<Point,Point>. Will be filled by
-   *             the function
-   * @param cases[out] : empty list of cases. Will be filled by the function
+   * \brief predict_positions: Given a list of halfedges, will predict every 
+   *        pair of vertices of a split.
+   *        This function implements line 17 of Algorithm 2.
+   * @param[in] h_extent List of halfedges to expand to faces.
+   * @param[out] new_points Empty list of pair<Point,Point>. Will be filled by
+   *             the function.
    */
-  void PredictPositions(const std::list< halfedge_descriptor > &h_extent,
-                        std::list< std::pair< Point, Point > > &new_points,
-                        std::list< FEVV::Filters::TOPOLOGYCASES > &/*cases*/)
+  void predict_positions(const std::list< halfedge_descriptor > &h_extent,
+                        std::list< std::pair< Point, Point > > &new_points)
   {
 
     auto pos_it = _positions.begin();
-    auto info_it = _other_info_bits.begin();
+    auto info_it = _other_info_bits.begin(); // reverse information
     for(typename std::list< halfedge_descriptor >::const_iterator h_it =
             h_extent.begin();
         h_it != h_extent.end();
@@ -144,14 +143,11 @@ public:
       h_it++;
       halfedge_descriptor h2 = *h_it;
 
-      // TOPOLOGYCASES current_case = FindCase(h1, h2);
-      // cases.push_back(current_case);
-
       vertex_descriptor vkept = target(h1, _g);
 
       bool reverse = false;
 
-      if(_vkept->getType() == VKEPT_POSITION::HALFEDGE)
+      if(_vkept->get_type() == VKEPT_POSITION::HALFEDGE)
       {
         bool b = (*info_it);
 
@@ -161,7 +157,7 @@ public:
       }
 
       std::pair< Point, Point > resulting_points =
-          _predictor->PlacePoints(*pos_it, vkept, h1, h2, reverse);
+          _predictor->place_points(*pos_it, vkept, h1, h2, reverse);
       pos_it++;
       new_points.push_back(std::move(resulting_points));
     }
@@ -178,7 +174,7 @@ public:
     auto span = spanningtree.get_spanning_tree_vertices();
     typename std::list< vertex_descriptor >::const_iterator it = span.begin();
 
-    for(; it != span.end(); it++)
+    for( ; it != span.end(); it++)
     {
       const Point& pt = get(_pm, *it);
       std::list< vertex_descriptor > list_v_around =
@@ -192,52 +188,66 @@ public:
   /**
    * \brief Dequantizes a mesh (restores integers as original doubles)
    */
-  void DequantizeMesh()
+  void dequantize_mesh()
   {
-    UniformDequantization< HalfedgeGraph, PointMap > dq(
+    Uniform_dequantization< HalfedgeGraph, PointMap > dq(
         _g,
         _pm,
         _header.getQuantization(),
         _header.getDimension(),
         _header.getInitCoord());
-    dq.set_max_length();
-    dq.set_quantization_step();
+
     dq.point_dequantization();
   }
  
   /** 
-   * \brief Decompresses a batch using a draco buffer
-   * @param[in] a draco decoderbuffer with refinement info
+   * \brief Decompresses a batch using a draco buffer.
+   *  This function implements lines 5 to 23 of Algorithm 2.
+   * @param[in] buffer A draco decoderbuffer with refinement info.
+   *            Not a const param because of call to non-const draco methods
+   *            such as Decode.
    */
-  void decompressBinaryBatch(draco::DecoderBuffer &buffer)
+  void decompress_binary_batch(draco::DecoderBuffer &buffer)
   {
-    // decode data for a batch.
-    BinaryBatchDecoder< HalfedgeGraph,
+    // Decode data for a batch.
+    Binary_batch_decoder< HalfedgeGraph,
                         PointMap,
                         Vector >
-        decoder(buffer, _header.getQuantization());
-    decoder.DecodeBitmask(_bitmask);
-    decoder.DecodeBitmask(_edge_bitmask);
-    if(_predictor->getType() == FEVV::Filters::PREDICTION_TYPE::POSITION)
-      decoder.DecodeResiduals(_positions, 2);
-    else
-      decoder.DecodeResiduals(_positions, 1);
-    if(_vkept->getType() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
-    {
-      decoder.DecodeBitmask(_other_info_bits);
-    }
+        decoder(buffer, _header.get_quantization());
+    decoder.decode_bitmask(_bitmask); // Implements lines 5 to 6 of Algorithm 2.
+    decoder.decode_bitmask(_edge_bitmask); // Implements lines 7 to 8 of Algorithm 2.
 
-    // predict position and refine mesh from the decoded data
+    // Implements lines 9 to 10 of Algorithm 2
+    if(_predictor->get_type() == FEVV::Filters::PREDICTION_TYPE::POSITION)
+      decoder.decode_residuals(_positions, 2);
+    else
+      decoder.decode_residuals(_positions, 1);
+
+    // Implements lines 11 to 14 of Algorithm 2
+    if(_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
+    { // For HALFEDGE/target case, an additional bit information is
+      // needed
+      decoder.decode_bitmask(_other_info_bits);
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Predict position and refine mesh from the decoded data
+
+    // Build a spanning tree for halfedge graph _g with vertex positions in _pm
+    // Implements line 15 of Algorithm 2.
     FEVV::Comparator::
         SpanningTreeVertexEdgeComparator< HalfedgeGraph, PointMap, Geometry >
-            spanningtree(_g, _pm, true); // "true" as for BatchCollapser to find
-                                         // the same adjacency (and not too
-                                         // costly for reasonable quantization)
+            spanningtree(_g, _pm, true);// "true"(=tie-break detection and avoidance)
+                                        // as for Batch_collapser to get
+                                        // the same adjacency ordering (and not
+                                        // too costly for reasonable 
+                                        // quantization)
+    ///////////////////////////////////////////////////////////////////////////
     std::list< halfedge_descriptor > h_extent;
-    // find every halfedge we have to expand into faces
-    FillHextentListNoSort(spanningtree, h_extent);
-    // split corresponding vertices
-    SplitVertices(h_extent);
+    // Find every halfedge we have to expand into faces
+    fill_h_extent_list_no_sort(spanningtree, h_extent); // Implements line 16 of 
+                                                   // Algorithm 2.
+    // Split corresponding vertices
+    split_vertices(h_extent); // Implements lines 17 to 23 of Algorithm 2.
 		
     std::cout << "batch " << std::to_string(_batch_id) << " done" << std::endl;
     _batch_id++;
@@ -257,46 +267,48 @@ private:
   FEVV::Filters::
       Predictor< HalfedgeGraph, PointMap >
           *_predictor;
-  FEVV::Filters::KeptPosition< HalfedgeGraph,
+  FEVV::Filters::Kept_position< HalfedgeGraph,
                                PointMap,
                                Geometry > *_vkept;
-  int _bit_quantization;
+
   std::list< std::vector< Vector > > _positions;
 
   std::list< bool > _bitmask;
   std::list< bool > _edge_bitmask;
   std::list< bool > _other_info_bits;
-  const FEVV::HeaderHandler &_header;
+  const FEVV::Header_handler &_header; // quantization info is obtained via the 
+                                      // header
   VertexColorMap &_vcm;
 
-  bool SplitVertices(std::list< halfedge_descriptor > &h_extent)
+  /// This function implements lines 17 to 23 of Algorithm 2.
+  bool split_vertices(const std::list< halfedge_descriptor > &h_extent)
   {
+    ///////////////////////////////////////////////////////
+    // DECODE VERTEX POSITIONS FOR ALL VERTICES TO SPLIT //
+    ///////////////////////////////////////////////////////
     std::list< std::pair< Point, Point > > new_points;
-    std::list< FEVV::Filters::TOPOLOGYCASES > cases;
-    PredictPositions(h_extent, 
-                     new_points, 
-                     cases);
+    predict_positions(h_extent, new_points); // Implements line 17 of Algorithm 2.
     auto pos_it = _positions.begin();
     auto info_it = _other_info_bits.begin();
-
+    /////////////////////////
+    // APPLY VERTEX SPLITS //
+    /////////////////////////
+    // Implements lines 18 to 23 of Algorithm 2: 
     auto new_points_it = new_points.begin();
-    for(typename std::list< halfedge_descriptor >::iterator h_it =
+    for(typename std::list< halfedge_descriptor >::const_iterator h_it =
             h_extent.begin();
         h_it != h_extent.end();
         h_it++)
     {
-      // boost::graph_traits<CGAL::Surface_mesh<Point>>::add_edge(_g);
       halfedge_descriptor hnew;
       halfedge_descriptor h1 = *h_it;
       h_it++;
       halfedge_descriptor h2 = *h_it;
 
-      TOPOLOGYCASES current_case = FindCase(h1, h2);
-      //vertex_descriptor vkept = target(h1, _g);
+      TOPOLOGY_CASE current_case = find_case(h1, h2);
 
       bool reverse = false;
-
-      if(_vkept->getType() == VKEPT_POSITION::HALFEDGE)
+      if(_vkept->get_type() == VKEPT_POSITION::HALFEDGE)
       {
         bool b = (*info_it);
 
@@ -305,29 +317,26 @@ private:
         info_it++;
       }
 
-      /*std::pair< Point, Point > resulting_points =
-          _predictor->PlacePoints(*pos_it, vkept, h1, h2, reverse);*/
       std::pair< Point, Point > resulting_points = *new_points_it;
       new_points_it++;
 
-      if(current_case == TOPOLOGYCASES::SIMPLE)
+      if(current_case == TOPOLOGY_CASE::SIMPLE)
       {
-        hnew = SimpleSplitCase(h1, h2);
+        hnew = simple_split_sase(h1, h2);
       }
-
       else
       {
-        if(current_case == TOPOLOGYCASES::CASE211 ||
-           current_case == TOPOLOGYCASES::CASE212 ||
-           current_case == TOPOLOGYCASES::CASE221 ||
-           current_case == TOPOLOGYCASES::CASE222)
+        if(current_case == TOPOLOGY_CASE::CASE211 ||
+           current_case == TOPOLOGY_CASE::CASE212 ||
+           current_case == TOPOLOGY_CASE::CASE221 ||
+           current_case == TOPOLOGY_CASE::CASE222)
         {
-          hnew = Cases2(h1, h2, current_case);
+          hnew = cases_2(h1, h2, current_case);
         }
         else
         {
 
-          hnew = Cases1(h1, current_case);
+          hnew = cases_1(h1, current_case);
         }
       }
       put(_pm, target(hnew, _g), resulting_points.first);
@@ -342,9 +351,11 @@ private:
     return true;
   }
 
-  // Fills the list of halfedges to expand. For cases without any border, two
-  // different halfedges will be added. Otherwise, one halfedge will be added.
-  void FillHextentListNoSort(
+  /// Fills the list of halfedges to expand. For cases without any border, two
+  /// different halfedges will be added. Otherwise, one halfedge will be added
+  /// twice.
+  /// This function implements line 16 of Algorithm 2.
+  void fill_h_extent_list_no_sort(
       const FEVV::Comparator::
           SpanningTreeVertexEdgeComparator< HalfedgeGraph, PointMap, Geometry >
               &spanningtree,
@@ -368,9 +379,6 @@ private:
     typename std::list< vertex_descriptor >::const_iterator spanning_it =
         spanning_vertices.begin();
     std::list< vertex_descriptor > vsplit_neighbours_list;
-
-    VertexSpanComparator< HalfedgeGraph, PointMap, vertex_descriptor, Geometry >
-        cmp_v(spanningtree);
 		
 	// bit optimization stuff (to not encode predictable zeros)
 	bool last_was_1 = false;	
@@ -395,7 +403,7 @@ private:
       }	  
 		
       // if we have to split the current vertex
-      if( (*bit_it == true) && !is_adjacent_to_former_1 )
+      if((*bit_it == true) && !is_adjacent_to_former_1)
       {
         // bit optimization stuff 
         last_was_1 = true; 
@@ -406,7 +414,7 @@ private:
         std::vector< bool > current_edge_bit;
         auto e_min_tree = spanningtree.get_spanning_tree_min_incident_edge(*spanning_it);
         halfedge_descriptor h_min_tree = halfedge(e_min_tree, _g);
-        if( target(h_min_tree, _g) != *spanning_it)
+        if(target(h_min_tree, _g) != *spanning_it)
           h_min_tree = opposite(h_min_tree, _g);
         halfedge_descriptor current_edge = h_min_tree;
         int nb_edges = 0;
@@ -438,7 +446,7 @@ private:
 
         if(nb_edges != 1 && nb_edges != 2)
         {
-          std::cerr << "FillHextentListNoSort: error. No halfedge to extent." << std::endl;
+          std::cerr << "fill_h_extent_list_no_sort: error. No halfedge to extent." << std::endl;
         }
 
         vsplit_neighbours_list.clear();
@@ -450,7 +458,7 @@ private:
     }
   }
  
-  FEVV::Filters::TOPOLOGYCASES FindCase(halfedge_descriptor h1,
+  FEVV::Filters::TOPOLOGY_CASE find_case(halfedge_descriptor h1,
                                         halfedge_descriptor h2)
   {
     if(h1 == h2)
@@ -462,18 +470,18 @@ private:
              opp_h,
              _g))) // both halfedges are not border, but a vertex might be
       {
-        return TOPOLOGYCASES::CASE11;
+        return TOPOLOGY_CASE::CASE11;
       }
       else
       {
         if(!CGAL::is_border(h, _g) &&
            CGAL::is_border(opp_h, _g)) // opposite on border
         {
-          return TOPOLOGYCASES::CASE12;
+          return TOPOLOGY_CASE::CASE12;
         }
         else
         {
-          return TOPOLOGYCASES::CASE13;
+          return TOPOLOGY_CASE::CASE13;
         }
       }
     }
@@ -484,7 +492,7 @@ private:
           boost::graph_traits<
               HalfedgeGraph >::null_face())) // both edges completely internal
       {
-        return TOPOLOGYCASES::SIMPLE;
+        return TOPOLOGY_CASE::SIMPLE;
       }
       else
       {
@@ -493,11 +501,11 @@ private:
           if(face(opposite(h2, _g), _g) ==
              boost::graph_traits< HalfedgeGraph >::null_face())
           {
-            return TOPOLOGYCASES::CASE211;
+            return TOPOLOGY_CASE::CASE211;
           }
           else
           {
-            return TOPOLOGYCASES::CASE221;
+            return TOPOLOGY_CASE::CASE221;
           }
         }
         else
@@ -505,18 +513,18 @@ private:
           if(face(opposite(h1, _g), _g) ==
              boost::graph_traits< HalfedgeGraph >::null_face())
           {
-            return TOPOLOGYCASES::CASE212;
+            return TOPOLOGY_CASE::CASE212;
           }
           else
           {
-            return TOPOLOGYCASES::CASE222;
+            return TOPOLOGY_CASE::CASE222;
           }
         }
       }
     }
   }
 
-  halfedge_descriptor SimpleSplitCase(
+  halfedge_descriptor simple_split_sase(
       halfedge_descriptor h1,
       halfedge_descriptor h2) // Simple Split Case: both h1 and h2 are internal
                               // to the mesh, and none is linked to a null face
@@ -574,10 +582,10 @@ private:
   }
 
   std::pair< halfedge_descriptor, halfedge_descriptor >
-  FindGoodHalfedgesforSplit(halfedge_descriptor h, TOPOLOGYCASES cas)
+  find_good_halfedges_for_split(halfedge_descriptor h, TOPOLOGY_CASE cas)
   {
     halfedge_descriptor h1, h2;
-    if(cas == TOPOLOGYCASES::CASE11)
+    if(cas == TOPOLOGY_CASE::CASE11)
     {
       // case 1
       h2 = h;
@@ -586,7 +594,7 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        ColorCenter(
+        color_center(
             _g,
             _pm,
             _vcm,
@@ -595,14 +603,14 @@ private:
                 1, 0, 0));
         put_property_map(FEVV::vertex_color, _g, test_pmaps_bag, _vcm);
         FEVV::Filters::write_mesh("test11.obj", _g, test_pmaps_bag);
-        std::cerr << "FindGoodHalfedgesforSplit: error, there is no good border found " << std::endl;
+        std::cerr << "find_good_halfedges_for_split: error, there is no good border found " << std::endl;
         assert(false);
       }
       else
         h1 = paire.first;
     }
 
-    else if(cas == TOPOLOGYCASES::CASE12)
+    else if(cas == TOPOLOGY_CASE::CASE12)
     {
       // case 2
       h2 = h;
@@ -611,7 +619,7 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        ColorCenter(
+        color_center(
             _g,
             _pm,
             _vcm,
@@ -620,14 +628,14 @@ private:
                 1, 0, 0));
         put_property_map(FEVV::vertex_color, _g, test_pmaps_bag, _vcm);
         FEVV::Filters::write_mesh("test12.obj", _g, test_pmaps_bag);
-        std::cerr << "FindGoodHalfedgesforSplit: error, there is no good border found " << std::endl;
+        std::cerr << "find_good_halfedges_for_split: error, there is no good border found " << std::endl;
         assert(false);
       }
       else
         h1 = paire.first;
     }
 
-    else if(cas == TOPOLOGYCASES::CASE13)
+    else if(cas == TOPOLOGY_CASE::CASE13)
     {
       // case 3
       h2 = prev(opposite(h, _g), _g);
@@ -636,14 +644,14 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        ColorCenter(
+        color_center(
             _g,
             _pm,
             _vcm,
             target(h, _g),
             typename boost::property_traits< VertexColorMap >::value_type(
                 1, 0, 0));
-        ColorCenter(
+        color_center(
             _g,
             _pm,
             _vcm,
@@ -652,7 +660,7 @@ private:
                 1, 1, 0));
         put_property_map(FEVV::vertex_color, _g, test_pmaps_bag, _vcm);
         FEVV::Filters::write_mesh("test13.obj", _g, test_pmaps_bag);
-        std::cerr << "FindGoodHalfedgesforSplit: error, there is no good border found " << std::endl;
+        std::cerr << "find_good_halfedges_for_split: error, there is no good border found " << std::endl;
         assert(false);
       }
       else
@@ -661,7 +669,7 @@ private:
 
     else
     {
-      std::cerr << "FindGoodHalfedgesforSplit: error , wrong case " << std::endl;
+      std::cerr << "find_good_halfedges_for_split: error , wrong case " << std::endl;
       assert(false);
     }
 
@@ -708,14 +716,14 @@ private:
         return nb_face_vertices;
     }
   }
-  halfedge_descriptor Cases1(halfedge_descriptor h, TOPOLOGYCASES current_case)
+  halfedge_descriptor cases_1(halfedge_descriptor h, TOPOLOGY_CASE current_case)
   {
     halfedge_descriptor hnew, h1, h2;
     std::pair< halfedge_descriptor, halfedge_descriptor > pair_of_h;
     switch(current_case)
     {
-    case FEVV::Filters::TOPOLOGYCASES::CASE11:
-      pair_of_h = FindGoodHalfedgesforSplit(h, current_case);
+    case FEVV::Filters::TOPOLOGY_CASE::CASE11:
+      pair_of_h = find_good_halfedges_for_split(h, current_case);
       h1 = pair_of_h.first;
       h2 = pair_of_h.second;
 
@@ -724,8 +732,8 @@ private:
         CGAL::Euler::split_face(hnew, next(next(hnew, _g), _g), _g);
       break;
 
-    case FEVV::Filters::TOPOLOGYCASES::CASE12:
-      pair_of_h = FindGoodHalfedgesforSplit(h, current_case);
+    case FEVV::Filters::TOPOLOGY_CASE::CASE12:
+      pair_of_h = find_good_halfedges_for_split(h, current_case);
       h1 = pair_of_h.first;
       h2 = pair_of_h.second;
       hnew = CGAL::Euler::split_vertex(h1, h2, _g);
@@ -735,9 +743,9 @@ private:
       CGAL::Euler::split_face(hnew, next(next(hnew, _g), _g), _g);
       break;
 
-    case FEVV::Filters::TOPOLOGYCASES::CASE13:
+    case FEVV::Filters::TOPOLOGY_CASE::CASE13:
 
-      pair_of_h = FindGoodHalfedgesforSplit(h, current_case);
+      pair_of_h = find_good_halfedges_for_split(h, current_case);
       h1 = pair_of_h.first;
       h2 = pair_of_h.second;
       if(h1 != h2)
@@ -753,7 +761,7 @@ private:
       }
       else
       {
-        ColorCenter(
+        color_center(
             _g,
             _pm,
             _vcm,
@@ -773,9 +781,9 @@ private:
   }
 
 
-  halfedge_descriptor Cases2(halfedge_descriptor h1,
+  halfedge_descriptor cases_2(halfedge_descriptor h1,
                              halfedge_descriptor h2,
-                             TOPOLOGYCASES current_case)
+                             TOPOLOGY_CASE current_case)
   {
     halfedge_descriptor first_to_split, second_to_split, border;
     vertex_descriptor first, second, third;
@@ -785,7 +793,7 @@ private:
     switch(current_case)
     {
 
-    case FEVV::Filters::TOPOLOGYCASES::CASE211:
+    case FEVV::Filters::TOPOLOGY_CASE::CASE211:
       first_to_split = hnew;
       second_to_split = prev(prev(hnew, _g), _g);
       border = opposite(hnew, _g);
@@ -793,7 +801,7 @@ private:
       second = source(h1, _g);
       third = target(hnew, _g);
       break;
-    case FEVV::Filters::TOPOLOGYCASES::CASE221:
+    case FEVV::Filters::TOPOLOGY_CASE::CASE221:
       first_to_split = hnew;
       second_to_split = prev(prev(hnew, _g), _g);
       border = opposite(hnew, _g);
@@ -803,7 +811,7 @@ private:
 
       break;
 
-    case FEVV::Filters::TOPOLOGYCASES::CASE212:
+    case FEVV::Filters::TOPOLOGY_CASE::CASE212:
       first_to_split = opposite(hnew, _g);
       second_to_split = prev(prev(opposite(hnew, _g), _g), _g);
       border = hnew;
@@ -811,7 +819,7 @@ private:
       second = source(h2, _g);
       third = source(hnew, _g);
       break;
-    case FEVV::Filters::TOPOLOGYCASES::CASE222:
+    case FEVV::Filters::TOPOLOGY_CASE::CASE222:
       first_to_split = opposite(hnew, _g);
       second_to_split = prev(prev(opposite(hnew, _g), _g), _g);
       border = hnew;

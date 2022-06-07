@@ -13,11 +13,11 @@
 
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/BatchCollapser.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/geometric_metrics.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/quantization.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/preprocessingLD.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Batch_collapser.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Geometric_metrics.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Uniform_quantization.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Uniform_dequantization.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Preprocessing.h"
 #include "boost/filesystem.hpp"
 #include <iostream>
 
@@ -42,34 +42,28 @@ get_files(fs::path const &root, std::string const &ext)
 }
 
 // Computes the distortion between an unquantized mesh g and a set of quantized
-// meshes (they will be unquantized) 
+// meshes (they will be unquantized).
 template< typename HalfedgeGraph,
           typename PointMap,
-          typename VertexColorMap,
-          typename EdgeColorMap,
-          typename VertexNormalMap,
           typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
 void
-ComputeDistortions(HalfedgeGraph &g, /// original mesh
+compute_distortions(HalfedgeGraph &g, /// original mesh
                    PointMap &pm, /// original point map
-                   VertexColorMap &v_cm, /// original attribute maps
-                   EdgeColorMap &/*e_cm*/,
-                   VertexNormalMap &/*v_nm*/,
                    const GeometryTraits &/*gt*/,
                    fs::path const &root // folder containing .obj files which 
-				                        // are used to compute distortions 
-										// between them and g
+                                        // are used to compute distortions 
+                                        // between them and g
                     )
 {
   //initialize AABB tree for the original mesh
-  FEVV::Filters::GeometricMetrics< HalfedgeGraph, PointMap > g_metric(g, pm);
+  FEVV::Filters::Geometric_metrics< HalfedgeGraph, PointMap > g_metric(g, pm);
 
   // PREPROCESS: get quantization parameters
-  FEVV::Filters::PreprocessingLD< HalfedgeGraph, PointMap, VertexColorMap >
-      preprocess(g, pm, v_cm);
+  FEVV::Filters::Preprocessing< HalfedgeGraph, PointMap >
+      preprocess(g, pm);
   preprocess.process_mesh_before_quantization();
   
-  FEVV::Filters::UniformQuantization< HalfedgeGraph, PointMap > pq(g, pm, 12);
+  FEVV::Filters::Uniform_quantization< HalfedgeGraph, PointMap > pq(g, pm, 12);
 
   std::vector< double > bb = pq.get_bb_dimension();
   std::vector< double > init = pq.get_init_coord();
@@ -86,10 +80,10 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
     auto current_pm = get(boost::vertex_point, current_mesh);
 	
 	//unquantize mesh
-    FEVV::Filters::UniformDequantization< HalfedgeGraph, PointMap > dq(
+    FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap > dq(
         current_mesh,
         current_pm,
-        12,
+        pq.get_nb_bits_quantization(),
         pq.get_bb_dimension(),
         pq.get_init_coord());
 
@@ -105,7 +99,7 @@ ComputeDistortions(HalfedgeGraph &g, /// original mesh
   auto it_dist = _distortion_per_batch.begin();
   dist_file << "DISTORSION"
              << "\n";
-  for(; it_dist != _distortion_per_batch.end(); it_dist++)
+  for( ; it_dist != _distortion_per_batch.end(); it_dist++)
   {
     dist_file << (*it_dist) << "\n";
   }

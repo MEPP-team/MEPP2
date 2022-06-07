@@ -25,7 +25,7 @@
 #pragma warning(disable : 4146 26812 26451)
 #endif
 
-#include "coarsemeshdecoder_draco_nowarning.h"
+#include "Coarse_mesh_decoder_draco_nowarning.h"
 
 #if defined _MSC_VER
 #pragma warning(pop)
@@ -42,21 +42,22 @@ template<
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename halfedge_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor >
-class CoarseMeshDecoder
+class Coarse_mesh_decoder
 {
 public:
 
-  /// CoarseMeshDecoder
+  /// Coarse_mesh_decoder
   /// \param[in] g an empty graph
   /// \param[in] pm an empty point map associated with g
-  CoarseMeshDecoder(HalfedgeGraph &g, /// empty graph
+  Coarse_mesh_decoder(HalfedgeGraph &g, /// empty graph
 	  PointMap &pm /// associated point map
   ) : _g(g), _pm(pm) {}
 
-  ~CoarseMeshDecoder() {}
+  ~Coarse_mesh_decoder() {}
 
   /// decode draco coarse mesh (vertex position and topology only)
-  void decodeCoarseMesh(draco::DecoderBuffer &buffer)
+  /// This function implements line 3 of Algorithm 2.
+  void decode_coarse_mesh(draco::DecoderBuffer &buffer)
   {
     draco::Decoder decoder;
     decoder.SetSkipAttributeTransform(
@@ -69,7 +70,7 @@ public:
     auto type_statusor = decoder.GetEncodedGeometryType(&buffer);
     if(!type_statusor.ok())
     {
-      std::cerr << "decodeCoarseMesh: failed to retrieve geometry " << std::endl;
+      std::cerr << "decode_coarse_mesh: failed to retrieve geometry " << std::endl;
       return;
     }
     const draco::EncodedGeometryType geom_type = type_statusor.value();
@@ -78,7 +79,7 @@ public:
       auto statusor = decoder.DecodeMeshFromBuffer(&buffer);
       if(!statusor.ok())
       {
-        std::cerr << "decodeCoarseMesh: failed to retrieve coarse mesh " << std::endl;
+        std::cerr << "decode_coarse_mesh: failed to retrieve coarse mesh " << std::endl;
         return;
       }
       std::unique_ptr< draco::Mesh > in_mesh = std::move(statusor).value();
@@ -90,13 +91,13 @@ public:
     }
 
     if(pc == nullptr){
-      std::cerr << "decodeCoarseMesh: Failed to decode the input file" << std::endl;
+      std::cerr << "decode_coarse_mesh: Failed to decode the input file" << std::endl;
     }
-	else
-      getMeshFromBinaryFile(*mesh);
+    else
+      get_mesh_from_binary_file(*mesh);
   }
  
-  bool getMeshFromBinaryFile(draco::Mesh &mesh)
+  bool get_mesh_from_binary_file(draco::Mesh &mesh)
   {
     const draco::PointCloud *p_point_cloud =
         &(static_cast< const draco::PointCloud & >(mesh));
@@ -107,15 +108,15 @@ public:
     // Encode points position into a buffer and faces into an other buffer
     const draco::PointAttribute *const att =
         p_point_cloud->GetNamedAttribute(draco::GeometryAttribute::POSITION);
-    if(!GetMeppMeshVertex(p_point_cloud, att, &map_index_to_vertex))
+    if(!get_mepp_mesh_vertex(p_point_cloud, att, &map_index_to_vertex))
       return false;
-    if(!GetMeppMeshFace(p_mesh, att, map_index_to_vertex))
+    if(!get_mepp_mesh_face(p_mesh, att, map_index_to_vertex))
       return false;
     return true;
   }
 
   bool
-  GetMeppMeshVertex(const draco::PointCloud * /*p_point_cloud*/,
+  get_mepp_mesh_vertex(const draco::PointCloud * /*p_point_cloud*/,
                     const draco::PointAttribute *const att,
                     std::map< int, vertex_descriptor > *map_index_to_vertex)
   {
@@ -141,7 +142,7 @@ public:
   }
 
   bool
-  GetMeppMeshFace(const draco::Mesh *p_mesh,
+  get_mepp_mesh_face(const draco::Mesh *p_mesh,
                   const draco::PointAttribute *const att,
                   const std::map< int, vertex_descriptor > &map_index_to_vertex)
   {
@@ -151,17 +152,17 @@ public:
 	  face.reserve(3);
       for(int j = 0; j < 3; ++j)
       {
-        if(!GetFaceCorner(i, j, p_mesh, face, att))
+        if(!get_face_corner(i, j, p_mesh, face, att))
           return false;
       }
 
       // update mesh connectivity
-      setMeshConnectivityFromFace(face, map_index_to_vertex);
+      set_mesh_connectivity_from_face(face, map_index_to_vertex);
     }
     return true;
   }
 
-  bool GetFaceCorner(draco::FaceIndex face_id,
+  bool get_face_corner(draco::FaceIndex face_id,
                      int local_corner_id,
                      const draco::Mesh *p_mesh,
                      std::vector< int >& face,
@@ -174,7 +175,7 @@ public:
   }
 
 
-  void setMeshConnectivityFromFace(
+  void set_mesh_connectivity_from_face(
       const std::vector< int >& face,
       const std::map< int, vertex_descriptor > &map_index_to_vertex)
   {
@@ -194,13 +195,11 @@ public:
 
 private:
   HalfedgeGraph &_g; // HalfedgeGraph: at the beginning, will be empty. the 
-                     // function decodeCoarseMesh will
-                     // add the vertices and corresponding connectivity from a 
-                     // draco buffer
+                     // function decode_coarse_mesh will add the vertices and
+                     // corresponding connectivity from a draco buffer
   PointMap &_pm; // Empty point map at the beginning. It will be filled thanks
                  // to the same draco buffer as _g
 };
-
 
 } // namespace Filters
 } // namespace FEVV

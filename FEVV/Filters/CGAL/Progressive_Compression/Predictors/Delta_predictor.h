@@ -22,7 +22,7 @@ namespace Filters {
 template<
     typename HalfedgeGraph,
     typename PointMap >
-class DeltaPredictor : public Predictor< HalfedgeGraph,
+class Delta_predictor : public Predictor< HalfedgeGraph,
                                          PointMap >
 {
 public:
@@ -35,19 +35,19 @@ public:
     using Geometry = typename FEVV::Geometry_traits< HalfedgeGraph >;
 	
     typedef Predictor< HalfedgeGraph, PointMap > 
-            SuperClass;
-  DeltaPredictor(HalfedgeGraph &_g,
-                 KeptPosition< HalfedgeGraph, PointMap > *kp,
+            Super_class;
+  Delta_predictor(HalfedgeGraph &_g,
+                 Kept_position< HalfedgeGraph, PointMap > *kp,
                  PointMap &pm)
-      : SuperClass(_g, kp, pm)
+      : Super_class(_g, kp, pm)
   {
-    SuperClass::_type = PREDICTION_TYPE::DELTA;
+    Super_class::_type = PREDICTION_TYPE::DELTA;
     _round_midpoint =
         std::make_tuple< bool, bool, bool, bool >(false, false, false, false);
   }
 
 
-  std::vector< Vector >  ComputeResiduals(CollapseInfo< HalfedgeGraph, PointMap > &mem) override
+  std::vector< Vector >  compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) override
   { // vt <- v1, vs <- v2
 
     Point A = mem.get_pos_v1();
@@ -62,16 +62,16 @@ public:
     Apred = A;
     Bpred = B;
 
-    Vector delta = SuperClass::_gt.sub_p(B, A);
+    Vector delta = Super_class::_gt.sub_p(B, A);
 
     Vector vec1 = // vt->vkept
-       SuperClass::_gt.sub_p(mem.get_pos_v1(), mem.get_pos_vkept()); 
+       Super_class::_gt.sub_p(mem.get_pos_v1(), mem.get_pos_vkept()); 
     Vector vec2 = // vs->vkept
-       SuperClass::_gt.sub_p(mem.get_pos_v2(), mem.get_pos_vkept()); 
+       Super_class::_gt.sub_p(mem.get_pos_v2(), mem.get_pos_vkept()); 
     std::vector< Vector > residuals;
     Vector to_be_pushed, revers;
     //auto copy_round = mem._midpoint_rounds;
-    if(SuperClass::_gt.length(vec1) <= SuperClass::_gt.length(vec2))
+    if(Super_class::_gt.length(vec1) <= Super_class::_gt.length(vec2))
     {
       to_be_pushed = std::move(vec1);
       revers = std::move(vec2);
@@ -81,11 +81,11 @@ public:
       to_be_pushed = std::move(vec2);
       revers = std::move(vec1);
     }
-    if(SuperClass::_kp->getType() == VKEPT_POSITION::MIDPOINT)
+    if(Super_class::_kp->get_type() == VKEPT_POSITION::MIDPOINT)
     {
       residuals = {delta};
     }
-    if(SuperClass::_kp->getType() == VKEPT_POSITION::HALFEDGE)
+    if(Super_class::_kp->get_type() == VKEPT_POSITION::HALFEDGE)
     {
       residuals = {delta};
     }
@@ -93,42 +93,42 @@ public:
     return residuals;
   }
 
-  std::vector< Vector > Reverse(vertex_descriptor v)
+  std::vector< Vector > reverse(vertex_descriptor v)
   {
-    SuperClass::_residuals[0] = _vkept_to_other_residual[v];
-    return SuperClass::_residuals;
+    Super_class::_residuals[0] = _vkept_to_other_residual[v];
+    return Super_class::_residuals;
   }
 
 
-  std::pair< Point, Point > PlacePoints(const std::vector< Vector > &residuals,
+  std::pair< Point, Point > place_points(const std::vector< Vector > &residuals,
                                         vertex_descriptor vkept,
                                         halfedge_descriptor /*h1*/,
                                         halfedge_descriptor /*h2*/,
                                         bool /*is_reverse*/) override
   {
-    const Point& current_point = get(SuperClass::_pm, vkept);
+    const Point& current_point = get(Super_class::_pm, vkept);
 
     Point p1, p2;
     if(residuals.size() == 2)
     {
-      p1 = SuperClass::_gt.add_pv(current_point, residuals[0]);
-      p2 = SuperClass::_gt.add_pv(current_point, residuals[1]);
+      p1 = Super_class::_gt.add_pv(current_point, residuals[0]);
+      p2 = Super_class::_gt.add_pv(current_point, residuals[1]);
     }
     else
     {
-      if(SuperClass::_kp->getType() == VKEPT_POSITION::MIDPOINT)
+      if(Super_class::_kp->get_type() == VKEPT_POSITION::MIDPOINT)
       {
         Vector D = residuals[0];
-        Vector DA = SuperClass::_gt.scalar_mult(D, -0.5f);
-        auto&& tmp = SuperClass::_gt.add_pv(SuperClass::_gt.ORIGIN, DA);
-        DA = Vector(std::floor(SuperClass::_gt.get_x(tmp)),
-                    std::floor(SuperClass::_gt.get_y(tmp)),
-                    std::floor(SuperClass::_gt.get_z(tmp)) );
-        Vector DB = SuperClass::_gt.add_v(D, DA);
+        Vector DA = Super_class::_gt.scalar_mult(D, -0.5f);
+        auto&& tmp = Super_class::_gt.add_pv(Super_class::_gt.ORIGIN, DA);
+        DA = Vector(std::floor(Super_class::_gt.get_x(tmp)),
+                    std::floor(Super_class::_gt.get_y(tmp)),
+                    std::floor(Super_class::_gt.get_z(tmp)) );
+        Vector DB = Super_class::_gt.add_v(D, DA);
 
-        p1 = SuperClass::_gt.add_pv(current_point, DA);
+        p1 = Super_class::_gt.add_pv(current_point, DA);
 
-        p2 = SuperClass::_gt.add_pv(current_point, DB);
+        p2 = Super_class::_gt.add_pv(current_point, DB);
       }
       else
       {
@@ -136,11 +136,11 @@ public:
         if(!_rev)
         {
           p1 = current_point;
-          p2 = SuperClass::_gt.add_pv(current_point, residuals[0]);
+          p2 = Super_class::_gt.add_pv(current_point, residuals[0]);
         }
         else
         {
-          p1 = SuperClass::_gt.sub_pv(current_point, residuals[0]);
+          p1 = Super_class::_gt.sub_pv(current_point, residuals[0]);
           p2 = current_point;
         }
       }
@@ -153,7 +153,7 @@ public:
    
 
 
-  const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const
+  const std::tuple< bool, bool, bool, bool >& get_midpoint() const
   {
     return _round_midpoint;
   }
@@ -161,11 +161,11 @@ public:
   {
     _round_midpoint = std::make_tuple(b1, b2, b3, b4);
   }
-  void set_rev(bool b)  { _rev = b; }
+  void set_rev(bool b) { _rev = b; }
 
-  std::string getMethodasString() const override { return "delta"; }
+  std::string get_as_string() const override { return "delta"; }
 
-  ~DeltaPredictor() {}
+  ~Delta_predictor() {}
 
 private:
   Point Apred, Bpred;

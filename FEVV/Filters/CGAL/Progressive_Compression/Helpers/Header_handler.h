@@ -23,7 +23,7 @@
 #pragma warning(disable : 4146 26812 26451)
 #endif
 
-#include "HeaderHandler_draco_nowarning.h"
+#include "Header_handler_draco_nowarning.h"
 
 #if defined _MSC_VER
 #pragma warning(pop)
@@ -31,10 +31,10 @@
 
 namespace FEVV {
 
-class HeaderHandler
+class Header_handler
 {
 public:
-  HeaderHandler(const std::vector< double >& dimension,
+  Header_handler(const std::vector< double >& dimension,
                 const std::vector< double >& init_coord,
                 FEVV::Filters::VKEPT_POSITION vkept,
                 FEVV::Filters::PREDICTION_TYPE pred,
@@ -47,15 +47,15 @@ public:
     _bit_quantization = bit_quantization;
   };
 
-  HeaderHandler()
+  Header_handler()
   {
     _bit_quantization = 16;
     _vkept = FEVV::Filters::VKEPT_POSITION::MIDPOINT;
     _pred = FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
   };
-  ~HeaderHandler(){};
+  ~Header_handler(){};
 
-  void encodeTextHeader(const std::string& filepath)
+  void encode_text_header(const std::string& filepath)
   {
     std::ofstream file_encode;
     file_encode.open(filepath);
@@ -78,7 +78,7 @@ public:
     file_encode.close();
   }
 
-  void decodeTextHeader(std::ifstream &file_decode)
+  void decode_text_header(std::ifstream &file_decode)
   {
 
     // file_decode.open(filepath);
@@ -108,7 +108,7 @@ public:
   }
 
   //Encodes header info in the file located at "filepath". Returns the size of the header in bits
-  size_t EncodeBinaryHeader(const std::string& filepath
+  size_t encode_binary_header(const std::string& filepath
                             )  
   {
     std::fstream output_file;
@@ -146,8 +146,9 @@ public:
   bool getUseTexture() const
   { return false;
   }
-  //Decodes a header from a draco buffer
-  void DecodeBinaryHeader(draco::DecoderBuffer &buffer)
+  // Decodes a header from a draco buffer.
+  // This function implements line 2 of Algorithm 2.
+  void decode_binary_header(draco::DecoderBuffer &buffer)
   {
     int vk;
     draco::DecodeVarint(&vk, &buffer);
@@ -171,11 +172,11 @@ public:
   }
  
 
-  FEVV::Filters::VKEPT_POSITION getVkept() const { return _vkept; }
-  FEVV::Filters::PREDICTION_TYPE getPred() const { return _pred; }
-  int getQuantization() const { return _bit_quantization; }
-  const std::vector< double >& getDimension() const { return _dimension; }
-  const std::vector< double >& getInitCoord() const { return _init_coord; }
+  FEVV::Filters::VKEPT_POSITION get_vkept() const { return _vkept; }
+  FEVV::Filters::PREDICTION_TYPE get_pred() const { return _pred; }
+  int get_quantization() const { return _bit_quantization; }
+  const std::vector< double >& get_dimension() const { return _dimension; }
+  const std::vector< double >& get_init_coord() const { return _init_coord; }
 
 private:
   std::vector< double > _dimension;

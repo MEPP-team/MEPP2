@@ -15,9 +15,8 @@
 #include <CGAL/boost/graph/Euler_operations.h>
 #include "FEVV/Wrappings/Geometry_traits.h"
 #include "FEVV/Wrappings/properties.h"
-#include <iostream>
+
 #include <vector>
-#include <list>
 
 namespace FEVV {
 namespace Filters {
@@ -29,7 +28,7 @@ template<
 	typename VertexColorMap,
 	typename halfedge_descriptor =
 	typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor >
-void ColorStencil(HalfedgeGraph &g,
+void color_stencil(HalfedgeGraph &g,
                   PointMap &pm,
                   EdgeColorMap &e_cm,
                   VertexColorMap &v_cm,
@@ -51,13 +50,13 @@ template<
 	typename edge_descriptor =
 	typename boost::graph_traits< HalfedgeGraph >::edge_descriptor >
 void
-ColorEdge(HalfedgeGraph &/*g*/,PointMap &/*pm*/,
+color_edge(HalfedgeGraph &/*g*/,PointMap &/*pm*/,
           EdgeColorMap &e_cm,
           VertexColorMap &/*v_cm*/,
           edge_descriptor edge_to_color, 
           typename boost::property_traits< VertexColorMap >::value_type color)
 {
-	put(e_cm, edge_to_color, color);// colors every edge in color
+	put(e_cm, edge_to_color, color);
 }
 
 template<
@@ -67,7 +66,7 @@ template<
 	typename vertex_descriptor =
 	typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor >
 void
-ColorCenter(HalfedgeGraph &/*g*/,
+color_center(HalfedgeGraph &/*g*/,
             PointMap &/*pm*/,
             VertexColorMap &v_cm,
             vertex_descriptor center,
@@ -75,5 +74,5 @@ ColorCenter(HalfedgeGraph &/*g*/,
 {
 	put(v_cm,center,color);
 }
-}
-}
+} // namespace Filters
+} // namespace FEVV

@@ -245,10 +245,10 @@ public:
       _predictor = FEVV::Filters::PREDICTION_TYPE::POSITION;
     }
 
-	_metric = FEVV::Filters::METRIC_TYPE::QEM;
+   _metric = FEVV::Filters::METRIC_TYPE::QEM_3D;
 	 if(metr.compare("QEM") == 0)
     {
-      _metric = FEVV::Filters::METRIC_TYPE::QEM;
+      _metric = FEVV::Filters::METRIC_TYPE::QEM_3D;
     }
     else if(metr.compare("Volume Preserving") == 0)
     {

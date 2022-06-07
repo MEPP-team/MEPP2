@@ -33,7 +33,7 @@ namespace MATH         // OK: even when nested, no indentation
 } // namespace FEVV
 ```
 
-### No <i>`using namespace`</i>
+### No using namespace
 
 Note: this coding style rule applies to `using namespace` but **does not** apply to the `using` expression. The usage of the `using` directive for [type alias](http://en.cppreference.com/w/cpp/language/type_alias) remains a must for [templated type alias](https://stackoverflow.com/questions/6907194/how-to-typedef-a-template-class).
 

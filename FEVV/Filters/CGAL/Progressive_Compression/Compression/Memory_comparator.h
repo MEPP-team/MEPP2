@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/CollapseInfo.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Collapse_info.h"
 #include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
 
 namespace FEVV {
@@ -22,69 +22,69 @@ template<typename HalfedgeGraph,
          typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
          typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point,
          typename Geometry = typename FEVV::Geometry_traits<HalfedgeGraph> >
-	class MemoryComparator
-	{
+class Memory_comparator
+{
 	private:
       const FEVV::Comparator::SpanningTreeVertexEdgeComparator<HalfedgeGraph,PointMap> &_st;
 	public:
-        bool operator()(const FEVV::Filters::CollapseInfo<HalfedgeGraph,PointMap> &mem1,
-                        const FEVV::Filters::CollapseInfo<HalfedgeGraph,PointMap> &mem2) const
+        bool operator()(const FEVV::Filters::Collapse_info<HalfedgeGraph,PointMap> &mem1,
+                        const FEVV::Filters::Collapse_info<HalfedgeGraph,PointMap> &mem2) const
         {
           return _st.operator()(mem1.get_vkept(), mem2.get_vkept());
         }
-        MemoryComparator(
+        Memory_comparator(
               const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                                                   PointMap >
                   &st)
                       : _st(st)
         {}
-        ~MemoryComparator() {}
-	};
+        ~Memory_comparator() {}
+};
 
-	template<typename HalfedgeGraph,
-             typename PointMap,
-             typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
-             typename Geometry = typename FEVV::Geometry_traits<HalfedgeGraph>>
-	class VertexSpanComparator
-    {
+template<typename HalfedgeGraph,
+         typename PointMap,
+         typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
+         typename Geometry = typename FEVV::Geometry_traits<HalfedgeGraph>>
+class Vertex_span_comparator
+{
 	private:
 	  const FEVV::Comparator::SpanningTreeVertexEdgeComparator<HalfedgeGraph,PointMap> &_st;
 	public:
-	  VertexSpanComparator(
+	  Vertex_span_comparator(
               const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                                                   PointMap >
                   &st)
                       : _st(st)
       {}
 
-      ~VertexSpanComparator() {}
+      ~Vertex_span_comparator() {}
 
       bool operator()(vertex_descriptor v1, vertex_descriptor v2) const
       {
         return _st.operator()(v1, v2);
       }
 	
-    };
+};
 
-	template<
+template<
         typename HalfedgeGraph,
         typename PointMap,
         typename vertex_descriptor =
             typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
         typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
         typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
-    class SimpleVertexComparator
-    {
+class Vertex_lexicographic_comparator
+{
     private:
       const HalfedgeGraph &_g;
       const PointMap &_pm;
       const Geometry _gt;
     public:
-      SimpleVertexComparator(const HalfedgeGraph &g, const PointMap &pm)
+      Vertex_lexicographic_comparator(const HalfedgeGraph &g, const PointMap &pm)
           : _g(g), _pm(pm), _gt(Geometry(g))
       {}
 
-      ~SimpleVertexComparator() {}
+      ~Vertex_lexicographic_comparator() {}
 
       bool operator()(vertex_descriptor v1, vertex_descriptor v2) const
       {
@@ -103,6 +103,6 @@ template<typename HalfedgeGraph,
 		  
 		return false;
       }
-    };
-}
-}
+};
+} // namespace Filters
+} // namespace FEVV

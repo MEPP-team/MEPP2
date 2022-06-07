@@ -35,7 +35,7 @@ template<
     typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector,
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
-class CollapseInfo
+class Collapse_info
 {
 private:
   HalfedgeGraph &_g;
@@ -64,11 +64,11 @@ private:
   /////////////////////////////////////////////////////////////////////////////
   int _num_collapse;
 public:
-  CollapseInfo(HalfedgeGraph &g, PointMap &pm) : _g(g), _gt(Geometry(_g)), _pm(pm)
+  Collapse_info(HalfedgeGraph &g, PointMap &pm) : _g(g), _gt(Geometry(_g)), _pm(pm)
   {
     _reverse = false;
   }
-  ~CollapseInfo() {}
+  ~Collapse_info() {}
 
   vertex_descriptor get_vkept() const { return _vkept; }
   vertex_descriptor get_vt() const { return _vt; }
@@ -129,7 +129,7 @@ public:
     _vkept = vkept; // vkept = target(h) = vt
   }
 
-  bool vkept_source_or_target()
+  bool is_vkept_source()
   {
     if(_vkept == _vs)
       return true;

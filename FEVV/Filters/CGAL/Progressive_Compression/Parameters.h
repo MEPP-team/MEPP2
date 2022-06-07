@@ -29,7 +29,7 @@ enum class VKEPT_POSITION { MIDPOINT = 0, HALFEDGE, FULLEDGE };
 
 enum class METRIC_TYPE {
   NO_METRIC = 0,
-  QEM,
+  QEM_3D,
   EDGE_LENGTH,
   VOLUME_PRESERVING
 };
@@ -42,42 +42,42 @@ enum class METRIC_TYPE {
 class Parameters // Local Parameters
 {
 private:
-  PREDICTION_TYPE Prediction;
-  VKEPT_POSITION Vkept_pos;
-  METRIC_TYPE Metric;
-  bool FirstCall;       
-  bool AllowDuplicates; // Global parameters
-  int QuantizationBits;
+  PREDICTION_TYPE _prediction;
+  VKEPT_POSITION _vkept_pos;
+  METRIC_TYPE _metric;
+  bool _first_call;       
+  bool _allow_duplicates; // Global parameters
+  int _quantization_bits;
   
 
 public:
-  PREDICTION_TYPE getPrediction() const { return Prediction; } 
-  VKEPT_POSITION getVKeptPosition() const { return Vkept_pos; }
-  METRIC_TYPE getMetric() const { return Metric; }
-  bool getFirstCall() const { return FirstCall; }
-  bool getAllowDuplicates() const { return AllowDuplicates; }
-  Parameters(PREDICTION_TYPE _Prediction = PREDICTION_TYPE::BUTTERFLY,
-             VKEPT_POSITION _Vkept_pos = VKEPT_POSITION::MIDPOINT,
-             METRIC_TYPE _Metric = METRIC_TYPE::EDGE_LENGTH,
-             bool _FirstCall = true,
-             bool _AllowDuplicates = false,
-             int _QuantizationBits = 16)
+  PREDICTION_TYPE get_prediction() const { return _prediction; } 
+  VKEPT_POSITION get_vkept_position() const { return _vkept_pos; }
+  METRIC_TYPE get_metric() const { return _metric; }
+  bool get_first_call() const { return _first_call; }
+  bool get_allow_duplicates() const { return _allow_duplicates; }
+  Parameters(PREDICTION_TYPE __prediction = PREDICTION_TYPE::BUTTERFLY,
+             VKEPT_POSITION __vkept_pos = VKEPT_POSITION::MIDPOINT,
+             METRIC_TYPE __metric = METRIC_TYPE::EDGE_LENGTH,
+             bool __first_call = true,
+             bool __allow_duplicates = false,
+             int __quantization_bits = 16)
   {
-    Prediction = _Prediction;
-    Vkept_pos = _Vkept_pos;
-    Metric = _Metric;
-    FirstCall = _FirstCall;
-    AllowDuplicates = _AllowDuplicates;
-    QuantizationBits = _QuantizationBits;
+    _prediction = __prediction;
+    _vkept_pos = __vkept_pos;
+    _metric = __metric;
+    _first_call = __first_call;
+    _allow_duplicates = __allow_duplicates;
+    _quantization_bits = __quantization_bits;
   }
 
   ~Parameters() {}
-  void setFirstCall(bool _first) { FirstCall = _first; }
-  int getQuantization() const { return QuantizationBits; }
+  void set_first_call(bool _first) { _first_call = _first; }
+  int get_quantization() const { return _quantization_bits; }
 
-  std::string PredictionTypeToString() const
+  std::string get_prediction_type_as_string() const
   {
-    switch(Prediction)
+    switch(_prediction)
     {
     case PREDICTION_TYPE::POSITION:
       return "position";
@@ -102,9 +102,9 @@ public:
       break;
     }
   }
-  std::string VKeptToString() const
+  std::string get_vkept_type_as_string() const
   {
-    switch(Vkept_pos)
+    switch(_vkept_pos)
     {
     case VKEPT_POSITION::HALFEDGE:
       return "halfedge";
@@ -120,14 +120,14 @@ public:
       break;
     }
   }
-  std::string MetricToString() const
+  std::string get_metric_type_as_string() const
   {
-    switch(Metric)
+    switch(_metric)
     {
     case FEVV::Filters::METRIC_TYPE::NO_METRIC:
       return "no_metric";
       break;
-    case FEVV::Filters::METRIC_TYPE::QEM:
+    case FEVV::Filters::METRIC_TYPE::QEM_3D:
       return "qem";
       break;
     case FEVV::Filters::METRIC_TYPE::EDGE_LENGTH:
@@ -142,10 +142,10 @@ public:
     }
   }
 
-  void ChangeMethods(METRIC_TYPE metr, VKEPT_POSITION vk)
+  void set_methods(METRIC_TYPE metr, VKEPT_POSITION vk)
   {
-    Metric = metr;
-    Vkept_pos = vk;
+    _metric = metr;
+    _vkept_pos = vk;
   }
 };
 

@@ -32,7 +32,6 @@ namespace Filters {
 template<
     typename HalfedgeGraph,
     typename PointMap,
-    typename VertexColorMap,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename halfedge_descriptor =
@@ -44,11 +43,11 @@ template<
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
 
-class PreprocessingLD
+class Preprocessing
 {
 public:
-  PreprocessingLD(HalfedgeGraph &g, PointMap &pm, VertexColorMap &cm)
-      : _g(g), _pm(pm), _cm(cm)
+  Preprocessing(HalfedgeGraph &g, PointMap &pm)
+      : _g(g), _pm(pm)
   {
   }
 
@@ -68,7 +67,7 @@ public:
   void process_mesh_after_quantization()
   {
     // process dupplicates
-    this->merge_dupplicates_after_quantization();
+    this->move_dupplicates_after_quantization();
 
     // check if there are not remainong dupplicates
     bool still_dupplicates = this->are_dupplicates();
@@ -78,7 +77,7 @@ public:
   }
 
 
-  /// erase isolated edges and vertices
+  /// Erase isolated edges and vertices.
   void erase_small_connnected_components()
   {
     auto iterator_pair = vertices(_g);
@@ -87,7 +86,7 @@ public:
     std::vector< vertex_descriptor > isolated_vertices;
     std::vector< halfedge_descriptor > isolated_hedges;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
 
       typename boost::graph_traits< HalfedgeGraph >::degree_size_type
@@ -109,12 +108,12 @@ public:
     }
     auto itE = isolated_hedges.begin(), 
          itEe = isolated_hedges.end();
-    for(; itE != itEe; ++itE)
+    for( ; itE != itEe; ++itE)
       remove_edge(edge(*itE, _g), _g);
 
     auto itV = isolated_vertices.begin(), 
          itVe = isolated_vertices.end();
-    for(; itV != itVe; ++itV)
+    for( ; itV != itVe; ++itV)
       remove_vertex(*itV, _g);
   }
 
@@ -124,7 +123,7 @@ public:
     edge_iterator ei = iterator_pair.first;
     edge_iterator ei_end = iterator_pair.second;
 
-    for(; ei != ei_end; ++ei)
+    for( ; ei != ei_end; ++ei)
     {
       if(CGAL::is_border_edge(halfedge(*ei, _g), _g))
         return true;
@@ -133,7 +132,7 @@ public:
   }
 
 
-  void merge_dupplicates_after_quantization()
+  void move_dupplicates_after_quantization()
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -144,7 +143,7 @@ public:
                bool >
         ret;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
       Point pos = get(_pm, *vi);
 
@@ -171,7 +170,7 @@ public:
     std::pair< typename std::map< Point, vertex_descriptor >::iterator, bool >
         ret;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
       const Point& pos = get(_pm, *vi);
       ret = map_pos.insert(std::pair< Point, vertex_descriptor >(pos, *vi));
@@ -330,7 +329,6 @@ public:
 private:
   HalfedgeGraph &_g;
   PointMap &_pm;
-  VertexColorMap &_cm;
   std::map< Point, vertex_descriptor, std::less< Point > > _position;
 };
 } // namespace Filters

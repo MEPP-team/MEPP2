@@ -17,8 +17,8 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include "FEVV/Wrappings/Geometry_traits.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/CollapseInfo.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/ConnectivityEncoding.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Collapse_info.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Connectivity_encoding.h"
 
 #include <list>
 #include <vector>
@@ -27,35 +27,32 @@
 namespace FEVV {
 namespace Filters {
 
-/** A RefinementInfo Object stores the necessary info to refine a batch.
-  * Each batch has its corresponding RefinementInfo object
-  * Input: a sorted list of CollapseInfo objects, a halfedgeGraph corresponding
-  *        to the current level of detail
-  * Output: corresponding bitmasks and residuals arrays
+/** A Refinement_info Object stores the necessary info to refine a batch.
+  * Each batch has its corresponding Refinement_info object.
+  * Input: A sorted list of Collapse_info objects, a halfedgeGraph corresponding
+  *        to the current level of detail.
+  * Output: Corresponding bitmasks and residuals arrays.
   **/
 template<
     typename HalfedgeGraph,
-    typename Index,
     typename PointMap,
-    typename EdgeColorMap,
-    typename VertexColorMap,
     typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector,
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename vertex_iterator =
         typename boost::graph_traits< HalfedgeGraph >::vertex_iterator >
-class RefinementInfo
+class Refinement_info
 { 
 public:
-  RefinementInfo(
+  Refinement_info(
       HalfedgeGraph &g, 
-      const std::list< CollapseInfo< HalfedgeGraph, PointMap > > &list_memory)
+      const std::list< Collapse_info< HalfedgeGraph, PointMap > > &list_memory)
       : _g(g), _list_memory(list_memory)
   {}
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  int GetNumVertices() const
+  int get_num_vertices() const
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -67,15 +64,15 @@ public:
 
   /////////////////////////////////////////////////////////////////////////////
   /// Creates a vertex bitmask according to a vertex spanning tree and 
-  /// a list of CollapseInfo objects (initialized at construction).
+  /// a list of Collapse_info objects (initialized at construction).
   void set_bitMask(
                    const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                              PointMap > &st /// spanning tree of current LOD
                    )
   {
 	const std::list< vertex_descriptor > &spanning_tree = st.get_spanning_tree_vertices(); /// st vertices ordered in the same ordered
-                                                                                           /// that the internal memory list
-    // bit optimization stuff (to not encode predictable zeros)
+                                                                                           /// that the internal memory list.
+    // Bit optimization stuff (to not encode predictable zeros).
 	bool last_was_1 = false;	
     std::list< vertex_descriptor > remaining_adjacent_vertices_of_last_v, tmp;
     std::map<vertex_descriptor, bool> processed_vertices;  
@@ -83,9 +80,9 @@ public:
     typename std::list< vertex_descriptor >::const_iterator it =
         spanning_tree.begin(), it_e = spanning_tree.end();
     auto it_list = _list_memory.begin(), it_list_e = _list_memory.end();
-    for(; (it != it_e) && (it_list != it_list_e); ++it)
+    for( ; (it != it_e) && (it_list != it_list_e); ++it)
     {
-      // bit optimization stuff 
+      // Bit optimization stuff. 
       processed_vertices[*it] = true; 
 	  bool is_adjacent_to_former_1 = false;
       if(last_was_1)
@@ -99,10 +96,9 @@ public:
           last_was_1 = false;
       }
 	  
-      if( *it == (*it_list).get_vkept() // each split vertex must be present in 
-                                        // the bit mask
-		  )
-      { // code by 1 vertex that belongs to the list
+      if(*it == (*it_list).get_vkept()) // Each split vertex must be present in 
+                                        // the bit mask.
+      { // Code by 1 vertex that belongs to the list.
         _bitMask.push_back(1);
 		
         _other_info_bits.push_back(std::get< 0 >((*it_list).get_midpoint_rounds()));
@@ -112,15 +108,14 @@ public:
 		
         ++it_list;
 		
-        // bit optimization stuff 
+        // Bit optimization stuff.
         last_was_1 = true; 
         tmp = FEVV::Comparator::get_not_processed_adjacent_vertices(*it, _g, processed_vertices, st.get_spanning_tree_min_incident_edge(*it));
         remaining_adjacent_vertices_of_last_v.insert(remaining_adjacent_vertices_of_last_v.end(), tmp.begin(), tmp.end());
       }
-      else if(!is_adjacent_to_former_1    // each non-split vertex is present in 
+      else if(!is_adjacent_to_former_1)   // Each non-split vertex is present in 
                                           // the bit mask only when not adjacent 
-                                          // to a previously met split vertex
-              )
+                                          // to a previously met split vertex.
       {
         _bitMask.push_back(0);
       }
@@ -133,19 +128,15 @@ public:
       const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                                           PointMap > &st, /// spanning tree of current LOD
                                 PointMap &pm, /// pointmap of current LOD
-                                //EdgeColorMap &ecm, /// color of edges
-                                //VertexColorMap &vcm,/// color of vertices
-      std::list< CollapseInfo< HalfedgeGraph, PointMap > > &list_memory /// sorted list of CollapseInfo objects
+      std::list< Collapse_info< HalfedgeGraph, PointMap > > &list_memory /// sorted list of Collapse_info objects
 	                                                                    /// (same list that _list_memory, but
 																		/// _list_memory use the original sorted
 																		/// list while here list_memory can have 
 																		/// its object' reverse field updated)
   )
   {
-    EncodeConnectivityBitmask(_g, 
+    encode_connectivity_bitmask(_g, 
                               pm, 
-                              //ecm, 
-                              //vcm, 
                               list_memory, 
                               _connectivity, 
                               st 
@@ -158,7 +149,7 @@ public:
     if(!_list_memory.empty())
     {
       auto it_list = _list_memory.begin(), ite = _list_memory.end();
-      for(; it_list != ite; ++it_list)
+      for( ; it_list != ite; ++it_list)
       {
         _error_prediction.push_back((*it_list).get_error_prediction());
       }
@@ -171,7 +162,7 @@ public:
     if(!_list_memory.empty())
     {
       auto it_list = _list_memory.begin(), ite = _list_memory.end();
-      for(; it_list != ite; ++it_list)
+      for( ; it_list != ite; ++it_list)
         _reverse_bool.push_back((*it_list).get_reverse());
     }
   }
@@ -190,7 +181,7 @@ public:
 
 private:
   HalfedgeGraph &_g;
-  const std::list< CollapseInfo< HalfedgeGraph, PointMap > > &_list_memory; /// sorted list of refinement info
+  const std::list< Collapse_info< HalfedgeGraph, PointMap > > &_list_memory; /// sorted list of refinement info
                                                                             /// (vertices to encode) according
                                                                             /// to the vertex spanning traversal																		
   std::list< bool > _bitMask; /// vertex bit mask (which vertex to split during)

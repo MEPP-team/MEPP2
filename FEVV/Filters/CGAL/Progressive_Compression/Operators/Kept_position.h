@@ -23,24 +23,24 @@ namespace Filters {
 template< typename HalfedgeGraph,
           typename PointMap,
           typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
-class KeptPosition
+class Kept_position
 {
 public:
   using Vector = typename Geometry::Vector;
   using Point = typename Geometry::Point;
-  KeptPosition(HalfedgeGraph &g,
+  Kept_position(HalfedgeGraph &g,
                PointMap &pm)
       : _g(g), _gt(Geometry(_g)), _pm(pm){}
-  KeptPosition(HalfedgeGraph &g,
+  Kept_position(HalfedgeGraph &g,
                PointMap &pm,
                Geometry &gt)
       : _g(g), _gt(gt), _pm(pm){}
-  virtual ~KeptPosition(){}
-  virtual Point ComputePosition(
+  virtual ~Kept_position(){}
+  virtual Point compute_position(
       typename boost::graph_traits< HalfedgeGraph >::edge_descriptor edge) = 0;
-  VKEPT_POSITION getType() const { return _type; }
-  bool getReverse() const { return _reverse; }
-  virtual std::string getMethodasString() const = 0;
+  VKEPT_POSITION get_type() const { return _type; }
+  bool get_reverse() const { return _reverse; }
+  virtual std::string get_as_string() const = 0;
 
 protected:
   HalfedgeGraph &_g;

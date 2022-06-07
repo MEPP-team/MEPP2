@@ -16,19 +16,19 @@
 
 #include "FEVV/Tools/Comparator/SpanningTreeVertexEdgeComparator.hpp"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/MemoryComparator.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/ApplyColor.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Memory_comparator.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/apply_color.h"
 
 namespace FEVV {
 namespace Filters {
 
 /**
-  * For a vertex (represented by a CollapseInfo object), will encode the edges 
+  * For a vertex (represented by a Collapse_info object), will encode the edges 
   * to expand in a binary stream, 1 being an edge that should be expanded and 0
   * being an edge that should not. Takes as arguments a graph g, a pointmap,
-  * [color maps for edges and vertices], a CollapseInfo object (again, 
+  * [color maps for edges and vertices], a Collapse_info object (again, 
   * representing a vertex and many necessary refinement info), the first edge 
-  * to process (see the EncodeConnectivityBitmask function), the 
+  * to process (see the encode_connectivity_bitmask function), the 
   * edge/connectivity bitmask (which will receive the connectivity bitstream), 
   * and a neighbours bitmask: used for debugging purposes, in order to separate
   * every connectivity bitmask (each vertex will have its connectivity written 
@@ -47,11 +47,11 @@ template<
         typename boost::graph_traits< HalfedgeGraph >::edge_descriptor,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
 void
-ConnectivityEncoding(const HalfedgeGraph &g,
+connectivity_encoding(const HalfedgeGraph &g,
                      const PointMap &/*pm*/,
                      //EdgeColorMap &/*ecm*/,
                      //VertexColorMap &/*vcm*/,
-                     CollapseInfo< HalfedgeGraph, PointMap > &mem,
+                     Collapse_info< HalfedgeGraph, PointMap > &mem,
                      edge_descriptor starting_edge, /// min edge (edge with the lowest index in the spanning tree)
                      std::list< bool > &edge_bitmask
                      //, std::vector< std::vector< bool > > &neighbours_bitmask /// for debug; \todo remove it (costly)
@@ -81,7 +81,7 @@ ConnectivityEncoding(const HalfedgeGraph &g,
   int count = 0;
   do
   {
-    if( count > 1)
+    if(count > 1)
 		break; // not needed to add the last false
     if(source(current_edge, g) == mem.get_v3() || source(current_edge, g) == mem.get_v4())
     {
@@ -133,14 +133,14 @@ template<
         typename boost::graph_traits< HalfedgeGraph >::edge_descriptor,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
 void
-EncodeConnectivityBitmask(
+encode_connectivity_bitmask(
     const HalfedgeGraph &g,
     const PointMap &pm,
     //EdgeColorMap &ecm,
     //VertexColorMap &vcm,
-    std::list< CollapseInfo< HalfedgeGraph, PointMap > > &list_memory, /// sorted list (according to st)
+    std::list< Collapse_info< HalfedgeGraph, PointMap > > &list_memory, /// sorted list (according to st)
 	                                                                   /// but non-const reference
-																	   /// due to CollapseInfo updates
+																	   /// due to Collapse_info updates
     std::list< bool > &edge_bitmask,
     const FEVV::Comparator::SpanningTreeVertexEdgeComparator< HalfedgeGraph,
                                                         PointMap,
@@ -150,10 +150,10 @@ EncodeConnectivityBitmask(
 {
   auto mem_it = list_memory.begin(), mem_it_e = list_memory.end();
   //typedef typename boost::property_traits< VertexColorMap >::value_type Color;
-  for(; mem_it != mem_it_e; ++mem_it)
+  for( ; mem_it != mem_it_e; ++mem_it)
   {
     auto min_edge = spanningtree.get_spanning_tree_min_incident_edge((*mem_it).get_vkept());
-    ConnectivityEncoding(g,
+    connectivity_encoding(g,
                          pm,
                          //ecm,
                          //vcm,

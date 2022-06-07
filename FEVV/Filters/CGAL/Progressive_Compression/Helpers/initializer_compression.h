@@ -15,12 +15,25 @@
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/progressive_compression_filter.hpp"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/DistortionComputing.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/distortion_computing.h"
 
+/**
+ * \brief Function to extract or create property map associated with a
+ *        property map bag (for generic processing).
+ * @param[in] m The input mesh associated with the the property map bag. 
+ * @param[in,out] pmaps_bag The property map bag. It is updated whenever
+ *                a property map creation occurs. 
+ * @param[out] v_cm The obtained vertex color map that is also added in the 
+ *             pmaps_bag when not already present.
+ * @param[out] e_cm The obtained edge color map that is also added in the
+ *             pmaps_bag when not already present.
+ * @param[out] v_nm The obtained vertex normal map that is also added in the
+ *             pmaps_bag when not already present.
+ */
 template< typename MeshT >
 void
 set_mesh_and_properties(
-    MeshT &m,
+    const MeshT &m,
     FEVV::PMapsContainer &pmaps_bag,
     typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type &v_cm,
     typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type &e_cm,
@@ -28,11 +41,11 @@ set_mesh_and_properties(
 
 {
   // Note: the property maps must be extracted from the
-  //       property maps bag, and explicitely passed as
+  //       property maps bag, and explicitly passed as
   //       parameters to the filter, in order to make
-  //       clear what property is used by the filter
+  //       clear what property is used by the filter.
 
-  // retrieve or create vertex-color property map
+  // Retrieve or create vertex-color property map.
   if(has_map(pmaps_bag, FEVV::vertex_color))
   {
     std::cout << "use existing vertex-color map" << std::endl;
@@ -42,10 +55,10 @@ set_mesh_and_properties(
   {
     std::cout << "create vertex-color map" << std::endl;
     v_cm = make_property_map(FEVV::vertex_color, m);
-    // store property map in property maps bag
+    // Store property map in property maps bag.
     put_property_map(FEVV::vertex_color, m, pmaps_bag, v_cm);
   }
-  // retrieve or create edge-color property map
+  // Retrieve or create edge-color property map.
   if(has_map(pmaps_bag, FEVV::edge_color))
   {
     std::cout << "using existing edge-color map" << std::endl;
@@ -55,10 +68,10 @@ set_mesh_and_properties(
   {
     std::cout << "create edge-color map" << std::endl;
     e_cm = make_property_map(FEVV::edge_color, m);
-    // store property map in property maps bag
+    // Store property map in property maps bag.
     put_property_map(FEVV::edge_color, m, pmaps_bag, e_cm);
   }
-  // retrieve or create vertex-normal property map
+  // Retrieve or create vertex-normal property map.
   if(has_map(pmaps_bag, FEVV::vertex_normal))
   {
     std::cout << "use existing vertex-normal map" << std::endl;
@@ -68,7 +81,7 @@ set_mesh_and_properties(
   {
     std::cout << "create vertex-normal map" << std::endl;
     v_nm = make_property_map(FEVV::vertex_normal, m);
-    // store property map in property maps bag
+    // Store property map in property maps bag.
     put_property_map(FEVV::vertex_normal, m, pmaps_bag, v_nm);
   }
 }
@@ -77,7 +90,7 @@ set_mesh_and_properties(
  * \brief A mesh type templated main(argc, argv) function that
  *         - loads a mesh from a file,
  *         - applies the \ref progressive_compression_filter generic filter,
- *         - write the resulting mesh to a file
+ *         - and write the resulting mesh to a file.
  */
 template< typename MeshT >
 int
@@ -142,8 +155,8 @@ progressive_compression_main(int argc, const char **argv)
   }
 
   FEVV::Filters::PREDICTION_TYPE prediction_type =
-	  FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
-  FEVV::Filters::METRIC_TYPE metric_type = FEVV::Filters::METRIC_TYPE::QEM;
+	    FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
+  FEVV::Filters::METRIC_TYPE metric_type = FEVV::Filters::METRIC_TYPE::QEM_3D;
   FEVV::Filters::VKEPT_POSITION vkeptpos =
       FEVV::Filters::VKEPT_POSITION::HALFEDGE;
 
@@ -171,11 +184,11 @@ progressive_compression_main(int argc, const char **argv)
   {
     bits_quantization = atoi(argv[11]);
   }
-  // input and output files
+  // Input and output files:
   std::string input_file_path = argv[1];
   std::string output_file_path = "progressive_compressionFilteroutput.obj";
 
-  // read mesh from file
+  // Read mesh from file.
   if (mode != 1) {
       FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
 
@@ -189,16 +202,15 @@ progressive_compression_main(int argc, const char **argv)
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type v_nm;
 
-  // create or retrieve property maps. 
+  // Create or retrieve property maps. 
   set_mesh_and_properties(
       m, pmaps_bag, v_cm, e_cm, v_nm);
 
-  // retrieve point property map (aka geometry)
+  // Retrieve point property map (aka geometry)
   auto pm = get(boost::vertex_point, m);
 
-
   auto gt_ = FEVV::Geometry_traits< MeshT >(m);
-  // apply filter
+  // Apply filter
   if(mode == 0)
   {
     std::cout << "Single Compression" << std::endl;
@@ -221,16 +233,15 @@ progressive_compression_main(int argc, const char **argv)
                                    false, 
                                    output_file_path_save_preprocess);
 
-    // write mesh to file: only write color maps.
+    // Write mesh to file: only write color maps.
     {
       FEVV::PMapsContainer pmaps_bag_empty;
-      // put_property_map(FEVV::halfedge_texcoord, m, pmaps_bag_empty, h_tm);
       put_property_map(FEVV::edge_color, m, pmaps_bag_empty, e_cm);
       put_property_map(FEVV::vertex_color, m, pmaps_bag_empty, v_cm);
       FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag_empty);
     }
   }
-  if(mode == 1)
+  else if(mode == 1)
   {
     std::cout << "Measure mode, all metrics being tested" << std::endl;
     std::vector< FEVV::Filters::PREDICTION_TYPE > available_predictions = {
@@ -245,7 +256,7 @@ progressive_compression_main(int argc, const char **argv)
     std::vector< FEVV::Filters::METRIC_TYPE > available_metrics = {
                                 FEVV::Filters::METRIC_TYPE::EDGE_LENGTH,
                                 FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING,
-                                FEVV::Filters::METRIC_TYPE::QEM
+                                FEVV::Filters::METRIC_TYPE::QEM_3D
                            };
 
     std::vector< int > tested_quantizations = { 10, 
@@ -287,7 +298,7 @@ progressive_compression_main(int argc, const char **argv)
                                     v_nm2);
 
 
-            // retrieve point property map (aka geometry)
+            // Retrieve point property map (aka geometry).
             auto pm2 = get(boost::vertex_point, mesh);
 
             FEVV::Filters::Parameters params(available_predictions[i],
@@ -297,12 +308,11 @@ progressive_compression_main(int argc, const char **argv)
                                              false,
                                              tested_quantizations[l]);
             
-            path_binary = ""; // must be "empty" in order to be set automatically
+            path_binary = ""; // Must be "empty" in order to be set automatically.
             progressive_compression_filter(mesh,
                                            pm2,
                                            v_cm2,
                                            e_cm2,
-                                           //v_nm2,
                                            gt_,
                                            params,
                                            output_path,
@@ -322,11 +332,10 @@ progressive_compression_main(int argc, const char **argv)
       }
     }
   }
-
-  if(mode == 2)
+  else if(mode == 2)
   {
-    ComputeDistortions(
-        m, pm, v_cm, e_cm, v_nm, FEVV::Geometry_traits< MeshT >(m), argv[3]);
+    compute_distortions(
+        m, pm, FEVV::Geometry_traits< MeshT >(m), argv[3]);
   }
 
   return 0;

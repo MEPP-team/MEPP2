@@ -13,7 +13,7 @@
 #include "FEVV/Filters/Generic/generic_reader.hpp"
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/Initializer_compression.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Helpers/initializer_compression.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/progressive_decompression_filter.hpp"
 
 #include "FEVV/Tools/IO/FileUtilities.hpp"
@@ -21,11 +21,11 @@
 #include "Testing/Utils/utils_are_meshes_identical.hpp"
 
 /** \brief Compresses then decompresses a mesh. 
- * \param  argc number of arguments in argv.
- * \param  argv array of C-like strings
+ * \param  argc Number of arguments in argv.
+ * \param  argv Array of C strings.
  * \return the test status.
- *         0 when the test success (decompressed version is equal to the original mesh)
- *         -1 otherwise.
+ *         0 when the test success (decompressed version is equal to the
+ *           original mesh); -1 otherwise.
  */
 template< typename MeshT >
 int
@@ -42,7 +42,7 @@ test_automatic_progressive_compression_decompression(int argc,
   MeshT m;
   FEVV::PMapsContainer pmaps_bag;
   /////////////////////////////////////////////////////////////////////////////
-  // input and output files
+  // Input and output files
   std::string input_file_path = argv[1];
   std::string output_file_path_save_preprocess = ""; 
   std::string output_file_path_decomp = "";
@@ -67,6 +67,7 @@ test_automatic_progressive_compression_decompression(int argc,
   {
     measurepath = "Other_mesh_type_";
   }
+  // Note: the file comparison can only be done with .off files
   std::string compressed_mesh_binary_file = measurepath + FEVV::FileUtils::get_file_name(input_file_path);
   output_file_path_save_preprocess = "progressive_compression_" + compressed_mesh_binary_file + "_original_mesh_after_preprocess.off"; // default value
   output_file_path_decomp = "progressive_decompression_" + compressed_mesh_binary_file + "_output.off"; // default value
@@ -86,59 +87,58 @@ test_automatic_progressive_compression_decompression(int argc,
     return -1;
   }
   /////////////////////////////////////////////////////////////////////////////
-  // read mesh from file
+  // Read mesh from file
   FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
-
+  /////////////////////////////////////////////////////////////////////////////
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type v_cm;
   typename FEVV::PMap_traits< FEVV::edge_color_t, MeshT >::pmap_type e_cm;
   typename FEVV::PMap_traits< FEVV::vertex_normal_t, MeshT >::pmap_type v_nm;
-  set_mesh_and_properties(
-      m, pmaps_bag, v_cm, e_cm, v_nm);
+  set_mesh_and_properties(m, pmaps_bag, v_cm, e_cm, v_nm);
 
   FEVV::Filters::Parameters params(FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
                                    FEVV::Filters::VKEPT_POSITION::MIDPOINT,
-                                   FEVV::Filters::METRIC_TYPE::QEM,
+                                   FEVV::Filters::METRIC_TYPE::QEM_3D,
                                    true,
                                    false,
                                    12);
 
   //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::BUTTERFLY,
   //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
-  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM_3D,
   //                                  true,
   //                                  false,
   //                                  12);
 
   //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::DELTA,
   //                                  FEVV::Filters::VKEPT_POSITION::MIDPOINT,
-  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM_3D,
   //                                  true,
   //                                  false,
   //                                  12);
 
   //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::DELTA,
   //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
-  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM_3D,
   //                                  true,
   //                                  false,
   //                                  12);
 
   //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::POSITION,
   //                                  FEVV::Filters::VKEPT_POSITION::MIDPOINT,
-  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM_3D,
   //                                  true,
   //                                  false,
   //                                  12);
 
   //FEVV::Filters::Parameters params( FEVV::Filters::PREDICTION_TYPE::POSITION,
   //                                  FEVV::Filters::VKEPT_POSITION::HALFEDGE,
-  //                                  FEVV::Filters::METRIC_TYPE::QEM,
+  //                                  FEVV::Filters::METRIC_TYPE::QEM_3D,
   //                                  true,
   //                                  false,
   //                                  12);
   auto pm = get(boost::vertex_point, m);
   auto gt_ = FEVV::Geometry_traits< MeshT >(m);
-  /////////////////////////////////////////////////////////////////////////////
+  
   progressive_compression_filter(m,
                                  pm,
                                  v_cm,
@@ -149,13 +149,13 @@ test_automatic_progressive_compression_decompression(int argc,
                                  measurepath,
                                  compressed_mesh_binary_file,
                                  200,
-                                 0,
+                                 3,
                                  FEVV::Filters::BATCH_CONDITION::ALL_EDGES,
                                  true,
                                  true,
                                  true,
                                  output_file_path_save_preprocess);
-
+  /////////////////////////////////////////////////////////////////////////////
   MeshT m_decomp;
   FEVV::PMapsContainer pmaps_bag_decomp;
   typename FEVV::PMap_traits< FEVV::vertex_color_t, MeshT >::pmap_type
@@ -170,16 +170,14 @@ test_automatic_progressive_compression_decompression(int argc,
                           v_cm_decomp,
                           e_cm_decomp,
                           v_nm_decomp);
-
-
-  // apply filter
-
+  
   FEVV::Filters::progressive_decompression_filter(m_decomp,
                                                   pm_decomp,
                                                   v_cm_decomp,
                                                   compressed_mesh_binary_file,
                                                   false);
-  // write mesh to file
+  /////////////////////////////////////////////////////////////////////////////
+  // Write mesh to file
   FEVV::PMapsContainer pmaps_bag_decomp_without_material;
 
   put_property_map(
@@ -188,7 +186,8 @@ test_automatic_progressive_compression_decompression(int argc,
       FEVV::vertex_color, m_decomp, pmaps_bag_decomp_without_material, v_cm);
   FEVV::Filters::write_mesh(
       output_file_path_decomp, m_decomp, pmaps_bag_decomp_without_material);
-
+  /////////////////////////////////////////////////////////////////////////////
+  // Compare preprocessed and decompressed meshes (with quantized coordinates)
   bool equal_or_not = are_meshes_equal(output_file_path_save_preprocess,
                                        output_file_path_decomp,
                                        false,
@@ -204,7 +203,5 @@ test_automatic_progressive_compression_decompression(int argc,
   {
     std::cout << "meshes are not equal" << std::endl;
     return -1;
-  }
-
-  
+  }  
 }

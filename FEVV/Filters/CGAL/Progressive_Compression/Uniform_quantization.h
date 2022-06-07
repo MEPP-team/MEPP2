@@ -31,20 +31,22 @@
 #include <cstdlib>
 
 namespace FEVV {
-	namespace Filters {
+namespace Filters {
 
-		template <typename HalfedgeGraph,
-			typename PointMap,
-			typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
-			typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point,
-			typename Geometry = FEVV::Geometry_traits<HalfedgeGraph>,
-			typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
-			typename vertex_iterator = typename boost::graph_traits<HalfedgeGraph>::vertex_iterator>
+template <typename HalfedgeGraph,
+          typename PointMap,
+          typename Vector = typename FEVV::Geometry_traits<HalfedgeGraph>::Vector,
+          typename Point = typename FEVV::Geometry_traits<HalfedgeGraph>::Point,
+          typename Geometry = FEVV::Geometry_traits<HalfedgeGraph>,
+          typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
+          typename vertex_iterator = typename boost::graph_traits<HalfedgeGraph>::vertex_iterator>
 			
-			class UniformQuantization {
+class Uniform_quantization 
+{
 
 			public:
-				UniformQuantization(const HalfedgeGraph& g, PointMap& pm, int nb_bits) : _g(g), _pm(pm), _nb_bits(nb_bits) {
+				Uniform_quantization(const HalfedgeGraph& g, PointMap& pm, int nb_bits) : _g(g), _pm(pm), _nb_bits(nb_bits) 
+				{
 					this->find_min_and_max();
 					this->set_bounding_box();
 					this->set_quantization_step();
@@ -53,23 +55,23 @@ namespace FEVV {
 			protected:
 				void find_min_and_max()
 				{
-                  Geometry gt(_g);
-                  vertex_iterator vi = vertices(_g).first;
-                  if (vertices(_g).first == vertices(_g).second)
-                    return;
-                  _p_min = get(_pm, *vi);
-                  _p_max = _p_min;
-                  ++vi;
-                  double x_min = gt.get_x(_p_min);
-                  double y_min = gt.get_y(_p_min);
-                  double z_min = gt.get_z(_p_min);
-                  double x_max = gt.get_x(_p_max);
-                  double y_max = gt.get_y(_p_max);
-                  double z_max = gt.get_z(_p_max);
-                  double x_current;
-                  double y_current;
-                  double z_current;
-					for (; vi != vertices(_g).second; ++vi)
+          Geometry gt(_g);
+          vertex_iterator vi = vertices(_g).first;
+          if(vertices(_g).first == vertices(_g).second)
+            return;
+          _p_min = get(_pm, *vi);
+          _p_max = _p_min;
+          ++vi;
+          double x_min = gt.get_x(_p_min);
+          double y_min = gt.get_y(_p_min);
+          double z_min = gt.get_z(_p_min);
+          double x_max = gt.get_x(_p_max);
+          double y_max = gt.get_y(_p_max);
+          double z_max = gt.get_z(_p_max);
+          double x_current;
+          double y_current;
+          double z_current;
+					for( ; vi != vertices(_g).second; ++vi)
 					{
 						Point p_current = get(_pm, *vi);
 
@@ -79,23 +81,23 @@ namespace FEVV {
 						z_current = gt.get_z(p_current);
 
 						// get min
-						if (x_current < x_min)
+						if(x_current < x_min)
 							x_min = x_current;
-						if (y_current < y_min)
+						if(y_current < y_min)
 							y_min = y_current;
-						if (z_current < z_min)
+						if(z_current < z_min)
 							z_min = z_current;
 
 						// get max
-						if (x_current > x_max)
+						if(x_current > x_max)
 							x_max = x_current;
-						if (y_current > y_max)
+						if(y_current > y_max)
 							y_max = y_current;
-						if (z_current > z_max)
+						if(z_current > z_max)
 							z_max = z_current;
 					}
-                  _p_min = Point(x_min, y_min, z_min);
-                  _p_max = Point(x_max, y_max, z_max);
+          _p_min = Point(x_min, y_min, z_min);
+          _p_max = Point(x_max, y_max, z_max);
 				}
 
 				
@@ -110,7 +112,7 @@ namespace FEVV {
 
 				void set_bounding_box()
 				{
-                    Geometry gt(_g);
+           Geometry gt(_g);
 
 					_bb.starting_point = _p_min;
 					_bb.vl = Vector(0, gt.get_y(_p_max)-gt.get_y(_p_min), 0);
@@ -121,19 +123,19 @@ namespace FEVV {
 
 				void set_quantization_step()
 				{
-                    Geometry gt(_g);
+          Geometry gt(_g);
 					double l = gt.length(_bb.vl);
 					double h = gt.length(_bb.vh);
-                    double p = gt.length(_bb.vp);
+          double p = gt.length(_bb.vp);
 
 					_max_length.first = l;
 					_max_length.second = 'y';
-					if (_max_length.first < p)
+					if(_max_length.first < p)
 					{
 						_max_length.first = p;
 						_max_length.second = 'x';
 					}
-					if (_max_length.first < h)
+					if(_max_length.first < h)
 					{
 						_max_length.first = h;
 						_max_length.second = 'z';
@@ -150,9 +152,10 @@ namespace FEVV {
 
 				void point_quantization(bool recompute_quanti_param = false)
 				{
-                    Geometry gt(_g);
+          Geometry gt(_g);
 					///////////////////////////////////////////////////////////
-					if (recompute_quanti_param) {
+					if(recompute_quanti_param) 
+					{
 						this->find_min_and_max();
 						this->set_bounding_box();
 						this->set_quantization_step();
@@ -163,7 +166,7 @@ namespace FEVV {
 					double p_min_z = gt.get_z(_p_min);
 
 					vertex_iterator vi = vertices(_g).first;
-					for (; vi != vertices(_g).second; ++vi)
+					for( ; vi != vertices(_g).second; ++vi)
 					{
 						Point point = get(_pm, *vi);
 
@@ -172,13 +175,13 @@ namespace FEVV {
 						double pz = gt.get_z(point);
 
 						uint32_t pq_x = static_cast<uint32_t>(round((px - p_min_x) / _quantization_step));
-						if( pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
+						if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
 							pq_x = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 						uint32_t pq_y = static_cast<uint32_t>(round((py - p_min_y) / _quantization_step));
-						if( pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
+						if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
 							pq_y = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 						uint32_t pq_z = static_cast<uint32_t>(round((pz - p_min_z) / _quantization_step));
-						if( pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
+						if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
                             pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 
 						Point new_position = Point(pq_x, pq_y, pq_z);
@@ -201,13 +204,13 @@ namespace FEVV {
 					double pz = gt.get_z(p);
 
 					uint32_t pq_x = static_cast<uint32_t>(round((px - p_min_x) / _quantization_step));
-					if (pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
+					if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
 						pq_x = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 					uint32_t pq_y = static_cast<uint32_t>(round((py - p_min_y) / _quantization_step));
-					if (pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
+					if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
 						pq_y = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 					uint32_t pq_z = static_cast<uint32_t>(round((pz - p_min_z) / _quantization_step));
-					if (pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
+					if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
 						pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 
 					Point pq = Point(pq_x, pq_y, pq_z);
@@ -238,14 +241,14 @@ namespace FEVV {
 					return init_coord;
 				}
 
-				double getDiagonal()
-                {
-                  Geometry gt(_g);
-                  Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
-                  return gt.length(diagonal);
-                }
+				double get_diagonal() const
+        {
+          Geometry gt(_g);
+          Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
+          return gt.length(diagonal);
+        }
 				
-
+        int get_nb_bits_quantization() const { return _nb_bits; }
 			private:
 				const HalfedgeGraph& _g; /// Topology remains the same
 				PointMap& _pm;           /// Point map changes
@@ -255,8 +258,6 @@ namespace FEVV {
 				Point _p_min;
 				Point _p_max;
 				boundingBox _bb;
-
-
-		};
-	}
-}
+};
+} // namespace Filters
+} // namespace FEVV
