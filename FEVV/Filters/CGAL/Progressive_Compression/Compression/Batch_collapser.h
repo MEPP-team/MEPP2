@@ -227,15 +227,19 @@ public:
     }
 
 public: 
-  /// Collapses edges in Batch_collapser::g,
+  /// Collapses all the collapsible edges from the mesh
+  /// in Batch_collapser::_g
+  /// 1) compute all edge costs for current batch;
+  /// 2) greedy collapse of the collapsible edges 
+  ///    with lowest cost.
   /// while the batch stopping condition is not met.
   void collapse_batch()
   {
     // count every case: forbidden edges, edges which would make our mesh non 
-	// manifold
+	  // manifold
     _forbidden = 0;
     _link_condition = 0;
-    _metric->compute_error(); // compute edge costs for current batch
+    _metric->compute_error(); // compute all edge costs for current batch
 
     bool collapse_possible = true;
     _nb_collapse = 0;
@@ -246,7 +250,8 @@ public:
     // Collapse until we meet our stopping condition
     while(!stop())
     {
-      collapse_possible = collapse_top_queue();
+      collapse_possible = collapse_top_queue(); // Get the edge with lowest cost
+                                                // and collapse it (if possible).
       if(collapse_possible)
       {
         _nb_collapse += 1;
@@ -263,12 +268,12 @@ public:
     std::cout << "Percentage vertices removed from last " << percentage_vertices << std::endl;
 #endif
     _number_vertices_last = number_current_vertices;
-
+    ///////////////////////////////////////////////////////////////////////////
     FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap > spanningtree(_g, _pm, true);
-
-    sort_list_memory(spanningtree); /// sort _list_memory according to vertex st traversal
-
+    sort_list_memory(spanningtree); /// sort _list_memory according to vertex 
+                                    /// st traversal
+    ///////////////////////////////////////////////////////////////////////////
     // Store refinement info as bitstreams and residuals
     Refinement_info< HalfedgeGraph,
                     PointMap >
@@ -285,9 +290,11 @@ public:
     // Concatenate our memory info to make one array per attribute per batch
     // (one array for each bitmask...)
     ref_settings.set_bitMask(spanningtree); // set vertex to split bitmask
-    ref_settings.set_error_prediction();
-    ref_settings.set_reverse_bool();
+    ref_settings.set_error_prediction(); // set residuals array
+    ref_settings.set_reverse_bool();// set reverse bitmask
+    ///////////////////////////////////////////////////////////////////////////
     _refinements.push_back(ref_settings);
+    ///////////////////////////////////////////////////////////////////////////
 #ifdef _DEBUG
     std::cout << "batch nb " << _batch_id << " done" << std::endl;
 #endif
@@ -296,15 +303,19 @@ public:
     _list_memory.clear();
   }
 
+  private:
   /// Returns whether the edge collapse causes a normal flip.
-  bool halfedge_flips_normal(halfedge_descriptor h_collapse,
+  bool are_halfedge_vertex_positions_change_without_normal_flip(halfedge_descriptor h_collapse,
                            const Point &pos_vkept)
   {
-    return (vertex_flips_normal(h_collapse, source(h_collapse, _g), pos_vkept) &&
-            vertex_flips_normal(h_collapse, target(h_collapse, _g), pos_vkept));
+    return (is_vertex_position_change_without_normal_flip(h_collapse, source(h_collapse, _g), pos_vkept) &&
+            is_vertex_position_change_without_normal_flip(h_collapse, target(h_collapse, _g), pos_vkept));
   }
 
-  bool vertex_flips_normal(halfedge_descriptor h_collapse,
+  /// Returns whether the change of position for the vertex
+  /// vertex with pos_vkept will create an incident face normal flip.
+  /// \return True if everything is all right, else false.
+  bool is_vertex_position_change_without_normal_flip(halfedge_descriptor h_collapse,
                          vertex_descriptor vertex,
                          const Point& pos_vkept)
   {
@@ -393,8 +404,8 @@ public:
       return true;
     }
   }
-
-  bool is_collapsible(halfedge_descriptor h, Point /*pvkept*/)
+ 
+  bool is_forbidden(halfedge_descriptor h, Point /*pvkept*/)
   {
     // forbid border cases for the first version
     return (
@@ -402,7 +413,6 @@ public:
           _forbidden_edges.find(opposite(h, _g)) == _forbidden_edges.end()) &&
          _metric->is_present_in_map(edge(h, _g))));
   }
-
 
   /// Used for debugging: instead of collapsing an edge, we color it.
   bool color_top_queue()
@@ -414,7 +424,7 @@ public:
       // is the  current edge forbidden? 
       auto current_halfedge = halfedge(std::get< 0 >(current_edge), _g);
 
-      if(is_collapsible(current_halfedge, std::get< 2 >(current_edge)))
+      if(is_forbidden(current_halfedge, std::get< 2 >(current_edge)))
       {
         if(CGAL::Euler::does_satisfy_link_condition(std::get< 0 >(current_edge),
                                                     _g))
@@ -507,7 +517,7 @@ public:
       // is the  current edge forbidden?
       auto current_halfedge = halfedge(std::get< 0 >(current_edge), _g);
 
-      if(is_collapsible(current_halfedge, std::get< 2 >(current_edge)))
+      if(is_forbidden(current_halfedge, std::get< 2 >(current_edge)))
       {
         if(CGAL::Euler::does_satisfy_link_condition(std::get< 0 >(current_edge),
                                                     _g))
@@ -531,9 +541,9 @@ public:
 
           // Check if collapsing this edge would flip normals, thus adding
           // artifacts. If it does, do not collapse.
-          bool normalflip = halfedge_flips_normal(current_halfedge, pvkept); // true when ok
+          bool normal_flip = are_halfedge_vertex_positions_change_without_normal_flip(current_halfedge, pvkept); // true when ok
 
-          if(normalflip)
+          if(normal_flip)
           {
               // forbid the simplification of the neighbourhood of the collapsed
               // edge for the current batch
@@ -597,7 +607,7 @@ public:
     return mesh_changed;
   }
 
-
+public:
   const std::vector< Refinement_info< HalfedgeGraph,
                                PointMap > >&
   get_refinements() const

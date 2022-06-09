@@ -55,22 +55,22 @@ class Uniform_quantization
 			protected:
 				void find_min_and_max()
 				{
-          Geometry gt(_g);
-          vertex_iterator vi = vertices(_g).first;
-          if(vertices(_g).first == vertices(_g).second)
-            return;
-          _p_min = get(_pm, *vi);
-          _p_max = _p_min;
-          ++vi;
-          double x_min = gt.get_x(_p_min);
-          double y_min = gt.get_y(_p_min);
-          double z_min = gt.get_z(_p_min);
-          double x_max = gt.get_x(_p_max);
-          double y_max = gt.get_y(_p_max);
-          double z_max = gt.get_z(_p_max);
-          double x_current;
-          double y_current;
-          double z_current;
+                    Geometry gt(_g);
+                    vertex_iterator vi = vertices(_g).first;
+                    if(vertices(_g).first == vertices(_g).second)
+                      return;
+                    _p_min = get(_pm, *vi);
+                    _p_max = _p_min;
+                    ++vi;
+                    double x_min = gt.get_x(_p_min);
+                    double y_min = gt.get_y(_p_min);
+                    double z_min = gt.get_z(_p_min);
+                    double x_max = gt.get_x(_p_max);
+                    double y_max = gt.get_y(_p_max);
+                    double z_max = gt.get_z(_p_max);
+                    double x_current;
+                    double y_current;
+                    double z_current;
 					for( ; vi != vertices(_g).second; ++vi)
 					{
 						Point p_current = get(_pm, *vi);
@@ -96,8 +96,8 @@ class Uniform_quantization
 						if(z_current > z_max)
 							z_max = z_current;
 					}
-          _p_min = Point(x_min, y_min, z_min);
-          _p_max = Point(x_max, y_max, z_max);
+                    _p_min = Point(x_min, y_min, z_min);
+                    _p_max = Point(x_max, y_max, z_max);
 				}
 
 				
@@ -112,7 +112,7 @@ class Uniform_quantization
 
 				void set_bounding_box()
 				{
-           Geometry gt(_g);
+                    Geometry gt(_g);
 
 					_bb.starting_point = _p_min;
 					_bb.vl = Vector(0, gt.get_y(_p_max)-gt.get_y(_p_min), 0);
@@ -123,10 +123,10 @@ class Uniform_quantization
 
 				void set_quantization_step()
 				{
-          Geometry gt(_g);
+                    Geometry gt(_g);
 					double l = gt.length(_bb.vl);
 					double h = gt.length(_bb.vh);
-          double p = gt.length(_bb.vp);
+                    double p = gt.length(_bb.vp);
 
 					_max_length.first = l;
 					_max_length.second = 'y';
@@ -150,9 +150,10 @@ class Uniform_quantization
 			public:
 				double get_quantization_step() const { return _quantization_step; }
 
+                /// Quantizes all vertex positions stored in the point map.
 				void point_quantization(bool recompute_quanti_param = false)
 				{
-          Geometry gt(_g);
+                    Geometry gt(_g);
 					///////////////////////////////////////////////////////////
 					if(recompute_quanti_param) 
 					{
@@ -190,8 +191,10 @@ class Uniform_quantization
 
 					}
 				}
-
-				Point quantize_point(const Point& p)
+                /// Quantizes a Point p according to quantization parameters.
+                /// The mesh point map is not modified.
+                /// Returns the quantized XYZ point. 
+				Point quantize(const Point& p)
 				{
 					Geometry gt(_g);
 
@@ -242,13 +245,13 @@ class Uniform_quantization
 				}
 
 				double get_diagonal() const
-        {
-          Geometry gt(_g);
-          Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
-          return gt.length(diagonal);
-        }
+                {
+                  Geometry gt(_g);
+                  Vector diagonal = _bb.vl + _bb.vh + _bb.vp;
+                  return gt.length(diagonal);
+                }
 				
-        int get_nb_bits_quantization() const { return _nb_bits; }
+                int get_nb_bits_quantization() const { return _nb_bits; }
 			private:
 				const HalfedgeGraph& _g; /// Topology remains the same
 				PointMap& _pm;           /// Point map changes

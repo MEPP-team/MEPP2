@@ -55,10 +55,8 @@ public:
   };
   ~Header_handler(){};
 
-  void encode_text_header(const std::string& filepath)
+  void encode_text_header(std::ofstream& file_encode)
   {
-    std::ofstream file_encode;
-    file_encode.open(filepath);
     unsigned int kept_int = static_cast< unsigned int >(_vkept);
     file_encode << (kept_int) << std::endl;
     unsigned int prediction_int = static_cast< unsigned int >(_pred);
@@ -74,14 +72,10 @@ public:
     {
       file_encode << _init_coord[i] << std::endl;
     }
-
-    file_encode.close();
   }
 
   void decode_text_header(std::ifstream &file_decode)
   {
-
-    // file_decode.open(filepath);
     if(file_decode)
     {
       std::string current_line;
@@ -103,19 +97,14 @@ public:
         getline(file_decode, current_line, '\n');
         _init_coord.push_back(std::stod(current_line));
       }
-      // file_decode.close();
     }
   }
 
-  //Encodes header info in the file located at "filepath". Returns the size of the header in bits
-  size_t encode_binary_header(const std::string& filepath
+  /// Encodes header info into a draco buffer. 
+  /// Returns the size of the header in bits
+  size_t encode_binary_header(draco::EncoderBuffer& buffer
                             )  
   {
-    std::fstream output_file;
-    output_file.open(
-        filepath, std::fstream::out | std::fstream::binary | std::fstream::app);
-
-    draco::EncoderBuffer buffer;
     int vkept_position = static_cast< int >(_vkept);
     int prediction_type = static_cast< int >(_pred);
     draco::EncodeVarint(vkept_position, &buffer);
@@ -133,21 +122,14 @@ public:
                        (buffer.buffer())->begin(),
                        (buffer.buffer())->end());
     size_t size_header = file_buffer.size() * 8;
-    for(auto buf_it = file_buffer.begin(); buf_it != file_buffer.end();
-        buf_it++)
-    {
-      // std::cout << *buf_it << std::endl;
-      output_file << *buf_it;
-    }
-    output_file.close();
     return size_header;
   }
 
   bool getUseTexture() const
   { return false;
   }
-  // Decodes a header from a draco buffer.
-  // This function implements line 2 of Algorithm 2.
+  /// Decodes a header from a draco buffer.
+  /// This function implements line 2 of Algorithm 2.
   void decode_binary_header(draco::DecoderBuffer &buffer)
   {
     int vk;

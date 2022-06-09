@@ -51,7 +51,7 @@ public:
       : _g(g), _list_memory(list_memory)
   {}
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
   int get_num_vertices() const
   {
     auto iterator_pair = vertices(_g);
@@ -61,7 +61,6 @@ public:
 
     return static_cast< int >(nb_vertices);
   }
-
   /////////////////////////////////////////////////////////////////////////////
   /// Creates a vertex bitmask according to a vertex spanning tree and 
   /// a list of Collapse_info objects (initialized at construction).
@@ -101,10 +100,10 @@ public:
       { // Code by 1 vertex that belongs to the list.
         _bitMask.push_back(1);
 		
-        _other_info_bits.push_back(std::get< 0 >((*it_list).get_midpoint_rounds()));
-        _other_info_bits.push_back(std::get< 1 >((*it_list).get_midpoint_rounds()));
-        _other_info_bits.push_back(std::get< 2 >((*it_list).get_midpoint_rounds()));
-        _other_info_bits.push_back(std::get< 3 >((*it_list).get_midpoint_rounds()));
+        //_other_info_bits.push_back(std::get< 0 >((*it_list).get_midpoint_rounds()));
+        //_other_info_bits.push_back(std::get< 1 >((*it_list).get_midpoint_rounds()));
+        //_other_info_bits.push_back(std::get< 2 >((*it_list).get_midpoint_rounds()));
+        //_other_info_bits.push_back(std::get< 3 >((*it_list).get_midpoint_rounds()));
 		
         ++it_list;
 		
@@ -122,8 +121,8 @@ public:
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /// Creates the edge bitmask
+  /////////////////////////////////////////////////////////////////////////////
+  /// Creates the edge bitmask.
   void set_connectivity_topology(
       const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                           PointMap > &st, /// spanning tree of current LOD
@@ -143,7 +142,8 @@ public:
                               );
   }
   
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /// Creates the residuals array.
   void set_error_prediction()
   {
     if(!_list_memory.empty())
@@ -156,7 +156,8 @@ public:
     }
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+  /// Creates the reverse bitmask.
   void set_reverse_bool()
   {
     if(!_list_memory.empty())
@@ -167,18 +168,17 @@ public:
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////
+public:
   const std::list< bool >& get_bitmask() const { return _bitMask; }
   const std::list< bool >& get_connectivity() const { return _connectivity; }
-  const std::list< bool >& get_other_info() const { return _other_info_bits; }
+  //const std::list< bool >& get_other_info() const { return _other_info_bits; }
   const std::list< std::vector< Vector > >& get_error_prediction() const
   {
     return _error_prediction;
   }
 
   const std::list< bool >& get_reverse_bool() const { return _reverse_bool; }
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 private:
   HalfedgeGraph &_g;
   const std::list< Collapse_info< HalfedgeGraph, PointMap > > &_list_memory; /// sorted list of refinement info
@@ -188,7 +188,7 @@ private:
                               /// decoding
   std::list< bool > _connectivity; /// edge bit mask (which incident edge to a 
                                    /// vertex to split is a pivot edge to expand)
-  std::list< bool > _other_info_bits;
+  //std::list< bool > _other_info_bits;
   std::list< std::vector< Vector > > _error_prediction;
   std::list< bool > _reverse_bool;
 };

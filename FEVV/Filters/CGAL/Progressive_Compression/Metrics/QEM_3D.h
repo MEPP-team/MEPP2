@@ -75,9 +75,9 @@ public:
     const Point& p1 = get(Super_class::_pm, source(h1, Super_class::_g));
     const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
     const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
-    Point p1_tmp = Super_class::_dequantiz.dequantize_vertex(p1);
-    Point p2_tmp = Super_class::_dequantiz.dequantize_vertex(p2);
-    Point p3_tmp = Super_class::_dequantiz.dequantize_vertex(p3);
+    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
 
     return compute_triangle_area(p1_tmp, p2_tmp, p3_tmp);
   }
@@ -147,7 +147,7 @@ public:
     vertex_descriptor v1 = target(current_halfedge, Super_class::_g);
     vertex_descriptor v2 = source(current_halfedge, Super_class::_g);
     Point dequantized_collapsePos =
-        Super_class::_dequantiz.dequantize_vertex(collapsePos);
+        Super_class::_dequantiz.dequantize(collapsePos);
     Eigen::Vector4d v =
         Eigen::Vector4d(Super_class::_gt.get_x(dequantized_collapsePos),
                         Super_class::_gt.get_y(dequantized_collapsePos),
@@ -206,9 +206,9 @@ protected:
     const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
     const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
 
-    Point p1_tmp = Super_class::_dequantiz.dequantize_vertex(p1);
-    Point p2_tmp = Super_class::_dequantiz.dequantize_vertex(p2);
-    Point p3_tmp = Super_class::_dequantiz.dequantize_vertex(p3);
+    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
 
 
     auto x1 = Super_class::_gt.get_x(p1_tmp);
@@ -340,8 +340,8 @@ protected:
         const Point& p1 = get(Super_class::_pm, source(h_v_opp, Super_class::_g));
         const Point& p2 = get(Super_class::_pm, target(h_v_opp, Super_class::_g));
 
-        Point p1_tmp = Super_class::_dequantiz.dequantize_vertex(p1);
-        Point p2_tmp = Super_class::_dequantiz.dequantize_vertex(p2);
+        Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+        Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
         double area = Super_class::_gt.length2(Super_class::_gt.sub_p(p2_tmp, p1_tmp)) * std::sqrt(3)/2.; // equilateral triangle area x 2
 
         auto x1 = Super_class::_gt.get_x(p1_tmp);

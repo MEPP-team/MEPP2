@@ -54,14 +54,6 @@ class Uniform_dequantization
 				this->set_quantization_step();
 			}
 		protected:
-			struct boundingBox
-			{
-				Point starting_point;
-				Vector vl;
-				Vector vh;
-				Vector vp;
-			};
-
 			void set_max_length()
 			{
 				_max_length = _bb_dimension[0];
@@ -78,14 +70,20 @@ class Uniform_dequantization
 				std::cout << "quantization step : " << _quantization_step << std::endl;
 			}
 		public:
-			Point dequantize_vertex(vertex_descriptor v)
+            /// Dequantizes a vertex position according to dequantization 
+            /// parameters.
+            /// The mesh point map is not modified.
+            /// Returns the dequantized XYZ vertex position. 		
+			Point dequantize(vertex_descriptor v)
 			{
 				const Point& pq = get(_pm, v);
 
-				return dequantize_vertex(pq);
+				return dequantize(pq);
 			}
-
-			Point dequantize_vertex(const Point& pq)
+            /// Dequantizes a Point p according to dequantization parameters.
+            /// The mesh point map is not modified.
+            /// Returns the dequantized XYZ point. 
+			Point dequantize(const Point& pq)
 			{
 				double p_min_x = _init_point[0];
 				double p_min_y = _init_point[1];
@@ -104,6 +102,7 @@ class Uniform_dequantization
 				Point new_position(p_x, p_y, p_z);
 				return new_position;
 			}
+			/// Dequantizes all vertex positions stored in the point map.
 			void point_dequantization()
 			{
 
@@ -134,14 +133,13 @@ class Uniform_dequantization
 				}
 			}
 
-      int get_nb_bits_quantization() const { return _nb_bits_quantization; }
+            int get_nb_bits_quantization() const { return _nb_bits_quantization; }
 		private:
 			const HalfedgeGraph &_g; /// Topology remains the same
 			PointMap &_pm;           /// Point map changes
 			const int _nb_bits_quantization;
-			std::vector< double > _bb_dimension;
-			std::vector< double > _init_point;
-			//boundingBox _bb;
+			const std::vector< double > _bb_dimension;
+			const std::vector< double > _init_point;
 			double _max_length;
 			double _quantization_step;
 };

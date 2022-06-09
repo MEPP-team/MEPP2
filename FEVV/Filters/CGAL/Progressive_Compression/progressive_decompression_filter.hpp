@@ -212,14 +212,14 @@ progressive_decompression_filter(HalfedgeGraph &g,
 
   std::vector< char > data;
   char b;
-  //Open file, load binary data
+  // Open file, load binary data.
   while(filebin.get(b))
   {
     data.push_back(b);
   }
   filebin.close();
 
-  //init draco buffer with the content of the binary file
+  // Init draco buffer with the content of the binary file.
   buffer.Init(data.data(), data.size());
   
   progressive_decompression_filter(g, pm, v_cm, gt, buffer, dequantize);

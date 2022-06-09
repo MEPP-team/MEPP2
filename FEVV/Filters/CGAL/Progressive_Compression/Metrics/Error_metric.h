@@ -28,6 +28,9 @@
 
 namespace FEVV {
 namespace Filters {
+/// Functor template class used by the priority queue member in
+/// the Error_metric class. It permits to store tuples made of
+/// edge, cost and point in descending order of their cost. 
 template<
 	typename HalfedgeGraph,
 	typename edge_descriptor =
