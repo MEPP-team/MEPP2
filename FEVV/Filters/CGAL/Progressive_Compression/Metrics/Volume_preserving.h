@@ -14,6 +14,9 @@
 
 namespace FEVV {
 namespace Filters {
+	
+/// \brief Concrete class to compute the collapse cost of each edge in a mesh
+///        as the local absolute volume error.		
 template<
     typename HalfedgeGraph,
     typename PointMap>
@@ -73,16 +76,6 @@ public:
       Super_class::_threshold /= count;
     }
   };
-
-  double compute_cost_edge(edge_descriptor e) 
-  {
-    Point collapsePos = Super_class::_vkept->compute_position(e);
-	  
-    double sum_first_vertex=0., sum_second_vertex=0.;
-    compute_volumes(e, collapsePos, sum_first_vertex, sum_second_vertex);
-	
-    return (sum_first_vertex + sum_second_vertex);
-  }
 
   double compute_cost_edge(edge_descriptor e, const Point &collapsePos) override
   {

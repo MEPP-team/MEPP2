@@ -52,6 +52,7 @@ public:
   {}
 
   /////////////////////////////////////////////////////////////////////////////
+  /// Get the number of vertices of the halfedge graph.
   int get_num_vertices() const
   {
     auto iterator_pair = vertices(_g);
@@ -157,7 +158,8 @@ public:
   }
 
   /////////////////////////////////////////////////////////////////////////////
-  /// Creates the reverse bitmask.
+  /// Creates the reverse bitmask (non-empty for halfedge/target position 
+  /// type).
   void set_reverse_bool()
   {
     if(!_list_memory.empty())

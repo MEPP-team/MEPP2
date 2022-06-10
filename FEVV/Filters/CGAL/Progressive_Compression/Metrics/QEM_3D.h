@@ -19,6 +19,9 @@
 
 namespace FEVV {
 namespace Filters {
+	
+/// \brief Concrete class to compute the collapse cost of each edge in a mesh
+///        as the memoryless variant of QEM error (Quadric Error Metric).		
 template< typename HalfedgeGraph,
           typename PointMap >
 class QEM_3D : public Error_metric< HalfedgeGraph,
@@ -58,29 +61,6 @@ public:
   {
   }
   ~QEM_3D(){}
-
-  double compute_triangle_area(const Point &p1, const Point &p2, const Point &p3) const
-  {
-    auto a2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p2, p1));
-    auto b2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p3, p2));
-    auto c2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p1, p3));
-    double area2 = (2*(a2*b2 + b2*c2 + a2*c2) - (a2*a2 + b2*b2 + c2*c2))*0.0625f; // expanded Heron's formula
-    return sqrt(area2);
-  }
-
-  double compute_triangle_area_after_dequantization(face_descriptor f) const
-  {
-    halfedge_descriptor h1 = halfedge(f, Super_class::_g);
-    halfedge_descriptor h2 = next(h1, Super_class::_g);
-    const Point& p1 = get(Super_class::_pm, source(h1, Super_class::_g));
-    const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
-    const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
-    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
-    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
-    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
-
-    return compute_triangle_area(p1_tmp, p2_tmp, p3_tmp);
-  }
 
   virtual void compute_error() override
   {
@@ -139,7 +119,6 @@ public:
     }
   }
 
-
   double compute_cost_edge(edge_descriptor e, const Point &collapsePos) override
   {
     auto current_halfedge = halfedge(e, Super_class::_g);
@@ -183,18 +162,36 @@ public:
     return cost;
   }
 
-  double compute_cost_edge(edge_descriptor e)
-  {
-    std::cout << "should not happen" << std::endl;
-    return 0.0;
-  }
-
   std::string get_as_string() const override { return "QEM_3D"; }
 
 protected:
   std::map< face_descriptor, Quadric > faces_quadrics;
 
   std::map< vertex_descriptor, Quadric > vertices_quadrics;
+
+
+  double compute_triangle_area(const Point &p1, const Point &p2, const Point &p3) const
+  {
+    auto a2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p2, p1));
+    auto b2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p3, p2));
+    auto c2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p1, p3));
+    double area2 = (2*(a2*b2 + b2*c2 + a2*c2) - (a2*a2 + b2*b2 + c2*c2))*0.0625f; // expanded Heron's formula
+    return sqrt(area2);
+  }
+
+  double compute_triangle_area_after_dequantization(face_descriptor f) const
+  {
+    halfedge_descriptor h1 = halfedge(f, Super_class::_g);
+    halfedge_descriptor h2 = next(h1, Super_class::_g);
+    const Point& p1 = get(Super_class::_pm, source(h1, Super_class::_g));
+    const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
+    const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
+    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
+
+    return compute_triangle_area(p1_tmp, p2_tmp, p3_tmp);
+  }
 
   std::vector< double > get_plane_equation(face_descriptor f) const
   {

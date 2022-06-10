@@ -10,6 +10,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 #pragma once
+
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/properties.hpp>
 #include <CGAL/boost/graph/Euler_operations.h>
@@ -20,45 +21,31 @@
 
 namespace FEVV {
 namespace Filters {
-	
+/**
+ *  \brief Colors an edge by putting the specified color into
+ *         the edge color map at the "edge" position.
+ *         Used for debug purpose.
+ */
 template<
 	typename HalfedgeGraph,
 	typename PointMap,
 	typename EdgeColorMap,
-	typename VertexColorMap,
-	typename halfedge_descriptor =
-	typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor >
-void color_stencil(HalfedgeGraph &g,
-                  PointMap &pm,
-                  EdgeColorMap &e_cm,
-                  VertexColorMap &v_cm,
-                  std::vector<halfedge_descriptor> &edges_to_color, 
-                  typename boost::property_traits< VertexColorMap >::value_type color)
-{
-    size_t nbe = edges_to_color.size();
-	for(size_t i = 0; i < nbe; i++)
-	{
-		put(e_cm, edge(edges_to_color[i], g), color); // colors every edge in color
-	}
-}
-
-template<
-	typename HalfedgeGraph,
-	typename PointMap,
-	typename EdgeColorMap,
-	typename VertexColorMap,
 	typename edge_descriptor =
 	typename boost::graph_traits< HalfedgeGraph >::edge_descriptor >
 void
 color_edge(HalfedgeGraph &/*g*/,PointMap &/*pm*/,
-          EdgeColorMap &e_cm,
-          VertexColorMap &/*v_cm*/,
-          edge_descriptor edge_to_color, 
-          typename boost::property_traits< VertexColorMap >::value_type color)
+           EdgeColorMap &e_cm,
+           edge_descriptor edge_to_color, 
+           typename boost::property_traits< EdgeColorMap >::value_type color)
 {
 	put(e_cm, edge_to_color, color);
 }
 
+/**
+ *  \brief Colors a vertex by putting the specified color into
+ *         the vertex color map at the "vertex" position.
+ *         Used for debug purpose. 
+ */
 template<
 	typename HalfedgeGraph,
 	typename PointMap,
@@ -66,13 +53,14 @@ template<
 	typename vertex_descriptor =
 	typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor >
 void
-color_center(HalfedgeGraph &/*g*/,
-            PointMap &/*pm*/,
-            VertexColorMap &v_cm,
-            vertex_descriptor center,
-            typename boost::property_traits<VertexColorMap>::value_type color )
+color_vertex(HalfedgeGraph &/*g*/,
+             PointMap &/*pm*/,
+             VertexColorMap &v_cm,
+             vertex_descriptor vertex_to_color,
+             typename boost::property_traits<VertexColorMap>::value_type color)
 {
-	put(v_cm,center,color);
+	put(v_cm, vertex_to_color, color);
 }
+
 } // namespace Filters
 } // namespace FEVV

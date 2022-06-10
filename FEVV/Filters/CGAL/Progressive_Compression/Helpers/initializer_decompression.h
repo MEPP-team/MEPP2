@@ -15,7 +15,10 @@
 #include "FEVV/Filters/CGAL/Surface_mesh/Progressive_Compression_ld/progressive_decompression_filter.hpp"
 
 /**
- * \brief 
+ * \brief A mesh type templated main(argc, argv) function that
+ *         - applies the \ref progressive_decompression_filter generic filter
+ *           on a compressed mesh file (binary file) ,
+ *         - and write the resulting mesh to a file.
  */
 template< typename MeshT >
 int

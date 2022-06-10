@@ -17,28 +17,31 @@ namespace FEVV {
 namespace Filters {
 
 enum class PREDICTION_TYPE {
-  POSITION = 0,
-  DELTA,
-  BARYCENTER_PREDICTOR,
-  BARYCENTER,
-  HALFRING,
-  BUTTERFLY,
+  POSITION = 0, /// encode the 2 edge vertex positions
+  DELTA, /// encode the delta between the 2 edge vertex positions
+  //BARYCENTER_PREDICTOR, // (not implemented in this release)
+  //BARYCENTER, // (not implemented in this release)
+  //HALFRING, // (not implemented in this release)
+  BUTTERFLY, /// encode the delta between the predicted delta and the delta between the 2 edge vertex positions
 };
 
-enum class VKEPT_POSITION { MIDPOINT = 0, HALFEDGE, FULLEDGE };
+enum class VKEPT_POSITION { MIDPOINT = 0, /// midpoint position
+                            HALFEDGE, /// edge target position
+                            FULLEDGE /// an "optimal" position along the collapsed edge (not implemented in this release)
+                           };
 
 enum class METRIC_TYPE {
   NO_METRIC = 0,
-  QEM_3D,
-  EDGE_LENGTH,
-  VOLUME_PRESERVING
+  QEM_3D, /// memoryless variant of QEM error (Quadric Error Metric)
+  EDGE_LENGTH, /// edge length metric
+  VOLUME_PRESERVING /// local absolute volume error metric
 };
 
 
-/*
-\brief Parameters: contains the methods used by the compression
-*/
-
+/**
+ * \brief Parameters contains the compression parameters except the
+ *        stopping criteria. 
+ */
 class Parameters // Local Parameters
 {
 private:
@@ -49,7 +52,6 @@ private:
   bool _allow_duplicates; // Global parameters
   int _quantization_bits;
   
-
 public:
   PREDICTION_TYPE get_prediction() const { return _prediction; } 
   VKEPT_POSITION get_vkept_position() const { return _vkept_pos; }
@@ -85,7 +87,7 @@ public:
     case PREDICTION_TYPE::DELTA:
       return "delta";
       break;
-    case PREDICTION_TYPE::BARYCENTER_PREDICTOR:
+    /*case PREDICTION_TYPE::BARYCENTER_PREDICTOR:
       return "barycentre_predictor";
       break;
     case PREDICTION_TYPE::BARYCENTER:
@@ -93,12 +95,12 @@ public:
       break;
     case PREDICTION_TYPE::HALFRING:
       return "simple_barycentre_half_ring";
-      break;
+      break;*/
     case PREDICTION_TYPE::BUTTERFLY:
       return "butterfly";
       break;
     default:
-      return "butterfly";
+      return "unknown";
       break;
     }
   }

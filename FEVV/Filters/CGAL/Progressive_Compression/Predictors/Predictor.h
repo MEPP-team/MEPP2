@@ -56,11 +56,11 @@ public:
   virtual ~Predictor(){}
 
   /// Compression side: Computes geometric residuals from a set of info about 
-  /// the collapse
+  /// the collapse.
   virtual std::vector< Vector >
   compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) = 0;
   
-  /// Decompression side: predicts a position from encoded residuals
+  /// Decompression side: predicts a position from encoded residuals.
   virtual std::pair< Point, Point >
   place_points(const std::vector< Vector > &residuals,
               vertex_descriptor vkept, /// should be target (h1) and target(h2)
@@ -71,8 +71,6 @@ public:
 
   virtual FEVV::Filters::PREDICTION_TYPE get_type() const { return _type; }
   
-  //virtual const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const = 0;
-  //virtual void set_bit_info(bool /*b1*/, bool /*b2*/, bool /*b3*/, bool /*b4*/) = 0;
   virtual void set_rev(bool /*b*/) = 0;
   
   virtual const Point& get_kept_position() const { return _kept_position; }

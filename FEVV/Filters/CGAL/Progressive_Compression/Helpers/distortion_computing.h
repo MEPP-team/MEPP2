@@ -24,7 +24,8 @@
 
 namespace fs = boost::filesystem;
 
-
+/// Get the files from the root directory that end with the 
+/// specified ext extension.
 std::vector< fs::path >
 get_files(fs::path const &root, std::string const &ext)
 {
@@ -41,21 +42,20 @@ get_files(fs::path const &root, std::string const &ext)
   return paths;
 }
 
-// Computes the distortion between an unquantized mesh g and a set of quantized
-// meshes (they will be unquantized).
+/// Computes the distortion between an unquantized mesh g and a set of 
+/// quantized meshes (LoDs associated with the original mesh, 
+/// they will be unquantized).
 template< typename HalfedgeGraph,
-          typename PointMap,
-          typename GeometryTraits = FEVV::Geometry_traits< HalfedgeGraph > >
+          typename PointMap >
 void
 compute_distortions(HalfedgeGraph &g, /// original mesh
                    PointMap &pm, /// original point map
-                   const GeometryTraits &/*gt*/,
-                   fs::path const &root // folder containing .obj files which 
-                                        // are used to compute distortions 
-                                        // between them and g
+                   fs::path const &root /// folder containing .obj files which 
+                                        /// are used to compute distortions 
+                                        /// between them and g
                     )
 {
-  //initialize AABB tree for the original mesh
+  // initialize AABB tree for the original mesh
   FEVV::Filters::Geometric_metrics< HalfedgeGraph, PointMap > g_metric(g, pm);
 
   // PREPROCESS: get quantization parameters
@@ -75,11 +75,11 @@ compute_distortions(HalfedgeGraph &g, /// original mesh
     HalfedgeGraph current_mesh;
     FEVV::PMapsContainer current_pmaps_bag;
 	
-	//read quantized mesh
+	// read quantized mesh
     FEVV::Filters::read_mesh(root.string()+files[i].string(),current_mesh,current_pmaps_bag);
     auto current_pm = get(boost::vertex_point, current_mesh);
 	
-	//unquantize mesh
+	// unquantize mesh
     FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap > dq(
         current_mesh,
         current_pm,

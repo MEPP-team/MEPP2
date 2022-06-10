@@ -29,6 +29,10 @@
 namespace FEVV {
 namespace Filters {
 
+/**
+ *  \brief Uniform_dequantization is a class dedicated to the XYZ uniform
+ *         dequantization of vertex coordinates stored in the mesh point map.
+ */
 template<typename HalfedgeGraph,
          typename PointMap,
          typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector,

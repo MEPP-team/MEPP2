@@ -54,6 +54,7 @@ public:
 };
 
 /// \brief Abstract class to compute the collapse cost of each edge in a mesh.
+///        It also manages a priority queue of (edge, cost, collapse position).
 template<
     typename HalfedgeGraph,
     typename PointMap>
@@ -94,7 +95,16 @@ public:
   }
   virtual ~Error_metric(){}
 
+  /// Method to compute 
+  /// 1) all edge costs of the mesh;
+  /// 2) the mean cost threshold.
   virtual void compute_error() = 0;
+  
+  /// Method to compute the cost associated with an edge to collapse.
+  /// It usually depends on the resulting vertex position (the collapsed 
+  /// position).
+  virtual double compute_cost_edge(edge_descriptor e, const Point &collapsePos) = 0;
+  
   bool is_queue_empty() { return _queue.empty(); }
   std::tuple< typename boost::graph_traits< HalfedgeGraph >::edge_descriptor,
               double,
@@ -103,7 +113,7 @@ public:
   void pop_queue() { _queue.pop(); }
 
   double get_weight_top() const { return std::get< 1 >(_queue.top()); }
-  virtual double compute_cost_edge(edge_descriptor e, const Point &collapsePos) = 0;
+
   double get_threshold() const { return _threshold; }
  
   void delete_from_descriptors(edge_descriptor e) { _edges_cost.erase(e); }

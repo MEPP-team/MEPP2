@@ -20,6 +20,10 @@
 
 namespace FEVV {
 namespace Filters {
+/**
+ *  \brief Abstract class to represent the position type of
+ *         the resulting vertex of an edge collapse. 
+ */
 template< typename HalfedgeGraph,
           typename PointMap,
           typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
@@ -36,9 +40,12 @@ public:
                Geometry &gt)
       : _g(g), _gt(gt), _pm(pm){}
   virtual ~Kept_position(){}
+  /// Compute the kept vertex position of an edge. 
   virtual Point compute_position(
       typename boost::graph_traits< HalfedgeGraph >::edge_descriptor edge) = 0;
   VKEPT_POSITION get_type() const { return _type; }
+  /// Has a reverse case? Namely do we need to reverse the left and right
+  /// pivot vertices?
   bool get_reverse() const { return _reverse; }
   virtual std::string get_as_string() const = 0;
 

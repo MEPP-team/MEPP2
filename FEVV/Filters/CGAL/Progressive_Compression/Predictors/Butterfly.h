@@ -19,7 +19,7 @@
 namespace FEVV {
 namespace Filters {
 
-/** Butterfly prediction scheme, as implemented in the paper by Rossignac
+/** Butterfly prediction scheme, as implemented in the paper by Rossignac.
  */
 template< typename HalfedgeGraph,
           typename PointMap >
@@ -49,22 +49,6 @@ public:
     Super_class::_type = FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
   }
 
-  bool is_on_border(vertex_descriptor v) const 
-  {
-    boost::iterator_range<
-        CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
-        iterator_range = CGAL::halfedges_around_target(v, Super_class::_g);
-    for(auto h_v : iterator_range)
-    {
-      if(CGAL::is_border(source(h_v, Super_class::_g), Super_class::_g))
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
   std::vector< Vector >
   compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) override
   {
@@ -79,8 +63,8 @@ public:
       halfedge_descriptor v4_to_vkept =
         std::get< 0 >(halfedge(mem.get_v4(), mem.get_vkept(), Super_class::_g));
 
-      Point A = mem.get_pos_v1();
-      Point B = mem.get_pos_v2();
+      Point A = mem.get_pos_vt();
+      Point B = mem.get_pos_vs();
 
       k_a = 0;
       k_b = 0;
@@ -168,70 +152,6 @@ public:
     {
       return _delta_for_borders.compute_residuals(mem);
     }
-  }
-
-
-  std::vector< Vector > compute_D_prime_A_and_B(const Point &CA,
-                                           const Point &SA,
-                                           const Point &CB,
-                                           const Point &SB,
-                                           const Point &kept_position)
-  {
-
-    // Convert SA,SB,CA,CB to Vector (easier for computation)
-    Vector SA_vec = Vector(Super_class::_gt.get_x(SA),
-                           Super_class::_gt.get_y(SA),
-                           Super_class::_gt.get_z(SA));
-    Vector SB_vec = Vector(Super_class::_gt.get_x(SB),
-                           Super_class::_gt.get_y(SB),
-                           Super_class::_gt.get_z(SB));
-
-
-    Vector CA_vec = Vector(Super_class::_gt.get_x(CA),
-                           Super_class::_gt.get_y(CA),
-                           Super_class::_gt.get_z(CA));
-    Vector CB_vec = Vector(Super_class::_gt.get_x(CB),
-                           Super_class::_gt.get_y(CB),
-                           Super_class::_gt.get_z(CB));
-
-    Vector V = Vector(Super_class::_gt.get_x(kept_position),
-                      Super_class::_gt.get_y(kept_position),
-                      Super_class::_gt.get_z(kept_position));
-
-
-    // following the formula from the paper
-
-    Vector alphaSA = Super_class::_gt.scalar_mult(SA_vec, _alpha);
-    Vector alphaSB = Super_class::_gt.scalar_mult(SB_vec, _alpha);
-
-    Vector opp_alphaCA = Super_class::_gt.scalar_mult(CA_vec, (1 - _alpha));
-    Vector opp_alphaCB = Super_class::_gt.scalar_mult(CB_vec, (1 - _alpha));
-
-    Vector left_part_A =
-        Super_class::_gt.scalar_mult(Super_class::_gt.add_v(opp_alphaCA, alphaSA), k_a + 3);
-    Vector left_part_B =
-        Super_class::_gt.scalar_mult(Super_class::_gt.add_v(opp_alphaCB, alphaSB), k_b + 3);
-
-    Vector right_part_A = Super_class::_gt.scalar_mult(V, _alpha - k_a - 3);
-    Vector right_part_B = Super_class::_gt.scalar_mult(V, _alpha - k_b - 3);
-
-    Vector DA_prime = Super_class::_gt.add_v(left_part_A, right_part_A);
-    Vector DB_prime = Super_class::_gt.add_v(left_part_B, right_part_B);
-
-    DA_prime = Super_class::_gt.scalar_mult(DA_prime, 1 / (k_a + 3 + _alpha));
-    DB_prime = Super_class::_gt.scalar_mult(DB_prime, 1 / (k_b + 3 + _alpha));
-    auto tmp  = Super_class::_gt.add_pv(Super_class::_gt.ORIGIN, DA_prime);
-    auto tmp2 = Super_class::_gt.add_pv(Super_class::_gt.ORIGIN, DB_prime);
-
-    DA_prime = Vector(std::round(Super_class::_gt.get_x(tmp) * (-2)),
-                      std::round(Super_class::_gt.get_y(tmp) * (-2)),
-                      std::round(Super_class::_gt.get_z(tmp) * (-2)));
-    DB_prime = Vector(std::round(Super_class::_gt.get_x(tmp2) * (2)),
-                      std::round(Super_class::_gt.get_y(tmp2) * (2)),
-                      std::round(Super_class::_gt.get_z(tmp2) * (2)));
-
-    std::vector< Vector > Ds = {DA_prime, DB_prime};
-    return Ds;
   }
 
   std::pair< Point, Point > place_points(const std::vector< Vector > &residuals,
@@ -400,6 +320,84 @@ public:
 
 
 private:
+  bool is_on_border(vertex_descriptor v) const 
+  {
+    boost::iterator_range<
+        CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
+        iterator_range = CGAL::halfedges_around_target(v, Super_class::_g);
+    for(auto h_v : iterator_range)
+    {
+      if(CGAL::is_border(source(h_v, Super_class::_g), Super_class::_g))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  std::vector< Vector > compute_D_prime_A_and_B(const Point &CA,
+                                           const Point &SA,
+                                           const Point &CB,
+                                           const Point &SB,
+                                           const Point &kept_position)
+  {
+
+    // Convert SA,SB,CA,CB to Vector (easier for computation)
+    Vector SA_vec = Vector(Super_class::_gt.get_x(SA),
+                           Super_class::_gt.get_y(SA),
+                           Super_class::_gt.get_z(SA));
+    Vector SB_vec = Vector(Super_class::_gt.get_x(SB),
+                           Super_class::_gt.get_y(SB),
+                           Super_class::_gt.get_z(SB));
+
+
+    Vector CA_vec = Vector(Super_class::_gt.get_x(CA),
+                           Super_class::_gt.get_y(CA),
+                           Super_class::_gt.get_z(CA));
+    Vector CB_vec = Vector(Super_class::_gt.get_x(CB),
+                           Super_class::_gt.get_y(CB),
+                           Super_class::_gt.get_z(CB));
+
+    Vector V = Vector(Super_class::_gt.get_x(kept_position),
+                      Super_class::_gt.get_y(kept_position),
+                      Super_class::_gt.get_z(kept_position));
+
+
+    // following the formula from the paper
+
+    Vector alphaSA = Super_class::_gt.scalar_mult(SA_vec, _alpha);
+    Vector alphaSB = Super_class::_gt.scalar_mult(SB_vec, _alpha);
+
+    Vector opp_alphaCA = Super_class::_gt.scalar_mult(CA_vec, (1 - _alpha));
+    Vector opp_alphaCB = Super_class::_gt.scalar_mult(CB_vec, (1 - _alpha));
+
+    Vector left_part_A =
+        Super_class::_gt.scalar_mult(Super_class::_gt.add_v(opp_alphaCA, alphaSA), k_a + 3);
+    Vector left_part_B =
+        Super_class::_gt.scalar_mult(Super_class::_gt.add_v(opp_alphaCB, alphaSB), k_b + 3);
+
+    Vector right_part_A = Super_class::_gt.scalar_mult(V, _alpha - k_a - 3);
+    Vector right_part_B = Super_class::_gt.scalar_mult(V, _alpha - k_b - 3);
+
+    Vector DA_prime = Super_class::_gt.add_v(left_part_A, right_part_A);
+    Vector DB_prime = Super_class::_gt.add_v(left_part_B, right_part_B);
+
+    DA_prime = Super_class::_gt.scalar_mult(DA_prime, 1 / (k_a + 3 + _alpha));
+    DB_prime = Super_class::_gt.scalar_mult(DB_prime, 1 / (k_b + 3 + _alpha));
+    auto tmp  = Super_class::_gt.add_pv(Super_class::_gt.ORIGIN, DA_prime);
+    auto tmp2 = Super_class::_gt.add_pv(Super_class::_gt.ORIGIN, DB_prime);
+
+    DA_prime = Vector(std::round(Super_class::_gt.get_x(tmp) * (-2)),
+                      std::round(Super_class::_gt.get_y(tmp) * (-2)),
+                      std::round(Super_class::_gt.get_z(tmp) * (-2)));
+    DB_prime = Vector(std::round(Super_class::_gt.get_x(tmp2) * (2)),
+                      std::round(Super_class::_gt.get_y(tmp2) * (2)),
+                      std::round(Super_class::_gt.get_z(tmp2) * (2)));
+
+    std::vector< Vector > Ds = {DA_prime, DB_prime};
+    return Ds;
+  }
+
   FEVV::Filters::Delta_predictor< HalfedgeGraph,
                                  PointMap >
       _delta_for_borders;

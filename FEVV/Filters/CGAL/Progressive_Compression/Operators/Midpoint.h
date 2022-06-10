@@ -15,6 +15,10 @@
 
 namespace FEVV {
 namespace Filters {
+/**
+ *  \brief Concrete class to represent the midpoint position type of
+ *         the resulting vertex of an edge collapse. 
+ */	
 template< typename HalfedgeGraph,
           typename PointMap,
           typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
@@ -35,7 +39,7 @@ public:
       : Super_class(g, pm)
   {
     Super_class::_type = VKEPT_POSITION::MIDPOINT;
-    Super_class::_reverse = false;
+    Super_class::_reverse = false; // has no reverse case
   }
   Midpoint(HalfedgeGraph &g,
            PointMap &pm,
@@ -43,11 +47,12 @@ public:
       : Super_class(g, pm, gt)
   {
     Super_class::_type = VKEPT_POSITION::MIDPOINT;
-    Super_class::_reverse = false;
+    Super_class::_reverse = false; // has no reverse case
   }
 
   std::string get_as_string() const override { return "midpoint"; }
-  //compute midpoint of two positions of an edge
+  
+  /// Compute the midpoint of an edge.
   Point compute_position(
       typename boost::graph_traits< HalfedgeGraph >::edge_descriptor edge) override
   {

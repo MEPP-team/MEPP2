@@ -594,7 +594,7 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        color_center(
+        color_vertex(
             _g,
             _pm,
             _vcm,
@@ -619,7 +619,7 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        color_center(
+        color_vertex(
             _g,
             _pm,
             _vcm,
@@ -644,14 +644,14 @@ private:
       if(paire.second == false)
       {
         FEVV::PMapsContainer test_pmaps_bag;
-        color_center(
+        color_vertex(
             _g,
             _pm,
             _vcm,
             target(h, _g),
             typename boost::property_traits< VertexColorMap >::value_type(
                 1, 0, 0));
-        color_center(
+        color_vertex(
             _g,
             _pm,
             _vcm,
@@ -761,7 +761,7 @@ private:
       }
       else
       {
-        color_center(
+        color_vertex(
             _g,
             _pm,
             _vcm,

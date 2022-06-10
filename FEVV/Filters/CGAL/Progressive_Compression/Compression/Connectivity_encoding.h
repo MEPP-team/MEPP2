@@ -22,12 +22,13 @@
 namespace FEVV {
 namespace Filters {
 
-/**
-  * For a vertex (represented by a Collapse_info object), will encode the edges 
-  * to expand in a binary stream, 1 being an edge that should be expanded and 0
-  * being an edge that should not. Takes as arguments a graph g, a pointmap,
-  * a Collapse_info object (again, representing a vertex and many necessary 
-  * refinement info), the first edge to process (see the 
+/** 
+  * \brief Encode vertex to split' one-ring edges to expand. 
+  * For a vertex to split (represented by a Collapse_info object), will encode  
+  * the edges to expand in a binary stream, 1 being an edge that should be 
+  * expanded and 0 being an edge that should not. Takes as arguments a graph g,
+  * a pointmap, a Collapse_info object (again, representing a vertex and many
+  * necessary refinement info), the first edge to process (see the 
   * encode_connectivity_bitmask function), and the edge/connectivity bitmask 
   * (which will receive the connectivity bitstream).
 **/
@@ -90,6 +91,8 @@ connectivity_encoding(const HalfedgeGraph &g, /// in
   }
 }
 
+/// \brief Encode vertex to split' one-ring edges to expand, for 
+///        all collapsed edges in the order of the sorted list list_memory.
 template<
     typename HalfedgeGraph,
     typename PointMap,
@@ -103,12 +106,13 @@ encode_connectivity_bitmask(
     const HalfedgeGraph &g,
     const PointMap &pm,
     std::list< Collapse_info< HalfedgeGraph, PointMap > > &list_memory, /// sorted list (according to st)
-	                                                                      /// but non-const reference
+                                                                        /// but non-const reference
                                                                         /// due to Collapse_info updates
     std::list< bool > &edge_bitmask, /// out
     const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap,
-                                                        Geometry >& spanningtree /// in computed st
+                                                        Geometry >& spanningtree /// in computed st (needed
+                                                                                 /// to find the min edges)
     )
 {
   auto mem_it = list_memory.begin(), mem_it_e = list_memory.end();

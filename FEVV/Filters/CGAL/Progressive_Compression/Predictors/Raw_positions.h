@@ -65,8 +65,8 @@ public:
 
   std::vector< Vector > compute_residuals(Collapse_info<HalfedgeGraph, PointMap> &mem) override
   {
-    Vector vec1 = Super_class::_gt.sub_p(mem.get_pos_v1(), Super_class::_gt.ORIGIN);
-    Vector vec2 = Super_class::_gt.sub_p(mem.get_pos_v2(), Super_class::_gt.ORIGIN);
+    Vector vec1 = Super_class::_gt.sub_p(mem.get_pos_vt(), Super_class::_gt.ORIGIN);
+    Vector vec2 = Super_class::_gt.sub_p(mem.get_pos_vs(), Super_class::_gt.ORIGIN);
     std::vector< Vector > residuals;
     residuals.reserve(2);
     residuals.push_back(std::move(vec1));

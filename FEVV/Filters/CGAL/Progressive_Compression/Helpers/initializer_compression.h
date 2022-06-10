@@ -334,8 +334,7 @@ progressive_compression_main(int argc, const char **argv)
   }
   else if(mode == 2)
   {
-    compute_distortions(
-        m, pm, FEVV::Geometry_traits< MeshT >(m), argv[3]);
+    compute_distortions(m, pm, argv[3]);
   }
 
   return 0;

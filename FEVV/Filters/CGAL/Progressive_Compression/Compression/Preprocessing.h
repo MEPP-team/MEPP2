@@ -29,6 +29,10 @@
 namespace FEVV {
 namespace Filters {
 
+/// \brief Preprocessing class is dedicated to provide a list of
+///        preprocessings that are needed to guarantee that the 
+///        following progressive compression will work properly
+///        with a "decompressible" binary file. 
 template<
     typename HalfedgeGraph,
     typename PointMap,
@@ -51,32 +55,33 @@ public:
   {
   }
 
-  //--------------------------input mesh
-  //pre-process--------------------------------------------
+  /// \brief Suppress all small connected components (isolated vertices and 
+  ///        isolated edges).
+  ///        To apply before quantization.   
   void process_mesh_before_quantization()
   {
-    // supress all small connected components (isolated vertices and isolated
-    // edges)
-    this->erase_small_connnected_components(); /// \todo need to be tested
+    this->erase_small_connnected_components(); 
 
     // does the mesh has borders?
     bool has_border = this->check_if_mesh_with_borders();
     std::clog << "process_mesh_before_quantization: does the mesh has borders ? " << has_border << std::endl;
   }
 
+  /// \brief Move duplicate vertex positions.
+  ///        To apply after quantization. 
   void process_mesh_after_quantization()
   {
-    // process dupplicates
-    this->move_dupplicates_after_quantization();
+    // process duplicates
+    this->move_duplicates_after_quantization();
 
-    // check if there are not remainong dupplicates
-    bool still_dupplicates = this->are_dupplicates();
-    if(still_dupplicates)
-      std::clog << "WARNING: process_mesh_after_quantization: there are still dupplicates "
+    // check if there are not remainong duplicates
+    bool still_duplicates = this->are_duplicates();
+    if(still_duplicates)
+      std::clog << "WARNING: process_mesh_after_quantization: there are still duplicates "
                 << std::endl;
   }
 
-
+private:
   /// Erase isolated edges and vertices.
   void erase_small_connnected_components()
   {
@@ -132,7 +137,7 @@ public:
   }
 
 
-  void move_dupplicates_after_quantization()
+  void move_duplicates_after_quantization()
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -158,9 +163,9 @@ public:
     }
   }
 
-  // simple test to check if all the dupplicates have been removed
-  // return true if there are still dupplicates in the mesh and false otherwise
-  bool are_dupplicates() const
+  // Simple test to check if all the duplicates have been removed
+  // return true if there are still duplicates in the mesh and false otherwise.
+  bool are_duplicates() const
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -183,7 +188,7 @@ public:
   }
 
 
-  Point move_dupplicate(vertex_descriptor v, int cas)
+  Point move_duplicate(vertex_descriptor v, int cas)
   {
     const Point& pos = get(_pm, v);
     Point new_pos;

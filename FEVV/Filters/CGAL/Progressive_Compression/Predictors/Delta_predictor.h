@@ -50,8 +50,8 @@ public:
   std::vector< Vector >  compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) override
   { // vt <- v1, vs <- v2
 
-    Point A = mem.get_pos_v1();
-    Point B = mem.get_pos_v2();
+    Point A = mem.get_pos_vt();
+    Point B = mem.get_pos_vs();
 
     if(mem.get_reverse())
     {
@@ -65,9 +65,9 @@ public:
     Vector delta = Super_class::_gt.sub_p(B, A);
 
     Vector vec1 = // vt->vkept
-       Super_class::_gt.sub_p(mem.get_pos_v1(), mem.get_pos_vkept()); 
+       Super_class::_gt.sub_p(mem.get_pos_vt(), mem.get_pos_vkept()); 
     Vector vec2 = // vs->vkept
-       Super_class::_gt.sub_p(mem.get_pos_v2(), mem.get_pos_vkept()); 
+       Super_class::_gt.sub_p(mem.get_pos_vs(), mem.get_pos_vkept()); 
     std::vector< Vector > residuals;
     Vector to_be_pushed, revers;
     //auto copy_round = mem._midpoint_rounds;

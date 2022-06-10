@@ -48,10 +48,6 @@ template<
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
-    typename face_descriptor =
-        typename boost::graph_traits< HalfedgeGraph >::face_descriptor,
-    typename halfedge_descriptor =
-        typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor,
     typename Geometry = FEVV::Geometry_traits< HalfedgeGraph > >
 class Binary_batch_encoder
 {
@@ -60,7 +56,7 @@ private:
                        /// before its encoding
 public:
   /// \brief Add column titles to cvs file (to call before
-  /// the addition of measurement line).
+  /// the addition of measurement lines).
   static void init_measure_file(const std::string& csv_file_path)
   {
     std::ofstream csv_file;
@@ -104,7 +100,8 @@ public:
     csv_file.close();
   }
  
-  /// \brief Encodes a non-textured quantized mesh
+  /// \brief Encodes a non-textured quantized mesh with draco single-rate
+  ///        mesh encoder.
   size_t quantize_encode_coarse_mesh(HalfedgeGraph &g, /// Mesh to encode
                                      PointMap &pm, /// Vertex positions property map
                                      const Geometry &gt, /// Geometry trait object
@@ -203,7 +200,8 @@ public:
 
     return (buffer.size() - original_size) * 8;
   }
-  /// Encodes a bit mask with draco's non-adaptive RAns coder (RAnsBitEncoder)
+  /// \brief Encodes a bit mask with draco's non-adaptive RAns coder 
+  ///        (RAnsBitEncoder).
   std::pair< int, double > encode_bitmask(const std::list< bool > &bitmask,
                                          draco::EncoderBuffer &buffer)
   {
@@ -230,7 +228,8 @@ public:
     return std::make_pair(static_cast< int >((buffer.size()) - size_buffer) * 8,
                           bitmask_entropy);
   }
-  /// Encodes a set of residuals with draco's entropy coder (SymbolBitEncoder)
+  /// \brief  Encodes a set of residuals with draco's entropy coder 
+  ///         (SymbolBitEncoder)
   std::pair< int, double >
   encode_residuals(const std::list< std::vector< Vector > > &residuals,
                   draco::EncoderBuffer &buffer,

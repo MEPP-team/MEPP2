@@ -16,7 +16,10 @@
 
 namespace FEVV {
 namespace Filters {
-	
+
+/// \brief Functor object to sort sequential container of Collapse_info 
+///        objects. It is based on the 
+///         Spanning_tree_vertex_edge_comparator functor. 
 template<typename HalfedgeGraph,
          typename PointMap,
          typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
@@ -41,6 +44,9 @@ class Memory_comparator
         ~Memory_comparator() {}
 };
 
+/// \brief Functor object to sort sequential container of vertex_descriptor 
+///        objects. It is based on the 
+///         Spanning_tree_vertex_edge_comparator functor. 
 template<typename HalfedgeGraph,
          typename PointMap,
          typename vertex_descriptor = typename boost::graph_traits<HalfedgeGraph>::vertex_descriptor,
@@ -66,43 +72,5 @@ class Vertex_span_comparator
 	
 };
 
-template<
-        typename HalfedgeGraph,
-        typename PointMap,
-        typename vertex_descriptor =
-            typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
-        typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
-        typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
-class Vertex_lexicographic_comparator
-{
-    private:
-      const HalfedgeGraph &_g;
-      const PointMap &_pm;
-      const Geometry _gt;
-    public:
-      Vertex_lexicographic_comparator(const HalfedgeGraph &g, const PointMap &pm)
-          : _g(g), _pm(pm), _gt(Geometry(g))
-      {}
-
-      ~Vertex_lexicographic_comparator() {}
-
-      bool operator()(vertex_descriptor v1, vertex_descriptor v2) const
-      {
-        const Point& pv1 = get(_pm, v1);
-        const Point& pv2 = get(_pm, v2);
-
-        if(fabs(_gt.get_x(pv1) - _gt.get_x(pv2)) >
-           std::numeric_limits< double >::epsilon())
-          return _gt.get_x(pv1) < _gt.get_x(pv2);
-        else if(fabs(_gt.get_y(pv1) - _gt.get_y(pv2)) >
-                std::numeric_limits<double >::epsilon())
-          return _gt.get_y(pv1) < _gt.get_y(pv2);
-        else if(fabs(_gt.get_z(pv1) - _gt.get_z(pv2)) >
-                std::numeric_limits< double >::epsilon())
-          return _gt.get_z(pv1) < _gt.get_z(pv2);
-		  
-		return false;
-      }
-};
 } // namespace Filters
 } // namespace FEVV

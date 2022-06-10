@@ -16,6 +16,9 @@
 
 namespace FEVV {
 namespace Filters {
+	
+/// \brief Concrete class to compute the collapse cost of each edge in a mesh
+///        as the edge length (L2).	
 template<
 	typename HalfedgeGraph,
 	typename PointMap >
@@ -79,19 +82,14 @@ public:
     }
   }
 
-  std::string get_as_string() const override { return "edgelength";}
-
-  double compute_cost_edge(edge_descriptor e)
+  double compute_cost_edge(edge_descriptor e, const Point &/*collapsePos*/) override
   {
     const Point& P0 = get(Super_class::_pm, source(e, Super_class::_g));
     const Point& P1 = get(Super_class::_pm, target(e, Super_class::_g));
     return Super_class::_gt.length(Super_class::_gt.sub_p(P1, P0));
   }
-
-  double compute_cost_edge(edge_descriptor e, const Point &/*collapsePos*/) override
-  {
-    return compute_cost_edge(e);
-  }
+  
+  std::string get_as_string() const override { return "edgelength";}
 };
 
 

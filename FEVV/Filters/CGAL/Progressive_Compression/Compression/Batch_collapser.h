@@ -76,20 +76,21 @@ public:
   using Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector;
   using Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point;
   using Geometry = typename FEVV::Geometry_traits< HalfedgeGraph >;
+  
   /**
     * \brief Batch_collapser
-	* @param g the mesh to simplify
-    * @param pm the point map associated to the mesh to simplify
-    * @param metric the address (pointer) of an object used to measure the cost
-    *        of each edge
-    * @param predictor the address (pointer) of an object used to compute the 
+    * @param[in,out] g the mesh to simplify
+    * @param[in,out] pm the point map associated to the mesh to simplify
+    * @param[in] metric the address (pointer) of an object used to measure the
+    *        cost of each edge
+    * @param[in] predictor the address (pointer) of an object used to compute the 
     *        geometric residuals
-    * @param vcm a property map containing the color of each vertex (useful for
+    * @param[in,out] vcm a property map containing the color of each vertex (useful for
     *        debugging)
-    * @param ecm a property map containing the color of each edge (useful for
+    * @param[in,out] ecm a property map containing the color of each edge (useful for
     *        debugging)
-    * @param batch_stop an Enum to know when to stop a batch (collapses every 
-    *        edge we can or stop at a threshold)
+    * @param[in] batch_stop an Enum to know when to stop a batch (collapses every 
+    *        edge we can or stop at a mean cost threshold)
    **/
   Batch_collapser(
       HalfedgeGraph &g, /// the mesh to simplify
@@ -115,7 +116,7 @@ public:
   ~Batch_collapser() {}
   
   /// \brief stop() : Depending on the chosen Batch condition, will return
-  ///  whether we have to continue collapsing or not
+  ///  whether we have to continue collapsing or not.
   bool stop()
   {
       switch(_batch_stop)
@@ -167,15 +168,6 @@ public:
     file_encode.close();
   }
 
-  void sort_list_memory(
-      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
-                                                          PointMap >
-          &spanningtree)
-  {
-    Memory_comparator< HalfedgeGraph, PointMap > mc(spanningtree);
-    _list_memory.sort(mc);
-  }
-
    /// Computes the L2 distorsion between the original mesh and the current LoD.
   void compute_distortion_l2(
       FEVV::Filters::Geometric_metrics< HalfedgeGraph, PointMap > &g_metric, /// object containing the original mesh
@@ -212,6 +204,15 @@ public:
   }
 
   private:
+  void sort_list_memory(
+      const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
+                                                          PointMap >
+          &spanningtree)
+  {
+    Memory_comparator< HalfedgeGraph, PointMap > mc(spanningtree);
+    _list_memory.sort(mc);
+  }
+  
     void setup_prediction(
       FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
       PointMap >
@@ -414,92 +415,6 @@ public:
          _metric->is_present_in_map(edge(h, _g))));
   }
 
-  /// Used for debugging: instead of collapsing an edge, we color it.
-  bool color_top_queue()
-  {
-    bool mesh_changed = false;
-    if(!_metric->is_queue_empty())
-    {
-      auto current_edge = _metric->getTopQueue();
-      // is the  current edge forbidden? 
-      auto current_halfedge = halfedge(std::get< 0 >(current_edge), _g);
-
-      if(is_forbidden(current_halfedge, std::get< 2 >(current_edge)))
-      {
-        if(CGAL::Euler::does_satisfy_link_condition(std::get< 0 >(current_edge),
-                                                    _g))
-        {
-          std::vector< halfedge_descriptor > edges_to_color;
-          vertex_descriptor vs = source(current_halfedge, _g);
-          vertex_descriptor vt = target(current_halfedge, _g);
-          const Point& pvkept = std::get< 2 >(current_edge); // position vkept
-
-          std::vector< Vector > v =
-              _predictor->ComputeResiduals(vt, vs, pvkept);
-          //_metric->remove_old_edges(vs, vt);
-          Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
-          memory.set_source_and_target(vs, vt);
-          memory.record_v3_v4(current_halfedge);
-          edge_descriptor v4target = std::get< 0 >(edge(memory._v4, vt, _g));
-
-          typename boost::property_traits< VertexColorMap >::value_type yellow(
-              1, 1, 0);
-          ColorEdge(_g, _pm, _ecm, _vcm, v4target, yellow);
-          typename boost::property_traits< VertexColorMap >::value_type green(
-              0, 1, 0);
-
-          memory.record_pos_removed(current_halfedge);
-          // fill memory with vkept init position
-          // Point pvkept = std::get< 2 >(current_edge);
-          memory.record_pos_vkept(vt);
-
-          memory.record_error_prediction(v);
-          mesh_changed = true;
-          // std::cout << "collapse done" << std::endl;
-          typename boost::property_traits< VertexColorMap >::value_type purple(
-              1, 0, 1);
-          edge_descriptor v3target = std::get< 0 >(edge(memory._v3, vt, _g));
-          ColorEdge(_g, _pm, _ecm, _vcm, v3target, green);
-
-
-          FEVV::Filters::compute_simple_stencil< HalfedgeGraph,
-                                               vertex_descriptor,
-                                               halfedge_descriptor >(
-              _g, vt, _forbidden_edges, edges_to_color);
-          FEVV::Filters::compute_simple_stencil< HalfedgeGraph,
-                                               vertex_descriptor,
-                                               halfedge_descriptor >(
-              _g, vs, _forbidden_edges, edges_to_color);
-
-
-          memory.record_vkept(vt);
-
-          _list_memory.push_back(std::move(memory));
-          // put(_pm, vkept, pvkept);
-          typename boost::property_traits< VertexColorMap >::value_type red(
-              1, 0, 0);
-          typename boost::property_traits< VertexColorMap >::value_type blue(
-              0, 0, 1);
-          ColorCenter(_g, _pm, _vcm, vt, blue);
-          ColorCenter(_g, _pm, _vcm, vs, red);
-
-          FEVV::PMapsContainer pmaps_bag;
-          put_property_map(FEVV::vertex_color, _g, pmaps_bag, _vcm);
-          FEVV::Filters::write_mesh(
-              "tests3dmodelsfirstcollapse.off", _g, pmaps_bag);
-          //_metric->UpdateCosts( vkept);
-          //_metric->add_new_edges_to_cost_edges(vt);
-        }
-      }
-      else
-      {
-        // std::cout << "forbidden"  <<std::endl;
-      }
-      _metric->popQueue(); // dans tous les cas on pop
-    }
-    return mesh_changed;
-  }
-
   /**
     * @brief collapse_top_queue
     * collapses the edge with the lowest cost, and records the necessary
@@ -532,12 +447,10 @@ public:
           // reconstruct the edge
           Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
           memory.record_v3_v4(current_halfedge);
-          memory.record_v1_v2(get(_pm, vt), get(_pm, vs));
+          memory.record_vt_vs(get(_pm, vt), get(_pm, vs));
 
           // give collapse info a unique ID (useful for debugging)
           memory.set_num_collapse(_nb_collapse);
-
-          memory.record_pos_removed(current_halfedge);
 
           // Check if collapsing this edge would flip normals, thus adding
           // artifacts. If it does, do not collapse.

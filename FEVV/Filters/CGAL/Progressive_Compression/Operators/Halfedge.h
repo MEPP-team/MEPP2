@@ -15,6 +15,10 @@
 
 namespace FEVV {
 namespace Filters {
+/**
+ *  \brief Concrete class to represent the target position type of
+ *         the resulting vertex of an edge collapse. 
+ */		
 template< typename HalfedgeGraph,
           typename PointMap,
           typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
@@ -34,7 +38,7 @@ public:
       : Super_class(g, pm)
   {
     Super_class::_type = VKEPT_POSITION::HALFEDGE;
-    Super_class::_reverse = true;
+    Super_class::_reverse = true; // has a reverse case
   }
   Halfedge(HalfedgeGraph &g,
            PointMap &pm,
@@ -42,9 +46,11 @@ public:
       : Super_class(g, pm, gt)
   {
     Super_class::_type = VKEPT_POSITION::HALFEDGE;
-    Super_class::_reverse = true;
+    Super_class::_reverse = true; // has a reverse case
   }
   ~Halfedge(){}
+  
+  /// Compute the target position of an edge.
   Point compute_position(
       typename boost::graph_traits< HalfedgeGraph >::edge_descriptor edge) override
   {

@@ -21,7 +21,7 @@
 namespace FEVV {
 namespace Filters {
 /** 
-  * \brief Class used to store information on a collapse operation
+  * \brief Class used to store information on a collapse operation.
   **/
 template<
     typename HalfedgeGraph,
@@ -30,8 +30,6 @@ template<
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename halfedge_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor,
-    typename face_descriptor =
-        typename boost::graph_traits< HalfedgeGraph >::face_descriptor,
     typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector,
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
@@ -42,23 +40,22 @@ private:
   const Geometry _gt;
   PointMap &_pm;
   vertex_descriptor _vkept; /// kept vertex after applying the edge collapse
-  vertex_descriptor _vt;
-  vertex_descriptor _vs;
+                            /// (the remaining vertex after the operation, 
+                            /// i.e. either source or target vertex)
+  vertex_descriptor _vt; /// target vertex
+  vertex_descriptor _vs; /// source vertex
   vertex_descriptor
-      _v3; /// vertex v3=source(prev(opposite(h))) before the edge collapse
+      _v3; /// vertex v3=source(prev(opposite(h))) before the edge collapse 
+           /// (pivot vertex when not null)
   vertex_descriptor _v4; /// vertex v4=source(prev(h)) before the edge collapse
-  Point _pos_v1, _pos_v2;
-  std::tuple< bool, bool, bool, bool > _midpoint_rounds;
+                         /// (pivot vertex when not null)  
+  Point _pos_vt, _pos_vs;
 
-  Point _pos_v_removed;
-
-  bool _reverse; // reverse the delta or not
+  bool _reverse; /// reverse the delta or not
 
   Point _pos_vkept; /// used to store the initial position of vkept in case we
                     /// choose midpoint placement
-                    // Vector delta; /// pos(target(h_collapsed)) -
-                    // pos(source(h_collapsed))
-					
+				
   std::vector< Vector >
       _error_prediction; /// Contains one or several deltas for position					
   /////////////////////////////////////////////////////////////////////////////
@@ -71,32 +68,40 @@ public:
   ~Collapse_info() {}
 
   vertex_descriptor get_vkept() const { return _vkept; }
+  
+  /// Get edge target vertex (sometimes called v1).
   vertex_descriptor get_vt() const { return _vt; }
+  
+  /// Get edge source vertex (sometimes called v0 or v2).
   vertex_descriptor get_vs() const { return _vs; }
+  
+  /// Get the vertex in front of the edge to collapse and 
+  /// on the other triangle.
+  /// When not a null_vertex, this vertex is a pivot.
   vertex_descriptor get_v3() const { return _v3; }
+  
+  /// Get the vertex in front of the edge to collapse and  
+  /// on the same triangle.
+  /// When not a null_vertex, this vertex is a pivot.  
   vertex_descriptor get_v4() const { return _v4; }
-  const Point& get_pos_v1() const { return _pos_v1; }
-  const Point& get_pos_v2() const { return _pos_v2; }
+  
+  const Point& get_pos_vt() const { return _pos_vt; }
+  const Point& get_pos_vs() const { return _pos_vs; }
   const Point& get_pos_vkept() const { return _pos_vkept; }
   const std::vector< Vector >& get_error_prediction() const { return _error_prediction; }
-  const std::tuple< bool, bool, bool, bool >& get_midpoint_rounds() const { return _midpoint_rounds; }
   
+  /// Get the reverse information (used by the Predictor object,
+  /// see compute_residuals method)
   bool get_reverse() const { return _reverse; }
   
   int get_num_collapse() const { return _num_collapse; }
   void set_num_collapse(int nb) { _num_collapse = nb; }
 
-  void record_error_info(std::tuple< bool, bool, bool, bool > info)
-  {
-    _midpoint_rounds = info;
-  }
+  /// Set reverse information to true when the vertex v3 is reached
+  /// after v4 when going throught adjacent vertices to the kept
+  /// vertex. See connectivity_encoding method for more details. 
   void record_reverse(bool rev) { _reverse = rev; }
 
-  void reverse_bit()
-  {
-    std::get< 3 >(_midpoint_rounds) = !std::get< 3 >(_midpoint_rounds);
-  }
-  
   void record_v3_v4(halfedge_descriptor h)
   {
     _v3 = boost::graph_traits< HalfedgeGraph >::null_vertex();
@@ -112,21 +117,15 @@ public:
     }
   }
 
-  void record_v1_v2(const Point& v1, const Point& v2)
+  void record_vt_vs(const Point& v1, const Point& v2)
   {
-    _pos_v1 = v1;
-    _pos_v2 = v2;
+    _pos_vt = v1;
+    _pos_vs = v2;
   }
 
-
-  void record_pos_removed(halfedge_descriptor h)
-  {
-    _pos_v_removed = get(_pm, source(h, _g));
-  }
-  
   void record_vkept(vertex_descriptor vkept)
   {
-    _vkept = vkept; // vkept = target(h) = vt
+    _vkept = vkept; 
   }
 
   bool is_vkept_source()
@@ -143,39 +142,11 @@ public:
     _vt = t;
   }
   
+  /// Store the computed residuals which is done during the prediction
+  /// (see compute_residuals method of any Predictor object).  
   void record_error_prediction(const std::vector< Vector >& pred)
   {
     _error_prediction = pred;
-  }
-
-  void record_delta(const Point& pos_vkept, VKEPT_POSITION type)
-  {
-    Geometry gt(_g);
-    const Point& pos_vs = _pos_v_removed;
-    const Point& pos_vt = pos_vkept;
-
-    if(type == VKEPT_POSITION::MIDPOINT)
-    {
-      // get delta
-      Vector delta(std::move(gt.sub(pos_vt, pos_vs)));
-
-      _error_prediction.push_back(delta);
-    }
-    else if(type == VKEPT_POSITION::HALFEDGE)
-    {
-      // get delta
-      Vector opp_delta(std::move(gt.sub(pos_vs, pos_vt)));
-
-      _error_prediction.push_back(opp_delta);
-    }
-    else // full edge collapse
-    {
-      Vector delta_vt(std::move(gt.sub(pos_vt, pos_vkept)));
-      Vector delta_vs(std::move(gt.sub(pos_vs, pos_vkept)));
-
-      _error_prediction.push_back(delta_vt);
-      _error_prediction.push_back(delta_vs);
-    }
   }
 
   void record_pos_vkept(vertex_descriptor vkept)
