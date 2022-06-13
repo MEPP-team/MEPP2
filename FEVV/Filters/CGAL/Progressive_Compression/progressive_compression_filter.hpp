@@ -175,7 +175,9 @@ template< typename HalfedgeGraph,
   // the result (so we can compare it to the decompressed mesh).
   if (preprocess)
   {
-    preprocess_mesh(g, pm, pq, allow_duplicates); // quantize vertex positions
+    preprocess_mesh(g, pm, pq, allow_duplicates); // Apply a preprocess to remove isolated vertices and edges
+                                                  // then quantize vertex positions,
+                                                  // then move duplicate positions when allow_duplicates is false.
   }
   if (save_preprocess)
   {

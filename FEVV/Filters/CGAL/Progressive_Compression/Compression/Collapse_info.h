@@ -21,7 +21,8 @@
 namespace FEVV {
 namespace Filters {
 /** 
-  * \brief Class used to store information on a collapse operation.
+  * \brief Class used to store information on a single edge
+  *        collapse operation.
   **/
 template<
     typename HalfedgeGraph,

@@ -67,7 +67,7 @@ public:
   /// a list of Collapse_info objects (initialized at construction).
   void set_bitMask(
                    const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
-                                             PointMap > &st /// spanning tree of current LOD
+                                             PointMap > &st /// spanning tree of current LoD
                    )
   {
 	const std::list< vertex_descriptor > &spanning_tree = st.get_spanning_tree_vertices(); /// st vertices ordered in the same ordered
@@ -175,6 +175,7 @@ public:
   const std::list< bool >& get_bitmask() const { return _bitMask; }
   const std::list< bool >& get_connectivity() const { return _connectivity; }
   //const std::list< bool >& get_other_info() const { return _other_info_bits; }
+  /// Get the list of residuals.
   const std::list< std::vector< Vector > >& get_error_prediction() const
   {
     return _error_prediction;
@@ -191,7 +192,7 @@ private:
   std::list< bool > _connectivity; /// edge bit mask (which incident edge to a 
                                    /// vertex to split is a pivot edge to expand)
   //std::list< bool > _other_info_bits;
-  std::list< std::vector< Vector > > _error_prediction;
+  std::list< std::vector< Vector > > _error_prediction; /// List of residuals.
   std::list< bool > _reverse_bool;
 };
 

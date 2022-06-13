@@ -220,7 +220,6 @@ public:
     {
       auto it_list = _list_memory.begin();
 
-
       for( ; it_list != _list_memory.end(); ++it_list)
       {
         _predictor->compute_residuals((*it_list));
@@ -236,19 +235,18 @@ public:
   /// while the batch stopping condition is not met.
   void collapse_batch()
   {
-    // count every case: forbidden edges, edges which would make our mesh non 
-	  // manifold
+    // Count every case: forbidden edges, edges which would make our mesh non 
+	  // manifold or non-decodable.
     _forbidden = 0;
     _link_condition = 0;
-    _metric->compute_error(); // compute all edge costs for current batch
+    _metric->compute_error(); /// Compute all edge costs for the current batch.
+                              /// Implements lines 7 to 10 of Algorithm 1.
 
     bool collapse_possible = true;
     _nb_collapse = 0;
 
-
-    //std::cout << "size queue = " << _metric->get_size_queue_t() << std::endl;
-
-    // Collapse until we meet our stopping condition
+    /// Collapse until we meet our stopping condition.
+    /// Implements lines 11 to 20 of Algorithm 1.
     while(!stop())
     {
       collapse_possible = collapse_top_queue(); // Get the edge with lowest cost
@@ -260,7 +258,7 @@ public:
     }
     int64_t number_current_vertices = FEVV::size_of_vertices(_g);
 #ifdef _DEBUG
-    // Compute percentage of removed vertices compared to original mesh
+    // Compute percentage of removed vertices compared to original mesh.
     double percentage_vertices = (1 - (double)number_current_vertices /
                                          (double)_number_vertices_original) * 100;
     std::cout << "Percentage vertices removed from start " << percentage_vertices << std::endl;
@@ -272,20 +270,20 @@ public:
     ///////////////////////////////////////////////////////////////////////////
     FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap > spanningtree(_g, _pm, true);
-    sort_list_memory(spanningtree); /// sort _list_memory according to vertex 
-                                    /// st traversal
+    sort_list_memory(spanningtree); /// Sort _list_memory according to vertex 
+                                    /// st traversal.
     ///////////////////////////////////////////////////////////////////////////
-    // Store refinement info as bitstreams and residuals
+    // Store refinement info as bitstreams and residuals.
     Refinement_info< HalfedgeGraph,
                     PointMap >
         ref_settings(_g, _list_memory);
 
-    // compute connectivity bitmask (to know which halfedges to expand at the
-    // decompression step)
+    // Compute connectivity bitmask (to know which halfedges to expand at the
+    // decompression step).
     ref_settings.set_connectivity_topology(spanningtree, 
                                            _pm, 
                                            _list_memory); // set one-ring bitmask
-    // Compute Predictions
+    // Compute Predictions.
     setup_prediction(spanningtree);
 	
     // Concatenate our memory info to make one array per attribute per batch
@@ -427,7 +425,7 @@ public:
     {
       // we obtain the edge with the lowest cost
       std::tuple< edge_descriptor, double, Point > current_edge =
-          _metric->get_top_queue();
+          _metric->get_top_queue(); /// Implements line 12 of Algorithm 1.
 		  
       // is the  current edge forbidden?
       auto current_halfedge = halfedge(std::get< 0 >(current_edge), _g);
@@ -441,16 +439,7 @@ public:
           vertex_descriptor vs = source(current_halfedge, _g);
           vertex_descriptor vt = target(current_halfedge, _g);
 
-          const Point& pvkept = std::get< 2 >(current_edge); // position vkept
-
-          // Create a collapse info objet to store the info we need to
-          // reconstruct the edge
-          Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
-          memory.record_v3_v4(current_halfedge);
-          memory.record_vt_vs(get(_pm, vt), get(_pm, vs));
-
-          // give collapse info a unique ID (useful for debugging)
-          memory.set_num_collapse(_nb_collapse);
+          const Point& pvkept = std::get< 2 >(current_edge); // vkept position
 
           // Check if collapsing this edge would flip normals, thus adding
           // artifacts. If it does, do not collapse.
@@ -458,50 +447,34 @@ public:
 
           if(normal_flip)
           {
-              // forbid the simplification of the neighbourhood of the collapsed
-              // edge for the current batch
-              forbid_edges(_g, vs, _forbidden_edges, edges_to_color);
-              forbid_edges(_g, vt, _forbidden_edges, edges_to_color);
-              // collapse edge
-              vertex_descriptor vkept =
+            // Here the edge is collapsible (line 12 of Algorithm 1).
+
+            // Create a collapse info objet to store the info we need to
+            // reconstruct the edge.
+            Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
+            memory.record_v3_v4(current_halfedge);
+            memory.record_vt_vs(get(_pm, vt), get(_pm, vs));
+
+            // give collapse info a unique ID (useful for debugging)
+            memory.set_num_collapse(_nb_collapse);
+
+            // forbid the simplification of the neighbourhood of the collapsed
+            // edge for the current batch
+            forbid_edges(_g, vs, _forbidden_edges, edges_to_color);
+            forbid_edges(_g, vt, _forbidden_edges, edges_to_color);
+
+            // collapse edge
+            vertex_descriptor vkept =
                   CGAL::Euler::collapse_edge(std::get< 0 >(current_edge), _g);
-              mesh_changed = true;
+            mesh_changed = true;
 
-              if(memory.get_v3() !=
-                 boost::graph_traits< HalfedgeGraph >::null_vertex())
-              {
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4834)
-#endif
-                //halfedge_descriptor h1 =
-                    std::get< 0 >(halfedge(memory.get_v3(), vkept, _g));
-#if defined _MSC_VER
-#pragma warning(pop)
-#endif
-              }
+            // set position of the kept vertex
+            put(_pm, vkept, pvkept);
 
-              if(memory.get_v4() !=
-                 boost::graph_traits< HalfedgeGraph >::null_vertex())
-              {
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4834)
-#endif
-                //halfedge_descriptor h2 =
-                    std::get< 0 >(halfedge(memory.get_v4(), vkept, _g));
-#if defined _MSC_VER
-#pragma warning(pop)
-#endif
-              }
+            memory.record_pos_vkept(vkept);
+            memory.record_vkept(vkept);
 
-              // set position of the kept vertex
-              put(_pm, vkept, pvkept);
-
-              memory.record_pos_vkept(vkept);
-
-              memory.record_vkept(vkept);
-              _list_memory.push_back(std::move(memory));
+            _list_memory.push_back(std::move(memory));
           }
           else
           {
@@ -537,18 +510,20 @@ private:
   Metric *_metric; /// Measuring collapse cost of each edge
   VertexColorMap &_vcm;
   EdgeColorMap &_ecm;
-  std::set< halfedge_descriptor > _forbidden_edges; // edges that cannot be collapsed in the current batch
+  std::set< halfedge_descriptor > _forbidden_edges; /// Edges that cannot be collapsed in the current batch.
   const Geometry _gt;
   int _batch_id; // current batch number
   int _nb_collapse;
-  std::list< Collapse_info< HalfedgeGraph, PointMap > > _list_memory;
+  std::list< Collapse_info< HalfedgeGraph, PointMap > > _list_memory; /// Current batch' collapse information
+                                                                      /// to sort in the spanning tree vertex traversal order.
   FEVV::Filters::
       Predictor< HalfedgeGraph, PointMap >
           *_predictor;
   std::vector< Refinement_info< HalfedgeGraph,
                                PointMap > >
-      _refinements;
-
+      _refinements; /// One refinement object per simplification batch.
+                    /// These objects are stored in the batch simplification order,
+                    /// i.e. LoD_i is stored at the #LoD - i - 1 position.
 
   std::vector< double > _RMSE_distortion_per_batch, _hausdorff_distortion_per_batch;
   std::vector< std::vector< bool > > _list_edge_bitmask;
