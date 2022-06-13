@@ -254,12 +254,12 @@ template< typename HalfedgeGraph,
   /////////////////////////
   // Add parameters info //
   /////////////////////////
-  header_size += HH.encode_binary_header(buffer);
+  header_size += HH.encode_binary_header(buffer); // Implements line 35 of Algorithm 1.
 
   //////////////////////////////////////////////
   // Add encoded base mesh with its positions //
   //////////////////////////////////////////////
-  size_t size = binaryencode.quantize_encode_coarse_mesh(g, pm, gt, buffer);
+  size_t size = binaryencode.quantize_encode_coarse_mesh(g, pm, gt, buffer); // Implements line 36 of Algorithm 1.
 
   std::cout << "size coarse mesh: " << size << std::endl;
   header_size += size;
@@ -273,6 +273,7 @@ template< typename HalfedgeGraph,
   int cumulative_residuals = 0;
   int cumulative_connectivity = 0;
   int cumulative_otherinfo = 0;
+  // Implements lines 37 to 43 of Algorithm 1.
   for (int i = static_cast<int>(refinements.size() - 1); i >= 0;
     --i) // refinement batches have to be written in reverse order: from
          // coarse to fine (during the simplification step we go from fine to
@@ -287,8 +288,6 @@ template< typename HalfedgeGraph,
         binaryencode.encode_bitmask(refinements[i].get_bitmask(), buffer);
       auto data_connectivity =
         binaryencode.encode_bitmask(refinements[i].get_connectivity(), buffer);
-      auto data_residuals = binaryencode.encode_residuals(
-        refinements[i].get_error_prediction(), buffer, HH.get_quantization());
 
       std::pair< int, double > data_other_info = std::make_pair(0, 0.0);
       size_t size_other_info = 0; // reverse information
@@ -299,6 +298,9 @@ template< typename HalfedgeGraph,
           refinements[i].get_reverse_bool(), buffer);
         size_other_info = refinements[i].get_reverse_bool().size();
       }
+
+      auto data_residuals = binaryencode.encode_residuals(
+        refinements[i].get_error_prediction(), buffer, HH.get_quantization());
 
       cumulative_bitmask += (data_bitmask.first);
       cumulative_residuals += (data_residuals.first);

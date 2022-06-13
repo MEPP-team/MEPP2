@@ -78,7 +78,9 @@ public:
       std::tuple< edge_descriptor, double, Point >,
       std::vector< std::tuple< edge_descriptor, double, Point > >, 
       Compare_weights2< HalfedgeGraph > >
-    priority_queue_edges;
+    priority_queue_edges; /// Priority queue object, manages the priority of
+                          /// (edge, cost, kept vertex position) tuples
+                          /// according to their cost.
 
   typedef std::map< edge_descriptor, std::pair< double, Point > > edge2cost_map;
 
@@ -203,7 +205,7 @@ protected:
   const Geometry _gt;
   PointMap &_pm;
 
-  priority_queue_edges _queue; // queue with the weight as the key
+  priority_queue_edges _queue; /// queue with the weight as the key
   edge2cost_map _edges_cost;
 
   FEVV::Filters::VKEPT_POSITION _operator;

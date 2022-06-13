@@ -239,14 +239,14 @@ public:
 	  // manifold or non-decodable.
     _forbidden = 0;
     _link_condition = 0;
-    _metric->compute_error(); /// Compute all edge costs for the current batch.
-                              /// Implements lines 7 to 10 of Algorithm 1.
+    _metric->compute_error(); // Compute all edge costs for the current batch.
+                              // Implements lines 7 to 11 of Algorithm 1.
 
     bool collapse_possible = true;
     _nb_collapse = 0;
 
-    /// Collapse until we meet our stopping condition.
-    /// Implements lines 11 to 20 of Algorithm 1.
+    // Collapse until we meet our stopping condition.
+    // Implements lines 12 to 22 of Algorithm 1.
     while(!stop())
     {
       collapse_possible = collapse_top_queue(); // Get the edge with lowest cost
@@ -268,31 +268,36 @@ public:
 #endif
     _number_vertices_last = number_current_vertices;
     ///////////////////////////////////////////////////////////////////////////
+    // Spanning tree construction. Implements line 23 of Algorithm 1.
     FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
                                                         PointMap > spanningtree(_g, _pm, true);
-    sort_list_memory(spanningtree); /// Sort _list_memory according to vertex 
-                                    /// st traversal.
+    sort_list_memory(spanningtree); // Sort _list_memory according to vertex 
+                                    // st traversal.
+                                    // Implements line 24 of Algorithm 1.
     ///////////////////////////////////////////////////////////////////////////
     // Store refinement info as bitstreams and residuals.
     Refinement_info< HalfedgeGraph,
                     PointMap >
         ref_settings(_g, _list_memory);
 
+    // set_bitMask, set_connectivity_topology and set_reverse_bool
+    // implement line 25 of Algorithm 1.
+    // Compute vertex to split bitmask. 
+    ref_settings.set_bitMask(spanningtree); // set vertex to split bitmask
+
     // Compute connectivity bitmask (to know which halfedges to expand at the
     // decompression step).
     ref_settings.set_connectivity_topology(spanningtree, 
                                            _pm, 
                                            _list_memory); // set one-ring bitmask
-    // Compute Predictions.
-    setup_prediction(spanningtree);
-	
-    // Concatenate our memory info to make one array per attribute per batch
-    // (one array for each bitmask...)
-    ref_settings.set_bitMask(spanningtree); // set vertex to split bitmask
-    ref_settings.set_error_prediction(); // set residuals array
     ref_settings.set_reverse_bool();// set reverse bitmask
+
+    // Compute Predictions.
+    // The two lines below implement line 26 of Algorithm 1.
+    setup_prediction(spanningtree);
+    ref_settings.set_error_prediction(); // set residuals array
     ///////////////////////////////////////////////////////////////////////////
-    _refinements.push_back(ref_settings);
+    _refinements.push_back(ref_settings); // Implements line 27 of Algorithm 1
     ///////////////////////////////////////////////////////////////////////////
 #ifdef _DEBUG
     std::cout << "batch nb " << _batch_id << " done" << std::endl;
@@ -425,7 +430,7 @@ public:
     {
       // we obtain the edge with the lowest cost
       std::tuple< edge_descriptor, double, Point > current_edge =
-          _metric->get_top_queue(); /// Implements line 12 of Algorithm 1.
+          _metric->get_top_queue(); // Implements line 12 of Algorithm 1.
 		  
       // is the  current edge forbidden?
       auto current_halfedge = halfedge(std::get< 0 >(current_edge), _g);
@@ -447,13 +452,13 @@ public:
 
           if(normal_flip)
           {
-            // Here the edge is collapsible (line 12 of Algorithm 1).
+            // Here the edge is collapsible (line 14 of Algorithm 1).
 
             // Create a collapse info objet to store the info we need to
             // reconstruct the edge.
             Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
-            memory.record_v3_v4(current_halfedge);
-            memory.record_vt_vs(get(_pm, vt), get(_pm, vs));
+            memory.record_vt_vs(get(_pm, vt), get(_pm, vs)); /// Add source and target vertices
+            memory.record_v3_v4(current_halfedge); /// Add pivot vertices
 
             // give collapse info a unique ID (useful for debugging)
             memory.set_num_collapse(_nb_collapse);
@@ -463,7 +468,8 @@ public:
             forbid_edges(_g, vs, _forbidden_edges, edges_to_color);
             forbid_edges(_g, vt, _forbidden_edges, edges_to_color);
 
-            // collapse edge
+            // Collapse edge.
+            // Implements lines 16 to 17 of Algorithm 1.
             vertex_descriptor vkept =
                   CGAL::Euler::collapse_edge(std::get< 0 >(current_edge), _g);
             mesh_changed = true;

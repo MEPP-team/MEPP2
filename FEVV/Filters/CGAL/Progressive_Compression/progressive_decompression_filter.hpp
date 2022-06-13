@@ -165,7 +165,7 @@ progressive_decompression_filter(HalfedgeGraph& g,
     }
     if(dequantize) // if we want, dequantize attributes (it is useful to not
     {              // dequantize for tests)
-      // These lines implement line 25 of Algorithm 2.
+      // These lines implement line 21 of Algorithm 2.
       FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap > dq(
         g, pm, HH.get_quantization(), HH.get_dimension(), HH.get_init_coord());
       dq.point_dequantization();

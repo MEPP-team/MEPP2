@@ -122,7 +122,7 @@ public:
   /**
    * \brief predict_positions: Given a list of halfedges, will predict every 
    *        pair of vertices of a split.
-   *        This function implements line 17 of Algorithm 2.
+   *        This function implements line 13 of Algorithm 2.
    * @param[in] h_extent List of halfedges to expand to faces.
    * @param[out] new_points Empty list of pair<Point,Point>. Will be filled by
    *             the function.
@@ -202,7 +202,7 @@ public:
  
   /** 
    * \brief Decompresses a batch using a draco buffer.
-   *  This function implements lines 5 to 23 of Algorithm 2.
+   *  This function implements lines 5 to 19 of Algorithm 2.
    * @param[in] buffer A draco decoderbuffer with refinement info.
    *            Not a const param because of call to non-const draco methods
    *            such as Decode.
@@ -214,26 +214,26 @@ public:
                         PointMap,
                         Vector >
         decoder(buffer, _header.get_quantization());
-    decoder.decode_bitmask(_bitmask); // Implements lines 5 to 6 of Algorithm 2.
-    decoder.decode_bitmask(_edge_bitmask); // Implements lines 7 to 8 of Algorithm 2.
+    decoder.decode_bitmask(_bitmask); // Implements line 5 of Algorithm 2.
+    decoder.decode_bitmask(_edge_bitmask); // Implements line 6 of Algorithm 2.
 
-    // Implements lines 9 to 10 of Algorithm 2
-    if(_predictor->get_type() == FEVV::Filters::PREDICTION_TYPE::POSITION)
-      decoder.decode_residuals(_positions, 2);
-    else
-      decoder.decode_residuals(_positions, 1);
-
-    // Implements lines 11 to 14 of Algorithm 2
-    if(_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
+    // Implements lines 7 to 9 of Algorithm 2
+    if (_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
     { // For HALFEDGE/target case, an additional bit information is
       // needed
       decoder.decode_bitmask(_other_info_bits);
     }
+
+    // Implements line 10 of Algorithm 2
+    if(_predictor->get_type() == FEVV::Filters::PREDICTION_TYPE::POSITION)
+      decoder.decode_residuals(_positions, 2);
+    else
+      decoder.decode_residuals(_positions, 1);
     ///////////////////////////////////////////////////////////////////////////
     // Predict position and refine mesh from the decoded data
 
     // Build a spanning tree for halfedge graph _g with vertex positions in _pm
-    // Implements line 15 of Algorithm 2.
+    // Implements line 11 of Algorithm 2.
     FEVV::Comparator::
         Spanning_tree_vertex_edge_comparator< HalfedgeGraph, PointMap, Geometry >
             spanningtree(_g, _pm, true);// "true"(=tie-break detection and avoidance)
@@ -244,10 +244,10 @@ public:
     ///////////////////////////////////////////////////////////////////////////
     std::list< halfedge_descriptor > h_extent;
     // Find every halfedge we have to expand into faces
-    fill_h_extent_list_no_sort(spanningtree, h_extent); // Implements line 16 of 
-                                                   // Algorithm 2.
+    fill_h_extent_list_no_sort(spanningtree, h_extent); // Implements line 12 of 
+                                                        // Algorithm 2.
     // Split corresponding vertices
-    split_vertices(h_extent); // Implements lines 17 to 23 of Algorithm 2.
+    split_vertices(h_extent); // Implements lines 13 to 19 of Algorithm 2.
 		
     std::cout << "batch " << std::to_string(_batch_id) << " done" << std::endl;
     _batch_id++;
@@ -280,20 +280,20 @@ private:
                                       // header
   VertexColorMap &_vcm;
 
-  /// This function implements lines 17 to 23 of Algorithm 2.
+  /// This function implements lines 13 to 19 of Algorithm 2.
   bool split_vertices(const std::list< halfedge_descriptor > &h_extent)
   {
     ///////////////////////////////////////////////////////
     // DECODE VERTEX POSITIONS FOR ALL VERTICES TO SPLIT //
     ///////////////////////////////////////////////////////
     std::list< std::pair< Point, Point > > new_points;
-    predict_positions(h_extent, new_points); // Implements line 17 of Algorithm 2.
+    predict_positions(h_extent, new_points); // Implements line 13 of Algorithm 2.
     auto pos_it = _positions.begin();
     auto info_it = _other_info_bits.begin();
     /////////////////////////
     // APPLY VERTEX SPLITS //
     /////////////////////////
-    // Implements lines 18 to 23 of Algorithm 2: 
+    // Implements lines 14 to 19 of Algorithm 2: 
     auto new_points_it = new_points.begin();
     for(typename std::list< halfedge_descriptor >::const_iterator h_it =
             h_extent.begin();
@@ -354,7 +354,7 @@ private:
   /// Fills the list of halfedges to expand. For cases without any border, two
   /// different halfedges will be added. Otherwise, one halfedge will be added
   /// twice.
-  /// This function implements line 16 of Algorithm 2.
+  /// This function implements line 12 of Algorithm 2.
   void fill_h_extent_list_no_sort(
       const FEVV::Comparator::
           Spanning_tree_vertex_edge_comparator< HalfedgeGraph, PointMap, Geometry >
