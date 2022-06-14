@@ -77,7 +77,7 @@ preprocess_mesh(
  * \brief Takes a mesh g, applies batches of simplification until either the
  * number of max batches or the minimum number of vertices is reached. After
  * that, it encodes the coarse mesh and the refinement data into a buffer.
- *        This function implements Algorithm 1.
+ *        This function implements Algorithm 1 (Progressive encoder).
  *
  * @param[in,out] g Halfedge graph to encode.
  * @param[in,out] pm Pointmap associated with g (vertex positions).
