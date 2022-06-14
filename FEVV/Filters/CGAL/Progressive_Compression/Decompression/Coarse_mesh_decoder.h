@@ -55,7 +55,7 @@ public:
 
   ~Coarse_mesh_decoder() {}
 
-  /// decode draco coarse mesh (vertex position and topology only)
+  /// Decode draco coarse mesh (vertex position and topology only).
   /// This function implements line 3 of Algorithm 2.
   void decode_coarse_mesh(draco::DecoderBuffer &buffer)
   {

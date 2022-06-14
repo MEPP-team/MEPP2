@@ -50,7 +50,7 @@ namespace Filters {
    *                topological issues during the decoding.
    * @param[in] gt The geometry trait object. Used to automatically find
    *            the GeometryTraits type.
-   * @param[in] buffer The draco buffer to decode. Not a const param because
+   * @param[in,out] buffer The draco buffer to decode. Not a const param because
    *            of call to non-const draco methods such as Decode.
    * @param[in] dequantize True to dequantize the vertex positions at
    *            the end of the decompression, else vertex positions remain
