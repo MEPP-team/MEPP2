@@ -1485,7 +1485,7 @@ FEVV::SimpleWindow::on_actionAbout_MEPP_Help_triggered()
       QObject::tr("<b>MEPP2</b><br>"
          "<br>"
          "3D MEsh Processing Platform<br>"
-         "Copyright (c) 2016-2021 University of Lyon and CNRS (France)<br>"
+         "Copyright (c) 2016-2022 University of Lyon and CNRS (France)<br>"
          "<br>"
          "LIRIS ORIGAMI / MEPP-team<br>"
          "<br>"
@@ -2073,7 +2073,6 @@ FEVV::SimpleWindow::on_actionCopy_Viewpoint_triggered()
     BaseAdapterVisuQt *bavQt =
         dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
 
-    bavQt->getViewer()->m_ShowAxis = !(bavQt->getViewer()->m_ShowAxis);
     pre_actionHG(bavQt->getViewer(), 'C');
   }
 }
@@ -2086,7 +2085,6 @@ FEVV::SimpleWindow::on_actionPaste_Viewpoint_triggered()
     BaseAdapterVisuQt *bavQt =
         dynamic_cast< BaseAdapterVisuQt * >(activeMdiChild());
 
-    bavQt->getViewer()->m_ShowGrid = !(bavQt->getViewer()->m_ShowGrid);
     pre_actionHG(bavQt->getViewer(), 'P');
   }
 }
