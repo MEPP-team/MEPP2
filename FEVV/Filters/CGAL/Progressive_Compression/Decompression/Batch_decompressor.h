@@ -200,9 +200,9 @@ public:
   /** 
    * \brief Decompresses a batch using a draco buffer.
    *  This function implements lines 5 to 19 of Algorithm 2.
-   * @param[in] buffer A draco decoderbuffer with refinement info.
-   *            Not a const param because of call to non-const draco methods
-   *            such as Decode.
+   * @param[in,out] buffer A draco decoderbuffer with refinement info.
+   *            Not a const param because of call to non-const draco 
+   *            methods such as Decode.
    */
   void decompress_binary_batch(draco::DecoderBuffer &buffer)
   {

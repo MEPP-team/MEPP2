@@ -141,10 +141,11 @@ template< typename HalfedgeGraph,
                                  FEVV::Filters::BATCH_CONDITION batch_condition, /// batch stopping criterion for its edge collapses
                                  draco::EncoderBuffer &buffer, /// Output encoded buffer
                                  const std::string &measure_path,
-                                 bool preprocess, /// true to remove isolated vertices, isolated edges
+                                 bool preprocess = true, /// true to remove isolated vertices, isolated edges
                                                   /// and vertex duplicates (several compression steps
                                                   /// cannot handle these configurations)
-                                 bool dequantiz, /// true to dequantize coordinates just after writting the compressed mesh into a file
+                                 bool dequantiz = false, /// true to dequantize coordinates just after writting the compressed mesh into a file
+                                                 /// mainly for display purpose
                                  bool save_preprocess = false,
                                  const std::string& output_file_path_save_preprocess = "",
                                  bool allow_duplicates=false)
@@ -393,10 +394,11 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                std::string &binary_path, /// If the binary path is not set by the user, 
                                                          /// it will automatically set the path to 
                                                          /// output_path+predictor+metric+keptposition+quantization.bin
-                               bool preprocess, /// true to remove isolated vertices, isolated edges
+                               bool preprocess = true, /// true to remove isolated vertices, isolated edges
                                                 /// and vertex duplicates (several compression steps
                                                 /// cannot handle these configurations)
-                               bool dequantiz, /// true to dequantize coordinates just after writting the compressed mesh into a file
+                               bool dequantiz = false, /// true to dequantize coordinates just after writting the compressed mesh into a file
+                                               /// mainly for display purpose
                                bool save_preprocess = false,
                                const std::string& output_file_path_save_preprocess = "")
 {
@@ -633,8 +635,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// input mesh
                                int nb_max_batches,
                                int nb_min_vertices,
                                FEVV::Filters::BATCH_CONDITION batch_condition, /// batch stopping criterion for its edge collapses
-                               bool preprocess,
-                               bool dequantiz,
+                               bool preprocess = true,
+                               bool dequantiz = false,
                                bool save_preprocess = false,
                                const std::string& output_file_path_save_preprocess = "")
 

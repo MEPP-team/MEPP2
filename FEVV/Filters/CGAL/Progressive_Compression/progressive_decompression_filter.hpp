@@ -66,7 +66,7 @@ progressive_decompression_filter(HalfedgeGraph& g,
                                  VertexColorMap& v_cm,
                                  const GeometryTraits&/*gt*/,
                                  draco::DecoderBuffer& buffer,
-                                 bool dequantize) 
+                                 bool dequantize = true) 
 {
     ////////////////////////
     // DECODE FILE HEADER //
@@ -200,7 +200,7 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                  VertexColorMap &v_cm,
                                  const GeometryTraits & gt,
                                  const std::string &input_file_path,
-                                 bool dequantize)
+                                 bool dequantize = true)
 {
 #ifdef TIMING
   auto time_point_before_decomp = std::chrono::high_resolution_clock::now();
@@ -256,7 +256,7 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                  PointMap &pm,
                                  VertexColorMap &v_cm,
                                  const std::string &input_file_path,
-                                 bool dequantize)
+                                 bool dequantize = true)
 
 {
   GeometryTraits gt(g);
