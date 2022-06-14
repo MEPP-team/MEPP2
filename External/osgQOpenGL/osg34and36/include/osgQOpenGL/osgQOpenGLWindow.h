@@ -42,7 +42,7 @@ protected:
     QWidget* _widget = nullptr;
 
 public:
-    osgQOpenGLWindow(QWidget* parent = nullptr);
+    osgQOpenGLWindow(/*QWidget* parent = nullptr*/); // MT
     virtual ~osgQOpenGLWindow();
 
     /** Get osgViewer View */

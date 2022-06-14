@@ -13,13 +13,9 @@
 #include <QWindow>
 
 
-osgQOpenGLWindow::osgQOpenGLWindow(QWidget* parent)
+osgQOpenGLWindow::osgQOpenGLWindow(/*QWidget* parent*/) // MT
     : QOpenGLWindow(QOpenGLWindow::NoPartialUpdate, nullptr)
 {
-    // MT (temp)
-    QWidget* useless = nullptr;
-    useless = parent;
-
     _widget = QWidget::createWindowContainer(this);
 }
 
