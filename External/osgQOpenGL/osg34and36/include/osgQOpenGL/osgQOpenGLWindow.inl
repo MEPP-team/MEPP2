@@ -16,7 +16,9 @@
 osgQOpenGLWindow::osgQOpenGLWindow(QWidget* parent)
     : QOpenGLWindow(QOpenGLWindow::NoPartialUpdate, nullptr)
 {
-    QWidget* useless = parent; // MT (temp)
+    // MT (temp)
+    QWidget* useless = nullptr;
+    useless = parent;
 
     _widget = QWidget::createWindowContainer(this);
 }
