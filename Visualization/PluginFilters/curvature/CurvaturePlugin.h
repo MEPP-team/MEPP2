@@ -1180,7 +1180,11 @@ public:
 
     //reset();
 
+#if(FEVV_USE_QT5)
+  // empty
+#else
     viewer->frame();
+#endif
   }
 
 #ifdef FEVV_USE_OPENMESH
