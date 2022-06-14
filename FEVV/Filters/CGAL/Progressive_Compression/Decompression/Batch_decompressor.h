@@ -145,19 +145,16 @@ public:
 
       vertex_descriptor vkept = target(h1, _g);
 
-      bool reverse = false;
-
       if(_vkept->get_type() == VKEPT_POSITION::HALFEDGE)
       {
         bool b = (*info_it);
 
         _predictor->set_rev(b);
         info_it++;
-        reverse = b;
       }
 
       std::pair< Point, Point > resulting_points =
-          _predictor->place_points(*pos_it, vkept, h1, h2, reverse);
+          _predictor->place_points(*pos_it, vkept, h1, h2);
       pos_it++;
       new_points.push_back(std::move(resulting_points));
     }
@@ -217,18 +214,15 @@ public:
     decoder.decode_bitmask(_bitmask); // Implements line 5 of Algorithm 2.
     decoder.decode_bitmask(_edge_bitmask); // Implements line 6 of Algorithm 2.
 
-    // Implements lines 7 to 9 of Algorithm 2
+    // Implements lines 7 to 9 of Algorithm 2.
     if (_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
     { // For HALFEDGE/target case, an additional bit information is
       // needed
       decoder.decode_bitmask(_other_info_bits);
     }
 
-    // Implements line 10 of Algorithm 2
-    if(_predictor->get_type() == FEVV::Filters::PREDICTION_TYPE::POSITION)
-      decoder.decode_residuals(_positions, 2);
-    else
-      decoder.decode_residuals(_positions, 1);
+    // Implements line 10 of Algorithm 2.
+    decoder.decode_residuals(_positions, _predictor->get_nb_residuals());
     ///////////////////////////////////////////////////////////////////////////
     // Predict position and refine mesh from the decoded data
 
@@ -243,7 +237,7 @@ public:
                                         // quantization)
     ///////////////////////////////////////////////////////////////////////////
     std::list< halfedge_descriptor > h_extent;
-    // Find every halfedge we have to expand into faces
+    // Find every halfedge we have to expand into faces.
     fill_h_extent_list_no_sort(spanningtree, h_extent); // Implements line 12 of 
                                                         // Algorithm 2.
     // Split corresponding vertices

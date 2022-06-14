@@ -47,6 +47,7 @@ public:
     k_a = 0;
     k_b = 0;
     Super_class::_type = FEVV::Filters::PREDICTION_TYPE::BUTTERFLY;
+	Super_class::_nbResiduals = 1;
   }
 
   std::vector< Vector >
@@ -157,8 +158,7 @@ public:
   std::pair< Point, Point > place_points(const std::vector< Vector > &residuals,
                                         vertex_descriptor vkept,
                                         halfedge_descriptor h1,
-                                        halfedge_descriptor h2,
-                                        bool is_reverse) override
+                                        halfedge_descriptor h2) override
   {
     bool is_border_case = is_on_border(vkept);
     if(!is_border_case)
@@ -244,9 +244,6 @@ public:
         if(_rev)
         {
           D = Super_class::_gt.scalar_mult(D, -1);
-        }
-        if(_rev)
-        {
 
           A = Super_class::_gt.add_pv(current_point, D); 
           B = current_point;
@@ -269,8 +266,7 @@ public:
       return _delta_for_borders.place_points(residuals, 
                                             vkept, 
                                             h1, 
-                                            h2, 
-                                            is_reverse);    
+                                            h2);    
 	}
   }
 

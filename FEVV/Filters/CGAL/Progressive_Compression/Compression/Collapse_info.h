@@ -43,20 +43,18 @@ private:
   vertex_descriptor _vkept; /// kept vertex after applying the edge collapse
                             /// (the remaining vertex after the operation, 
                             /// i.e. either source or target vertex)
-  vertex_descriptor _vt; /// target vertex
-  vertex_descriptor _vs; /// source vertex
   vertex_descriptor
       _v3; /// vertex v3=source(prev(opposite(h))) before the edge collapse 
            /// (pivot vertex when not null)
   vertex_descriptor _v4; /// vertex v4=source(prev(h)) before the edge collapse
                          /// (pivot vertex when not null)  
-  Point _pos_vt, _pos_vs;
-
-  bool _reverse; /// reverse the delta or not
+  Point _pos_vt, _pos_vs; /// target and source vertex positions
 
   Point _pos_vkept; /// used to store the initial position of vkept in case we
-                    /// choose midpoint placement
-				
+                  /// choose midpoint placement
+
+  bool _reverse; /// reverse the delta or not
+			
   std::vector< Vector >
       _error_prediction; /// Contains one or several deltas for position					
   /////////////////////////////////////////////////////////////////////////////
@@ -70,12 +68,6 @@ public:
 
   vertex_descriptor get_vkept() const { return _vkept; }
   
-  /// Get edge target vertex (sometimes called v1).
-  vertex_descriptor get_vt() const { return _vt; }
-  
-  /// Get edge source vertex (sometimes called v0 or v2).
-  vertex_descriptor get_vs() const { return _vs; }
-  
   /// Get the vertex in front of the edge to collapse and 
   /// on the other triangle.
   /// When not a null_vertex, this vertex is a pivot.
@@ -86,8 +78,11 @@ public:
   /// When not a null_vertex, this vertex is a pivot.  
   vertex_descriptor get_v4() const { return _v4; }
   
+  /// Get edge target vertex position.
   const Point& get_pos_vt() const { return _pos_vt; }
+  /// Get edge source vertex position.
   const Point& get_pos_vs() const { return _pos_vs; }
+  /// Get edge kept position.
   const Point& get_pos_vkept() const { return _pos_vkept; }
   const std::vector< Vector >& get_error_prediction() const { return _error_prediction; }
   
@@ -118,7 +113,7 @@ public:
     }
   }
 
-  void record_vt_vs(const Point& v1, const Point& v2)
+  void record_vt_vs_pos(const Point& v1, const Point& v2)
   {
     _pos_vt = v1;
     _pos_vs = v2;
@@ -127,20 +122,6 @@ public:
   void record_vkept(vertex_descriptor vkept)
   {
     _vkept = vkept; 
-  }
-
-  bool is_vkept_source()
-  {
-    if(_vkept == _vs)
-      return true;
-    else
-      return false;
-  }
-
-  void set_source_and_target(vertex_descriptor s, vertex_descriptor t)
-  {
-    _vs = s;
-    _vt = t;
   }
   
   /// Store the computed residuals which is done during the prediction

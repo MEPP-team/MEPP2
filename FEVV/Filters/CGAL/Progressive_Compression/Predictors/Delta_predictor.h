@@ -42,6 +42,7 @@ public:
       : Super_class(_g, kp, pm)
   {
     Super_class::_type = PREDICTION_TYPE::DELTA;
+	Super_class::_nbResiduals = 1;
     _round_midpoint =
         std::make_tuple< bool, bool, bool, bool >(false, false, false, false);
   }
@@ -93,24 +94,17 @@ public:
     return residuals;
   }
 
-  std::vector< Vector > reverse(vertex_descriptor v)
-  {
-    Super_class::_residuals[0] = _vkept_to_other_residual[v];
-    return Super_class::_residuals;
-  }
-
-
   std::pair< Point, Point > place_points(const std::vector< Vector > &residuals,
                                         vertex_descriptor vkept,
                                         halfedge_descriptor /*h1*/,
-                                        halfedge_descriptor /*h2*/,
-                                        bool /*is_reverse*/) override
+                                        halfedge_descriptor /*h2*/) override
   {
     const Point& current_point = get(Super_class::_pm, vkept);
 
     Point p1, p2;
     if(residuals.size() == 2)
-    {
+    { // Case of the optimized position along the edge.
+      // Should not occur in this work. 
       p1 = Super_class::_gt.add_pv(current_point, residuals[0]);
       p2 = Super_class::_gt.add_pv(current_point, residuals[1]);
     }

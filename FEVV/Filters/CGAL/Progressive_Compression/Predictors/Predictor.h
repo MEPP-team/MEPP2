@@ -65,8 +65,7 @@ public:
   place_points(const std::vector< Vector > &residuals,
               vertex_descriptor vkept, /// should be target (h1) and target(h2)
               halfedge_descriptor h1, /// first halfedge to expand into a face
-              halfedge_descriptor h2, /// second halfedge to expand into a face
-              bool is_reverse /// is the current split a reverse case?
+              halfedge_descriptor h2 /// second halfedge to expand into a face
               ) = 0;
 
   virtual FEVV::Filters::PREDICTION_TYPE get_type() const { return _type; }
@@ -80,6 +79,7 @@ public:
 
   virtual std::string get_as_string() const = 0;
 
+  int get_nb_residuals() const { return _nbResiduals; }
 protected:
   Kept_position< HalfedgeGraph, PointMap >
       *_kp;
@@ -87,7 +87,6 @@ protected:
   const Geometry _gt;
   PointMap &_pm;
   int _nbResiduals;
-  std::vector< Vector > _residuals;
   Point _kept_position;
   FEVV::Filters::PREDICTION_TYPE _type;
 };

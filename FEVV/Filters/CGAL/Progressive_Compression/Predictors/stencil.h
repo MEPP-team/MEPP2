@@ -26,8 +26,7 @@ template< typename HalfedgeGraph,
 void
 forbid_vertex(HalfedgeGraph &g,
              vertex_descriptor v,
-             std::set< halfedge_descriptor > &forbidden_edges,
-             std::vector< halfedge_descriptor > &/*edges_to_color*/)
+             std::set< halfedge_descriptor > &forbidden_edges)
 {
   boost::iterator_range<
       CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
@@ -47,9 +46,7 @@ template< typename HalfedgeGraph,
 void
 find_vertices_to_forbid(HalfedgeGraph &g,
                      vertex_descriptor v,
-                     std::set< halfedge_descriptor > &/*forbidden_edges*/,
-                     std::set< vertex_descriptor > &forbidden_vertices,
-                     std::vector< halfedge_descriptor > &/*edges_to_color*/)
+                     std::set< vertex_descriptor > &forbidden_vertices)
 {
   boost::iterator_range<
       CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
@@ -83,15 +80,14 @@ template< typename HalfedgeGraph,
 void
 forbid_edges(HalfedgeGraph &g,
             vertex_descriptor v,
-            std::set< halfedge_descriptor > &forbidden_edges,
-            std::vector< halfedge_descriptor > &edges_to_color)
+            std::set< halfedge_descriptor > &forbidden_edges)
 {
   std::set< vertex_descriptor > forbidden_vertices;
   find_vertices_to_forbid(
-      g, v, forbidden_edges, forbidden_vertices, edges_to_color);
+      g, v, forbidden_vertices);
   for(const vertex_descriptor &ver : forbidden_vertices)
   {
-    forbid_vertex(g, ver, forbidden_edges, edges_to_color);
+    forbid_vertex(g, ver, forbidden_edges);
   }
 }
 

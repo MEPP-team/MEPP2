@@ -440,7 +440,6 @@ public:
         if(CGAL::Euler::does_satisfy_link_condition(std::get< 0 >(current_edge),
                                                     _g))
         {
-          std::vector< halfedge_descriptor > edges_to_color;
           vertex_descriptor vs = source(current_halfedge, _g);
           vertex_descriptor vt = target(current_halfedge, _g);
 
@@ -457,7 +456,7 @@ public:
             // Create a collapse info objet to store the info we need to
             // reconstruct the edge.
             Collapse_info< HalfedgeGraph, PointMap > memory(_g, _pm);
-            memory.record_vt_vs(get(_pm, vt), get(_pm, vs)); /// Add source and target vertices
+            memory.record_vt_vs_pos(get(_pm, vt), get(_pm, vs)); /// Add source and target vertex positions
             memory.record_v3_v4(current_halfedge); /// Add pivot vertices
 
             // give collapse info a unique ID (useful for debugging)
@@ -465,8 +464,8 @@ public:
 
             // forbid the simplification of the neighbourhood of the collapsed
             // edge for the current batch
-            forbid_edges(_g, vs, _forbidden_edges, edges_to_color);
-            forbid_edges(_g, vt, _forbidden_edges, edges_to_color);
+            forbid_edges(_g, vs, _forbidden_edges);
+            forbid_edges(_g, vt, _forbidden_edges);
 
             // Collapse edge.
             // Implements lines 16 to 17 of Algorithm 1.
