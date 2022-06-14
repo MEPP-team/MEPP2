@@ -14,10 +14,13 @@
 #include <QMdiArea>
 #include <QTimer>
 
-#include <osgQt/GraphicsWindowQt> // Qt4&5
+#if(FEVV_USE_QT5)
+#include <osgQOpenGL/osgQOpenGLWidget> // not used ?
+#include <osgQOpenGL/osgQOpenGLWindow>
+#else
+#include <osgQt/GraphicsWindowQt>
 // #include <osgViewer/GraphicsWindow>
-
-//#include <osgQOpenGL/osgQOpenGLWidget> // Qt6
+#endif
 
 #if __GNUC__ >= 9
 #pragma GCC diagnostic push
@@ -91,10 +94,14 @@ public:
   // void attachMesh( HalfedgeGraph& _mesh );
 
 protected:
+#if(FEVV_USE_QT5)
+  // empty
+#else
   virtual void paintEvent(QPaintEvent * /*event*/) override
   {
     static_cast< BaseViewerOSG * >(myViewer)->frame();
   }
+#endif
 
   /**
    * Needed to disable event listener on subwidget.
@@ -106,22 +113,34 @@ protected:
   //virtual void keyReleaseEvent(QKeyEvent *event) override; // not used ?
   virtual bool event(QEvent *event) override;
 
-  // Qt4&5
+
+#if(FEVV_USE_QT5)
+  // empty
+#else
   void addViewWidget(osg::ref_ptr< osgQt::GraphicsWindowQt > _gw,
                      osg::ref_ptr< osg::Node > _scene);
+
   osg::ref_ptr< osgQt::GraphicsWindowQt >
-  // Qt4&5
   createGraphicsWindow(int _x,
                        int _y,
                        int _w,
                        int _h,
                        const std::string &_name = "",
                        bool _windowDecoration = false) const;
+#endif
+
   // not used ?
   //osgGA::EventQueue *getEventQueue() const;
 
+#if(FEVV_USE_QT5)
+protected://public:
+  osgQOpenGLWidget *my_osgQOpenGLWidget = nullptr; // not used ?
+  osgQOpenGLWindow *my_osgQOpenGLWindow = nullptr;
+//protected:
+#else
 protected:
-  osgQt::GraphicsWindowQt *myGraphicsWindow = nullptr; // Qt4&5
+  osgQt::GraphicsWindowQt *myGraphicsWindow = nullptr;
+#endif
 
   QTimer timerUpdate;
 

@@ -189,8 +189,12 @@ FEVV::SimpleViewer::init()
     return;
   }
 
+#if(FEVV_USE_QT5)
+  // empty
+#else
   // disable the default setting of viewer.done() by pressing Escape
   setKeyEventSetsDone(0);
+#endif
 
   changeBackgroundColor(Color::WetAsphalt());
 
@@ -300,8 +304,12 @@ FEVV::SimpleViewer::saveScreenshot(const std::string &_name)
       new osgViewer::ScreenCaptureHandler::WriteToFile(_name, "png"));
 
   scrn->setCaptureOperation(captureOper.get());
+#if(FEVV_USE_QT5)
+  // empty
+#else
   scrn->captureNextFrame(*this);
   this->frame();
+#endif
 
   return true;
 }

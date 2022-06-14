@@ -39,7 +39,11 @@
 
 namespace FEVV {
 
+#if(FEVV_USE_QT5)
+class BaseViewerOSG : public BaseViewer
+#else
 class BaseViewerOSG : public osgViewer::Viewer, public BaseViewer
+#endif
 {
 public:
   using DataModel = DataVisitor::Data;
@@ -56,7 +60,11 @@ public:
    * Constructor.
    */
   BaseViewerOSG()
+#if(FEVV_USE_QT5)
+      : BaseViewer(),
+#else
       : osgViewer::Viewer(), BaseViewer(),
+#endif
         root_node(new osg::Group), visitor(new DataVisitor(this))
   {
 #ifdef DEBUG_VISU2
@@ -70,9 +78,9 @@ public:
 #if OSG_MIN_VERSION_REQUIRED(3, 4, 0)
     // setThreadingModel(osgViewer::ViewerBase::AutomaticSelection); // maybe
     // one day this PB will be fixed either by OSG or by Qt...
-    setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
+    //setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
 #else
-    setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
+    //setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
 #endif
 #else
 #if defined(Q_WS_X11)    // X Window System -> Linux

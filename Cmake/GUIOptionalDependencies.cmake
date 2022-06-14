@@ -200,31 +200,42 @@ if( BUILD_USE_GUI )
   endif()
 
   # Find osgQt - caution, no more 'osgQt' module embedded by default since openscenegraph 3.5.5 !
-  # --> With Qt6, the new module is 'osgQOpenGL'
+  # --> With Qt5, now, the new module is 'osgQOpenGL'
   message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
-    set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
-    #set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
+    if( BUILD_USE_QT5 )
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
+    else()
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+    endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   elseif( APPLE )
-    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+    if( BUILD_USE_QT5 )
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+      else()
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      endif()
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   else() # Linux
-    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/include" )
-    elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+    if( BUILD_USE_QT5 )
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/include" )
+      elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+      else()
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      endif()
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   endif()

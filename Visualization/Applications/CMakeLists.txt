@@ -105,26 +105,44 @@ include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 
 # osgQt
 if(MSVC)
-  set( osgQt_SRC ${osgQt_SRC}
-    "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
-elseif( APPLE )
-  if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-    set( osgQt_SRC ${osgQt_SRC}
-      "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+  if( BUILD_USE_QT5 )
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
   else()
     set( osgQt_SRC ${osgQt_SRC}
       "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
   endif()
-else() # Linux
-  if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
-    set( osgQt_SRC ${osgQt_SRC}
-      "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
-  elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-    set( osgQt_SRC ${osgQt_SRC}
-      "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+elseif( APPLE )
+  if( BUILD_USE_QT5 )
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
   else()
-    set( osgQt_SRC ${osgQt_SRC}
-      "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+      set( osgQt_SRC ${osgQt_SRC}
+        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    else()
+      set( osgQt_SRC ${osgQt_SRC}
+        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    endif()
+  endif()
+else() # Linux
+  if( BUILD_USE_QT5 )
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
+  else()
+    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
+      set( osgQt_SRC ${osgQt_SRC}
+        "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+      set( osgQt_SRC ${osgQt_SRC}
+        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    else()
+      set( osgQt_SRC ${osgQt_SRC}
+        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
+    endif()
   endif()
 endif()
 
@@ -151,6 +169,7 @@ set( qrc_files ${qrc_files}
 
 if( BUILD_USE_QT5 )
   qt5_wrap_cpp( MOC_FILES ${moc_files} )
+  qt5_wrap_cpp( MOC_FILES_osgQOpenGL ${osgQOpenGL_HEADER} )
   qt5_wrap_ui( UI_FILES ${ui_files} )
   qt5_add_resources( QT_RESOURCE_FILES ${qrc_files} )
 else()
@@ -192,6 +211,7 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
 
   add_executable( ${FILE} MACOSX_BUNDLE
     ${osgQt_SRC}
+    ${MOC_FILES_osgQOpenGL}
     ${MOC_FILES}
     ${QT_RESOURCE_FILES}
     ${resource_files}

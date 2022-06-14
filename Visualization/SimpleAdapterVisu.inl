@@ -84,11 +84,12 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
   // myGraphicsWindow = new osgViewer::GraphicsWindowEmbedded( this->x(),
   // this->y(), this->width(),   this->height() );
 
-  // Qt4&5
+#if(FEVV_USE_QT5)
+  // TODO TODO TODO
+#else
   addViewWidget(createGraphicsWindow(0, 0, 500, 500, "Viewer"),
                 static_cast< BaseViewerOSG * >(myViewer)->getRootNode());
-
-  //osgQOpenGLWidget widget(/*&arguments*/); // TODO -> DEL &arguments // Qt6
+#endif
 
   // @todo Setting Camera, lights, etc.
 
@@ -112,7 +113,9 @@ FEVV::SimpleAdapterVisu::isValid() const
 }
 
 
-#if 1 // Qt4&5
+#if(FEVV_USE_QT5)
+  // empty
+#else
 inline
 void
 FEVV::SimpleAdapterVisu::addViewWidget(
