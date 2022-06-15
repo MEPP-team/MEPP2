@@ -288,7 +288,20 @@ FEVV::SimpleViewer::changeBackgroundColor(
   // osgViewer::View* _osgView = getView(0); // for osgViewer::CompositeViewer
   osgViewer::View *_osgView =
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
-  _osgView->getCamera()->setClearColor(Helpers::ColorConverter(_color));
+
+#if(FEVV_USE_QT5)
+  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
+  SimpleAdapterVisu *sav =
+      dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
+
+  //_osgView = sav->my_osgQOpenGLWidget->getOsgViewer();
+  _osgView = sav->my_osgQOpenGLWindow->getOsgViewer();
+#endif
+
+  if(_osgView)
+  {
+    _osgView->getCamera()->setClearColor(Helpers::ColorConverter(_color));
+  }
 
   return true;
 }
@@ -3256,6 +3269,15 @@ FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
 
+#if(FEVV_USE_QT5)
+  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
+  SimpleAdapterVisu *sav =
+      dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
+
+  //_osgView = sav->my_osgQOpenGLWidget->getOsgViewer();
+  _osgView = sav->my_osgQOpenGLWindow->getOsgViewer();
+#endif
+
   if(_osgView)
   {
 #ifdef MANIPULATOR
@@ -3295,6 +3317,15 @@ FEVV::SimpleViewer::getMatrixVP()
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
 
+#if(FEVV_USE_QT5)
+  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
+  SimpleAdapterVisu *sav =
+      dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
+
+  //_osgView = sav->my_osgQOpenGLWidget->getOsgViewer();
+  _osgView = sav->my_osgQOpenGLWindow->getOsgViewer();
+#endif
+
   if(_osgView)
   {
     matrix = _osgView->getCameraManipulator()->getMatrix();
@@ -3312,6 +3343,15 @@ FEVV::SimpleViewer::setMatrixVP(osg::Matrix matrix)
   osgViewer::View *_osgView =
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
+
+#if(FEVV_USE_QT5)
+  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
+  SimpleAdapterVisu *sav =
+      dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
+
+  //_osgView = sav->my_osgQOpenGLWidget->getOsgViewer();
+  _osgView = sav->my_osgQOpenGLWindow->getOsgViewer();
+#endif     
 
   if(_osgView)
   {

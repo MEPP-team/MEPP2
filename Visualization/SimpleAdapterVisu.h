@@ -133,10 +133,11 @@ protected:
   //osgGA::EventQueue *getEventQueue() const;
 
 #if(FEVV_USE_QT5)
-protected://public:
+public:
   osgQOpenGLWidget *my_osgQOpenGLWidget = nullptr; // not used ?
   osgQOpenGLWindow *my_osgQOpenGLWindow = nullptr;
-//protected:
+
+protected:
 #else
 protected:
   osgQt::GraphicsWindowQt *myGraphicsWindow = nullptr;
