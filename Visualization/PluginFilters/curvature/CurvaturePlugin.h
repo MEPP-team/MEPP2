@@ -1181,9 +1181,9 @@ public:
     //reset();
 
 #if(FEVV_USE_QT5)
-  // empty
+    // empty
 #else
-    viewer->frame();
+    viewer->frame(); // necessary or not ?
 #endif
   }
 
