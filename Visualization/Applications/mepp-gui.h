@@ -11,7 +11,7 @@
 #pragma once
 
 // -----------------------------------------------------------------------
-#define MEPP_VERSION "v0.15.0 - 15/06/2022"
+#define MEPP_VERSION "v0.15.0b - 15/06/2022"
 
 #define MAINWINDOW_TITLE QObject::tr("MEPP2 : 3D MEsh Processing Platform")
 
