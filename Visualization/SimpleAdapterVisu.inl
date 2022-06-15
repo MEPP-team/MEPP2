@@ -94,11 +94,13 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setRenderableType(QSurfaceFormat::OpenGL);
     format.setOption(QSurfaceFormat::DebugContext);
+    std::cout << "----------------------> OSG_GL3_AVAILABLE : (3, 2) - CoreProfile" << std::endl;
 #else
     format.setVersion(2, 0);
     format.setProfile(QSurfaceFormat::CompatibilityProfile);
     format.setRenderableType(QSurfaceFormat::OpenGL);
     format.setOption(QSurfaceFormat::DebugContext);
+    std::cout << "----------------------> QSurfaceFormat : (2, 0) - CompatibilityProfile" << std::endl;
 #endif
     format.setDepthBufferSize(24);
     //format.setAlphaBufferSize(8);
@@ -128,7 +130,7 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
 
   QObject::connect(my_osgQOpenGLWidget2, &osgQOpenGLWindow::initialized, [ my_osgQOpenGLWidget2, _scene, myViewer2 ] // 1 ici
   {
-    std::cout << "----------------------> QObject::connect - QObject::connect -QObject::connect" << std::endl;
+    //std::cout << "----------------------> QObject::connect - QObject::connect -QObject::connect" << std::endl;
 
     //BoxT<T> * nonConstObj = const_cast<BoxT<T> *>(constObj); // https://stackoverflow.com/questions/7311041/const-to-non-const-conversion-in-c
     osgQOpenGLWindow *my_osgQOpenGLWidget3 = const_cast<osgQOpenGLWindow *>(my_osgQOpenGLWidget2); // 2 ici
