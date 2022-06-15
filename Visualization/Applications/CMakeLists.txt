@@ -237,7 +237,7 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
                 -test )
     endif()
   elseif( MSVC )
-    if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED DOCKER_RUN) ) # temp
+    if( (NOT DEFINED ENV{DOCKER_RUN}) AND (NOT DEFINED DOCKER_RUN) AND (NOT DEFINED ENV{GITLAB_CI}) ) # DOCKER_RUN -> temp - GITLAB_CI -> temp: because of new osgQOpenGL module
         add_test( "Test_${FILE}"
                   ${FILE}
                   ${DATA_TEST}
