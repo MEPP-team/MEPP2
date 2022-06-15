@@ -24,7 +24,7 @@ if (BUILD_USE_GUI_HelloworldPlugin)
       "${CMAKE_CURRENT_LIST_DIR}/helloworld_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/helloworld_dialog.cpp"
       ${Helloworld_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (HelloworldPlugin ${Helloworld_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

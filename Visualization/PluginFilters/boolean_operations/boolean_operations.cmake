@@ -22,7 +22,7 @@ if (BUILD_USE_GUI_BooleanOperationsPlugin)
 
   add_library(BooleanOperationsPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/BooleanOperationsPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/Dialogs/DialogBooleanOperations1.cpp"
     ${BooleanOperations_Qt_Plugin_SRC}
-    ${osgQt_SRC} # from viewer
+    ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
     )
   target_link_libraries (BooleanOperationsPlugin ${BooleanOperations_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

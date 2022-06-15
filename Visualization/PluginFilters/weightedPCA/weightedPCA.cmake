@@ -35,7 +35,7 @@ if (BUILD_USE_GUI_WeightedPCAPlugin)
       "${CMAKE_CURRENT_LIST_DIR}/weightedPCA_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/weightedPCA_dialog.cpp"
       ${WeightedPCA_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (WeightedPCAPlugin ${WeightedPCA_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
