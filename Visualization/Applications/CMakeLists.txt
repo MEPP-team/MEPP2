@@ -103,11 +103,11 @@ set( GUILIB_DEMO
 include_directories( "${MEPP_GUI_INC}" )
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 
-# osgQt
+# osgQt and osgQOpenGL
 if(MSVC)
   if( BUILD_USE_QT5 )
-    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
-    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    #set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
   else()
     set( osgQt_SRC ${osgQt_SRC}
@@ -115,8 +115,8 @@ if(MSVC)
   endif()
 elseif( APPLE )
   if( BUILD_USE_QT5 )
-    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
-    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    #set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
   else()
     if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
@@ -129,8 +129,8 @@ elseif( APPLE )
   endif()
 else() # Linux
   if( BUILD_USE_QT5 )
-    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
-    "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
+    #set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
+    set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
   else()
     if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
