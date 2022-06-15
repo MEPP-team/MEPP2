@@ -1292,7 +1292,7 @@ FEVV::SimpleWindow::on_actionQuit_triggered()
 inline void
 FEVV::SimpleWindow::closeEvent(QCloseEvent *event)
 {
-#if ( (defined(__linux__) || defined(__APPLE__)) && defined(FEVV_USE_QT5) ) // no PB with Qt4...
+/*#if ( (defined(__linux__) || defined(__APPLE__)) && defined(FEVV_USE_QT5) ) // no PB with Qt4...
   if (!clean_closure)
   {
     event->ignore();
@@ -1300,7 +1300,7 @@ FEVV::SimpleWindow::closeEvent(QCloseEvent *event)
     QMessageBox::information(this, "", QObject::tr("Please, use 'File' -> 'Exit' menu to quit."));
   }
   else
-#endif
+#endif*/
   {
     if(mdiArea)
     {
