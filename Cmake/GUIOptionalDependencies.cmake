@@ -44,21 +44,23 @@ if( BUILD_USE_GUI )
     # Instruct CMake to NOT run moc automatically when needed
     set(CMAKE_AUTOMOC OFF)
 
-    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED)
+    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED) # for Qt6 add 'OpenGLWidgets'
 
-    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND )
+    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND ) # for Qt6 add 'AND Qt6OpenGLWidgets_FOUND'
       set(QT5_FOUND_MEPP 1)
-      message( STATUS "Qt5 (Widgets, OpenGL and Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." )
+      message( STATUS "Qt5 (Widgets, OpenGL, Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." ) # for Qt6 add ', OpenGLWidgets'
 
       add_definitions("-DFEVV_USE_QT5")
 
       set(MEPP_GUI_LIB ${MEPP_GUI_LIB}
         ${Qt5Widgets_LIBRARIES}
         ${Qt5OpenGL_LIBRARIES}
+        #${Qt6OpenGLWidgets_LIBRARIES} # for Qt6
         ${Qt5Xml_LIBRARIES})
       set(MEPP_GUI_INC ${MEPP_GUI_INC}
         ${Qt5Widgets_INCLUDES_DIRS}
         ${Qt5OpenGL_INCLUDES_DIR}
+        #${Qt6OpenGLWidgets_INCLUDES_DIR} # for Qt6
         ${Qt5Xml_INCLUDES_DIR})
 
     else()
