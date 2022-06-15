@@ -1,3 +1,6 @@
+v0.15.0 - 15/06/2022 :
+ - support for osgQOpenGL instead of osgQt for Qt 5
+
 v0.14.3 (TAGGED) - 11/07/2021 :
  - fix : meshes with vertex colors and face colors are now displayed correctly
  - add support for copy/paste of viewpoint
