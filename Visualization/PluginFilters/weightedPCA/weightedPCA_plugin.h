@@ -166,14 +166,14 @@ public:
 
   QStringList Generic_plugins() const override
   {
-    return QStringList() << "WeightedPCAPluginPrivate";
+    return QStringList() << "WeightedPCAPlugin";
   }
 
   bool Generic_plugin(const QString &/*plugin*/) override
   {
     SimpleWindow *sw = static_cast< SimpleWindow * >(window);
       // dynamic_cast fails under OS X
-    sw->onModificationParam("weightedPCA_private_qt_p", this);
+    sw->onModificationParam("weightedPCA_qt_p", this);
       //TODO-elo-refactor-plugins
       // 1) the name of the function onModificationParam()
       //    is unrelated to its content!!!
