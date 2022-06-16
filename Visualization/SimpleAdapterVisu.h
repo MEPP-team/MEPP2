@@ -14,7 +14,7 @@
 #include <QMdiArea>
 #include <QTimer>
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
 #include <osgQOpenGL/osgQOpenGLWidget> // not used ?
 #include <osgQOpenGL/osgQOpenGLWindow>
 #else
@@ -94,7 +94,7 @@ public:
   // void attachMesh( HalfedgeGraph& _mesh );
 
 protected:
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
   // empty
 #else
   virtual void paintEvent(QPaintEvent * /*event*/) override
@@ -114,7 +114,7 @@ protected:
   virtual bool event(QEvent *event) override;
 
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
   // empty
 #else
   void addViewWidget(osg::ref_ptr< osgQt::GraphicsWindowQt > _gw,
@@ -132,7 +132,7 @@ protected:
   // not used ?
   //osgGA::EventQueue *getEventQueue() const;
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
 public:
   osgQOpenGLWidget *my_osgQOpenGLWidget = nullptr; // not used ?
   osgQOpenGLWindow *my_osgQOpenGLWindow = nullptr;

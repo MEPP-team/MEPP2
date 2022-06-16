@@ -205,14 +205,14 @@ if( BUILD_USE_GUI )
   # --> With Qt5, now, the new module is 'osgQOpenGL'
   message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
-    if( BUILD_USE_QT6 ) # FOR_QT6
+    if( BUILD_USE_QT5 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   elseif( APPLE )
-    if( BUILD_USE_QT6 ) # FOR_QT6
+    if( BUILD_USE_QT5 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
@@ -225,7 +225,7 @@ if( BUILD_USE_GUI )
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   else() # Linux
-    if( BUILD_USE_QT6 ) # FOR_QT6
+    if( BUILD_USE_QT5 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )

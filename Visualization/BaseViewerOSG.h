@@ -39,7 +39,7 @@
 
 namespace FEVV {
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
 class BaseViewerOSG : public BaseViewer
 #else
 class BaseViewerOSG : public osgViewer::Viewer, public BaseViewer
@@ -60,7 +60,7 @@ public:
    * Constructor.
    */
   BaseViewerOSG()
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
       : BaseViewer(),
 #else
       : osgViewer::Viewer(), BaseViewer(),
@@ -78,13 +78,13 @@ public:
 #if OSG_MIN_VERSION_REQUIRED(3, 4, 0)
     // setThreadingModel(osgViewer::ViewerBase::AutomaticSelection); // maybe
     // one day this PB will be fixed either by OSG or by Qt...
-    #if(FEVV_USE_QT6) // FOR_QT6
+    #if(FEVV_USE_QT5) // FOR_QT6
         // empty
     #else
         setThreadingModel(osgViewer::ViewerBase::SingleThreaded);
     #endif
 #else
-    #if(FEVV_USE_QT6) // FOR_QT6
+    #if(FEVV_USE_QT5) // FOR_QT6
         // empty
     #else
         setThreadingModel(osgViewer::ViewerBase::SingleThreaded);

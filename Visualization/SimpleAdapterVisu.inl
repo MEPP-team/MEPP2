@@ -84,7 +84,7 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
   // myGraphicsWindow = new osgViewer::GraphicsWindowEmbedded( this->x(),
   // this->y(), this->width(),   this->height() );
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
   // !!! TODO CLEAN - TODO CLEAN - TODO CLEAN - TODO CLEAN - TODO CLEAN !!!
   osg::ref_ptr< osg::Node > _scene = static_cast< BaseViewerOSG * >(myViewer)->getRootNode();
 
@@ -240,7 +240,7 @@ FEVV::SimpleAdapterVisu::isValid() const
 }
 
 
-#if(FEVV_USE_QT6) // FOR_QT6
+#if(FEVV_USE_QT5) // FOR_QT6
   // empty
 #else
 inline
