@@ -887,7 +887,7 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
   osgViewer::View *view =
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
   SimpleAdapterVisu *sav =
       dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());

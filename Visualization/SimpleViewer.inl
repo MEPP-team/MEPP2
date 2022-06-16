@@ -189,7 +189,7 @@ FEVV::SimpleViewer::init()
     return;
   }
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   // empty
 #else
   // disable the default setting of viewer.done() by pressing Escape
@@ -289,7 +289,7 @@ FEVV::SimpleViewer::changeBackgroundColor(
   osgViewer::View *_osgView =
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
   SimpleAdapterVisu *sav =
       dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
@@ -317,7 +317,7 @@ FEVV::SimpleViewer::saveScreenshot(const std::string &_name)
       new osgViewer::ScreenCaptureHandler::WriteToFile(_name, "png"));
 
   scrn->setCaptureOperation(captureOper.get());
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   // empty
 #else
   scrn->captureNextFrame(*this);
@@ -3269,7 +3269,7 @@ FEVV::SimpleViewer::centerMesh(HalfedgeGraph *_g)
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
   SimpleAdapterVisu *sav =
       dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
@@ -3317,7 +3317,7 @@ FEVV::SimpleViewer::getMatrixVP()
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
   SimpleAdapterVisu *sav =
       dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
@@ -3344,7 +3344,7 @@ FEVV::SimpleViewer::setMatrixVP(osg::Matrix matrix)
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
   // osgViewer::View* _osgView = getViewWithFocus();
 
-#if(FEVV_USE_QT5)
+#if(FEVV_USE_QT6) // FOR_QT6
   BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
   SimpleAdapterVisu *sav =
       dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());

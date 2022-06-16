@@ -105,7 +105,7 @@ include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 
 # osgQt and osgQOpenGL
 if(MSVC)
-  if( BUILD_USE_QT5 )
+  if( BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -114,7 +114,7 @@ if(MSVC)
       "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
   endif()
 elseif( APPLE )
-  if( BUILD_USE_QT5 )
+  if( BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -128,7 +128,7 @@ elseif( APPLE )
     endif()
   endif()
 else() # Linux
-  if( BUILD_USE_QT5 )
+  if( BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -169,7 +169,7 @@ set( qrc_files ${qrc_files}
 
 if( BUILD_USE_QT5 )
   qt5_wrap_cpp( MOC_FILES ${moc_files} )
-  qt5_wrap_cpp( MOC_FILES_osgQOpenGL ${osgQOpenGL_HEADER} )
+  qt5_wrap_cpp( MOC_FILES_osgQOpenGL ${osgQOpenGL_HEADER} ) # FOR_QT6
   qt5_wrap_ui( UI_FILES ${ui_files} )
   qt5_add_resources( QT_RESOURCE_FILES ${qrc_files} )
 else()
@@ -211,7 +211,7 @@ foreach(FILE ${UI_TESTS_SRC_DEMO})
 
   add_executable( ${FILE} MACOSX_BUNDLE
     ${osgQt_SRC}
-    ${MOC_FILES_osgQOpenGL}
+    ${MOC_FILES_osgQOpenGL} # FOR_QT6
     ${MOC_FILES}
     ${QT_RESOURCE_FILES}
     ${resource_files}
@@ -339,6 +339,7 @@ endif()
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 # Set location of plugins : IMPORTANT !
 
+# !!! FOR_QT6 : if not Qt6 then activate this line in all plugins : 'viewer->frame();' !!!
 include( "${CMAKE_CURRENT_SOURCE_DIR}/../PluginFilters/PluginFilters.cmake" )
 
 #####
