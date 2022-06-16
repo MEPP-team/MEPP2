@@ -153,7 +153,11 @@ public:
     // comment next line to keep parameters values between calls
     //reset();
 
-    viewer->frame();
+#if(FEVV_USE_QT5)
+    // empty
+#else
+    viewer->frame(); // necessary or not ?
+#endif
   }
 
 #if 0 // Point cloud only

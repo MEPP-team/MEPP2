@@ -31,7 +31,7 @@ if (BUILD_USE_GUI_CMDMPlugin)
       "${CMAKE_CURRENT_LIST_DIR}/cmdm_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/cmdm_dialog.cpp"
       ${CMDM_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (CMDMPlugin ${CMDM_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

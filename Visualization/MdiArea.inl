@@ -38,6 +38,16 @@ FEVV::MdiArea::dragEnterEvent(QDragEnterEvent *event)
 		if (event->mouseButtons() & Qt::RightButton)
 			bType=bRight;
 #endif
+#ifdef _MSC_VER
+	// new
+	m_mw->activateWindow();
+	m_mw->raise();
+	// new
+
+	bType=bLeft;
+	if (event->mouseButtons() & Qt::RightButton)
+		bType=bRight;
+#endif
 // ---------------------------------------------------
 
 		//std::cout << "acceptProposedAction" << std::endl;
@@ -61,7 +71,7 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	if (event->keyboardModifiers() & Qt::MetaModifier)
 		bType=bRight;
 #endif
-#ifdef _MSC_VER
+/*#ifdef _MSC_VER
 	// new
 	m_mw->activateWindow();
 	m_mw->raise();
@@ -70,7 +80,7 @@ FEVV::MdiArea::dropEvent(QDropEvent *event)
 	bType=bLeft;
 	if (event->mouseButtons() & Qt::RightButton)
 		bType=bRight;
-#endif
+#endif*/
 // ---------------------------------------------------
 
 	QList<QUrl> urls;

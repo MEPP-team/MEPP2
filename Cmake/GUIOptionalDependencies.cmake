@@ -44,21 +44,23 @@ if( BUILD_USE_GUI )
     # Instruct CMake to NOT run moc automatically when needed
     set(CMAKE_AUTOMOC OFF)
 
-    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED)
+    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED) # for Qt6 add 'OpenGLWidgets'
 
-    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND )
+    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND ) # for Qt6 add 'AND Qt6OpenGLWidgets_FOUND'
       set(QT5_FOUND_MEPP 1)
-      message( STATUS "Qt5 (Widgets, OpenGL and Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." )
+      message( STATUS "Qt5 (Widgets, OpenGL, Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." ) # for Qt6 add ', OpenGLWidgets'
 
       add_definitions("-DFEVV_USE_QT5")
 
       set(MEPP_GUI_LIB ${MEPP_GUI_LIB}
         ${Qt5Widgets_LIBRARIES}
         ${Qt5OpenGL_LIBRARIES}
+        #${Qt6OpenGLWidgets_LIBRARIES} # for Qt6
         ${Qt5Xml_LIBRARIES})
       set(MEPP_GUI_INC ${MEPP_GUI_INC}
         ${Qt5Widgets_INCLUDES_DIRS}
         ${Qt5OpenGL_INCLUDES_DIR}
+        #${Qt6OpenGLWidgets_INCLUDES_DIR} # for Qt6
         ${Qt5Xml_INCLUDES_DIR})
 
     else()
@@ -200,31 +202,42 @@ if( BUILD_USE_GUI )
   endif()
 
   # Find osgQt - caution, no more 'osgQt' module embedded by default since openscenegraph 3.5.5 !
-  # --> With Qt6, the new module is 'osgQOpenGL'
+  # --> With Qt5, now, the new module is 'osgQOpenGL'
   message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
-    set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
-    #set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
+    if( BUILD_USE_QT6 ) # FOR_QT6
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
+    else()
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+    endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   elseif( APPLE )
-    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+    if( BUILD_USE_QT6 ) # FOR_QT6
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+      else()
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      endif()
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   else() # Linux
-    if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/include" )
-    elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+    if( BUILD_USE_QT6 ) # FOR_QT6
+      set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
-      set( OSGQT_INCLUDE_DIR
-        "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg32/include" )
+      elseif( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg356/include" )
+      else()
+        set( OSGQT_INCLUDE_DIR
+          "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
+      endif()
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   endif()

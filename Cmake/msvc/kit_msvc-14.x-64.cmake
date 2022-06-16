@@ -73,7 +73,9 @@ if(BUILD_USE_QT5)
 	# with qt5
 	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)
 	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.12.11/5.12.11/msvc2017_64) # temp
-	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt6.2.0/6.2.0/msvc2019_64)     # temp
+	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.15.2/5.15.2/msvc2015_64) # temp
+	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.15.2/5.15.2/msvc2019_64) # temp
+	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt6.2.4/6.2.4/msvc2019_64) # temp
 else(BUILD_USE_QT5)
 	# with qt4
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)

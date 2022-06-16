@@ -15,7 +15,7 @@ if (BUILD_USE_GUI_CurvaturePlugin)
 
   add_library(CurvaturePlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/curvature/CurvaturePlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/curvature/Dialogs/DialogCurvature1.cpp"
     ${Curvature_Qt_Plugin_SRC}
-    ${osgQt_SRC} # from viewer
+    ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
     )
   target_link_libraries (CurvaturePlugin ${Curvature_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

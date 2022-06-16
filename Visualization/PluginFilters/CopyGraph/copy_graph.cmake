@@ -24,7 +24,7 @@ if (BUILD_USE_GUI_CopyGraphPlugin)
       "${CMAKE_CURRENT_LIST_DIR}/copy_graph_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/copy_graph_dialog.cpp"
       ${CopyGraph_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (CopyGraphPlugin ${CopyGraph_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

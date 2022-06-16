@@ -17,7 +17,7 @@ if (BUILD_USE_GUI_CompressionValencePlugin)
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.cpp"
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.cpp"
               ${CompressionValence_Qt_Plugin_SRC}
-              ${osgQt_SRC} # from viewer
+              ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
               )
   target_link_libraries (CompressionValencePlugin ${CompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
