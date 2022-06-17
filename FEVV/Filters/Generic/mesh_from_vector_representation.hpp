@@ -370,7 +370,6 @@ mesh_from_vector_representation(
     // no texture coord provided in mesh vertex representation
     use_corner_texture_coord = false;
   }
-  
 
   if(! mvr.normals_coords.empty())
   {
@@ -585,9 +584,13 @@ mesh_from_vector_representation(
       // DBG  std::cout << "call CGAL::Euler::add_face(face_vertices, g) #" <<
       // counter << std::endl;
 
-      face_descriptor current_face = CGAL::Euler::add_face(face_vertices, g);
+      face_descriptor current_face;
 
-      if(current_face == GraphTraits::null_face())
+      if(CGAL::Euler::can_add_face(face_vertices, g))
+      {
+        current_face = CGAL::Euler::add_face(face_vertices, g);
+      }
+      else
       {
         // helper lambda function to duplicate a vertex and its attributes
         auto duplicate_v = [ &face_vertices,
@@ -640,7 +643,6 @@ mesh_from_vector_representation(
         // try to add face by duplicating vertices
 
         // duplicate faulty vertices
-        bool face_vertex_duplicated = false;
         size_t n = face_vertices.size();
         for(size_t i = 0, ii = 1; i < n; ++i, ++ii, ii %= n)
         // the loop above and the 'faulty vertex' conditions below
@@ -662,13 +664,12 @@ mesh_from_vector_representation(
             // DBG  std::cout << "DUPLICATE ONE VERTEX" << std::endl;
 
             duplicate_v(i);
-            face_vertex_duplicated = true;
           }
         }
 
         // duplicate all face vertices if necessary
 
-        if(! face_vertex_duplicated)
+        if(! CGAL::Euler::can_add_face(face_vertices, g))
         {
           // no faulty vertex found, let's duplicate all face vertices
 
@@ -679,12 +680,17 @@ mesh_from_vector_representation(
             duplicate_v(i);
           }
         }
-
+      }
+      if (CGAL::Euler::can_add_face(face_vertices, g))
+      {
         // add face with duplicated vertices
         current_face = CGAL::Euler::add_face(face_vertices, g);
       }
-      assert(current_face != GraphTraits::null_face());
-
+      else
+      {
+        // face cannot be added
+        continue;
+      }
       //--- fill property maps
 
       vertex_descriptor prev_vertex = face_vertices.back();
@@ -832,7 +838,7 @@ mesh_from_vector_representation(
  * \param  dup_v_nbr   number of duplicated vertices of the mesh
  * \param  mvr         the vector representation structure (input)
  * \param  params      the named parameters
- * 
+ *
  * \sa     the variant that use the geometry traits provided by the user.
  */
 template< typename HalfedgeGraph,
