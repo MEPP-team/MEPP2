@@ -688,6 +688,12 @@ mesh_from_vector_representation(
       }
       else
       {
+        // DBG  auto point_pm = get(boost::vertex_point, g);
+        // DBG  auto p1 = get(point_pm, face_vertices[0]);
+        // DBG  auto p2 = get(point_pm, face_vertices[1]);
+        // DBG  auto p3 = get(point_pm, face_vertices[2]);
+        // DBG  std::cout << p1 << "  " << p2 << "  " << p3 << std::endl;
+
         // face cannot be added
         continue;
       }

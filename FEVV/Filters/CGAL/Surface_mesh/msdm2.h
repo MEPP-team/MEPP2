@@ -2,8 +2,8 @@
 // All rights reserved.
 //
 // This file is part of MEPP2; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published 
-// by the Free Software Foundation; either version 3 of the License, 
+// it under the terms of the GNU General Public License as published
+// by the Free Software Foundation; either version 3 of the License,
 // or (at your option) any later version.
 //
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -433,8 +433,6 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
                          radius_curvature * 5 * maxdim,
                          maxdim);
     }
-
-
     radius_curvature += 0.001;
   }
 
@@ -445,7 +443,6 @@ process_msdm2_multires(const HalfedgeGraph &m_poly_degrad,
     somme_msdm2 += std::pow(l_msdm2, 3);
     nb_vertex++;
   }
-
 
   msdm2_value = std::pow(somme_msdm2 / (double)nb_vertex, 1. / 3.);
 
@@ -604,7 +601,6 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
   s.push(p_vertex);
   vertices.insert(get(tags_pmap, p_vertex));
 
-
   tab_distance1.push_back(get(curv_pmap, p_vertex).KmaxCurv);
   tab_point1.push_back(get(pm_degr, p_vertex));
 
@@ -612,7 +608,6 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
   tab_point2.push_back(get(nearest_pmap, p_vertex));
 
   int nb_sommet_in_sphere = 0;
-
 
   while(!s.empty())
   {
@@ -625,7 +620,6 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
     {
       auto p1 = get(pm_degr, target(h, m_degr));
       auto p2 = get(pm_degr, target(opposite(h, m_degr), m_degr));
-
       auto p1m = get(nearest_pmap, target(h, m_degr));
       auto p2m = get(nearest_pmap, target(opposite(h, m_degr), m_degr));
 
@@ -634,13 +628,11 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
 
       if(v_it == p_vertex || v * (p - o) > 0.0)
       {
-
         double len_old = std::sqrt(v * v);
         bool isect = sphere_clip_vector_msdm2(o, radius, p, v);
         double len_edge = std::sqrt(v * v);
 
         nb_sommet_in_sphere++;
-
 
         double weighted_curv1, weighted_curv2;
         CGALPoint weighted_p1, weighted_p2;
@@ -648,7 +640,6 @@ process_msdm2_per_vertex(const HalfedgeGraph &m_degr,
         bool is_already_integrated = false;
         if(!isect)
         {
-
           auto w = target(opposite(h, m_degr), m_degr);
           if(vertices.find(get(tags_pmap, w)) == vertices.end())
           {
