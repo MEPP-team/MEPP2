@@ -28,7 +28,7 @@ if (BUILD_USE_GUI_PointCloudCurvaturePlugin)
       "${CMAKE_CURRENT_LIST_DIR}/point_cloud_curvature_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/point_cloud_curvature_dialog.cpp"
       ${PointCloudCurvature_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (PointCloudCurvaturePlugin ${PointCloudCurvature_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

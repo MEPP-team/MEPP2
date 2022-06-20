@@ -15,7 +15,7 @@ if (BUILD_USE_GUI_JndPlugin)
 
   add_library(JndPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/JndPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/jnd/Dialogs/DialogJnd1.cpp"
     ${Jnd_Qt_Plugin_SRC}
-    ${osgQt_SRC} # from viewer
+    ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
     )
   target_link_libraries (JndPlugin ${Jnd_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

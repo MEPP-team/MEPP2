@@ -887,6 +887,15 @@ FEVV::SimpleViewer::internal_loadShadedMesh(
   osgViewer::View *view =
       dynamic_cast< osgViewer::View * >(this); // for osgViewer::Viewer
 
+#if(FEVV_USE_QT5) // FOR_QT6
+  BaseViewer *bv = dynamic_cast< BaseViewer * >(this);
+  SimpleAdapterVisu *sav =
+      dynamic_cast< SimpleAdapterVisu * >(bv->getAdapter());
+
+  //view = sav->my_osgQOpenGLWidget->getOsgViewer();
+  view = sav->my_osgQOpenGLWindow->getOsgViewer();
+#endif
+
   // RM: setting callback for camera position
   osg::Uniform *cameraPos =
       new osg::Uniform(osg::Uniform::FLOAT_VEC3, "uniCameraPos");

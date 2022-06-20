@@ -324,7 +324,12 @@ public:
     }
 
     reset();
-    viewer->frame();
+
+#if(FEVV_USE_QT5)
+    // empty
+#else
+    viewer->frame(); // necessary or not ?
+#endif
   }
 
 

@@ -24,7 +24,7 @@ if (BUILD_USE_GUI_TextureImageDemoPlugin)
       "${CMAKE_CURRENT_LIST_DIR}/texture_image_demo_plugin.cpp"
       "${CMAKE_CURRENT_LIST_DIR}/Dialogs/texture_image_demo_dialog.cpp"
       ${TextureImageDemo_Qt_Plugin_SRC}
-      ${osgQt_SRC} # from viewer
+      ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
       )
   target_link_libraries (TextureImageDemoPlugin ${TextureImageDemo_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer

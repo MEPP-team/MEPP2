@@ -17,7 +17,7 @@ if (BUILD_USE_GUI_DecompressionValencePlugin)
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/DecompressionValencePlugin.cpp"
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/decompression_valence/Dialogs/DialogDecompressionValence1.cpp"
               ${DecompressionValence_Qt_Plugin_SRC}
-              ${osgQt_SRC} # from viewer
+              ${osgQt_SRC} ${MOC_FILES_osgQOpenGL} # from viewer
               )
   target_link_libraries (DecompressionValencePlugin ${DecompressionValence_Qt_Plugin_LIB}
     ${GUILIB_DEMO} # from viewer
