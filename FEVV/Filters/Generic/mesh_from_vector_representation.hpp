@@ -682,8 +682,16 @@ mesh_from_vector_representation(
 
         // add face with duplicated vertices
         current_face = CGAL::Euler::add_face(face_vertices, g);
+
+        if(current_face == GraphTraits::null_face())
+        {
+          // despite all efforts the face could not be created
+          std::cout << "Warning: failed to create one face." << std::endl;
+          // go to next face
+          continue;
+        }
       }
-      assert(current_face != GraphTraits::null_face());
+      // the face was successfully created
 
       //--- fill property maps
 
