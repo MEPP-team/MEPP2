@@ -27,7 +27,7 @@
 #pragma warning(disable : 4146 26812 26451)
 #endif
 
-#include "BinaryBatchEncoder_draco_nowarning.h"
+#include "Binary_batch_encoder_draco_nowarning.h"
 
 #if defined _MSC_VER
 #pragma warning(pop)
@@ -36,7 +36,7 @@
 namespace FEVV {
 namespace Filters {
 
-/** BinaryBatchEncoder class.
+/** Binary_batch_encoder class.
  *  \brief Encode binary data with draco.
  *         Also contains static methods to
  *         generate csv files.
@@ -48,40 +48,37 @@ template<
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
-    typename face_descriptor =
-        typename boost::graph_traits< HalfedgeGraph >::face_descriptor,
-    typename halfedge_descriptor =
-        typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor,
     typename Geometry = FEVV::Geometry_traits< HalfedgeGraph > >
-class BinaryBatchEncoder
+class Binary_batch_encoder
 {
 private:
   draco::Mesh g_draco; /// draco mesh to fill with right data
                        /// before its encoding
 public:
   /// \brief Add column titles to cvs file (to call before
-  /// the addition of measurement line).
-  static void InitMeasureFile(const std::string& csv_file_path)
+  /// the addition of measurement lines).
+  static void init_measure_file(const std::string& csv_file_path)
   {
     std::ofstream csv_file;
     csv_file.open(csv_file_path);
     csv_file
         << "NUM_BATCH,SIZE_BITMASK,SIZE_CONNECTIVITY,SIZE_RESIDUALS,BITMASK_"
-           "ENTROPY,CONNECTIVITY_ENTROPY,RESIDUALS_ENTROPY,DISTORTION,"
-           "NBVALUESBITMASK,NBVALUESCONNECTIVITY,NBVALUESOTHERINFO,"
+           "ENTROPY,CONNECTIVITY_ENTROPY,RESIDUALS_ENTROPY,DISTORTION_RMSE,"
+           "DISTORTION_HAUSDORFF,NBVALUESBITMASK,NBVALUESCONNECTIVITY,NBVALUESOTHERINFO,"
            "SIZEOTHERINFO,ENTROPYOTHERINFO,SIZE_HEADER,NUM_VERTICES"
         << "\n";
 
     csv_file.close();
   }
   /// \brief Add a line of measurements to cvs file.
-  static void AddLineMeasureFile(const std::string &csv_file_path,
+  static void add_line_measure_file(const std::string &csv_file_path,
                           int num_batch,
-                          std::pair< int, double > &data_bitmask, // returned by BinaryBatchEncoder::EncodeBitmask (gives the the actual size of the bitmask and the entropy)
-                          std::pair< int, double > &data_connectivity,// returned by BinaryBatchEncoder::EncodeBitmask
-                          std::pair< int, int64_t > &data_residuals,// returned by BinaryBatchEncoder::EncodeBitmaskResiduals
-                          std::pair< int, double > &data_other_info,// returned by BinaryBatchEncoder::EncodeBitmask
-                          double dist, //Distorsion value
+                          std::pair< int, double > &data_bitmask, // returned by Binary_batch_encoder::encode_bitmask (gives the the actual size of the bitmask and the entropy)
+                          std::pair< int, double > &data_connectivity,// returned by Binary_batch_encoder::encode_bitmask
+                          std::pair< int, double > &data_residuals,// returned by Binary_batch_encoder::encode_residuals
+                          std::pair< int, double > &data_other_info,// returned by Binary_batch_encoder::encode_bitmask
+                          double dist_RMSE, // Distortion value
+                          double dist_hausdorff, // Distortion value
                           size_t num_values_bitmask, 
                           size_t num_values_connectivity,
                           size_t num_values_other_info,
@@ -94,7 +91,7 @@ public:
     csv_file << num_batch << "," << data_bitmask.first << ","
              << data_connectivity.first << "," << data_residuals.first << ","
              << data_bitmask.second << "," << data_connectivity.second << ","
-             << data_residuals.second << "," << dist << ","
+             << data_residuals.second << "," << dist_RMSE << "," << dist_hausdorff << ","
              << num_values_bitmask << "," << num_values_connectivity << ","
              << num_values_other_info << "," << data_other_info.first << ","
              << data_other_info.second << "," << size_header << ","
@@ -103,11 +100,12 @@ public:
     csv_file.close();
   }
  
-  /// \brief Encodes a non-textured quantized mesh
-  size_t QuantizeEncodeCoarseMesh(HalfedgeGraph &g, /// Mesh to encode
-                                  PointMap &pm, /// Vertex positions property map
-                                  const Geometry &gt, /// Geometry trait object
-                                  draco::EncoderBuffer &buffer /// Output encoded buffer (using draco)
+  /// \brief Encodes a non-textured quantized mesh with draco single-rate
+  ///        mesh encoder.
+  size_t quantize_encode_coarse_mesh(HalfedgeGraph &g, /// Mesh to encode
+                                     PointMap &pm, /// Vertex positions property map
+                                     const Geometry &gt, /// Geometry trait object
+                                     draco::EncoderBuffer &buffer /// Output encoded buffer (using draco)
 								  ) 
   {
     auto iterator_pair = vertices(g);
@@ -125,7 +123,7 @@ public:
     draco::PointCloud *out_point_cloud_ =
         static_cast< draco::PointCloud * >(&g_draco);
     out_point_cloud_->set_num_points(
-        3 * static_cast<unsigned int>(num_faces_)); // Vincent: Why not use point number?
+        3 * static_cast<unsigned int>(num_faces_)); // Why not use point number?
 
     draco::GeometryAttribute va;
     va.Init(draco::GeometryAttribute::POSITION,
@@ -144,7 +142,7 @@ public:
     auto vi = iterator_pair.first;
     std::vector< uint32_t > vertex_data;
 	vertex_data.reserve(num_positions_ * 3);
-    for(; vi != iterator_pair.second; ++vi, ++pos_num)
+    for( ; vi != iterator_pair.second; ++vi, ++pos_num)
     {
       vertex_pos.insert(std::pair< vertex_descriptor, int >(*vi, pos_num));
       uint32_t val[3];
@@ -169,7 +167,7 @@ public:
     int pos_face = 0;
     auto iterator_pair_f = faces(g);
     auto fi = iterator_pair_f.first;
-    for(; fi != iterator_pair_f.second; ++fi, ++pos_face)
+    for( ; fi != iterator_pair_f.second; ++fi, ++pos_face)
     {
       std::vector< vertex_descriptor > vertices_of_face;
 	  vertices_of_face.reserve(3);
@@ -202,8 +200,9 @@ public:
 
     return (buffer.size() - original_size) * 8;
   }
-  /// Encodes a bit mask with draco's non-adaptive RAns coder (RAnsBitEncoder)
-  std::pair< int, double > EncodeBitMask(const std::list< bool > &bitmask,
+  /// \brief Encodes a bit mask with draco's non-adaptive RAns coder 
+  ///        (RAnsBitEncoder).
+  std::pair< int, double > encode_bitmask(const std::list< bool > &bitmask,
                                          draco::EncoderBuffer &buffer)
   {
     draco::RAnsBitEncoder encoder;
@@ -213,7 +212,7 @@ public:
 
     encoder.StartEncoding();
 	auto it = bitmask.begin(), it_e = bitmask.end();
-    for(; it != it_e; ++it)
+    for( ; it != it_e; ++it)
     {
       encoder.EncodeBit(*it);
       if(*it == true)
@@ -229,9 +228,10 @@ public:
     return std::make_pair(static_cast< int >((buffer.size()) - size_buffer) * 8,
                           bitmask_entropy);
   }
-  /// Encodes a set of residuals with draco's entropy coder (SymbolBitEncoder)
-  std::pair< int, int64_t >
-  EncodeResiduals(const std::list< std::vector< Vector > > &residuals,
+  /// \brief  Encodes a set of residuals with draco's entropy coder 
+  ///         (SymbolBitEncoder)
+  std::pair< int, double >
+  encode_residuals(const std::list< std::vector< Vector > > &residuals,
                   draco::EncoderBuffer &buffer,
                   int bit_quantization)
   {
@@ -248,7 +248,7 @@ public:
 
       auto residuals_it = residuals.begin(), residuals_it_e = residuals.end();
 
-      for(; residuals_it != residuals_it_e; ++residuals_it, ++i)
+      for( ; residuals_it != residuals_it_e; ++residuals_it, ++i)
       {
         for(size_t j = 0; j < nb_residuals; j++)
         {
@@ -265,7 +265,6 @@ public:
       draco::ConvertSignedIntsToSymbols(
           p_in, static_cast< int >(residuals.size() * nb_residuals * 3), p_out);
       // entropy computation
-      int num_unique_symbols = 0;
       uint32_t max = 0;
       for(size_t i = 0; i < residuals.size() * nb_residuals * 3; i++)
       {
@@ -278,14 +277,14 @@ public:
           p_out,
           static_cast< int >(residuals.size() * nb_residuals * 3),
           max,
-          &num_unique_symbols);
+          nullptr);
 
 
       // delete pointers in
       delete[] p_in;
 
 
-      // on encode la prediction
+      // encode the prediction
       draco::SymbolBitEncoder symbolBitEncoder;
       symbolBitEncoder.StartEncoding();
       for(size_t count = 0; count < residuals.size() * nb_residuals * 3; count++)
@@ -306,14 +305,10 @@ public:
       draco::EncodeSymbols(p_out, num_values_int, 1, opt, &buffer_max_comp);
       int size_original_method =
           (static_cast< int >(buffer.size()) - size_buffer) * 8;
-      //int size_max_comp = (static_cast< int >(buffer_max_comp.size())) * 8;
-      //double ratio =
-      //    ((double)stream_2_entropy_bits / (double)size_original_method) * 100.0;
-
 
       delete opt;
       delete[] p_out;
-      return std::make_pair(size_original_method, stream_2_entropy_bits);
+      return std::make_pair(size_original_method, stream_2_entropy_bits / static_cast<double>(residuals.size() * nb_residuals * 3));
     }
     return std::make_pair(0, 0);
   }

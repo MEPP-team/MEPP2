@@ -23,7 +23,7 @@
 #pragma warning(push)
 #pragma warning(disable : 4146 26812 26451)
 #endif
-#include "BinaryBatchDecoder_draco_nowarning.h"
+#include "Binary_batch_decoder_draco_nowarning.h"
 #if defined _MSC_VER
 #pragma warning(pop)
 #endif
@@ -37,20 +37,21 @@ template<
 typename HalfedgeGraph,
 typename PointMap,
 typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector >
-class BinaryBatchDecoder
+class Binary_batch_decoder
 {
 public:
-BinaryBatchDecoder() {};
-~BinaryBatchDecoder() {};
-BinaryBatchDecoder(draco::DecoderBuffer &buffer, int bit_quantization)
+Binary_batch_decoder() {};
+~Binary_batch_decoder() {};
+Binary_batch_decoder(draco::DecoderBuffer &buffer, int bit_quantization)
     : _buffer(buffer)
 {
   _bit_quantization = bit_quantization;
 };
 
 
-
-void DecodeBitmask(std::list<bool> &bitmask)
+/// This function implements lines 5 to 6 of Algorithm 2.
+/// Similar calls appear lines 7 to 8 and 12 to 13 of Algorithm 2.
+void decode_bitmask(std::list<bool> &bitmask)
 {
 	int size_bitmask;
 	draco::RAnsBitDecoder decoder;
@@ -65,7 +66,8 @@ void DecodeBitmask(std::list<bool> &bitmask)
   decoder.EndDecoding();
 }
 
-void DecodeResiduals(std::list<std::vector<Vector>> &residuals, int nb_residuals)
+/// This function implements lines 9 to 10 of Algorithm 2.
+void decode_residuals(std::list<std::vector<Vector>> &residuals, int nb_residuals)
 {
 	int size_residuals;
 	draco::DecodeVarint(&size_residuals,&_buffer);
@@ -77,7 +79,7 @@ void DecodeResiduals(std::list<std::vector<Vector>> &residuals, int nb_residuals
     residuals_uint.reserve(nb);
 	
 	symbolBitDecoder.StartDecoding(&_buffer);
-	for (int i = 0; i < nb; i++)
+	for(int i = 0; i < nb; i++)
 	{
       uint32_t temp;
       symbolBitDecoder.DecodeLeastSignificantBits32(_bit_quantization + 1, &temp);
@@ -89,11 +91,11 @@ void DecodeResiduals(std::list<std::vector<Vector>> &residuals, int nb_residuals
     residuals_int.resize(nb);
 	draco::ConvertSymbolsToSignedInts(residuals_uint.data(), nb, residuals_int.data());
 	
-	for (int i = 0; i < size_residuals; i++)
+	for(int i = 0; i < size_residuals; i++)
 	{
 		std::vector<Vector> paire;
 		paire.reserve(nb_residuals);
-		for (int j = 0; j < nb_residuals; ++j)
+		for(int j = 0; j < nb_residuals; ++j)
 		{
 			paire.push_back(Vector(residuals_int[3 * (nb_residuals*i + j) + 0], 
                                    residuals_int[3 * (nb_residuals*i + j) + 1], 
@@ -110,5 +112,5 @@ void DecodeResiduals(std::list<std::vector<Vector>> &residuals, int nb_residuals
 };
 
 
-}
-}
+} // namespace Filters
+} // namespace FEVV

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "FEVV/Tools/Comparator/VertexComparators.hpp"
+#include "FEVV/Tools/Comparator/Vertex_comparators.hpp"
 #include "FEVV/Operators/Geometry/triangles.hpp"
 
 #include <CGAL/boost/graph/iterator.h>
@@ -254,7 +254,7 @@ namespace Comparator
   }
 
   template <typename Graph, typename PointMap, typename GeometryTraits = FEVV::Geometry_traits<Graph> >
-  class SpanningTreeVertexEdgeComparator
+  class Spanning_tree_vertex_edge_comparator
   {
   public:
   typedef std::size_t                                         IndexType;
@@ -280,7 +280,7 @@ namespace Comparator
     std::list<edge_descriptor> _st_edges; /// all edges in the spanning tree order of traversal
     std::set<edge_descriptor> _has_been_added; // to speed up requests on added edges to the spanning tree
 
-    FEVV::Comparator::VertexComparator<Graph, PointMap, GeometryTraits> _cmp_v; // natural ordering + manage tie-break
+    FEVV::Comparator::Vertex_comparator<Graph, PointMap, GeometryTraits> _cmp_v; // natural ordering + manage tie-break
                                                                                 // with vertex degree, then mean of 
                                                                                 // adjacent vertex degree
 
@@ -421,7 +421,7 @@ namespace Comparator
               best_root = *(root_candidates.begin());
             else
             {
-              std::cerr << "SpanningTreeVertexEdgeComparator: compute_first_vertex_connected_component (find the root(s)): tie-break detected!" << std::endl;
+              std::cerr << "Spanning_tree_vertex_edge_comparator: compute_first_vertex_connected_component (find the root(s)): tie-break detected!" << std::endl;
             }
             break;
           }
@@ -511,7 +511,7 @@ namespace Comparator
                       if (!_cmp_v(*it_v_debug, *it_v2_debug) && !_cmp_v(*it_v2_debug, *it_v_debug))
                       {
                         _tie_break_vertices.insert(*it_v2_debug);
-                        std::cerr << "SpanningTreeVertexEdgeComparator: compute_st: new region growing start: tie-break detected!" << std::endl;
+                        std::cerr << "Spanning_tree_vertex_edge_comparator: compute_st: new region growing start: tie-break detected!" << std::endl;
                       }
                       else
                         break;
@@ -554,7 +554,7 @@ namespace Comparator
       }
     }
   public:
-    SpanningTreeVertexEdgeComparator(const Graph& g, const PointMap& pm, bool tie_break_detection=true) :_g(g),
+    Spanning_tree_vertex_edge_comparator(const Graph& g, const PointMap& pm, bool tie_break_detection=true) :_g(g),
                                                           _pm(pm), 
                                                           _gt(GeometryTraits(g)), 
                                                           _first_vertex_of_each_component(), 
@@ -568,7 +568,7 @@ namespace Comparator
                                                            {   _vim_st = FEVV::Vertex_pmap_traits<Graph, IndexType >::create(_g);
 														       _eim_st = FEVV::Edge_pmap_traits<Graph, IndexType >::create(_g);
 															   compute_st(tie_break_detection); }
-    SpanningTreeVertexEdgeComparator(const Graph& g, const PointMap& pm, bool tie_break_detection, const GeometryTraits& gt) :_g(g),
+    Spanning_tree_vertex_edge_comparator(const Graph& g, const PointMap& pm, bool tie_break_detection, const GeometryTraits& gt) :_g(g),
                                                                                     _pm(pm), 
                                                                                     _gt(gt), 
                                                                                     _first_vertex_of_each_component(),
@@ -607,7 +607,7 @@ namespace Comparator
 	size_t get_nb_of_connected_components() const { return _first_vertex_of_each_component.size(); }
 	const std::list<vertex_descriptor>& get_spanning_tree_vertices() const { return _st_vertices; }
 	const std::list<edge_descriptor>& get_spanning_tree_edges() const { return _st_edges; }
-  /// returns the min incident edge according to VertexComparator
+  /// returns the min incident edge according to Vertex_comparator
   edge_descriptor get_spanning_tree_min_incident_edge(vertex_descriptor v) const 
   { 
     if (degree(v, _g) == 0)
@@ -659,8 +659,8 @@ namespace Comparator
   /////////////////////////////////////////////////////////////////////////////
   template <typename Graph, typename PointMap, typename GeometryTraits = FEVV::Geometry_traits<Graph> >
   static 
-	SpanningTreeVertexEdgeComparator<Graph, PointMap, GeometryTraits>
-    get_spanning_tree_comparator(const Graph& g, const PointMap& pm, bool tie_break_detection=true) { return SpanningTreeVertexEdgeComparator<Graph, PointMap, GeometryTraits>(g, pm, tie_break_detection); }
+	Spanning_tree_vertex_edge_comparator<Graph, PointMap, GeometryTraits>
+    get_spanning_tree_comparator(const Graph& g, const PointMap& pm, bool tie_break_detection=true) { return Spanning_tree_vertex_edge_comparator<Graph, PointMap, GeometryTraits>(g, pm, tie_break_detection); }
 } // namespace Comparator
 } // namespace FEVV
 

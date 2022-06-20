@@ -17,67 +17,69 @@ namespace FEVV {
 namespace Filters {
 
 enum class PREDICTION_TYPE {
-  POSITION = 0,
-  DELTA,
-  BARYCENTER_PREDICTOR,
-  BARYCENTER,
-  HALFRING,
-  BUTTERFLY,
+  POSITION = 0, /// encode the 2 edge vertex positions
+  DELTA, /// encode the delta between the 2 edge vertex positions
+  //BARYCENTER_PREDICTOR, // (not implemented in this release)
+  //BARYCENTER, // (not implemented in this release)
+  //HALFRING, // (not implemented in this release)
+  BUTTERFLY, /// encode the delta between the predicted delta and the delta between the 2 edge vertex positions
 };
 
-enum class VKEPT_POSITION { MIDPOINT = 0, HALFEDGE, FULLEDGE };
+enum class VKEPT_POSITION { MIDPOINT = 0, /// midpoint position
+                            HALFEDGE, /// edge target position
+                            FULLEDGE /// an "optimal" position along the collapsed edge (not implemented in this release)
+                           };
 
 enum class METRIC_TYPE {
   NO_METRIC = 0,
-  QEM,
-  EDGE_LENGTH,
-  VOLUME_PRESERVING
+  QEM_3D, /// memoryless variant of QEM error (Quadric Error Metric)
+  EDGE_LENGTH, /// edge length metric
+  VOLUME_PRESERVING /// local absolute volume error metric
 };
 
 
-/*
-\brief Parameters: contains the methods used by the compression
-*/
-
+/**
+ * \brief Parameters contains the compression parameters except the
+ *        stopping criteria. 
+ */
 class Parameters // Local Parameters
 {
 private:
-  PREDICTION_TYPE Prediction;
-  VKEPT_POSITION Vkept_pos;
-  METRIC_TYPE Metric;
-  bool FirstCall;       
-  bool AllowDuplicates; // Global parameters
-  int QuantizationBits;
+  PREDICTION_TYPE _prediction;
+  VKEPT_POSITION _vkept_pos;
+  METRIC_TYPE _metric;
+  bool _first_call;       
+  bool _allow_duplicates; // Global parameters
+  int _quantization_bits;
   
-
 public:
-  PREDICTION_TYPE getPrediction() const { return Prediction; } 
-  VKEPT_POSITION getVKeptPosition() const { return Vkept_pos; }
-  METRIC_TYPE getMetric() const { return Metric; }
-  bool getFirstCall() const { return FirstCall; }
-  bool getAllowDuplicates() const { return AllowDuplicates; }
-  Parameters(PREDICTION_TYPE _Prediction = PREDICTION_TYPE::BUTTERFLY,
-             VKEPT_POSITION _Vkept_pos = VKEPT_POSITION::MIDPOINT,
-             METRIC_TYPE _Metric = METRIC_TYPE::EDGE_LENGTH,
-             bool _FirstCall = true,
-             bool _AllowDuplicates = false,
-             int _QuantizationBits = 16)
+  PREDICTION_TYPE get_prediction() const { return _prediction; } 
+  VKEPT_POSITION get_vkept_position() const { return _vkept_pos; }
+  METRIC_TYPE get_metric() const { return _metric; }
+  bool get_first_call() const { return _first_call; }
+  bool get_allow_duplicates() const { return _allow_duplicates; }
+  Parameters(PREDICTION_TYPE __prediction = PREDICTION_TYPE::BUTTERFLY,
+             VKEPT_POSITION __vkept_pos = VKEPT_POSITION::MIDPOINT,
+             METRIC_TYPE __metric = METRIC_TYPE::EDGE_LENGTH,
+             bool __first_call = true,
+             bool __allow_duplicates = false,
+             int __quantization_bits = 16)
   {
-    Prediction = _Prediction;
-    Vkept_pos = _Vkept_pos;
-    Metric = _Metric;
-    FirstCall = _FirstCall;
-    AllowDuplicates = _AllowDuplicates;
-    QuantizationBits = _QuantizationBits;
+    _prediction = __prediction;
+    _vkept_pos = __vkept_pos;
+    _metric = __metric;
+    _first_call = __first_call;
+    _allow_duplicates = __allow_duplicates;
+    _quantization_bits = __quantization_bits;
   }
 
   ~Parameters() {}
-  void setFirstCall(bool _first) { FirstCall = _first; }
-  int getQuantization() const { return QuantizationBits; }
+  void set_first_call(bool _first) { _first_call = _first; }
+  int get_quantization() const { return _quantization_bits; }
 
-  std::string PredictionTypeToString() const
+  std::string get_prediction_type_as_string() const
   {
-    switch(Prediction)
+    switch(_prediction)
     {
     case PREDICTION_TYPE::POSITION:
       return "position";
@@ -85,7 +87,7 @@ public:
     case PREDICTION_TYPE::DELTA:
       return "delta";
       break;
-    case PREDICTION_TYPE::BARYCENTER_PREDICTOR:
+    /*case PREDICTION_TYPE::BARYCENTER_PREDICTOR:
       return "barycentre_predictor";
       break;
     case PREDICTION_TYPE::BARYCENTER:
@@ -93,18 +95,18 @@ public:
       break;
     case PREDICTION_TYPE::HALFRING:
       return "simple_barycentre_half_ring";
-      break;
+      break;*/
     case PREDICTION_TYPE::BUTTERFLY:
       return "butterfly";
       break;
     default:
-      return "butterfly";
+      return "unknown";
       break;
     }
   }
-  std::string VKeptToString() const
+  std::string get_vkept_type_as_string() const
   {
-    switch(Vkept_pos)
+    switch(_vkept_pos)
     {
     case VKEPT_POSITION::HALFEDGE:
       return "halfedge";
@@ -120,14 +122,14 @@ public:
       break;
     }
   }
-  std::string MetricToString() const
+  std::string get_metric_type_as_string() const
   {
-    switch(Metric)
+    switch(_metric)
     {
     case FEVV::Filters::METRIC_TYPE::NO_METRIC:
       return "no_metric";
       break;
-    case FEVV::Filters::METRIC_TYPE::QEM:
+    case FEVV::Filters::METRIC_TYPE::QEM_3D:
       return "qem";
       break;
     case FEVV::Filters::METRIC_TYPE::EDGE_LENGTH:
@@ -142,10 +144,10 @@ public:
     }
   }
 
-  void ChangeMethods(METRIC_TYPE metr, VKEPT_POSITION vk)
+  void set_methods(METRIC_TYPE metr, VKEPT_POSITION vk)
   {
-    Metric = metr;
-    Vkept_pos = vk;
+    _metric = metr;
+    _vkept_pos = vk;
   }
 };
 

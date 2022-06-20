@@ -18,7 +18,7 @@
 
 #include "FEVV/Filters/CGAL/Progressive_Compression/Operators/Midpoint.h"
 #include "FEVV/Filters/CGAL/Progressive_Compression/Operators/Halfedge.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/dequantization.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Uniform_dequantization.h"
 
 #include <iostream>
 #include <vector>
@@ -28,6 +28,9 @@
 
 namespace FEVV {
 namespace Filters {
+/// Functor template class used by the priority queue member in
+/// the Error_metric class. It permits to store tuples made of
+/// edge, cost and point in descending order of their cost. 
 template<
 	typename HalfedgeGraph,
 	typename edge_descriptor =
@@ -51,10 +54,11 @@ public:
 };
 
 /// \brief Abstract class to compute the collapse cost of each edge in a mesh.
+///        It also manages a priority queue of (edge, cost, collapse position).
 template<
     typename HalfedgeGraph,
     typename PointMap>
-class ErrorMetric
+class Error_metric
 {
 public:
   using vertex_descriptor =
@@ -74,34 +78,45 @@ public:
       std::tuple< edge_descriptor, double, Point >,
       std::vector< std::tuple< edge_descriptor, double, Point > >, 
       Compare_weights2< HalfedgeGraph > >
-    priority_queue_edges;
+    priority_queue_edges; /// Priority queue object, manages the priority of
+                          /// (edge, cost, kept vertex position) tuples
+                          /// according to their cost.
 
   typedef std::map< edge_descriptor, std::pair< double, Point > > edge2cost_map;
 
-  ErrorMetric(
+  Error_metric(
       HalfedgeGraph &g,
       PointMap &pm,
-      KeptPosition< HalfedgeGraph, PointMap > *vkept,
-      FEVV::Filters::UniformDequantization< HalfedgeGraph, PointMap > &dequantiz)
+      Kept_position< HalfedgeGraph, PointMap > *vkept,
+      FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap > &dequantiz)
       : _g(g), _gt(Geometry(g)), _pm(pm),
         _dequantiz(dequantiz)
   {
     _vkept = vkept;
     _threshold = 0;
   }
-  virtual ~ErrorMetric(){}
+  virtual ~Error_metric(){}
 
-  virtual void ComputeError() = 0;
-  bool isQueueEmpty() { return _queue.empty(); }
+  /// Method to compute 
+  /// 1) all edge costs of the mesh;
+  /// 2) the mean cost threshold.
+  virtual void compute_error() = 0;
+  
+  /// Method to compute the cost associated with an edge to collapse.
+  /// It usually depends on the resulting vertex position (the collapsed 
+  /// position).
+  virtual double compute_cost_edge(edge_descriptor e, const Point &collapsePos) = 0;
+  
+  bool is_queue_empty() { return _queue.empty(); }
   std::tuple< typename boost::graph_traits< HalfedgeGraph >::edge_descriptor,
               double,
               typename Geometry::Point >
-  getTopQueue() const { return _queue.top(); }
-  void popQueue() { _queue.pop(); }
+  get_top_queue() const { return _queue.top(); }
+  void pop_queue() { _queue.pop(); }
 
-  double getWeightTop() const { return std::get< 1 >(_queue.top()); }
-  virtual double ComputeCostEdge(edge_descriptor e, const Point &collapsePos) = 0;
-  double getThreshold() const { return _threshold; }
+  double get_weight_top() const { return std::get< 1 >(_queue.top()); }
+
+  double get_threshold() const { return _threshold; }
  
   void delete_from_descriptors(edge_descriptor e) { _edges_cost.erase(e); }
 
@@ -177,27 +192,27 @@ public:
 
   size_t get_size_queue() const { return _queue.size(); }
 
-  KeptPosition< HalfedgeGraph, PointMap > *
+  Kept_position< HalfedgeGraph, PointMap > *
   get_vkept()
   {
     return _vkept;
   }
 
-  virtual std::string getMethodasString() const = 0;
+  virtual std::string get_as_string() const = 0;
 
 protected:
   HalfedgeGraph &_g;
   const Geometry _gt;
   PointMap &_pm;
 
-  priority_queue_edges _queue; // queue with the weight as the key
+  priority_queue_edges _queue; /// queue with the weight as the key
   edge2cost_map _edges_cost;
 
   FEVV::Filters::VKEPT_POSITION _operator;
-  KeptPosition< HalfedgeGraph, PointMap >
+  Kept_position< HalfedgeGraph, PointMap >
       *_vkept;
   double _threshold;
-  FEVV::Filters::UniformDequantization< HalfedgeGraph, PointMap > &_dequantiz;
+  FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap > &_dequantiz;
 };
 } // namespace Filters
 } // namespace FEVV

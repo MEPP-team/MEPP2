@@ -29,10 +29,13 @@
 namespace FEVV {
 namespace Filters {
 
+/// \brief Preprocessing class is dedicated to provide a list of
+///        preprocessings that are needed to guarantee that the 
+///        following progressive compression will work properly
+///        with a "decompressible" binary file. 
 template<
     typename HalfedgeGraph,
     typename PointMap,
-    typename VertexColorMap,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename halfedge_descriptor =
@@ -44,41 +47,42 @@ template<
     typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
 
-class PreprocessingLD
+class Preprocessing
 {
 public:
-  PreprocessingLD(HalfedgeGraph &g, PointMap &pm, VertexColorMap &cm)
-      : _g(g), _pm(pm), _cm(cm)
+  Preprocessing(HalfedgeGraph &g, PointMap &pm)
+      : _g(g), _pm(pm)
   {
   }
 
-  //--------------------------input mesh
-  //pre-process--------------------------------------------
+  /// \brief Suppress all small connected components (isolated vertices and 
+  ///        isolated edges).
+  ///        To apply before quantization.   
   void process_mesh_before_quantization()
   {
-    // supress all small connected components (isolated vertices and isolated
-    // edges)
-    this->erase_small_connnected_components(); /// \todo need to be tested
+    this->erase_small_connnected_components(); 
 
     // does the mesh has borders?
     bool has_border = this->check_if_mesh_with_borders();
     std::clog << "process_mesh_before_quantization: does the mesh has borders ? " << has_border << std::endl;
   }
 
+  /// \brief Move duplicate vertex positions.
+  ///        To apply after quantization. 
   void process_mesh_after_quantization()
   {
-    // process dupplicates
-    this->merge_dupplicates_after_quantization();
+    // process duplicates
+    this->move_duplicates_after_quantization();
 
-    // check if there are not remainong dupplicates
-    bool still_dupplicates = this->are_dupplicates();
-    if(still_dupplicates)
-      std::clog << "WARNING: process_mesh_after_quantization: there are still dupplicates "
+    // check if there are not remainong duplicates
+    bool still_duplicates = this->are_duplicates();
+    if(still_duplicates)
+      std::clog << "WARNING: process_mesh_after_quantization: there are still duplicates "
                 << std::endl;
   }
 
-
-  /// erase isolated edges and vertices
+private:
+  /// Erase isolated edges and vertices.
   void erase_small_connnected_components()
   {
     auto iterator_pair = vertices(_g);
@@ -87,7 +91,7 @@ public:
     std::vector< vertex_descriptor > isolated_vertices;
     std::vector< halfedge_descriptor > isolated_hedges;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
 
       typename boost::graph_traits< HalfedgeGraph >::degree_size_type
@@ -109,12 +113,12 @@ public:
     }
     auto itE = isolated_hedges.begin(), 
          itEe = isolated_hedges.end();
-    for(; itE != itEe; ++itE)
+    for( ; itE != itEe; ++itE)
       remove_edge(edge(*itE, _g), _g);
 
     auto itV = isolated_vertices.begin(), 
          itVe = isolated_vertices.end();
-    for(; itV != itVe; ++itV)
+    for( ; itV != itVe; ++itV)
       remove_vertex(*itV, _g);
   }
 
@@ -124,7 +128,7 @@ public:
     edge_iterator ei = iterator_pair.first;
     edge_iterator ei_end = iterator_pair.second;
 
-    for(; ei != ei_end; ++ei)
+    for( ; ei != ei_end; ++ei)
     {
       if(CGAL::is_border_edge(halfedge(*ei, _g), _g))
         return true;
@@ -133,7 +137,7 @@ public:
   }
 
 
-  void merge_dupplicates_after_quantization()
+  void move_duplicates_after_quantization()
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -144,7 +148,7 @@ public:
                bool >
         ret;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
       Point pos = get(_pm, *vi);
 
@@ -159,9 +163,9 @@ public:
     }
   }
 
-  // simple test to check if all the dupplicates have been removed
-  // return true if there are still dupplicates in the mesh and false otherwise
-  bool are_dupplicates() const
+  // Simple test to check if all the duplicates have been removed
+  // return true if there are still duplicates in the mesh and false otherwise.
+  bool are_duplicates() const
   {
     auto iterator_pair = vertices(_g);
     vertex_iterator vi = iterator_pair.first;
@@ -171,7 +175,7 @@ public:
     std::pair< typename std::map< Point, vertex_descriptor >::iterator, bool >
         ret;
 
-    for(; vi != vi_end; ++vi)
+    for( ; vi != vi_end; ++vi)
     {
       const Point& pos = get(_pm, *vi);
       ret = map_pos.insert(std::pair< Point, vertex_descriptor >(pos, *vi));
@@ -184,7 +188,7 @@ public:
   }
 
 
-  Point move_dupplicate(vertex_descriptor v, int cas)
+  Point move_duplicate(vertex_descriptor v, int cas)
   {
     const Point& pos = get(_pm, v);
     Point new_pos;
@@ -330,7 +334,6 @@ public:
 private:
   HalfedgeGraph &_g;
   PointMap &_pm;
-  VertexColorMap &_cm;
   std::map< Point, vertex_descriptor, std::less< Point > > _position;
 };
 } // namespace Filters

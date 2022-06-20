@@ -150,8 +150,6 @@ public:
       FEVV::Filters::progressive_decompression_filter(_mesh, 
                                                       pm, 
                                                       v_cm, 
-                                                      //v_nm, 
-                                                      e_cm, 
                                                       mesh_binary_path, 
                                                       true);
     }

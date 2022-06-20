@@ -10,7 +10,7 @@
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 #pragma once
 
-#include "ErrorMetric.h"
+#include "Error_metric.h"
 
 #include <Eigen/Dense>
 
@@ -19,9 +19,12 @@
 
 namespace FEVV {
 namespace Filters {
+	
+/// \brief Concrete class to compute the collapse cost of each edge in a mesh
+///        as the memoryless variant of QEM error (Quadric Error Metric).		
 template< typename HalfedgeGraph,
           typename PointMap >
-class QEM3D : public ErrorMetric< HalfedgeGraph,
+class QEM_3D : public Error_metric< HalfedgeGraph,
                                   PointMap >
 {
 public:
@@ -39,118 +42,95 @@ public:
   using Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point;
   using Geometry = typename FEVV::Geometry_traits< HalfedgeGraph >;
 
-  typedef ErrorMetric< HalfedgeGraph,
-                       PointMap >
-      SuperClass;
+  typedef Error_metric< HalfedgeGraph,
+                       PointMap > Super_class;
 
   typedef Eigen::MatrixXd Matrix;
   typedef Eigen::VectorXd VectorX;
   typedef typename std::tuple< Matrix, VectorX, double > Quadric;
 
 
-  QEM3D(
+  QEM_3D(
       HalfedgeGraph &g,
       PointMap &pm,
-      KeptPosition< HalfedgeGraph, PointMap >
+      Kept_position< HalfedgeGraph, PointMap >
           *vkept,
-      FEVV::Filters::UniformDequantization< HalfedgeGraph, PointMap >
+      FEVV::Filters::Uniform_dequantization< HalfedgeGraph, PointMap >
           &dequantiz)
-      : SuperClass(g, pm, vkept, dequantiz)
+      : Super_class(g, pm, vkept, dequantiz)
   {
   }
-  ~QEM3D(){}
+  ~QEM_3D(){}
 
-  double ComputeAreaTriangle(const Point &p1, const Point &p2, const Point &p3) const
+  virtual void compute_error() override
   {
-    auto a2 = SuperClass::_gt.length2(SuperClass::_gt.sub_p(p2, p1));
-    auto b2 = SuperClass::_gt.length2(SuperClass::_gt.sub_p(p3, p2));
-    auto c2 = SuperClass::_gt.length2(SuperClass::_gt.sub_p(p1, p3));
-    double area2 = (2*(a2*b2 + b2*c2 + a2*c2) - (a2*a2 + b2*b2 + c2*c2))*0.0625f; // expanded Heron's formula
-    return sqrt(area2);
-  }
-
-  double ComputeAreaTriangleAfterDequantization(face_descriptor f) const
-  {
-    halfedge_descriptor h1 = halfedge(f, SuperClass::_g);
-    halfedge_descriptor h2 = next(h1, SuperClass::_g);
-    const Point& p1 = get(SuperClass::_pm, source(h1, SuperClass::_g));
-    const Point& p2 = get(SuperClass::_pm, target(h1, SuperClass::_g));
-    const Point& p3 = get(SuperClass::_pm, target(h2, SuperClass::_g));
-    Point p1_tmp = SuperClass::_dequantiz.dequantize_vertex(p1);
-    Point p2_tmp = SuperClass::_dequantiz.dequantize_vertex(p2);
-    Point p3_tmp = SuperClass::_dequantiz.dequantize_vertex(p3);
-
-    return ComputeAreaTriangle(p1_tmp, p2_tmp, p3_tmp);
-  }
-
-  virtual void ComputeError() override
-  {
-    if (!SuperClass::_queue.empty())
+    if(!Super_class::_queue.empty())
     {
-      typename SuperClass::priority_queue_edges empty2;
-      std::swap(SuperClass::_queue, empty2);
+      typename Super_class::priority_queue_edges empty2;
+      std::swap(Super_class::_queue, empty2);
     }
-    SuperClass::_edges_cost.clear();
-    if (SuperClass::_edges_cost.empty())
+    Super_class::_edges_cost.clear();
+    typename Super_class::edge2cost_map empty;
+    std::swap(Super_class::_edges_cost, empty);
+    if(Super_class::_edges_cost.empty())
     {
       faces_quadrics.clear();
-      auto face_pair = faces(SuperClass::_g);
+      auto face_pair = faces(Super_class::_g);
       auto face_it = face_pair.first;
       auto face_it_end = face_pair.second;
       // Compute every face quadric
-      for (; face_it != face_it_end; ++face_it)
+      for( ; face_it != face_it_end; ++face_it)
       {
-        Quadric curr_quadric = ComputeFaceQuadric(*face_it);
+        Quadric curr_quadric = compute_face_quadric(*face_it);
         faces_quadrics.emplace(*face_it, curr_quadric);
       }
 
-      auto vertices_pair = vertices(SuperClass::_g);
+      auto vertices_pair = vertices(Super_class::_g);
       auto vertices_it = vertices_pair.first;
       auto vertices_it_end = vertices_pair.second;
       // Compute every vertex quadric
-      for (; vertices_it != vertices_it_end; ++vertices_it)
+      for( ; vertices_it != vertices_it_end; ++vertices_it)
       {
-        Quadric curr_vertex_quadric = ComputeVertexQuadric(*vertices_it);
+        Quadric curr_vertex_quadric = compute_vertex_quadric(*vertices_it);
         vertices_quadrics.emplace(*vertices_it, curr_vertex_quadric);
       }
-      SuperClass::_pm = get(boost::vertex_point, SuperClass::_g);
+      Super_class::_pm = get(boost::vertex_point, Super_class::_g);
 
-      auto edge_iterator_pair = edges(SuperClass::_g);
+      auto edge_iterator_pair = edges(Super_class::_g);
       auto edge_ite = edge_iterator_pair.first;
       int count = 0;
-      SuperClass::_threshold = 0;
-      for (; edge_ite != edge_iterator_pair.second;
+      Super_class::_threshold = 0;
+      for( ; edge_ite != edge_iterator_pair.second;
         ++edge_ite)
       {
         Point collapsePos;
-        collapsePos = SuperClass::_vkept->ComputePosition(*edge_ite);
-        double weight = ComputeCostEdge(*edge_ite, collapsePos);
+        collapsePos = Super_class::_vkept->compute_position(*edge_ite);
+        double weight = compute_cost_edge(*edge_ite, collapsePos);
 
-        SuperClass::_threshold += weight;
+        Super_class::_threshold += weight;
         ++count;
         ///////////////////////////////////////////////////////////////////////
-        SuperClass::_queue.push(
+        Super_class::_queue.push(
           std::make_tuple(*edge_ite, weight, collapsePos));
-        SuperClass::_edges_cost.emplace(
+        Super_class::_edges_cost.emplace(
           *edge_ite, std::make_pair(weight, collapsePos));
       }
-      SuperClass::_threshold /= count;
+      Super_class::_threshold /= count;
     }
   }
 
-
-  double ComputeCostEdge(edge_descriptor e, const Point &collapsePos) override
+  double compute_cost_edge(edge_descriptor e, const Point &collapsePos) override
   {
-    auto current_halfedge = halfedge(e, SuperClass::_g);
+    auto current_halfedge = halfedge(e, Super_class::_g);
 
-    vertex_descriptor v1 = target(current_halfedge, SuperClass::_g);
-    vertex_descriptor v2 = source(current_halfedge, SuperClass::_g);
+    vertex_descriptor v1 = target(current_halfedge, Super_class::_g);
+    vertex_descriptor v2 = source(current_halfedge, Super_class::_g);
     Point dequantized_collapsePos =
-        SuperClass::_dequantiz.dequantize_vertex(collapsePos);
+        Super_class::_dequantiz.dequantize(collapsePos);
     Eigen::Vector4d v =
-        Eigen::Vector4d(SuperClass::_gt.get_x(dequantized_collapsePos),
-                        SuperClass::_gt.get_y(dequantized_collapsePos),
-                        SuperClass::_gt.get_z(dequantized_collapsePos),
+        Eigen::Vector4d(Super_class::_gt.get_x(dequantized_collapsePos),
+                        Super_class::_gt.get_y(dequantized_collapsePos),
+                        Super_class::_gt.get_z(dequantized_collapsePos),
                         1);
     auto vt = v.transpose();
 
@@ -182,45 +162,63 @@ public:
     return cost;
   }
 
-  double ComputeCostEdge(edge_descriptor e)
-  {
-    std::cout << "should not happen" << std::endl;
-    return 0.0;
-  }
-
-  std::string getMethodasString() const override { return "QEM3D"; }
+  std::string get_as_string() const override { return "QEM_3D"; }
 
 protected:
   std::map< face_descriptor, Quadric > faces_quadrics;
 
   std::map< vertex_descriptor, Quadric > vertices_quadrics;
 
-  std::vector< double > getPlaneEquation(face_descriptor f) const
+
+  double compute_triangle_area(const Point &p1, const Point &p2, const Point &p3) const
   {
-    halfedge_descriptor h1 = halfedge(f, SuperClass::_g);
-    halfedge_descriptor h2 = next(h1, SuperClass::_g);
+    auto a2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p2, p1));
+    auto b2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p3, p2));
+    auto c2 = Super_class::_gt.length2(Super_class::_gt.sub_p(p1, p3));
+    double area2 = (2*(a2*b2 + b2*c2 + a2*c2) - (a2*a2 + b2*b2 + c2*c2))*0.0625f; // expanded Heron's formula
+    return sqrt(area2);
+  }
+
+  double compute_triangle_area_after_dequantization(face_descriptor f) const
+  {
+    halfedge_descriptor h1 = halfedge(f, Super_class::_g);
+    halfedge_descriptor h2 = next(h1, Super_class::_g);
+    const Point& p1 = get(Super_class::_pm, source(h1, Super_class::_g));
+    const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
+    const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
+    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
+
+    return compute_triangle_area(p1_tmp, p2_tmp, p3_tmp);
+  }
+
+  std::vector< double > get_plane_equation(face_descriptor f) const
+  {
+    halfedge_descriptor h1 = halfedge(f, Super_class::_g);
+    halfedge_descriptor h2 = next(h1, Super_class::_g);
 
     // get points a the face and dequantize them
-    const Point& p1 = get(SuperClass::_pm, source(h1, SuperClass::_g));
-    const Point& p2 = get(SuperClass::_pm, target(h1, SuperClass::_g));
-    const Point& p3 = get(SuperClass::_pm, target(h2, SuperClass::_g));
+    const Point& p1 = get(Super_class::_pm, source(h1, Super_class::_g));
+    const Point& p2 = get(Super_class::_pm, target(h1, Super_class::_g));
+    const Point& p3 = get(Super_class::_pm, target(h2, Super_class::_g));
 
-    Point p1_tmp = SuperClass::_dequantiz.dequantize_vertex(p1);
-    Point p2_tmp = SuperClass::_dequantiz.dequantize_vertex(p2);
-    Point p3_tmp = SuperClass::_dequantiz.dequantize_vertex(p3);
+    Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+    Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+    Point p3_tmp = Super_class::_dequantiz.dequantize(p3);
 
 
-    auto x1 = SuperClass::_gt.get_x(p1_tmp);
-    auto y1 = SuperClass::_gt.get_y(p1_tmp);
-    auto z1 = SuperClass::_gt.get_z(p1_tmp);
+    auto x1 = Super_class::_gt.get_x(p1_tmp);
+    auto y1 = Super_class::_gt.get_y(p1_tmp);
+    auto z1 = Super_class::_gt.get_z(p1_tmp);
 
-    auto x2 = SuperClass::_gt.get_x(p2_tmp);
-    auto y2 = SuperClass::_gt.get_y(p2_tmp);
-    auto z2 = SuperClass::_gt.get_z(p2_tmp);
+    auto x2 = Super_class::_gt.get_x(p2_tmp);
+    auto y2 = Super_class::_gt.get_y(p2_tmp);
+    auto z2 = Super_class::_gt.get_z(p2_tmp);
 
-    auto x3 = SuperClass::_gt.get_x(p3_tmp);
-    auto y3 = SuperClass::_gt.get_y(p3_tmp);
-    auto z3 = SuperClass::_gt.get_z(p3_tmp);
+    auto x3 = Super_class::_gt.get_x(p3_tmp);
+    auto y3 = Super_class::_gt.get_y(p3_tmp);
+    auto z3 = Super_class::_gt.get_z(p3_tmp);
 
     // compute equation of a plane: compute normal vector to the plane
     Eigen::Vector3d v1;
@@ -250,10 +248,10 @@ protected:
   }
 
 
-  virtual Quadric ComputeFaceQuadric(face_descriptor f) const
+  virtual Quadric compute_face_quadric(face_descriptor f) const
   {
     // the quadric of a face is a representation of the equation of this place
-    std::vector< double > plane_eq = getPlaneEquation(f);
+    std::vector< double > plane_eq = get_plane_equation(f);
     Eigen::Vector3d n(plane_eq[0], plane_eq[1], plane_eq[2]);
 
     double d = plane_eq[3];
@@ -289,12 +287,12 @@ protected:
     return std::make_tuple(Af, Bf, Cf);
   }
 
-  virtual Quadric ComputeVertexQuadric(vertex_descriptor v) const
+  virtual Quadric compute_vertex_quadric(vertex_descriptor v) const
   {
     // The quadric of a vertex is the sum of the quadrics of its adjacent faces.
     boost::iterator_range<
         CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
-        iterator_range = CGAL::halfedges_around_target(v, SuperClass::_g);
+        iterator_range = CGAL::halfedges_around_target(v, Super_class::_g);
 
     Matrix M(3, 3);
     VectorX V(3);
@@ -304,7 +302,7 @@ protected:
     // get every adjacent quadric
     for(auto h_v : iterator_range)
     {
-      face_descriptor f = face(h_v, SuperClass::_g);
+      face_descriptor f = face(h_v, Super_class::_g);
       // avoid border case
       if(f != boost::graph_traits< HalfedgeGraph >::null_face())
       {
@@ -312,44 +310,44 @@ protected:
         if(it_curr_quadric != faces_quadrics.end())
         {
           // if a quadric has been found (no border case)
-          double area = ComputeAreaTriangleAfterDequantization(f);
+          double area = compute_triangle_area_after_dequantization(f);
           M = M + area * std::get< 0 >(it_curr_quadric->second);
           V = V + area * std::get< 1 >(it_curr_quadric->second);
           D = D + area * std::get< 2 >(it_curr_quadric->second);
         }
       }
       if(f == boost::graph_traits< HalfedgeGraph >::null_face() ||
-         CGAL::is_border(opposite(h_v, SuperClass::_g), SuperClass::_g))
+         CGAL::is_border(opposite(h_v, Super_class::_g), Super_class::_g))
       {
         // border case: create a perpendicular plane
-        halfedge_descriptor h_v_opp = opposite(h_v, SuperClass::_g);
+        halfedge_descriptor h_v_opp = opposite(h_v, Super_class::_g);
         face_descriptor f_opp;
         if(f == boost::graph_traits< HalfedgeGraph >::null_face())
         {
-          f_opp = face(h_v_opp, SuperClass::_g);
+          f_opp = face(h_v_opp, Super_class::_g);
         }
         else
         {
-          f_opp = face(h_v, SuperClass::_g);
+          f_opp = face(h_v, Super_class::_g);
         }
         
-        std::vector< double > plane_eq_opp = getPlaneEquation(f_opp);
+        std::vector< double > plane_eq_opp = get_plane_equation(f_opp);
         Eigen::Vector3d n(plane_eq_opp[0], plane_eq_opp[1], plane_eq_opp[2]);
 
-        const Point& p1 = get(SuperClass::_pm, source(h_v_opp, SuperClass::_g));
-        const Point& p2 = get(SuperClass::_pm, target(h_v_opp, SuperClass::_g));
+        const Point& p1 = get(Super_class::_pm, source(h_v_opp, Super_class::_g));
+        const Point& p2 = get(Super_class::_pm, target(h_v_opp, Super_class::_g));
 
-        Point p1_tmp = SuperClass::_dequantiz.dequantize_vertex(p1);
-        Point p2_tmp = SuperClass::_dequantiz.dequantize_vertex(p2);
-        double area = SuperClass::_gt.length2(SuperClass::_gt.sub_p(p2_tmp, p1_tmp)) * std::sqrt(3)/2.; // equilateral triangle area x 2
+        Point p1_tmp = Super_class::_dequantiz.dequantize(p1);
+        Point p2_tmp = Super_class::_dequantiz.dequantize(p2);
+        double area = Super_class::_gt.length2(Super_class::_gt.sub_p(p2_tmp, p1_tmp)) * std::sqrt(3)/2.; // equilateral triangle area x 2
 
-        auto x1 = SuperClass::_gt.get_x(p1_tmp);
-        auto y1 = SuperClass::_gt.get_y(p1_tmp);
-        auto z1 = SuperClass::_gt.get_z(p1_tmp);
+        auto x1 = Super_class::_gt.get_x(p1_tmp);
+        auto y1 = Super_class::_gt.get_y(p1_tmp);
+        auto z1 = Super_class::_gt.get_z(p1_tmp);
 
-        auto x2 = SuperClass::_gt.get_x(p2_tmp);
-        auto y2 = SuperClass::_gt.get_y(p2_tmp);
-        auto z2 = SuperClass::_gt.get_z(p2_tmp);
+        auto x2 = Super_class::_gt.get_x(p2_tmp);
+        auto y2 = Super_class::_gt.get_y(p2_tmp);
+        auto z2 = Super_class::_gt.get_z(p2_tmp);
 
         Eigen::Vector3d v1;
         v1 << x2 - x1, y2 - y1, z2 - z1;

@@ -17,8 +17,8 @@
 
 #include "FEVV/Wrappings/Geometry_traits.h"
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Operators/KeptPosition.h"
-#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/CollapseInfo.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Operators/Kept_position.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Compression/Collapse_info.h"
 
 #include <vector>
 #include <utility>
@@ -45,7 +45,7 @@ public:
     using Geometry = typename FEVV::Geometry_traits< HalfedgeGraph >;
   Predictor(
       HalfedgeGraph &g,
-      KeptPosition< HalfedgeGraph, PointMap >
+      Kept_position< HalfedgeGraph, PointMap >
           *kp,
       PointMap &pm)
       : _g(g), _gt(Geometry(_g)), _pm(pm)
@@ -56,40 +56,37 @@ public:
   virtual ~Predictor(){}
 
   /// Compression side: Computes geometric residuals from a set of info about 
-  /// the collapse
+  /// the collapse.
   virtual std::vector< Vector >
-  ComputeResiduals(CollapseInfo< HalfedgeGraph, PointMap > &mem) = 0;
+  compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) = 0;
   
-  /// Decompression side: predicts a position from encoded residuals
+  /// Decompression side: predicts a position from encoded residuals.
   virtual std::pair< Point, Point >
-  PlacePoints(const std::vector< Vector > &residuals,
+  place_points(const std::vector< Vector > &residuals,
               vertex_descriptor vkept, /// should be target (h1) and target(h2)
               halfedge_descriptor h1, /// first halfedge to expand into a face
-              halfedge_descriptor h2, /// second halfedge to expand into a face
-              bool is_reverse /// is the current split a reverse case?
+              halfedge_descriptor h2 /// second halfedge to expand into a face
               ) = 0;
 
-  virtual FEVV::Filters::PREDICTION_TYPE getType() const { return _type; }
+  virtual FEVV::Filters::PREDICTION_TYPE get_type() const { return _type; }
   
-  //virtual const std::tuple< bool, bool, bool, bool >& getInfoMidPoint() const = 0;
-  //virtual void set_bit_info(bool /*b1*/, bool /*b2*/, bool /*b3*/, bool /*b4*/) = 0;
   virtual void set_rev(bool /*b*/) = 0;
   
   virtual const Point& get_kept_position() const { return _kept_position; }
 
-  virtual FEVV::Filters::VKEPT_POSITION getTypeKP() const { return _kp->getType(); }
+  virtual FEVV::Filters::VKEPT_POSITION get_type_KP() const { return _kp->get_type(); }
 
 
-  virtual std::string getMethodasString() const = 0;
+  virtual std::string get_as_string() const = 0;
 
+  int get_nb_residuals() const { return _nbResiduals; }
 protected:
-  KeptPosition< HalfedgeGraph, PointMap >
+  Kept_position< HalfedgeGraph, PointMap >
       *_kp;
   HalfedgeGraph &_g;
   const Geometry _gt;
   PointMap &_pm;
   int _nbResiduals;
-  std::vector< Vector > _residuals;
   Point _kept_position;
   FEVV::Filters::PREDICTION_TYPE _type;
 };

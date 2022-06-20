@@ -28,7 +28,7 @@ namespace Comparator
                                                                      typename FEVV::Geometry_traits<Graph>::Scalar
                                                                      >::pmap_type,
             typename GeometryTraits = FEVV::Geometry_traits<Graph> >
-  class EdgeComparator
+  class Edge_comparator
   {
   public:
     typedef boost::graph_traits<Graph>              GraphTraits;
@@ -42,11 +42,11 @@ namespace Comparator
     EdgeWeightMap _ew;
     const GeometryTraits _gt;
   public:
-    EdgeComparator(const Graph& g, const PointMap& pm) :_g(g), _pm(pm), _ew(0, get(boost::edge_index, g)), _gt(GeometryTraits(g)) {}
-    EdgeComparator(const Graph& g, const PointMap& pm, const GeometryTraits& gt):_g(g), _pm(pm), _ew(0, get(boost::edge_index, g)), _gt(gt) {}
-    EdgeComparator(const Graph& g, const PointMap& pm, const EdgeWeightMap& ew) :_g(g), _pm(pm), _ew(ew), _gt(GeometryTraits(g)) {}
-    EdgeComparator(const Graph& g, const PointMap& pm, const EdgeWeightMap& ew, const GeometryTraits& gt) :_g(g), _pm(pm), _ew(ew), _gt(gt) {}
-    EdgeComparator(const EdgeComparator& other): _g(other._g), _pm(other._pm), _ew(other._ew), _gt(other._gt) {}
+    Edge_comparator(const Graph& g, const PointMap& pm) :_g(g), _pm(pm), _ew(0, get(boost::edge_index, g)), _gt(GeometryTraits(g)) {}
+    Edge_comparator(const Graph& g, const PointMap& pm, const GeometryTraits& gt):_g(g), _pm(pm), _ew(0, get(boost::edge_index, g)), _gt(gt) {}
+    Edge_comparator(const Graph& g, const PointMap& pm, const EdgeWeightMap& ew) :_g(g), _pm(pm), _ew(ew), _gt(GeometryTraits(g)) {}
+    Edge_comparator(const Graph& g, const PointMap& pm, const EdgeWeightMap& ew, const GeometryTraits& gt) :_g(g), _pm(pm), _ew(ew), _gt(gt) {}
+    Edge_comparator(const Edge_comparator& other): _g(other._g), _pm(other._pm), _ew(other._ew), _gt(other._gt) {}
     bool operator()(edge_descriptor e1, edge_descriptor e2)
     {
       if(e1==e2)
@@ -233,8 +233,8 @@ namespace Comparator
                                                                      >::pmap_type, 
             typename GeometryTraits = FEVV::Geometry_traits<Graph> >
   static
-  EdgeComparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>
-    get_edge_comparator(const Graph& g, const PointMap& pm) { return EdgeComparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>(g, pm); }
+  Edge_comparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>
+    get_edge_comparator(const Graph& g, const PointMap& pm) { return Edge_comparator<Graph, PointMap, EdgeWeightMap, GeometryTraits>(g, pm); }
 } // namespace Container
 } // namespace FEVV
 

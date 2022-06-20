@@ -22,7 +22,7 @@ namespace FEVV {
 namespace Comparator 
 {
   template <typename Graph, typename PointMap, typename GeometryTraits = FEVV::Geometry_traits<Graph> >
-  class VertexComparator
+  class Vertex_comparator
   {
   public: 
     typedef boost::graph_traits<Graph>                        GraphTraits;
@@ -34,8 +34,8 @@ namespace Comparator
     const PointMap& _pm;
     const GeometryTraits _gt;
   public:
-    VertexComparator(const Graph& g, const PointMap& pm) :_g(g), _pm(pm), _gt(GeometryTraits(g)) {}
-    VertexComparator(const Graph& g, const PointMap& pm, const GeometryTraits& gt) :_g(g), _pm(pm), _gt(gt) {}
+    Vertex_comparator(const Graph& g, const PointMap& pm) :_g(g), _pm(pm), _gt(GeometryTraits(g)) {}
+    Vertex_comparator(const Graph& g, const PointMap& pm, const GeometryTraits& gt) :_g(g), _pm(pm), _gt(gt) {}
     bool operator()(vertex_descriptor v1, vertex_descriptor v2)
     {
       if(v1==v2)
@@ -110,8 +110,8 @@ namespace Comparator
   /////////////////////////////////////////////////////////////////////////////
   template <typename Graph, typename PointMap, typename GeometryTraits = FEVV::Geometry_traits<Graph> >
   static 
-  VertexComparator<Graph, PointMap, GeometryTraits>
-    get_vertex_comparator(const Graph& g, const PointMap& pm) { return VertexComparator<Graph, PointMap, GeometryTraits>(g, pm); }
+  Vertex_comparator<Graph, PointMap, GeometryTraits>
+    get_vertex_comparator(const Graph& g, const PointMap& pm) { return Vertex_comparator<Graph, PointMap, GeometryTraits>(g, pm); }
 } // namespace Container
 } // namespace FEVV
 

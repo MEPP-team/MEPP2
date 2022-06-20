@@ -176,7 +176,7 @@ public:
     // apply filter
     // B) call the filter corresponding to your operation
     FEVV::Filters::Parameters params(_predictor,_operator,_metric,true,false,_quantization);
-    std::string filepath = "null";
+    std::string filepath = ""; // output_path
 	
     std::string result;
     try {
@@ -187,11 +187,11 @@ public:
                                      //v_nm,
                                      gt,
                                      params,
-                                     filepath,
-                                     _filepath,
                                      _nb_batches,
                                      _minimum_vertices,
                                      _batch_stop,
+                                     filepath,
+                                     _filepath,
                                      true,
                                      true,
                                      false,
@@ -245,10 +245,10 @@ public:
       _predictor = FEVV::Filters::PREDICTION_TYPE::POSITION;
     }
 
-	_metric = FEVV::Filters::METRIC_TYPE::QEM;
+   _metric = FEVV::Filters::METRIC_TYPE::QEM_3D;
 	 if(metr.compare("QEM") == 0)
     {
-      _metric = FEVV::Filters::METRIC_TYPE::QEM;
+      _metric = FEVV::Filters::METRIC_TYPE::QEM_3D;
     }
     else if(metr.compare("Volume Preserving") == 0)
     {

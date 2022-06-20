@@ -11,46 +11,52 @@
 
 #pragma once
 
-#include "FEVV/Filters/CGAL/Progressive_Compression/Operators/KeptPosition.h"
+#include "FEVV/Filters/CGAL/Progressive_Compression/Operators/Kept_position.h"
 
 namespace FEVV {
 namespace Filters {
+/**
+ *  \brief Concrete class to represent the target position type of
+ *         the resulting vertex of an edge collapse. 
+ */		
 template< typename HalfedgeGraph,
           typename PointMap,
           typename Geometry = typename FEVV::Geometry_traits< HalfedgeGraph > >
-class Halfedge : public KeptPosition< HalfedgeGraph,
+class Halfedge : public Kept_position< HalfedgeGraph,
                                       PointMap,
                                       Geometry >
 {
 public:
   using Vector = typename Geometry::Vector;
   using Point = typename Geometry::Point;
-  typedef KeptPosition< HalfedgeGraph,
+  typedef Kept_position< HalfedgeGraph,
                         PointMap,
                         Geometry >
-      SuperClass;
+      Super_class;
   Halfedge(HalfedgeGraph &g,
            PointMap &pm)
-      : SuperClass(g, pm)
+      : Super_class(g, pm)
   {
-    SuperClass::_type = VKEPT_POSITION::HALFEDGE;
-    SuperClass::_reverse = true;
+    Super_class::_type = VKEPT_POSITION::HALFEDGE;
+    Super_class::_reverse = true; // has a reverse case
   }
   Halfedge(HalfedgeGraph &g,
            PointMap &pm,
            Geometry &gt)
-      : SuperClass(g, pm, gt)
+      : Super_class(g, pm, gt)
   {
-    SuperClass::_type = VKEPT_POSITION::HALFEDGE;
-    SuperClass::_reverse = true;
+    Super_class::_type = VKEPT_POSITION::HALFEDGE;
+    Super_class::_reverse = true; // has a reverse case
   }
   ~Halfedge(){}
-  Point ComputePosition(
+  
+  /// Compute the target position of an edge.
+  Point compute_position(
       typename boost::graph_traits< HalfedgeGraph >::edge_descriptor edge) override
   {
-    return get(SuperClass::_pm, target(edge, SuperClass::_g));
+    return get(Super_class::_pm, target(edge, Super_class::_g));
   }
-  std::string getMethodasString() const override { return "halfedge"; }
+  std::string get_as_string() const override { return "halfedge"; }
 };
 
 } // namespace Filters
