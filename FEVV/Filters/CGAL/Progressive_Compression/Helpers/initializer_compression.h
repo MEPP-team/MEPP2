@@ -105,7 +105,7 @@ progressive_compression_main(int argc, const char **argv)
   "progressive_compression_original_mesh_after_preprocess.off"; // not used in this file
   if(argc < 2)
   {
-    std::cout << "Apply a dummy filter to the input mesh." << std::endl;
+    std::cout << "Apply a progressive compression filter to the input mesh." << std::endl;
     std::cout << "Usage:  " << argv[0] << "  input_mesh_filename" << std::endl;
     std::cout << "Example:  " << argv[0]
               << "  ../Testing/Data/CubeNonTriangleFaces.off" << std::endl;
