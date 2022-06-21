@@ -34,7 +34,11 @@ testSpanningTreeComparatorSurfaceMesh(const std::string& filename)
   Mesh m;
   try
   {
+#if( CGAL_VERSION_NR < CGAL_VERSION_NUMBER(5,3,0) )	  
     CGAL::read_off(in, m);
+#else
+	CGAL::IO::read_OFF(in, m);
+#endif
   }
   catch (const std::length_error &le)
   {
