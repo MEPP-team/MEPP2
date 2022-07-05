@@ -33,11 +33,11 @@ namespace MATH         // OK: even when nested, no indentation
 } // namespace FEVV
 ```
 
-### No using namespace
+### No "using namespace"
 
-Note: this coding style rule applies to `using namespace` but **does not** apply to the `using` expression. The usage of the `using` directive for [type alias](http://en.cppreference.com/w/cpp/language/type_alias) remains a must for [templated type alias](https://stackoverflow.com/questions/6907194/how-to-typedef-a-template-class).
+Note: this coding style rule applies to "using namespace" but **does not** apply to the "using" expression. The usage of the "using" directive for [type alias](http://en.cppreference.com/w/cpp/language/type_alias) remains a must for [templated type alias](https://stackoverflow.com/questions/6907194/how-to-typedef-a-template-class).
 
-By default the usage of `using namespace` is forbidden. Yet, when visibility is _really_ compromised then the usage of `using namespace` will be simply frown upon (as opposed to forbidden) when restricted to the block where it is used (as opposed to file scope).
+By default the usage of "using namespace" is forbidden. Yet, when visibility is _really_ compromised then the usage of "using namespace" will be simply frown upon (as opposed to forbidden) when restricted to the block where it is used (as opposed to file scope).
 For example code like
 ```
 void SomeFunction(void)
