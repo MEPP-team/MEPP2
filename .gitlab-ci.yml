@@ -928,11 +928,11 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_111
 
 # ELO - 22.04 - uncomment below for test
-#dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
-#  tags:
-#    - MEPP2,osx,DOCKER-LIN
-#  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_112
+dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+  tags:
+    - MEPP2,osx,DOCKER-LIN
+  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_112
 
 ########################################
 # DOCKER_WIN - CONF3 (ALL) - 4 configs #
