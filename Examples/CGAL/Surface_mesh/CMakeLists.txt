@@ -44,6 +44,7 @@ target_link_libraries( texture_image_demo_filter_cgal_surface_mesh
 
 ######
 add_subdirectory( JND )
+add_subdirectory( Lib_msdm2 )
 
 ######		
 if( NOT BUILD_USE_DRACO OR NOT draco_FOUND )
@@ -58,5 +59,3 @@ target_link_libraries( progressive_compression_filter_cgal_surface_mesh
                        ${IMG-3RDPARTY_LIBRARIES}
                        ${draco_LIBRARIES}
                        )
-
-

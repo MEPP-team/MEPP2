@@ -14,7 +14,7 @@ This distinction is due to respect the \ref DevelopersCodingStyleGeneralitiesPag
 
  - Within &nbsp;<small><i>Visualization/PluginFilters/<YourFilterName></i></small>&nbsp; directory and its &nbsp;<small><i>Dialogs</i></small>&nbsp; subdirectory rename the files &nbsp;<small><i>helloworld*</i></small>&nbsp; to &nbsp;<small><i><your_filter_name>*</i></small>&nbsp;
 
-### Editing files
+### Editing plugin files
 
 Reminder : <b>watch out case sensitivity</b>.
 
@@ -22,9 +22,9 @@ Reminder : <b>watch out case sensitivity</b>.
    - replace &nbsp;<small><i><Helloworld></i></small>&nbsp; by &nbsp;<small><i><YourFilterName></i></small>&nbsp;
    - replace &nbsp;<small><i><helloworld></i></small>&nbsp; by &nbsp;<small><i><your_filter_name></i></small>&nbsp;
 
-### Modification of &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp;
+### Adding the new plugin to the plugins building list
 
- - add this line to the file (in alphabetical order please):<br>
+ - add this line to the file &nbsp;<small><i>Visualization/PluginFilters/PluginFilters.cmake</i></small>&nbsp; (in alphabetical order please):<br>
     &nbsp;<small><i>include( "${CMAKE_CURRENT_LIST_DIR}/<YourFilterName>/<your_filter_name>.cmake" )</i></small>&nbsp;
 
 ### Call your filter from the plugin

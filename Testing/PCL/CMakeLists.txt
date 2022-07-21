@@ -59,12 +59,23 @@ target_link_libraries( test_reader_writer_pcl
                        ${PCL_COMMON_LIBRARIES} ${PCL_IO_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )
-add_test( Test_reader_writer_pcl
-          test_reader_writer_pcl
-          ${TESTING_DATA_DIR}/tetra.with_normal_and_color.ply
-          test_reader_writer_pcl.ply
-          ${TESTING_REFOUTPUT_DIR}/PCL/test_reader_writer_pcl.ref.ply
-          )
+if( ${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR} VERSION_LESS "1.12" )
+  # PCL < 1.12
+  add_test( Test_reader_writer_pcl
+            test_reader_writer_pcl
+            ${TESTING_DATA_DIR}/tetra.with_normal_and_color.ply
+            test_reader_writer_pcl.ply
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_reader_writer_pcl.ref.ply
+            )
+else()
+  # PCL >= 1.12
+  add_test( Test_reader_writer_pcl
+            test_reader_writer_pcl
+            ${TESTING_DATA_DIR}/tetra.with_normal_and_color.ply
+            test_reader_writer_pcl.ply
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_reader_writer_pcl.pcl-1.12.1.ref.ply
+            )
+endif()
 
 #####
 add_executable( test_NN_search_concept_pcl
@@ -83,13 +94,25 @@ target_link_libraries( test_point_cloud_curvature_pcl
                        ${PCL_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )
-add_test( Test_point_cloud_curvature_pcl
-          test_point_cloud_curvature_pcl
-          ${TESTING_DATA_DIR}/casting_with_normals.ply
-          test_point_cloud_curvature_pcl_casting.ply
-          15
-          ${TESTING_REFOUTPUT_DIR}/PCL/test_point_cloud_curvature_pcl_casting.ref.ply
-          )
+if( ${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR} VERSION_LESS "1.12" )
+  # PCL < 1.12
+  add_test( Test_point_cloud_curvature_pcl
+            test_point_cloud_curvature_pcl
+            ${TESTING_DATA_DIR}/casting_with_normals.ply
+            test_point_cloud_curvature_pcl_casting.ply
+            15
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_point_cloud_curvature_pcl_casting.ref.ply
+            )
+else()
+  # PCL >= 1.12
+  add_test( Test_point_cloud_curvature_pcl
+            test_point_cloud_curvature_pcl
+            ${TESTING_DATA_DIR}/casting_with_normals.ply
+            test_point_cloud_curvature_pcl_casting.ply
+            15
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_point_cloud_curvature_pcl_casting.pcl-1.12.1.ref.ply
+            )
+endif()
 
 #####
 add_executable( test_geometry_concept_pcl
@@ -109,9 +132,21 @@ target_link_libraries( test_copy_graph_pcl
                        ${PCL_LIBRARIES}
                        ${Boost_LIBRARIES}
                        )
-add_test( Test_copy_graph_pcl_monkey_color_normal
-          test_copy_graph_pcl
-          ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
-          test_copy_graph_pcl_monkey_color_normal.ply
-          ${TESTING_REFOUTPUT_DIR}/PCL/test_copy_graph_pcl_monkey_color_normal.ref.ply
-          )
+if( ${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR} VERSION_LESS "1.12" )
+  # PCL < 1.12
+  add_test( Test_copy_graph_pcl_monkey_color_normal
+            test_copy_graph_pcl
+            ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+            test_copy_graph_pcl_monkey_color_normal.ply
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_copy_graph_pcl_monkey_color_normal.ref.ply
+            )
+else()
+  # PCL >= 1.12
+  add_test( Test_copy_graph_pcl_monkey_color_normal
+            test_copy_graph_pcl
+            ${TESTING_DATA_DIR}/monkey_points_with_color_and_normal.ply
+            test_copy_graph_pcl_monkey_color_normal.ply
+            ${TESTING_REFOUTPUT_DIR}/PCL/test_copy_graph_pcl_monkey_color_normal.pcl-1.12.1.ref.ply
+            )
+endif()
+

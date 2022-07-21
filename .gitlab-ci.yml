@@ -699,6 +699,18 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
+.linux_build_template_0x - CLANG - Release - QT5 - CONF3 (ALL): &linux_build_definition_0x-clang-qt5-release
+  rules:
+    - !reference [.no-dock-lin_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
 #dock-lin16.04LTS [Release - GCC - QT4 - CONF3 (ALL)]:
 #  tags:
 #    - MEPP2,osx,DOCKER-LIN
@@ -734,6 +746,12 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #    - MEPP2,osx,DOCKER-LIN
 #  image: mtola/ubuntu-21.04-mepp2
 #  <<: *linux_build_definition_0x-clang-qt5-debug
+
+#dock-lin22.04LTS [Release - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-22.04-mepp2
+#  <<: *linux_build_definition_0x-clang-qt5-release
 #
 .linux_build_template_1x - GCC - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-gcc-qt5-debug-cgal_50-pcl_110
   rules:
@@ -834,6 +852,87 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #    - MEPP2,osx,DOCKER-LIN
 #  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_111
+#
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_523-pcl_111
+  rules:
+    - !reference [.no-dock-lin_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.2.3"
+    - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_523-pcl_112
+  rules:
+    - !reference [.no-dock-lin_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.2.3"
+    - export PCL_DIR="$HOME/pcl-1.12.1/share/pcl-1.12"
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_111
+  rules:
+    - !reference [.no-dock-lin_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.4.1"
+    - export PCL_DIR="$HOME/pcl-1.11.1/share/pcl-1.11"
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_112
+  rules:
+    - !reference [.no-dock-lin_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - export CGAL_DIR="$HOME/CGAL-5.4.1"
+    - export PCL_DIR="$HOME/pcl-1.12.1/share/pcl-1.12"
+    - export CXX=clang++ CC=clang
+    - mkdir build; cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=$GUI -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - make -j 2 # now freeze with -j 3 !
+    - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+
+#dock-lin22.04LTS-cgal_5.2.3-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_523-pcl_111
+
+#dock-lin22.04LTS-cgal_5.2.3-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_523-pcl_112
+
+#dock-lin22.04LTS-cgal_5.4.1-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_111
+
+# ELO - 22.04 - uncomment below for test
+dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+  tags:
+    - MEPP2,osx,DOCKER-LIN
+  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_112
 
 ########################################
 # DOCKER_WIN - CONF3 (ALL) - 4 configs #
