@@ -23,21 +23,27 @@
 //Input:
 // path to a mesh
 // from here, the parameters are optional, and have default values
-// mode (0:compressing the mesh with defined parameters 
-//       1: compressing the given mesh with every method combination. 
-//       2: given a folder, will compute the distorsion between the meshes in the folder and the given mesh)
-// path to the compressed mesh (binary file)
-// folder to store the measure files 
-// predictor as an int (see parameters.h for actual values)
-// metric as an int
-// kept position as an int
+// mode (0: compressing the mesh with defined parameters ;
+//       1: compressing the given mesh with every method combination; 
+//       2: given a folder, will compute the distorsion between the meshes in the folder and the given mesh.)
+// path to the compressed mesh (binary file), use "" for default value
+// folder to store the measure files, use "" for default value (current folder) 
+// predictor as an int (0: POSITION <=> no-prediction; 
+//                      1: DELTA; 
+//                      2: BUTTERFLY)
+// metric as an int (0: QEM_3D; 
+//                   1: EDGE_LENGTH;
+//                   2: VOLUME_PRESERVING <=> local absolute volume error)
+// kept position as an int (0: MIDPOINT; 
+//                          1: HALFEDGE <=> edge target position)
 // number of simplification batches
-// minimum number of vertices
-// batch stopping condition as an int (0=ALL_EDGES or 1=REACH_THRESHOLD)
-// quantization bits
+// minimum number of vertices (-1 to set it to 5% of the input mesh vertices)
+// batch stopping condition as an int (0: ALL_EDGES;
+//                                     1: REACH_THRESHOLD)
+// quantization bits (10, 12 or 16 are common values)
 
 
-//Output: simplified mesh (as progressive_compressionFilteroutput.obj )
+//Output:
 //Compressed mesh as binary file(name given by the user or [predictor][keptposition][metric][quantization].bin
 int
 main(int argc, const char **argv)
