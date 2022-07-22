@@ -36,8 +36,6 @@ namespace Filters {
 template<
     typename HalfedgeGraph,
     typename PointMap,
-    typename Vector = typename FEVV::Geometry_traits< HalfedgeGraph >::Vector,
-    typename Point = typename FEVV::Geometry_traits< HalfedgeGraph >::Point,
     typename vertex_descriptor =
         typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
     typename halfedge_descriptor =
@@ -45,6 +43,7 @@ template<
 class Coarse_mesh_decoder
 {
 public:
+  typedef typename boost::property_traits<PointMap>::value_type Point;
 
   /// Coarse_mesh_decoder
   /// \param[in] g an empty graph
