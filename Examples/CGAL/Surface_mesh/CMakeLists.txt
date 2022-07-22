@@ -59,3 +59,12 @@ target_link_libraries( progressive_compression_filter_cgal_surface_mesh
                        ${IMG-3RDPARTY_LIBRARIES}
                        ${draco_LIBRARIES}
                        )
+
+add_executable( progressive_decompression_filter_cgal_surface_mesh
+                progressive_decompression_filter_cgal_surface_mesh.cpp )
+target_link_libraries( progressive_decompression_filter_cgal_surface_mesh
+                       ${CGAL_LIBRARY} ${CGAL_3RD_PARTY_LIBRARIES}
+                       ${Boost_LIBRARIES} ${FBX_LIBRARY} ${VTK_LIBRARIES}
+                       ${IMG-3RDPARTY_LIBRARIES}
+                       ${draco_LIBRARIES}
+                       )

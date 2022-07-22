@@ -78,12 +78,7 @@ progressive_decompression_filter(HalfedgeGraph& g,
 
     // Retrieve the base mesh
     FEVV::Filters::Coarse_mesh_decoder<
-      HalfedgeGraph,
-      PointMap,
-      typename GeometryTraits::Vector,
-      typename GeometryTraits::Point,
-      typename boost::graph_traits< HalfedgeGraph >::vertex_descriptor,
-      typename boost::graph_traits< HalfedgeGraph >::halfedge_descriptor >
+      HalfedgeGraph, PointMap >
       coarse(g, pm);
     coarse.decode_coarse_mesh(buffer);
 

@@ -12,7 +12,7 @@
 
 #include "FEVV/Filters/Generic/generic_writer.hpp"
 
-#include "FEVV/Filters/CGAL/Surface_mesh/Progressive_Compression_ld/progressive_decompression_filter.hpp"
+#include "FEVV/Filters/CGAL/Progressive_Compression/progressive_decompression_filter.hpp"
 
 /**
  * \brief A mesh type templated main(argc, argv) function that
@@ -36,7 +36,7 @@ progressive_decompression_main(int argc, const char **argv)
   // Input and output files.
   std::string input_file_path = argv[1];
   std::string output_file_path = (argc == 3)?argv[2]:
-                                  "progressive_decompressionFilter.output.obj";
+                                  "progressive_decompression_filter_output.obj";
 
   // Read mesh from file.
   MeshT m;

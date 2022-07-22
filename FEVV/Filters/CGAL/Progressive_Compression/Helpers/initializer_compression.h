@@ -102,10 +102,10 @@ progressive_compression_main(int argc, const char **argv)
   int min_number_vertices = -1;
   int bits_quantization = 12;
   std::string output_file_path_save_preprocess = 
-  "progressive_compression_original_mesh_after_preprocess.off"; // not used in this file
+  "progressive_compression_original_mesh_after_preprocess.obj"; // not used in this file
   if(argc < 2)
   {
-    std::cout << "Apply a dummy filter to the input mesh." << std::endl;
+    std::cout << "Apply a progressive compression filter to the input mesh." << std::endl;
     std::cout << "Usage:  " << argv[0] << "  input_mesh_filename" << std::endl;
     std::cout << "Example:  " << argv[0]
               << "  ../Testing/Data/CubeNonTriangleFaces.off" << std::endl;
@@ -186,7 +186,7 @@ progressive_compression_main(int argc, const char **argv)
   }
   // Input and output files:
   std::string input_file_path = argv[1];
-  std::string output_file_path = "progressive_compressionFilteroutput.obj";
+  //std::string output_file_path = "progressive_compression_filter_base_mesh.obj"; // for debug
 
   // Read mesh from file.
   if (mode != 1) {
@@ -233,13 +233,13 @@ progressive_compression_main(int argc, const char **argv)
                                    false, 
                                    output_file_path_save_preprocess);
 
-    // Write mesh to file: only write color maps.
-    {
-      FEVV::PMapsContainer pmaps_bag_empty;
-      put_property_map(FEVV::edge_color, m, pmaps_bag_empty, e_cm);
-      put_property_map(FEVV::vertex_color, m, pmaps_bag_empty, v_cm);
-      FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag_empty);
-    }
+    // Write mesh to file: only write color maps (debug).
+    // {
+      // FEVV::PMapsContainer pmaps_bag_empty;
+      // put_property_map(FEVV::edge_color, m, pmaps_bag_empty, e_cm);
+      // put_property_map(FEVV::vertex_color, m, pmaps_bag_empty, v_cm);
+      // FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag_empty);
+    // }
   }
   else if(mode == 1)
   {
