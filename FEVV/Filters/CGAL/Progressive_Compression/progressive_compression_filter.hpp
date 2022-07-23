@@ -327,10 +327,12 @@ template< typename HalfedgeGraph,
       }
       num_batch++;
     }
+#ifdef _DEBUG
     else
     {
       std::cout << "nothing to encode" << std::endl;
     }
+#endif
   }
 }
 
@@ -428,7 +430,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                              // halfedge target
   {
 #ifdef _DEBUG
-    std::cout << "Halfedge" << std::endl;
+    std::cout << "HALFEDGE" << std::endl;
 #endif
     KP = new FEVV::Filters::
       Halfedge< HalfedgeGraph, PointMap >(
@@ -439,7 +441,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
                                              // halfedge
   {
 #ifdef _DEBUG
-    std::cout << "Midpoint" << std::endl;
+    std::cout << "MIDPOINT" << std::endl;
 #endif
     KP = new FEVV::Filters::
       Midpoint< HalfedgeGraph, PointMap >(
@@ -459,7 +461,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
       PointMap >(
         g, pm, KP, dq);
 #ifdef _DEBUG
-    std::cout << "Edge Length" << std::endl;
+    std::cout << "EDGE_LENGTH" << std::endl;
 #endif
   }
   else if (params.get_metric() == FEVV::Filters::METRIC_TYPE::VOLUME_PRESERVING)
@@ -473,7 +475,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
         KP,
         dq);
 #ifdef _DEBUG
-    std::cout << "Volume preserving" << std::endl;
+    std::cout << "VOLUME_PRESERVING" << std::endl;
 #endif
   }
   else if (params.get_metric() == FEVV::Filters::METRIC_TYPE::QEM_3D)
@@ -502,16 +504,25 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   {
     predict = new FEVV::Filters::
       Butterfly< HalfedgeGraph, PointMap >(g, KP, pm);
+#ifdef _DEBUG
+    std::cout << "BUTTERFLY" << std::endl;
+#endif
   }
   else if (params.get_prediction() == FEVV::Filters::PREDICTION_TYPE::DELTA)
   {
     predict = new FEVV::Filters::Delta_predictor< HalfedgeGraph,
       PointMap >(g, KP, pm);
+#ifdef _DEBUG
+    std::cout << "DELTA" << std::endl;
+#endif
   }
   else if (params.get_prediction() == FEVV::Filters::PREDICTION_TYPE::POSITION)
   {
     predict = new FEVV::Filters::Raw_positions< HalfedgeGraph,
       PointMap >(g, KP, pm);
+#ifdef _DEBUG
+    std::cout << "POSITION" << std::endl;
+#endif
   }
   else
   {

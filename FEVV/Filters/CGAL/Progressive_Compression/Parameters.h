@@ -31,7 +31,7 @@ enum class VKEPT_POSITION { MIDPOINT = 0, /// midpoint position
                            };
 
 enum class METRIC_TYPE {
-  NO_METRIC = 0,
+  NO_METRIC = -1, /// do not use a local metric (not implemented in this release)
   QEM_3D, /// memoryless variant of QEM error (Quadric Error Metric)
   EDGE_LENGTH, /// edge length metric
   VOLUME_PRESERVING /// local absolute volume error metric

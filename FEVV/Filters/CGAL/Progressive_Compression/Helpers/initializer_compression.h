@@ -121,14 +121,26 @@ progressive_compression_main(int argc, const char **argv)
   if(argc > 3)
   {
     path_binary = argv[3];
+    if (path_binary == ".")
+    {
+      std::cerr << "The binary path cannot be set to \".\". Therefore, it will be set to default value." << std::endl;
+      path_binary = "";
+    }
   }
   /////////////////////////////////////////////////////////////////////////////
   MeshT m;
   FEVV::PMapsContainer pmaps_bag;
   /////////////////////////////////////////////////////////////////////////////
   std::string output_path = "";
-  if(argc > 4)
+  if (argc > 4)
+  {
     output_path = argv[4];
+    if (output_path == ".")
+    {
+      std::cerr << "The output path path cannot be set to \".\". Therefore, it will be set to \"./\"." << std::endl;
+      output_path = "./";
+    }
+  }
   else
   {
     output_path = typeid(m).name();
@@ -160,21 +172,25 @@ progressive_compression_main(int argc, const char **argv)
   FEVV::Filters::VKEPT_POSITION vkeptpos =
       FEVV::Filters::VKEPT_POSITION::HALFEDGE;
 
-  if(argc == 9)
+  if (argc > 5)
   {
-    std::cout << "user parameters" << std::endl;
     int predint = atoi(argv[5]);
-    int metrint = atoi(argv[6]);
-    int vkeptint = atoi(argv[7]);
-    number_batches = atoi(argv[8]);
-    prediction_type = static_cast< FEVV::Filters::PREDICTION_TYPE >(predint);
-    metric_type = static_cast< FEVV::Filters::METRIC_TYPE >(metrint);
-    vkeptpos = static_cast< FEVV::Filters::VKEPT_POSITION >(vkeptint);
+    prediction_type = static_cast<FEVV::Filters::PREDICTION_TYPE>(predint);
   }
-  if(argc > 9)
+  if (argc > 6)
   {
-    min_number_vertices = atoi(argv[9]);
+    int metrint = atoi(argv[6]);
+    metric_type = static_cast<FEVV::Filters::METRIC_TYPE>(metrint);
   }
+  if (argc > 7)
+  {
+    int vkeptint = atoi(argv[7]);
+    vkeptpos = static_cast<FEVV::Filters::VKEPT_POSITION>(vkeptint);
+  }
+  if (argc > 8)
+    number_batches = atoi(argv[8]);
+  if(argc > 9)
+    min_number_vertices = atoi(argv[9]);
   if(argc > 10)
   {
     int batchint = atoi(argv[10]);
