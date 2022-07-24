@@ -841,11 +841,12 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-gcc-qt5-debug-cgal_52-pcl_110
 
-dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
-  tags:
-    - MEPP2,osx,DOCKER-LIN
-  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
-  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
+# ubuntu-20.04 - uncomment below for test
+#dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+#  tags:
+#    - MEPP2,osx,DOCKER-LIN
+#  image: mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+#  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_52-pcl_111
 
 #dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - GCC - QT5 - CONF3 (ALL)]:
 #  tags:
@@ -927,7 +928,6 @@ dock-lin20.04LTS-cgal_5.2-pcl_1.11 [Debug - CLANG - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_111
 
-# ELO - 22.04 - uncomment below for test
 dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
