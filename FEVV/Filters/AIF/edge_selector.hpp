@@ -33,6 +33,8 @@ namespace Filters {
  * \tparam GeometryTraits The geometric kernel when available. This is defaulted
  *         to FEVV::Geometry_traits<FaceGraph>. 
  * \param[in] g The FaceGraph instance.
+ * \param[in] is_input_mesh_2_manifold Boolean to avoid costly checks when 
+ *            the input mesh is 2-manifold. If you do not know, chose false.
  * \param[in] forbid_non_satisfying_link_condition Boolean to avoid edge 
  *            non-satisfaying the link condition.
  * \param[in] forbid_non_manifold_edge Boolean to avoid non-manifold edge.
@@ -63,6 +65,7 @@ namespace Filters {
            typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
   std::vector<typename boost::graph_traits<FaceGraph>::edge_descriptor>
     edge_selector_for_collapse(const FaceGraph& g,
+                               bool is_input_mesh_2_manifold,
                                bool forbid_non_satisfying_link_condition, 
                                bool forbid_non_manifold_edge, 
                                bool forbid_edge_collapse_creating_non_manifold_split,
@@ -87,8 +90,10 @@ namespace Filters {
     {
       if (forbidden_edges_to_collapse.find(*edge_it) == forbidden_edges_to_collapse.end())
       {
-        bool is_a_2_manifold_collapse = Helpers::is_2_manifold_edge(*edge_it);
-        bool edge_ok_for_collapse = !forbid_non_manifold_edge ||
+        bool is_a_2_manifold_collapse = is_input_mesh_2_manifold || 
+                                        Helpers::is_2_manifold_edge(*edge_it);
+        bool edge_ok_for_collapse = is_input_mesh_2_manifold ||
+                                    !forbid_non_manifold_edge ||
           ( is_a_2_manifold_collapse && // cannot encode neither cut vertices, nor complex edges with triplets (v,left, right)
             Helpers::is_one_ring_2_manifold(source(*edge_it, g)) &&
             Helpers::is_one_ring_2_manifold(target(*edge_it, g)));
@@ -288,6 +293,8 @@ namespace Filters {
  * \tparam GeometryTraits The geometric kernel when available. This is defaulted
  *         to FEVV::Geometry_traits<FaceGraph>.
  * \param[in] g The FaceGraph instance.
+ * \param[in] is_input_mesh_2_manifold Boolean to avoid costly checks when 
+ *            the input mesh is 2-manifold. If you do not know, chose false.  
  * \param[in] forbid_non_satisfying_link_condition Boolean to avoid edge
  *            non-satisfaying the link condition.
  * \param[in] forbid_non_manifold_edge Boolean to avoid non-manifold edge.
@@ -313,6 +320,7 @@ namespace Filters {
     typename GeometryTraits = FEVV::Geometry_traits< FaceGraph > >
     std::vector<typename boost::graph_traits<FaceGraph>::edge_descriptor>
     edge_selector_for_collapse( const FaceGraph& g,
+                                bool is_input_mesh_2_manifold,
                                 bool forbid_non_satisfying_link_condition,
                                 bool forbid_non_manifold_edge,
                                 bool forbid_edge_collapse_creating_non_manifold_split,
@@ -328,7 +336,8 @@ namespace Filters {
   {
     std::set<typename boost::graph_traits<FaceGraph>::edge_descriptor> empty_external_forbidden_edges_to_collapse;
     
-    return  edge_selector_for_collapse( g, 
+    return  edge_selector_for_collapse( g,
+                                        is_input_mesh_2_manifold,
                                         forbid_non_satisfying_link_condition, 
                                         forbid_non_manifold_edge,
                                         forbid_edge_collapse_creating_non_manifold_split,

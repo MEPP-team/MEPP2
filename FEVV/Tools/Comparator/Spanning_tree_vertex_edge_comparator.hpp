@@ -126,7 +126,7 @@ namespace Comparator
     else
       area = FEVV::Operators::Geometry::triangle_area<GeometryTraits>(v_s_t_kept_neighbor_pos, v_s_pos, v_t_pos, gt);
     double res = ((perim < prec)? area:area/perim);
-    static double min_res = 0., max_res = 1024 * 2;
+    static double min_res = 0., max_res = 1024. * 2.;
     size_t nb_bit_quantization = static_cast<size_t>(log2(max_res) + 2);
     if (max_res < res)
     {
