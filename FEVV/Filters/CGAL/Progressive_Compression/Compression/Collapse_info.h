@@ -40,6 +40,8 @@ private:
   HalfedgeGraph &_g;
   const Geometry _gt;
   PointMap &_pm;
+  /////////////////////////////////////////////////////////////////////////////
+  // information set during the edge collapses
   vertex_descriptor _vkept; /// kept vertex after applying the edge collapse
                             /// (the remaining vertex after the operation, 
                             /// i.e. either source or target vertex)
@@ -48,17 +50,30 @@ private:
            /// (pivot vertex when not null)
   vertex_descriptor _v4; /// vertex v4=source(prev(h)) before the edge collapse
                          /// (pivot vertex when not null)  
+                         
   Point _pos_vt, _pos_vs; /// target and source vertex positions
 
   Point _pos_vkept; /// used to store the initial position of vkept in case we
-                  /// choose midpoint placement
+                    /// choose midpoint placement
 
+  // information set during the topology information generation
   bool _reverse; /// reverse the delta or not
+                 /// set during a call to connectivity_encoding function
+                 /// that is called by encode_connectivity_bitmask function
+                 /// called itself by set_connectivity_topology defined in
+                 /// Refinement_info.h and used at the end of collapse_batch
+                 /// function of the Batch_collapser.h file
 			
+  // information set during the geometry information generation (residuals)
   std::vector< Vector >
-      _error_prediction; /// Contains one or several deltas for position					
+      _error_prediction; /// contains one or several deltas for position	
+                         /// set during a call to compute_residuals (within 
+                         /// a predictor type) that is called by the 
+                         /// setup_prediction function in the Batch_collapser.h
+                         /// file and used at the end of collapse_batch
+                         /// function of the Batch_collapser.h file
   /////////////////////////////////////////////////////////////////////////////
-  int _num_collapse;
+  int _num_collapse; // only for debug purpose
 public:
   Collapse_info(HalfedgeGraph &g, PointMap &pm) : _g(g), _gt(Geometry(_g)), _pm(pm)
   {

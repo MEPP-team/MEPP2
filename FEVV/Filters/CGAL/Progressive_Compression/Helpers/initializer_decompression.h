@@ -24,18 +24,21 @@ template< typename MeshT >
 int
 progressive_decompression_main(int argc, const char **argv)
 {
-  if(argc < 2 || argc > 3)
+  if(argc < 2 || argc > 4)
   {
     std::cout << "Open a binary compressed 3D mesh " << std::endl;
-    std::cout << "Usage:  " << argv[0] << "  input_mesh_filename  [output_mesh_filename]" << std::endl;
+    std::cout << "Usage:  " << argv[0] << "  input_binary_file_name  [output_mesh_filename [nb_max_batches]]" << std::endl;
     std::cout << "Example:  " << argv[0]
               << "  binarymesh.bin" << std::endl;
     return EXIT_FAILURE;
   }
-
+  int nb_max_batches = 10000;
+  if (argc == 4){
+    nb_max_batches = atoi(argv[3]);
+  }
   // Input and output files.
   std::string input_file_path = argv[1];
-  std::string output_file_path = (argc == 3)?argv[2]:
+  std::string output_file_path = (argc >= 3)?argv[2]:
                                   "progressive_decompression_filter_output.obj";
 
   // Read mesh from file.
@@ -98,14 +101,17 @@ progressive_decompression_main(int argc, const char **argv)
   // Retrieve point property map (aka geometry).
   auto pm = get(boost::vertex_point, m);
 
-  // Apply filter.
+  ////////////////////////////////////////////////
+  // Decompression algorithm call (Algorithm 2) //
+  ////////////////////////////////////////////////	
   FEVV::Filters::progressive_decompression_filter(m, 
                                                   pm, 
                                                   v_cm, 
                                                   //v_nm,
                                                   e_cm,
                                                   input_file_path,
-                                                  true);
+                                                  true,
+                                                  nb_max_batches);
   // Write mesh to file.
   FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag);
 

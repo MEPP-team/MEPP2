@@ -123,7 +123,7 @@ public:
     draco::PointCloud *out_point_cloud_ =
         static_cast< draco::PointCloud * >(&g_draco);
     out_point_cloud_->set_num_points(
-        3 * static_cast<unsigned int>(num_faces_)); // Why not use point number?
+        3 * static_cast<unsigned int>(num_faces_)); 
 
     draco::GeometryAttribute va;
     va.Init(draco::GeometryAttribute::POSITION,
@@ -156,12 +156,6 @@ public:
       out_point_cloud_->attribute(pos_att_id_)
           ->SetAttributeValue(draco::AttributeValueIndex(pos_num), val);
     }
-
-    // measure entropy of vertices
-    //draco::ShannonEntropyTracker entropy_tracker;
-    //entropy_tracker.Push(vertex_data.data(),
-    //                     static_cast< int >(vertex_data.size()));
-    //const int64_t stream_2_entropy_bits = entropy_tracker.GetNumberOfDataBits();
 
     // Add connectivity data
     int pos_face = 0;

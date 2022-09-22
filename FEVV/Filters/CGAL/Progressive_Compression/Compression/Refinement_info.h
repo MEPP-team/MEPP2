@@ -51,7 +51,6 @@ public:
       : _g(g), _list_memory(list_memory)
   {}
 
-  /////////////////////////////////////////////////////////////////////////////
   /// Get the number of vertices of the halfedge graph.
   int get_num_vertices() const
   {
@@ -62,7 +61,7 @@ public:
 
     return static_cast< int >(nb_vertices);
   }
-  /////////////////////////////////////////////////////////////////////////////
+ 
   /// Creates a vertex bitmask according to a vertex spanning tree and 
   /// a list of Collapse_info objects (initialized at construction).
   void set_bitMask(
@@ -100,14 +99,9 @@ public:
                                         // the bit mask.
       { // Code by 1 vertex that belongs to the list.
         _bitMask.push_back(1);
-		
-        //_other_info_bits.push_back(std::get< 0 >((*it_list).get_midpoint_rounds()));
-        //_other_info_bits.push_back(std::get< 1 >((*it_list).get_midpoint_rounds()));
-        //_other_info_bits.push_back(std::get< 2 >((*it_list).get_midpoint_rounds()));
-        //_other_info_bits.push_back(std::get< 3 >((*it_list).get_midpoint_rounds()));
-		
+        
         ++it_list;
-		
+        
         // Bit optimization stuff.
         last_was_1 = true; 
         tmp = FEVV::Comparator::get_not_processed_adjacent_vertices(*it, _g, processed_vertices, st.get_spanning_tree_min_incident_edge(*it));
@@ -122,7 +116,6 @@ public:
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
   /// Creates the edge bitmask.
   void set_connectivity_topology(
       const FEVV::Comparator::Spanning_tree_vertex_edge_comparator< HalfedgeGraph,
@@ -143,7 +136,6 @@ public:
                               );
   }
   
-  /////////////////////////////////////////////////////////////////////////////
   /// Creates the residuals array.
   void set_error_prediction()
   {
@@ -157,7 +149,6 @@ public:
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
   /// Creates the reverse bitmask (non-empty for halfedge/target position 
   /// type).
   void set_reverse_bool()
@@ -174,7 +165,7 @@ public:
 public:
   const std::list< bool >& get_bitmask() const { return _bitMask; }
   const std::list< bool >& get_connectivity() const { return _connectivity; }
-  //const std::list< bool >& get_other_info() const { return _other_info_bits; }
+
   /// Get the list of residuals.
   const std::list< std::vector< Vector > >& get_error_prediction() const
   {
@@ -191,9 +182,9 @@ private:
                               /// decoding
   std::list< bool > _connectivity; /// edge bit mask (which incident edge to a 
                                    /// vertex to split is a pivot edge to expand)
-  //std::list< bool > _other_info_bits;
-  std::list< std::vector< Vector > > _error_prediction; /// List of residuals.
-  std::list< bool > _reverse_bool;
+
+  std::list< std::vector< Vector > > _error_prediction; /// list of residuals.
+  std::list< bool > _reverse_bool; /// list of reverse booleans for deltas (for Halfedge/target position type)
 };
 
 

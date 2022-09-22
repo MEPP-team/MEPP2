@@ -114,9 +114,9 @@ public:
   get_top_queue() const { return _queue.top(); }
   void pop_queue() { _queue.pop(); }
 
-  double get_weight_top() const { return std::get< 1 >(_queue.top()); }
+  double get_top_cost() const { return std::get< 1 >(_queue.top()); }
 
-  double get_threshold() const { return _threshold; }
+  double get_mean_threshold() const { return _threshold; }
  
   void delete_from_descriptors(edge_descriptor e) { _edges_cost.erase(e); }
 
@@ -205,7 +205,7 @@ protected:
   const Geometry _gt;
   PointMap &_pm;
 
-  priority_queue_edges _queue; /// queue with the weight as the key
+  priority_queue_edges _queue; /// queue with the cost/weight as the key
   edge2cost_map _edges_cost;
 
   FEVV::Filters::VKEPT_POSITION _operator;

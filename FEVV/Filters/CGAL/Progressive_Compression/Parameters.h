@@ -139,7 +139,7 @@ public:
       return "volume-preserving";
       break;
     default:
-      return "wut"; // On doit pas tomber là dessus normalement
+      return "unknown";
       break;
     }
   }

@@ -198,8 +198,6 @@ public:
       std::vector< Vector > Ds =
           compute_D_prime_A_and_B(CA, SA, CB, SB, current_point);
 
-      //Vector DprimeA = Ds[0];
-      //Vector DprimeB = Ds[1];
       // we get correct DA and DB
       Vector Dprime = 
            Super_class::_gt.scalar_mult(Super_class::_gt.add_v(Ds[0], Ds[1]), 0.5f);

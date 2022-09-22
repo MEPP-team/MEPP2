@@ -69,8 +69,7 @@ class Uniform_dequantization
 
 			void set_quantization_step()
 			{
-				//_quantization_step = _max_length / (pow(2.0, _nb_bits_quantization) - 1);
-				_quantization_step = _max_length / pow(2.0, _nb_bits_quantization);
+				_quantization_step = _max_length / (pow(2.0, _nb_bits_quantization) - 1);
 				std::cout << "quantization step : " << _quantization_step << std::endl;
 			}
 		public:
@@ -125,13 +124,12 @@ class Uniform_dequantization
 					uint32_t pq_y = static_cast<uint32_t>(gt.get_y(pq));
 					uint32_t pq_z = static_cast<uint32_t>(gt.get_z(pq));
 
-					// Left reconstruction: why do no use instead the center reconstruction?
+					// Left reconstruction: why do no use instead the centered reconstruction?
 					double p_x = (double)pq_x * _quantization_step + p_min_x;
 					double p_y = (double)pq_y * _quantization_step + p_min_y;
 					double p_z = (double)pq_z * _quantization_step + p_min_z;
 
 					Point new_position = Point(p_x, p_y, p_z);
-					// std::cout << new_position << std::endl;
 
 					put(_pm, *vi, new_position);
 				}
