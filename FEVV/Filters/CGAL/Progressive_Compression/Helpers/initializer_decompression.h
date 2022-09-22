@@ -18,6 +18,7 @@
  * \brief A mesh type templated main(argc, argv) function that
  *         - applies the \ref progressive_decompression_filter generic filter
  *           on a compressed mesh file (binary file) ,
+ *         - reconstructs at maximum nb_max_batches batches, 
  *         - and write the resulting mesh to a file.
  */
 template< typename MeshT >

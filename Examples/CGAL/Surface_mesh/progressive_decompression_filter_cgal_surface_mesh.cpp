@@ -23,7 +23,7 @@
 //Input:
 // path to the compressed mesh (binary file)
 // path to the output mesh filename: set by default to progressive_decompression_filter_output.obj
-
+// number of maximum refinement batches to reconstruct: set by default to 10000
 
 //Output: reconstructed/decompressed mesh
 int
