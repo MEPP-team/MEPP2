@@ -218,7 +218,7 @@ public:
     if (_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
     { // For HALFEDGE/target case, an additional bit information is
       // needed
-      decoder.decode_bitmask(_other_info_bits);
+      decoder.decode_bitmask(_other_info_bits);  // Implements line 8 of Algorithm 2.
     }
 
     // Implements line 10 of Algorithm 2.

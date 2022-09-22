@@ -49,8 +49,10 @@ Binary_batch_decoder(draco::DecoderBuffer &buffer, int bit_quantization)
 };
 
 
-/// This function implements lines 5 to 6 of Algorithm 2.
-/// Similar calls appear lines 7 to 8 and 12 to 13 of Algorithm 2.
+/// \brief Decodes a bit mask encoded with draco's non-adaptive RAns  
+///        coder (RAnsBitDecoder). Only one bitmask of the current
+///        draco buffer is decoded if several bitmasks are
+///        present.
 void decode_bitmask(std::list<bool> &bitmask)
 {
 	int size_bitmask;
@@ -66,7 +68,8 @@ void decode_bitmask(std::list<bool> &bitmask)
   decoder.EndDecoding();
 }
 
-/// This function implements lines 9 to 10 of Algorithm 2.
+/// \brief  Decodes a set of residuals encoded with draco's entropy  
+///         coder (SymbolBitDecoder).
 void decode_residuals(std::list<std::vector<Vector>> &residuals, int nb_residuals)
 {
 	int size_residuals;
