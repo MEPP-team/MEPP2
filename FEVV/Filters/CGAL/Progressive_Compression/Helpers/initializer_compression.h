@@ -98,7 +98,7 @@ progressive_compression_main(int argc, const char **argv)
 {
   int mode = 0;
 
-  int number_batches = 15;
+  int number_batches = 70;
   int min_number_vertices = -1;
   int bits_quantization = 12;
   std::string output_file_path_save_preprocess = 
