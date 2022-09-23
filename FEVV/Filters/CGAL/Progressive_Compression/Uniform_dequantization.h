@@ -69,7 +69,7 @@ class Uniform_dequantization
 
 			void set_quantization_step()
 			{
-				_quantization_step = _max_length / (pow(2.0, _nb_bits_quantization) - 1);
+				_quantization_step = _max_length / pow(2.0, _nb_bits_quantization);
 #if(DEBUG)				
 				std::cout << "Uniform_dequantization: quantization step : " << _quantization_step << std::endl;
 #endif				
