@@ -146,10 +146,11 @@ class Uniform_quantization
 
 					}
 				
-					//_quantization_step = _max_length.first /( pow(2.0, _nb_bits) - 1);
-                    _quantization_step = _max_length.first / pow(2.0, _nb_bits);
-					///std::cout << "max length : " << _max_length.first << std::endl;
-					///std::cout << _quantization_step << std::endl;
+					_quantization_step = _max_length.first / pow(2.0, _nb_bits);
+#if(DEBUG)					
+					std::cout << "Uniform_quantization: max length : " << _max_length.first << std::endl;
+					std::cout << "Uniform_quantization: quantization step : " << _quantization_step << std::endl;
+#endif					
 				}
 			public:
 				double get_quantization_step() const { return _quantization_step; }
@@ -180,19 +181,17 @@ class Uniform_quantization
 						double pz = gt.get_z(point);
 
 						uint32_t pq_x = static_cast<uint32_t>(round((px - p_min_x) / _quantization_step));
-						if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
+						if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x 
 							pq_x = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 						uint32_t pq_y = static_cast<uint32_t>(round((py - p_min_y) / _quantization_step));
-						if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
+						if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y 
 							pq_y = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 						uint32_t pq_z = static_cast<uint32_t>(round((pz - p_min_z) / _quantization_step));
-						if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
+						if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z 
                             pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 
 						Point new_position = Point(pq_x, pq_y, pq_z);
-						//std::cout << new_position << std::endl;
 						put(_pm, *vi, new_position);
-
 					}
 				}
                 /// Quantizes a Point p according to quantization parameters.
@@ -211,13 +210,13 @@ class Uniform_quantization
 					double pz = gt.get_z(p);
 
 					uint32_t pq_x = static_cast<uint32_t>(round((px - p_min_x) / _quantization_step));
-					if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x
+					if(pq_x >= pow(2.0, _nb_bits)) // may occur when px = p_max_x 
 						pq_x = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 					uint32_t pq_y = static_cast<uint32_t>(round((py - p_min_y) / _quantization_step));
-					if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y
+					if(pq_y >= pow(2.0, _nb_bits)) // may occur when py = p_max_y 
 						pq_y = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 					uint32_t pq_z = static_cast<uint32_t>(round((pz - p_min_z) / _quantization_step));
-					if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z
+					if(pq_z >= pow(2.0, _nb_bits)) // may occur when pz = p_max_z 
 						pq_z = static_cast<uint32_t>(pow(2.0, _nb_bits) - 1);
 
 					Point pq = Point(pq_x, pq_y, pq_z);

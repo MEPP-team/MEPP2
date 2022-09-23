@@ -58,7 +58,6 @@ public:
     std::swap(Super_class::_edges_cost, empty);
     if(Super_class::_edges_cost.empty())
     {
-      //std::cout << "Edge length Metric" << std::endl;
       auto edge_iterator_pair = edges(Super_class::_g);
       auto edge_ite = edge_iterator_pair.first;
       int count = 0;

@@ -255,14 +255,15 @@ template< typename HalfedgeGraph,
   /////////////////////////
   // Add parameters info //
   /////////////////////////
-  header_size += HH.encode_binary_header(buffer); // Implements line 35 of Algorithm 1.
+  header_size += HH.encode_binary_header(buffer); // Implements line 36 of Algorithm 1.
 
   //////////////////////////////////////////////
   // Add encoded base mesh with its positions //
   //////////////////////////////////////////////
-  size_t size = binaryencode.quantize_encode_coarse_mesh(g, pm, gt, buffer); // Implements line 36 of Algorithm 1.
-
+  size_t size = binaryencode.quantize_encode_coarse_mesh(g, pm, gt, buffer); // Implements line 37 of Algorithm 1.
+#if(DEBUG)
   std::cout << "size coarse mesh: " << size << std::endl;
+#endif
   header_size += size;
   /////////////////////////////////////////////
   // Add refinement info from coarse to fine //
@@ -274,7 +275,7 @@ template< typename HalfedgeGraph,
   int cumulative_residuals = 0;
   int cumulative_connectivity = 0;
   int cumulative_otherinfo = 0;
-  // Implements lines 37 to 43 of Algorithm 1.
+  // Implements lines 38 to 44 of Algorithm 1.
   for (int i = static_cast<int>(refinements.size() - 1); i >= 0;
     --i) // refinement batches have to be written in reverse order: from
          // coarse to fine (during the simplification step we go from fine to
@@ -327,7 +328,7 @@ template< typename HalfedgeGraph,
       }
       num_batch++;
     }
-#ifdef _DEBUG
+#if(DEBUG)
     else
     {
       std::cout << "nothing to encode" << std::endl;
@@ -429,7 +430,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     FEVV::Filters::VKEPT_POSITION::HALFEDGE) // Kept at the position of the
                                              // halfedge target
   {
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "HALFEDGE" << std::endl;
 #endif
     KP = new FEVV::Filters::
@@ -440,7 +441,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     FEVV::Filters::VKEPT_POSITION::MIDPOINT) // kept at the middle of the
                                              // halfedge
   {
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "MIDPOINT" << std::endl;
 #endif
     KP = new FEVV::Filters::
@@ -458,9 +459,8 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   if (params.get_metric() == FEVV::Filters::METRIC_TYPE::EDGE_LENGTH)
   {
     EM = new FEVV::Filters::Edge_length_metric< HalfedgeGraph,
-      PointMap >(
-        g, pm, KP, dq);
-#ifdef _DEBUG
+      PointMap >(g, pm, KP, dq);
+#if(DEBUG)
     std::cout << "EDGE_LENGTH" << std::endl;
 #endif
   }
@@ -469,12 +469,12 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
     EM = new FEVV::Filters::Volume_preserving<
       HalfedgeGraph,
       PointMap >( // metric computing the local volume difference between
-                      // the locally collapsed neighborhood and the original one
+                  // the locally collapsed neighborhood and the original one
         g,
         pm,
         KP,
         dq);
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "VOLUME_PRESERVING" << std::endl;
 #endif
   }
@@ -486,7 +486,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
         pm,
         KP,
         dq);
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "QEM_3D" << std::endl;
 #endif
   }
@@ -504,7 +504,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   {
     predict = new FEVV::Filters::
       Butterfly< HalfedgeGraph, PointMap >(g, KP, pm);
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "BUTTERFLY" << std::endl;
 #endif
   }
@@ -512,7 +512,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   {
     predict = new FEVV::Filters::Delta_predictor< HalfedgeGraph,
       PointMap >(g, KP, pm);
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "DELTA" << std::endl;
 #endif
   }
@@ -520,7 +520,7 @@ progressive_compression_filter(HalfedgeGraph &g, /// Mesh to encode
   {
     predict = new FEVV::Filters::Raw_positions< HalfedgeGraph,
       PointMap >(g, KP, pm);
-#ifdef _DEBUG
+#if(DEBUG)
     std::cout << "POSITION" << std::endl;
 #endif
   }

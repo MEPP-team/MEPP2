@@ -77,7 +77,7 @@ public:
     // check if there are not remainong duplicates
     bool still_duplicates = this->are_duplicates();
     if(still_duplicates)
-      std::clog << "WARNING: process_mesh_after_quantization: there are still duplicates "
+      std::clog << "Warning: process_mesh_after_quantization: there are still duplicates "
                 << std::endl;
   }
 
@@ -157,7 +157,6 @@ private:
                  .second)
       {
         pos = Point(pos[0], pos[1], pos[2] + 1.0);
-        //std::cerr<< "doublon ";
       }
       put(_pm, *vi, pos);
     }

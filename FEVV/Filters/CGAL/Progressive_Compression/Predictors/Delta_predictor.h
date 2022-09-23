@@ -49,8 +49,7 @@ public:
 
 
   std::vector< Vector >  compute_residuals(Collapse_info< HalfedgeGraph, PointMap > &mem) override
-  { // vt <- v1, vs <- v2
-
+  { 
     Point A = mem.get_pos_vt();
     Point B = mem.get_pos_vs();
 
@@ -65,23 +64,7 @@ public:
 
     Vector delta = Super_class::_gt.sub_p(B, A);
 
-    Vector vec1 = // vt->vkept
-       Super_class::_gt.sub_p(mem.get_pos_vt(), mem.get_pos_vkept()); 
-    Vector vec2 = // vs->vkept
-       Super_class::_gt.sub_p(mem.get_pos_vs(), mem.get_pos_vkept()); 
     std::vector< Vector > residuals;
-    Vector to_be_pushed, revers;
-    //auto copy_round = mem._midpoint_rounds;
-    if(Super_class::_gt.length(vec1) <= Super_class::_gt.length(vec2))
-    {
-      to_be_pushed = std::move(vec1);
-      revers = std::move(vec2);
-    }
-    else
-    {
-      to_be_pushed = std::move(vec2);
-      revers = std::move(vec1);
-    }
     if(Super_class::_kp->get_type() == VKEPT_POSITION::MIDPOINT)
     {
       residuals = {delta};
@@ -174,5 +157,4 @@ private:
 
 
 } // namespace Filters
-
 } // namespace FEVV

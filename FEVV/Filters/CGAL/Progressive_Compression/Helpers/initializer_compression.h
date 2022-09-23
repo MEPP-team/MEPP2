@@ -98,7 +98,7 @@ progressive_compression_main(int argc, const char **argv)
 {
   int mode = 0;
 
-  int number_batches = 15;
+  int number_batches = 70;
   int min_number_vertices = -1;
   int bits_quantization = 12;
   std::string output_file_path_save_preprocess = 
@@ -202,8 +202,9 @@ progressive_compression_main(int argc, const char **argv)
   }
   // Input and output files:
   std::string input_file_path = argv[1];
-  //std::string output_file_path = "progressive_compression_filter_base_mesh.obj"; // for debug
-
+#if(DEBUG)  
+  std::string output_file_path = "progressive_compression_filter_base_mesh.obj"; 
+#endif
   // Read mesh from file.
   if (mode != 1) {
       FEVV::Filters::read_mesh(input_file_path, m, pmaps_bag);
@@ -232,6 +233,9 @@ progressive_compression_main(int argc, const char **argv)
     std::cout << "Single Compression" << std::endl;
     FEVV::Filters::Parameters params(
         prediction_type, vkeptpos, metric_type, true, false, bits_quantization);
+    //////////////////////////////////////////////
+    // Compression algorithm call (Algorithm 1) //
+    //////////////////////////////////////////////	
     progressive_compression_filter(m,
                                    pm,
                                    v_cm,
@@ -248,14 +252,14 @@ progressive_compression_main(int argc, const char **argv)
                                    true,
                                    false, 
                                    output_file_path_save_preprocess);
-
-    // Write mesh to file: only write color maps (debug).
-    // {
-      // FEVV::PMapsContainer pmaps_bag_empty;
-      // put_property_map(FEVV::edge_color, m, pmaps_bag_empty, e_cm);
-      // put_property_map(FEVV::vertex_color, m, pmaps_bag_empty, v_cm);
-      // FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag_empty);
-    // }
+#if(DEBUG)
+     { // Write mesh to file: only write color maps (debug).
+       FEVV::PMapsContainer pmaps_bag_empty;
+       put_property_map(FEVV::edge_color, m, pmaps_bag_empty, e_cm);
+       put_property_map(FEVV::vertex_color, m, pmaps_bag_empty, v_cm);
+       FEVV::Filters::write_mesh(output_file_path, m, pmaps_bag_empty);
+     }
+#endif	 
   }
   else if(mode == 1)
   {
@@ -275,10 +279,8 @@ progressive_compression_main(int argc, const char **argv)
                                 FEVV::Filters::METRIC_TYPE::QEM_3D
                            };
 
-    std::vector< int > tested_quantizations = { 10, 
-                                                12 
-                                                ,16
-                                               };
+    std::vector< int > tested_quantizations = {10, 12, 16};
+    
     bool first = true;
     int cpt = 0;
     for(size_t i = 0; i < available_predictions.size(); i++)
@@ -325,6 +327,9 @@ progressive_compression_main(int argc, const char **argv)
                                              tested_quantizations[l]);
             
             path_binary = ""; // Must be "empty" in order to be set automatically.
+            //////////////////////////////////////////////
+            // Compression algorithm call (Algorithm 1) //
+            //////////////////////////////////////////////			
             progressive_compression_filter(mesh,
                                            pm2,
                                            v_cm2,

@@ -45,8 +45,8 @@ template< typename HalfedgeGraph,
               HalfedgeGraph >::halfedge_descriptor >
 void
 find_vertices_to_forbid(HalfedgeGraph &g,
-                     vertex_descriptor v,
-                     std::set< vertex_descriptor > &forbidden_vertices)
+                        vertex_descriptor v,
+                        std::set< vertex_descriptor > &forbidden_vertices)
 {
   boost::iterator_range<
       CGAL::Halfedge_around_target_iterator< HalfedgeGraph > >
@@ -54,20 +54,8 @@ find_vertices_to_forbid(HalfedgeGraph &g,
   forbidden_vertices.insert(v);
   for(auto h_v : iterator_range)
   {
-    vertex_descriptor sourc_h = source(h_v, g);
-    forbidden_vertices.insert(sourc_h);
-    if(!CGAL::is_border(h_v, g))
-    {
-
-      halfedge_descriptor next_h = next(opposite(h_v, g), g);
-      halfedge_descriptor opp_next_h = opposite(next_h, g);
-      if(!CGAL::is_border(opp_next_h, g))
-      {
-
-        //halfedge_descriptor wing_h = next(opp_next_h, g);
-        //forbidden_vertices.insert(target(wing_h, g));
-      }
-    }
+    vertex_descriptor src_h = source(h_v, g);
+    forbidden_vertices.insert(src_h);
   }
 }
 
@@ -83,8 +71,11 @@ forbid_edges(HalfedgeGraph &g,
             std::set< halfedge_descriptor > &forbidden_edges)
 {
   std::set< vertex_descriptor > forbidden_vertices;
-  find_vertices_to_forbid(
-      g, v, forbidden_vertices);
+  // include all adjacent vertices to v in forbidden_vertices
+  find_vertices_to_forbid(g, v, forbidden_vertices);
+  
+  // include all halfedges incident to a vertex in forbidden_vertices
+  // in forbidden_edges
   for(const vertex_descriptor &ver : forbidden_vertices)
   {
     forbid_vertex(g, ver, forbidden_edges);

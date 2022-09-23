@@ -138,7 +138,9 @@ test_automatic_progressive_compression_decompression(int argc,
   //                                  12);
   auto pm = get(boost::vertex_point, m);
   auto gt_ = FEVV::Geometry_traits< MeshT >(m);
-  
+  //////////////////////////////////////////////
+  // Compression algorithm call (Algorithm 1) //
+  //////////////////////////////////////////////	 
   progressive_compression_filter(m,
                                  pm,
                                  v_cm,
@@ -170,7 +172,9 @@ test_automatic_progressive_compression_decompression(int argc,
                           v_cm_decomp,
                           e_cm_decomp,
                           v_nm_decomp);
-  
+  ////////////////////////////////////////////////
+  // Decompression algorithm call (Algorithm 2) //
+  ////////////////////////////////////////////////	
   FEVV::Filters::progressive_decompression_filter(m_decomp,
                                                   pm_decomp,
                                                   v_cm_decomp,

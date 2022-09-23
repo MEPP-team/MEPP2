@@ -55,18 +55,22 @@ namespace Filters {
    * @param[in] dequantize True to dequantize the vertex positions at
    *            the end of the decompression, else vertex positions remain
    *            quantized, used to test (without dequantization).
+   * @param[in] nb_max_batches A positive integer value to stop the 
+   *            progressive decompression after having decompressed at 
+   *            maximum nb_max_batches batches.
    */
 template< typename HalfedgeGraph,
-    typename PointMap,
-    typename VertexColorMap,
-    typename GeometryTraits >
+          typename PointMap,
+          typename VertexColorMap,
+          typename GeometryTraits >
 void 
-progressive_decompression_filter(HalfedgeGraph& g,
-                                 PointMap& pm,
-                                 VertexColorMap& v_cm,
-                                 const GeometryTraits&/*gt*/,
-                                 draco::DecoderBuffer& buffer,
-                                 bool dequantize = true) 
+progressive_decompression_filter(HalfedgeGraph& g, 
+                                 PointMap& pm, 
+                                 VertexColorMap& v_cm, 
+                                 const GeometryTraits&/*gt*/, 
+                                 draco::DecoderBuffer& buffer, 
+                                 bool dequantize = true,
+                                 unsigned int nb_max_batches = 10000) 
 {
     ////////////////////////
     // DECODE FILE HEADER //
@@ -154,9 +158,11 @@ progressive_decompression_filter(HalfedgeGraph& g,
 
     // Refine mesh until the buffer is fully decoded
     // Implements the while loop of Algorithm 2.
-    while(buffer.remaining_size() != 0)
+    unsigned int nb = 0;
+    while((buffer.remaining_size() != 0) && (nb < nb_max_batches))
     {
       _batch.decompress_binary_batch(buffer);
+      ++nb;
     }
     if(dequantize) // if we want, dequantize attributes (it is useful to not
     {              // dequantize for tests)
@@ -184,6 +190,9 @@ progressive_decompression_filter(HalfedgeGraph& g,
  * @param[in] dequantize True to dequantize the vertex positions at
  *            the end of the decompression, else vertex positions remain 
  *            quantized, used to test (without dequantization).
+ * @param[in] nb_max_batches A positive integer value to stop the 
+ *            progressive decompression after having decompressed at 
+ *            maximum nb_max_batches batches.
  */
 template< typename HalfedgeGraph,
           typename PointMap,
@@ -195,7 +204,8 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                  VertexColorMap &v_cm,
                                  const GeometryTraits & gt,
                                  const std::string &input_file_path,
-                                 bool dequantize = true)
+                                 bool dequantize = true,
+                                 unsigned int nb_max_batches = 10000)
 {
 #ifdef TIMING
   auto time_point_before_decomp = std::chrono::high_resolution_clock::now();
@@ -217,7 +227,7 @@ progressive_decompression_filter(HalfedgeGraph &g,
   // Init draco buffer with the content of the binary file.
   buffer.Init(data.data(), data.size());
   
-  progressive_decompression_filter(g, pm, v_cm, gt, buffer, dequantize);
+  progressive_decompression_filter(g, pm, v_cm, gt, buffer, dequantize, nb_max_batches);
 
 #ifdef TIMING
   auto time_point_after_decomp = std::chrono::high_resolution_clock::now();
@@ -241,6 +251,9 @@ progressive_decompression_filter(HalfedgeGraph &g,
  * @param[in] dequantize True to dequantize the vertex positions at
  *            the end of the decompression, else vertex positions remain
  *            quantized, used to test (without dequantization).
+ * @param[in] nb_max_batches A positive integer value to stop the 
+ *            progressive decompression after having decompressed at 
+ *            maximum nb_max_batches batches.
  */
 template< typename HalfedgeGraph,
           typename PointMap,
@@ -251,7 +264,8 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                  PointMap &pm,
                                  VertexColorMap &v_cm,
                                  const std::string &input_file_path,
-                                 bool dequantize = true)
+                                 bool dequantize = true,
+                                 unsigned int nb_max_batches = 10000)
 
 {
   GeometryTraits gt(g);
@@ -259,7 +273,7 @@ progressive_decompression_filter(HalfedgeGraph &g,
                                     PointMap, 
                                     VertexColorMap, 
                                     GeometryTraits>(
-      g, pm, v_cm, gt, input_file_path, dequantize);
+      g, pm, v_cm, gt, input_file_path, dequantize, nb_max_batches);
 }
 
 } // namespace Filters

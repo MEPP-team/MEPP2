@@ -53,8 +53,6 @@ public:
     std::swap(Super_class::_edges_cost, empty);
     if(Super_class::_edges_cost.empty())
     {
-      //std::cout << "Volume Metric" << std::endl;
-      //Super_class::_pm = get(boost::vertex_point, Super_class::_g);
       auto edge_iterator_pair = edges(Super_class::_g);
       auto edge_ite = edge_iterator_pair.first;
       int count = 0;
@@ -96,9 +94,8 @@ public:
   {
     return fabs(Super_class::_gt.dot_product(
                Super_class::_gt.cross_product(Super_class::_gt.sub_p(b, a), Super_class::_gt.sub_p(c, a)),
-               Super_class::_gt.sub_p(d, a))) /
-           6.0; // this calculus has been validated onto several
-    // tetrahedra using the above commented source code
+               Super_class::_gt.sub_p(d, a))) / 6.0; // this calculus has been validated onto several
+                                                     // tetrahedra using the above commented source code
   };
   void compute_volumes(edge_descriptor e, const Point &collapsePos, double& sum_first_vertex, double& sum_second_vertex)
   {
@@ -113,7 +110,7 @@ public:
          (prev(opposite(h, Super_class::_g), Super_class::_g) == current_halfedge) ||
          CGAL::is_border(opposite(h, Super_class::_g),
                          Super_class::_g)) // when volume calculus is not possible
-                                          // we ignore it
+                                           // we ignore it
       {
         continue;
       }
@@ -121,8 +118,7 @@ public:
       Point b = get(Super_class::_pm, target(next(opposite(h, Super_class::_g), Super_class::_g), Super_class::_g));
       const Point& c = get(Super_class::_pm, target(current_halfedge, Super_class::_g));
 
-      sum_first_vertex +=
-          tetrahedron_volume(a, b, c, collapsePos); // volume polyhedron
+      sum_first_vertex += tetrahedron_volume(a, b, c, collapsePos);
     }
     iterator_range =
         CGAL::halfedges_around_target(source(current_halfedge, Super_class::_g), Super_class::_g);

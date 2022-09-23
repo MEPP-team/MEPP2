@@ -218,7 +218,7 @@ public:
     if (_vkept->get_type() == FEVV::Filters::VKEPT_POSITION::HALFEDGE)
     { // For HALFEDGE/target case, an additional bit information is
       // needed
-      decoder.decode_bitmask(_other_info_bits);
+      decoder.decode_bitmask(_other_info_bits);  // Implements line 8 of Algorithm 2.
     }
 
     // Implements line 10 of Algorithm 2.
@@ -271,7 +271,7 @@ private:
   std::list< bool > _edge_bitmask;
   std::list< bool > _other_info_bits;
   const FEVV::Header_handler &_header; // quantization info is obtained via the 
-                                      // header
+                                       // header
   VertexColorMap &_vcm;
 
   /// This function implements lines 13 to 19 of Algorithm 2.
@@ -545,14 +545,9 @@ private:
     do
     {
       hb = opposite(next(hb, _g), _g);
+	  // check if good border or if it's a hole in the mesh
       if(CGAL::is_border(hb, _g))
       {
-        /*	// check if good border or if it's a hole in the mesh
-                        // check the orientation -> if anti-clockwise direction,
-           it's not a good border, it's a hole halfedge_descriptor hbp =
-           prev(hb, _g); halfedge_descriptor clockwise_direction =
-           opposite(next(opposite(next(opposite(hb, _g), _g), _g), _g), _g);
-                if (hbp == clockwise_direction)*/
         ok = true;
       }
       else
@@ -560,12 +555,6 @@ private:
 
         if(CGAL::is_border(opposite(hb, _g), _g))
         {
-          /*	// check if good border or if it's a hole in the mesh
-                          // check the orientation -> if anti-clockwise
-             direction, it's not a good border, it's a hole halfedge_descriptor
-             hbp = prev(hb, _g); halfedge_descriptor clockwise_direction =
-             opposite(next(opposite(next(opposite(hb, _g), _g), _g), _g), _g);
-                  if (hbp == clockwise_direction)*/
           hb = opposite(hb, _g);
           ok = true;
         }
@@ -749,8 +738,6 @@ private:
 
         CGAL::internal::set_border(opposite(hnew, _g), _g);
 
-        // CGAL::Euler::split_face(hnew, next(next(hnew, _g), _g), _g); // does
-        // not work with almost_square.off and square3.off (which is normal)
         CGAL::Euler::split_face(prev(hnew, _g), next(hnew, _g), _g);
       }
       else
