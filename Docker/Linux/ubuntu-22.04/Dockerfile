@@ -82,7 +82,7 @@ RUN apt-get -y install doxygen graphviz
 #RUN apt-get -y install libvtk7-dev # 7.1.1
 RUN apt-get -y install libvtk9-dev # 9.1.0
 
-# PCL - 3 tests fail with 1.12.1 but are OK with 1.11.1 and 1.10.1 !
+# PCL
 RUN apt-get -y install libflann-dev libproj-dev
 RUN apt-get -y install libpcl-dev # 1.12.1
 
@@ -112,4 +112,5 @@ ENV OPENMESH_DIR "$HOME/OpenMesh-9.0.0"
 ENV FBX_DIR "$HOME/FBX_SDK/2019.0"
 
 # Qt6
-#RUN apt-get -y install qt6-base-dev libqt6opengl6-dev # 6.2.4
+RUN apt-get -y install qt6-base-dev libqt6opengl6-dev # 6.2.4
+RUN apt-get -y autoremove

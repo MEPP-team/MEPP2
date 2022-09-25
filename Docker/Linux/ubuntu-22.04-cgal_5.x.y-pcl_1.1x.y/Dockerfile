@@ -66,6 +66,12 @@ RUN cd /tmp                                                                     
 RUN cd /tmp                                                                                         && \
     wget https://github.com/CGAL/cgal/releases/download/v5.4.1/CGAL-5.4.1.zip                       && \
     cd && unzip /tmp/CGAL-5.4.1.zip
+RUN cd /tmp                                                                                         && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.4.2/CGAL-5.4.2.zip                       && \
+    cd && unzip /tmp/CGAL-5.4.2.zip
+RUN cd /tmp                                                                                         && \
+    wget https://github.com/CGAL/cgal/releases/download/v5.5/CGAL-5.5.zip                           && \
+    cd && unzip /tmp/CGAL-5.5.zip
 
 # OpenMesh (installation in user home directory)
 RUN cd /tmp                                                                                         && \
@@ -94,6 +100,8 @@ RUN cd /tmp                                                                     
 #RUN apt-get -y install libqt4-dev libqt4-opengl-dev # now, no more Qt4 in Ubuntu
 # Qt5
 RUN apt-get -y install qtbase5-dev libqt5opengl5-dev # 5.15.3
+# Qt6
+RUN apt-get -y install qt6-base-dev libqt6opengl6-dev # 6.2.4
 
 # OpenSceneGraph
 RUN apt-get -y install libjpeg-dev libpng-dev libtiff-dev libfreetype6-dev
@@ -106,7 +114,7 @@ RUN apt-get -y install doxygen graphviz
 #RUN apt-get -y install libvtk7-dev # 7.1.1
 RUN apt-get -y install libvtk9-dev # 9.1.0
 
-# PCL (installation in user home directory) - DON'T use libpcl-dev package ?!
+# PCL (installation in user home directory)
 RUN apt-get -y install libflann-dev libproj-dev
 #RUN apt-get -y install libpcl-dev # 1.12.1
 #RUN cd /tmp                                                                                                                                                                && \
@@ -165,10 +173,10 @@ RUN cd /tmp                                                                     
     make -j 3                                                                                           && \
     make install && cd
 RUN cd /tmp                                                                                             && \
-    wget https://github.com/google/draco/archive/refs/tags/1.5.2.tar.gz                                 && \
-    tar -xzf 1.5.2.tar.gz                                                                               && \
-    cd draco-1.5.2 && mkdir build && cd build                                                           && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.5.2 .. && \
+    wget https://github.com/google/draco/archive/refs/tags/1.5.3.tar.gz                                 && \
+    tar -xzf 1.5.3.tar.gz                                                                               && \
+    cd draco-1.5.3 && mkdir build && cd build                                                           && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$HOME/draco-1.5.3 .. && \
     make -j 3                                                                                           && \
     make install && cd
 
@@ -186,6 +194,8 @@ ENV CGAL_DIR "$HOME/CGAL-5.2.3"
 #ENV CGAL_DIR "$HOME/CGAL-5.3.2"
 #ENV CGAL_DIR "$HOME/CGAL-5.4"
 #ENV CGAL_DIR "$HOME/CGAL-5.4.1"
+#ENV CGAL_DIR "$HOME/CGAL-5.4.2"
+#ENV CGAL_DIR "$HOME/CGAL-5.5"
 
 #ENV OPENMESH_DIR "$HOME/OpenMesh-7.1"
 #ENV OPENMESH_DIR "$HOME/OpenMesh-8.1"
@@ -200,7 +210,4 @@ ENV FBX_DIR "$HOME/FBX_SDK/2019.0"
 
 #ENV DRACO_DIR "$HOME/draco-1.3.6"
 #ENV DRACO_DIR "$HOME/draco-1.4.3"
-ENV DRACO_DIR "$HOME/draco-1.5.2"
-
-# Qt6
-#RUN apt-get -y install qt6-base-dev libqt6opengl6-dev # 6.2.4
+ENV DRACO_DIR "$HOME/draco-1.5.3"
