@@ -22,11 +22,7 @@ environment:
   matrix:
 # new matrix
 #
-# all (qt5 and qt4)
-  - B_USE_CGAL: ON
-    B_USE_OM:   ON
-    B_USE_AIF:  ON
-    B_USE_QT5:  ON    # so we use Qt5 here for UI
+# all (qt4)
   - B_USE_CGAL: ON
     B_USE_OM:   ON
     B_USE_AIF:  ON
@@ -46,6 +42,11 @@ environment:
     B_USE_OM:   OFF
     B_USE_AIF:  ON
     B_USE_QT5:  OFF   # so we use Qt4 here for UI
+# all (qt5)
+  - B_USE_CGAL: ON
+    B_USE_OM:   ON
+    B_USE_AIF:  ON
+    B_USE_QT5:  ON    # so we use Qt5 here for UI
 
 # this is how to allow failing jobs in the matrix
 matrix:
