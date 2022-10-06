@@ -613,17 +613,26 @@ mesh_from_vector_representation(
           if(use_vertex_normal)
           {
             auto vn_pm = get_property_map(FEVV::vertex_normal, g, pmaps);
-            put(vn_pm, vnew, get(vn_pm, vold));
+            //put(vn_pm, vnew, get(vn_pm, vold));
+            // splitted in 2 lines to avoid random crash on Windows
+            Vector normal = get(vn_pm, vold);
+            put(vn_pm, vnew, normal);
           }
           if(use_vertex_color)
           {
             auto vc_pm = get_property_map(FEVV::vertex_color, g, pmaps);
-            put(vc_pm, vnew, get(vc_pm, vold));
+            //put(vc_pm, vnew, get(vc_pm, vold));
+            // splitted in 2 lines to avoid random crash on Windows
+            Vector color = get(vc_pm, vold);
+            put(vc_pm, vnew, color);
           }
           if(use_vertex_texture_coord)
           {
             auto vt_pm = get_property_map(FEVV::vertex_texcoord, g, pmaps);
-            put(vt_pm, vnew, get(vt_pm, vold));
+            //put(vt_pm, vnew, get(vt_pm, vold));
+            // splitted in 2 lines to avoid random crash on Windows
+            Vector coord = get(vt_pm, vold);
+            put(vt_pm, vnew, coord);
           }
         };
 
