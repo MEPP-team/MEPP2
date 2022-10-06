@@ -11,6 +11,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <fstream>
 #include <iostream>
 
@@ -18,14 +19,15 @@
  * \brief  Compare two text based files in search possible differences.
  * \param  filenameA    Filename of first file.
  * \param  filenameB    Filename of second file.
- * \param  skip_mtllib  skip lines beginning with 'mtllib' (for OBJ comparison).
+ * \param  skip         skip lines beginning with the provided strings.
  * \result true when files are identical false otherwise
  */
 inline
 bool
 identical_text_based_files(std::string filename_a,
                            std::string filename_b,
-                           bool skip_mtllib = false)
+                           const std::vector< std::string > &skip =
+                              std::vector< std::string >())
 {
   std::ifstream file_a(filename_a);
   if(!file_a)
@@ -50,12 +52,22 @@ identical_text_based_files(std::string filename_a,
     getline(file_a, line_a);
     getline(file_b, line_b);
 
-    // skip 'mtllib' lines if requested
-    if(skip_mtllib &&
-       (line_a.substr(0, 6) == "mtllib") &&
-       (line_b.substr(0, 6) == "mtllib"))
+    // skip lines if requested
+    bool skip_line = false;
+    for(auto &skip_str : skip)
     {
-      continue;
+      if((line_a.substr(0, skip_str.size()) == skip_str) &&
+         (line_b.substr(0, skip_str.size()) == skip_str))
+      {
+        skip_line = true;
+        break;
+      }
+    }
+    if(skip_line)
+    {
+      std::cout << "skip line_a '" << line_a << "'" << std::endl;
+      std::cout << "skip line_b '" << line_b << "'" << std::endl;
+      continue; // stop processing the current line
     }
 
     // remove DOS end of line extra character if any
@@ -69,6 +81,9 @@ identical_text_based_files(std::string filename_a,
     {
       result = false;
       std::cout << "Comparison with reference file failed" << std::endl;
+      std::cout << "<line_a '" << line_a << "'" << std::endl;
+      std::cout << "---" << std::endl;
+      std::cout << ">line_b '" << line_b << "'" << std::endl;
       break;
     }
   }
