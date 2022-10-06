@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 
 template< typename MeshT >
@@ -84,9 +85,10 @@ test_copy_graph(int argc, const char **argv)
   else
   {
     // use text file comparator
+    std::vector< std::string > skip = { "mtllib" };
     if(! identical_text_based_files(output_file_path,
                                     reference_file_path,
-                                    true /*skip_mtllib*/))
+                                    skip))
     {
       std::cout << "Files are different!" << std::endl;
       return EXIT_FAILURE;
