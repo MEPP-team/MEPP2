@@ -18,9 +18,11 @@ option( BUILD_USE_QT5 "Using Qt5." OFF )
 # BUILD_USE_QT6:
 #
 # 1)  For the moment, under Ubuntu 22.04, VTK must be set to OFF if BUILD_USE_QT6 is ON (because VTK is linked with Qt5 !)
-# 2a) For the moment, under Windows, the BUILD_USE_QT6 option is hidden because of additional dependencies for Eigen and OpenMesh
+# 2a) For the moment, under Windows*, the BUILD_USE_QT6 option is hidden because of additional dependencies for Eigen and OpenMesh
 #     (newer versions: Eigen 3.3.9 and OpenMesh 8.1)
-# 2b) For the moment, under Windows (current binary kit), PCL must be set to OFF if BUILD_USE_QT6 is ON (because Flann 1.9.1 is too old !)
+# 2b) For the moment, under Windows* (current binary kit), PCL must be set to OFF if BUILD_USE_QT6 is ON (because Flann 1.9.1 is too old !)
+#
+#     * BUILD_USE_QT6 under Windows requires MSVC 2019 !
 # -----------------------------------------------------------------------------
 #option( BUILD_USE_QT6 "Using Qt6." OFF ) # TODO, comment
 
