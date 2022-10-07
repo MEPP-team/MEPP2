@@ -12,15 +12,19 @@ if (BUILD_USE_GUI_PointCloudCurvaturePlugin)
   set( PointCloudCurvature_Qt_Plugin_UI
        "${CMAKE_CURRENT_LIST_DIR}/Dialogs/point_cloud_curvature_dialog.ui"
        )
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(PointCloudCurvature_Qt_Plugin_MOC_CPP ${PointCloudCurvature_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(PointCloudCurvature_Qt_Plugin_UI_CPP ${PointCloudCurvature_Qt_Plugin_UI})
+    set(PointCloudCurvature_Qt_Plugin_SRC ${PointCloudCurvature_Qt_Plugin_SRC} ${PointCloudCurvature_Qt_Plugin_MOC_CPP} ${PointCloudCurvature_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(PointCloudCurvature_Qt_Plugin_MOC_CPP ${PointCloudCurvature_Qt_Plugin_HEADER})
     QT5_WRAP_UI(PointCloudCurvature_Qt_Plugin_UI_CPP ${PointCloudCurvature_Qt_Plugin_UI})
     set(PointCloudCurvature_Qt_Plugin_SRC ${PointCloudCurvature_Qt_Plugin_SRC} ${PointCloudCurvature_Qt_Plugin_MOC_CPP} ${PointCloudCurvature_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(PointCloudCurvature_Qt_Plugin_MOC_CPP ${PointCloudCurvature_Qt_Plugin_HEADER})
     QT4_WRAP_UI(PointCloudCurvature_Qt_Plugin_UI_CPP ${PointCloudCurvature_Qt_Plugin_UI})
     set(PointCloudCurvature_Qt_Plugin_SRC ${PointCloudCurvature_Qt_Plugin_SRC} ${PointCloudCurvature_Qt_Plugin_MOC_CPP} ${PointCloudCurvature_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 
   add_library(
       PointCloudCurvaturePlugin

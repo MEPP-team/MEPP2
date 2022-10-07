@@ -8,15 +8,19 @@ if (BUILD_USE_GUI_HelloworldPlugin)
   set( Helloworld_Qt_Plugin_UI
        "${CMAKE_CURRENT_LIST_DIR}/Dialogs/helloworld_dialog.ui"
        )
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(Helloworld_Qt_Plugin_MOC_CPP ${Helloworld_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(Helloworld_Qt_Plugin_UI_CPP ${Helloworld_Qt_Plugin_UI})
+    set(Helloworld_Qt_Plugin_SRC ${Helloworld_Qt_Plugin_SRC} ${Helloworld_Qt_Plugin_MOC_CPP} ${Helloworld_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(Helloworld_Qt_Plugin_MOC_CPP ${Helloworld_Qt_Plugin_HEADER})
     QT5_WRAP_UI(Helloworld_Qt_Plugin_UI_CPP ${Helloworld_Qt_Plugin_UI})
     set(Helloworld_Qt_Plugin_SRC ${Helloworld_Qt_Plugin_SRC} ${Helloworld_Qt_Plugin_MOC_CPP} ${Helloworld_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(Helloworld_Qt_Plugin_MOC_CPP ${Helloworld_Qt_Plugin_HEADER})
     QT4_WRAP_UI(Helloworld_Qt_Plugin_UI_CPP ${Helloworld_Qt_Plugin_UI})
     set(Helloworld_Qt_Plugin_SRC ${Helloworld_Qt_Plugin_SRC} ${Helloworld_Qt_Plugin_MOC_CPP} ${Helloworld_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 
   add_library(
       HelloworldPlugin

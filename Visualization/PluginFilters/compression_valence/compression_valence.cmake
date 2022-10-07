@@ -3,15 +3,19 @@ OPTION(BUILD_USE_GUI_CompressionValencePlugin "BUILD CompressionValencePlugin " 
 if (BUILD_USE_GUI_CompressionValencePlugin)
   set(CompressionValence_Qt_Plugin_HEADER "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.h" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.h")
   set(CompressionValence_Qt_Plugin_UI "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/Dialogs/DialogCompressionValence1.ui")
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(CompressionValence_Qt_Plugin_MOC_CPP ${CompressionValence_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(CompressionValence_Qt_Plugin_UI_CPP ${CompressionValence_Qt_Plugin_UI})
+    set(CompressionValence_Qt_Plugin_SRC ${CompressionValence_Qt_Plugin_SRC} ${CompressionValence_Qt_Plugin_MOC_CPP} ${CompressionValence_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(CompressionValence_Qt_Plugin_MOC_CPP ${CompressionValence_Qt_Plugin_HEADER})
     QT5_WRAP_UI(CompressionValence_Qt_Plugin_UI_CPP ${CompressionValence_Qt_Plugin_UI})
     set(CompressionValence_Qt_Plugin_SRC ${CompressionValence_Qt_Plugin_SRC} ${CompressionValence_Qt_Plugin_MOC_CPP} ${CompressionValence_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(CompressionValence_Qt_Plugin_MOC_CPP ${CompressionValence_Qt_Plugin_HEADER})
     QT4_WRAP_UI(CompressionValence_Qt_Plugin_UI_CPP ${CompressionValence_Qt_Plugin_UI})
     set(CompressionValence_Qt_Plugin_SRC ${CompressionValence_Qt_Plugin_SRC} ${CompressionValence_Qt_Plugin_MOC_CPP} ${CompressionValence_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 
   add_library(CompressionValencePlugin SHARED
               "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/compression_valence/CompressionValencePlugin.cpp"

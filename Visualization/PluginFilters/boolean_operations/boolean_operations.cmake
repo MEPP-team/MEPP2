@@ -10,15 +10,19 @@ OPTION(BUILD_USE_GUI_BooleanOperationsPlugin "BUILD BooleanOperationsPlugin " ON
 if (BUILD_USE_GUI_BooleanOperationsPlugin)
   set(BooleanOperations_Qt_Plugin_HEADER "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/BooleanOperationsPlugin.h" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/Dialogs/DialogBooleanOperations1.h")
   set(BooleanOperations_Qt_Plugin_UI "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/Dialogs/DialogBooleanOperations1.ui")
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(BooleanOperations_Qt_Plugin_MOC_CPP ${BooleanOperations_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(BooleanOperations_Qt_Plugin_UI_CPP ${BooleanOperations_Qt_Plugin_UI})
+    set(BooleanOperations_Qt_Plugin_SRC ${BooleanOperations_Qt_Plugin_SRC} ${BooleanOperations_Qt_Plugin_MOC_CPP} ${BooleanOperations_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(BooleanOperations_Qt_Plugin_MOC_CPP ${BooleanOperations_Qt_Plugin_HEADER})
     QT5_WRAP_UI(BooleanOperations_Qt_Plugin_UI_CPP ${BooleanOperations_Qt_Plugin_UI})
     set(BooleanOperations_Qt_Plugin_SRC ${BooleanOperations_Qt_Plugin_SRC} ${BooleanOperations_Qt_Plugin_MOC_CPP} ${BooleanOperations_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(BooleanOperations_Qt_Plugin_MOC_CPP ${BooleanOperations_Qt_Plugin_HEADER})
     QT4_WRAP_UI(BooleanOperations_Qt_Plugin_UI_CPP ${BooleanOperations_Qt_Plugin_UI})
     set(BooleanOperations_Qt_Plugin_SRC ${BooleanOperations_Qt_Plugin_SRC} ${BooleanOperations_Qt_Plugin_MOC_CPP} ${BooleanOperations_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 
   add_library(BooleanOperationsPlugin SHARED "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/BooleanOperationsPlugin.cpp" "${PROJECT_SOURCE_DIR}/Visualization/PluginFilters/boolean_operations/Dialogs/DialogBooleanOperations1.cpp"
     ${BooleanOperations_Qt_Plugin_SRC}

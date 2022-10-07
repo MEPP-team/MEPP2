@@ -14,15 +14,19 @@ if (BUILD_USE_GUI_ProgressiveDecompressionPlugin)
   set( ProgressiveDecompression_Qt_Plugin_UI
        "${CMAKE_CURRENT_LIST_DIR}/Dialogs/progressivedecompression_dialog.ui"
        )
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(ProgressiveDecompression_Qt_Plugin_MOC_CPP ${ProgressiveDecompression_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(ProgressiveDecompression_Qt_Plugin_UI_CPP ${ProgressiveDecompression_Qt_Plugin_UI})
+    set(ProgressiveDecompression_Qt_Plugin_SRC ${ProgressiveDecompression_Qt_Plugin_SRC} ${ProgressiveDecompression_Qt_Plugin_MOC_CPP} ${ProgressiveDecompression_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(ProgressiveDecompression_Qt_Plugin_MOC_CPP ${ProgressiveDecompression_Qt_Plugin_HEADER})
     QT5_WRAP_UI(ProgressiveDecompression_Qt_Plugin_UI_CPP ${ProgressiveDecompression_Qt_Plugin_UI})
     set(ProgressiveDecompression_Qt_Plugin_SRC ${ProgressiveDecompression_Qt_Plugin_SRC} ${ProgressiveDecompression_Qt_Plugin_MOC_CPP} ${ProgressiveDecompression_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(ProgressiveDecompression_Qt_Plugin_MOC_CPP ${ProgressiveDecompression_Qt_Plugin_HEADER})
     QT4_WRAP_UI(ProgressiveDecompression_Qt_Plugin_UI_CPP ${ProgressiveDecompression_Qt_Plugin_UI})
     set(ProgressiveDecompression_Qt_Plugin_SRC ${ProgressiveDecompression_Qt_Plugin_SRC} ${ProgressiveDecompression_Qt_Plugin_MOC_CPP} ${ProgressiveDecompression_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 include_directories( ${draco_INCLUDE_DIRS} )
   add_library(
       ProgressiveDecompressionPlugin

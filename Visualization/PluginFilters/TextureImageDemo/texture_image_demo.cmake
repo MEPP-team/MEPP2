@@ -8,15 +8,19 @@ if (BUILD_USE_GUI_TextureImageDemoPlugin)
   set( TextureImageDemo_Qt_Plugin_UI
        "${CMAKE_CURRENT_LIST_DIR}/Dialogs/texture_image_demo_dialog.ui"
        )
-  if (BUILD_USE_QT5)
+  if (BUILD_USE_QT6)
+    QT6_WRAP_CPP(TextureImageDemo_Qt_Plugin_MOC_CPP ${TextureImageDemo_Qt_Plugin_HEADER})
+    QT6_WRAP_UI(TextureImageDemo_Qt_Plugin_UI_CPP ${TextureImageDemo_Qt_Plugin_UI})
+    set(TextureImageDemo_Qt_Plugin_SRC ${TextureImageDemo_Qt_Plugin_SRC} ${TextureImageDemo_Qt_Plugin_MOC_CPP} ${TextureImageDemo_Qt_Plugin_UI_CPP})
+  elseif (BUILD_USE_QT5)
     QT5_WRAP_CPP(TextureImageDemo_Qt_Plugin_MOC_CPP ${TextureImageDemo_Qt_Plugin_HEADER})
     QT5_WRAP_UI(TextureImageDemo_Qt_Plugin_UI_CPP ${TextureImageDemo_Qt_Plugin_UI})
     set(TextureImageDemo_Qt_Plugin_SRC ${TextureImageDemo_Qt_Plugin_SRC} ${TextureImageDemo_Qt_Plugin_MOC_CPP} ${TextureImageDemo_Qt_Plugin_UI_CPP})
-  else(BUILD_USE_QT5)
+  else()
     QT4_WRAP_CPP(TextureImageDemo_Qt_Plugin_MOC_CPP ${TextureImageDemo_Qt_Plugin_HEADER})
     QT4_WRAP_UI(TextureImageDemo_Qt_Plugin_UI_CPP ${TextureImageDemo_Qt_Plugin_UI})
     set(TextureImageDemo_Qt_Plugin_SRC ${TextureImageDemo_Qt_Plugin_SRC} ${TextureImageDemo_Qt_Plugin_MOC_CPP} ${TextureImageDemo_Qt_Plugin_UI_CPP})
-  endif(BUILD_USE_QT5)
+  endif()
 
   add_library(
       TextureImageDemoPlugin
