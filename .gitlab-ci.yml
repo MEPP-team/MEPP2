@@ -896,7 +896,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
     - make -j 2 # now freeze with -j 3 !
     - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
 
-.linux_build_template_1x - CLANG - Debug - QT5 - CONF3 (ALL): &linux_build_definition_1x-clang-qt6-debug-cgal_541-pcl_112
+.linux_build_template_1x - CLANG - Debug - QT6 - CONF3 (ALL but VTK=OFF for the moment): &linux_build_definition_1x-clang-qt6-debug-cgal_541-pcl_112
   rules:
     - !reference [.no-dock-lin_rules, rules]
     - !reference [.no-all-on_rules, rules]
@@ -928,7 +928,7 @@ DOC - osx [Release - QT5 - CONF3 (ALL)]:
 #  image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
 #  <<: *linux_build_definition_1x-clang-qt5-debug-cgal_541-pcl_111
 
-dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
+dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT6 - CONF3 (ALL but VTK=OFF for the moment)]:
   tags:
     - MEPP2,osx,DOCKER-LIN
   image: mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
@@ -996,6 +996,22 @@ dock-lin22.04LTS-cgal_5.4.1-pcl_1.12 [Debug - CLANG - QT5 - CONF3 (ALL)]:
     - MSBuild /m MEPP2.sln
     - ctest -j 3 --output-on-failure
 
+.windows_build_template_0x - MSBuild - Release - QT6 - CONF3 (ALL but PCL=OFF for the moment): &windows_build_definition_0x-powershell-qt6-release
+  rules:
+    - !reference [.no-dock-win_rules, rules]
+    - !reference [.no-all-on_rules, rules]
+    - when: always
+  script:
+    - $env:DOCKER_RUN='YES'
+    - md build; cd build
+    - $GUI # https://stackoverflow.com/questions/62776512/powershell-not-expands-variable-as-argument
+    - cmake .. -DCMAKE_CONFIGURATION_TYPES=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI="$GUI" -DBUILD_USE_QT6=ON -DBUILD_USE_PCL=OFF -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+    - MSBuild /m MEPP2.sln
+    - ctest -j 3 --output-on-failure
+  artifacts:
+    paths:
+      - build/Visualization/Applications/Release
+
 # Reduce the time 2
 #dock-w2017 - Release - QT4 - CONF3 (ALL):
 #  tags:
@@ -1022,6 +1038,13 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
     - MEPP2,windows,DOCKER-WIN
   image: mtola/vs2019-ltsc2019-mepp2
   <<: *windows_build_definition_0x-powershell-qt4-debug
+
+# QT6 (temp)
+dock-w2019 - Release - QT6 - CONF3 (ALL but PCL=OFF for the moment):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-qt6
+  <<: *windows_build_definition_0x-powershell-qt6-release
 #
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
   rules:
