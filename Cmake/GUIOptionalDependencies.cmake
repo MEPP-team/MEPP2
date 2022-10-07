@@ -14,7 +14,26 @@ message(STATUS "")
 
 option( BUILD_USE_QT5 "Using Qt5." OFF )
 
+# -----------------------------------------------------------------------------
+# BUILD_USE_QT6:
+#
+# 1)  For the moment, under Ubuntu 22.04, VTK must be set to OFF if BUILD_USE_QT6 is ON (because VTK is linked with Qt5 !)
+# 2a) For the moment, under Windows, the BUILD_USE_QT6 option is hidden because of additional dependencies for Eigen and OpenMesh
+#     (newer versions: Eigen 3.3.9 and OpenMesh 8.1)
+# 2b) For the moment, under Windows (current binary kit), PCL must be set to OFF if BUILD_USE_QT6 is ON (because Flann 1.9.1 is too old !)
+# -----------------------------------------------------------------------------
+#option( BUILD_USE_QT6 "Using Qt6." OFF ) # TODO, comment
+
+if( BUILD_USE_QT6 )
+  set( BUILD_USE_QT5 OFF )
+  set( LIST_OPTION ${LIST_OPTION} [QT6]\ ) # ??
+  message(STATUS "   BUILD_USE_QT6  true   (Using of Qt6 instead of Qt4)")
+else()
+  message(STATUS "   BUILD_USE_QT6  false  (Using of Qt6 instead of Qt4)")
+endif()
+
 if( BUILD_USE_QT5 )
+  set( BUILD_USE_QT6 OFF )
   set( LIST_OPTION ${LIST_OPTION} [QT5]\ ) # ??
   message(STATUS "   BUILD_USE_QT5  true   (Using of Qt5 instead of Qt4)")
 else()
@@ -33,8 +52,42 @@ endif()
 # -----------------------------------------------------------------------------
 set( QT4_FOUND_MEPP 0 )
 set( QT5_FOUND_MEPP 0 )
+set( QT6_FOUND_MEPP 0 )
 if( BUILD_USE_GUI )
-  if( BUILD_USE_QT5 ) # sample for help : QT5_DIR=/usr/local/Cellar/qt/5.9.2 or Qt5_DIR=/usr/local/Cellar/qt/5.9.2/lib/cmake/Qt5 (caution, here 't' not 'T' !)
+  if( BUILD_USE_QT6 )
+    # QT6 Handling
+    if(DEFINED ENV{QT6_DIR})
+      set( QT6_DIR $ENV{QT6_DIR} )
+    endif()
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT6_DIR})
+
+    # Instruct CMake to NOT run moc automatically when needed
+    set(CMAKE_AUTOMOC OFF)
+
+    find_package(Qt6 COMPONENTS Widgets OpenGL OpenGLWidgets Xml REQUIRED) # for Qt6 add 'OpenGLWidgets'
+
+    if( Qt6Widgets_FOUND AND Qt6OpenGL_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Xml_FOUND ) # for Qt6 add 'AND Qt6OpenGLWidgets_FOUND'
+      set(QT6_FOUND_MEPP 1)
+      message( STATUS "Qt6 (Widgets, OpenGL, OpenGLWidgets, Xml modules) found (needed by OpenSceneGraph compiled with Qt6)." ) # for Qt6 add ', OpenGLWidgets'
+
+      add_definitions("-DFEVV_USE_QT5") # important !!!
+      add_definitions("-DFEVV_USE_QT6") # for future... ???
+
+      set(MEPP_GUI_LIB ${MEPP_GUI_LIB}
+        ${Qt6Widgets_LIBRARIES}
+        ${Qt6OpenGL_LIBRARIES}
+        ${Qt6OpenGLWidgets_LIBRARIES} # for Qt6
+        ${Qt6Xml_LIBRARIES})
+      set(MEPP_GUI_INC ${MEPP_GUI_INC}
+        ${Qt6Widgets_INCLUDES_DIRS}
+        ${Qt6OpenGL_INCLUDES_DIR}
+        ${Qt6OpenGLWidgets_INCLUDES_DIR} # for Qt6
+        ${Qt6Xml_INCLUDES_DIR})
+
+    else()
+      message( STATUS "One of Qt6's modules was not found (needed by OpenSceneGraph)." )
+    endif()
+  elseif( BUILD_USE_QT5 ) # sample for help : QT5_DIR=/usr/local/Cellar/qt/5.9.2 or Qt5_DIR=/usr/local/Cellar/qt/5.9.2/lib/cmake/Qt5 (caution, here 't' not 'T' !)
     # QT5 Handling
     if(DEFINED ENV{QT5_DIR})
       set( QT5_DIR $ENV{QT5_DIR} )
@@ -44,23 +97,21 @@ if( BUILD_USE_GUI )
     # Instruct CMake to NOT run moc automatically when needed
     set(CMAKE_AUTOMOC OFF)
 
-    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED) # for Qt6 add 'OpenGLWidgets'
+    find_package(Qt5 COMPONENTS Widgets OpenGL Xml REQUIRED)
 
-    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND ) # for Qt6 add 'AND Qt6OpenGLWidgets_FOUND'
+    if( Qt5Widgets_FOUND AND Qt5OpenGL_FOUND AND Qt5Xml_FOUND )
       set(QT5_FOUND_MEPP 1)
-      message( STATUS "Qt5 (Widgets, OpenGL, Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." ) # for Qt6 add ', OpenGLWidgets'
+      message( STATUS "Qt5 (Widgets, OpenGL, Xml modules) found (needed by OpenSceneGraph compiled with Qt5)." )
 
       add_definitions("-DFEVV_USE_QT5")
 
       set(MEPP_GUI_LIB ${MEPP_GUI_LIB}
         ${Qt5Widgets_LIBRARIES}
         ${Qt5OpenGL_LIBRARIES}
-        #${Qt6OpenGLWidgets_LIBRARIES} # for Qt6
         ${Qt5Xml_LIBRARIES})
       set(MEPP_GUI_INC ${MEPP_GUI_INC}
         ${Qt5Widgets_INCLUDES_DIRS}
         ${Qt5OpenGL_INCLUDES_DIR}
-        #${Qt6OpenGLWidgets_INCLUDES_DIR} # for Qt6
         ${Qt5Xml_INCLUDES_DIR})
 
     else()
@@ -202,17 +253,17 @@ if( BUILD_USE_GUI )
   endif()
 
   # Find osgQt - caution, no more 'osgQt' module embedded by default since openscenegraph 3.5.5 !
-  # --> With Qt5, now, the new module is 'osgQOpenGL'
+  # --> With Qt5 and Qt6, now, the new module is 'osgQOpenGL'
   message("--> OSG version: " ${_osg_VERSION_MAJOR}.${_osg_VERSION_MINOR}.x )
   if( MSVC )
-    if( BUILD_USE_QT5 ) # FOR_QT6
+    if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/include" )
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   elseif( APPLE )
-    if( BUILD_USE_QT5 ) # FOR_QT6
+    if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} EQUAL 5 )
@@ -225,7 +276,7 @@ if( BUILD_USE_GUI )
     endif()
     include_directories(${OSGQT_INCLUDE_DIR})
   else() # Linux
-    if( BUILD_USE_QT5 ) # FOR_QT6
+    if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
       set( OSGQT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include" )
     else()
       if( ${_osg_VERSION_MAJOR} EQUAL 3 AND ${_osg_VERSION_MINOR} LESS 4 )

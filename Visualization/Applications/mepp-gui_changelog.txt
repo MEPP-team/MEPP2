@@ -1,5 +1,5 @@
-v0.15.0beta - 16/06/2022 :
- - support for osgQOpenGL instead of osgQt for Qt 5
+v0.15.0beta2 - 07/10/2022 :
+ - support for osgQOpenGL instead of osgQt for Qt5 and Qt6
 
 v0.14.3 (TAGGED) - 11/07/2021 :
  - fix : meshes with vertex colors and face colors are now displayed correctly

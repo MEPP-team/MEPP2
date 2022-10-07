@@ -105,7 +105,7 @@ include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 
 # osgQt and osgQOpenGL
 if(MSVC)
-  if( BUILD_USE_QT5 ) # FOR_QT6
+  if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -114,7 +114,7 @@ if(MSVC)
       "${PROJECT_SOURCE_DIR}/External/osgQt/osg34and36/GraphicsWindowQt.cxx" ) # see also /Cmake/GUIOptionalDependencies.cmake for include
   endif()
 elseif( APPLE )
-  if( BUILD_USE_QT5 ) # FOR_QT6
+  if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -128,7 +128,7 @@ elseif( APPLE )
     endif()
   endif()
 else() # Linux
-  if( BUILD_USE_QT5 ) # FOR_QT6
+  if( BUILD_USE_QT5 OR BUILD_USE_QT6 ) # FOR_QT6
     set( osgQOpenGL_HEADER ${osgQOpenGL_HEADER} "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWidget.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/osgQOpenGLWindow.h"
     "${PROJECT_SOURCE_DIR}/External/osgQOpenGL/osg34and36/include/osgQOpenGL/OSGRenderer.h" ) # see also /Cmake/GUIOptionalDependencies.cmake for include folder
@@ -147,8 +147,8 @@ else() # Linux
 endif()
 
 # common moc stuff to all executables... /
-# IMPORTANT : automoc is off for qt5 because we wan't same behavior
-# with qt4 and/or qt5...
+# IMPORTANT : automoc is off for qt5 and qt6 because we wan't same behavior
+# with qt4 and/or qt5 and/or qt6...
 set( moc_files ${moc_files}
   "${PROJECT_SOURCE_DIR}/Visualization/Plugins/PluginDialog.hpp"
 #  "${PROJECT_SOURCE_DIR}/Visualization/Qt/SimpleLineEdit.h"
@@ -167,7 +167,12 @@ set( qrc_files ${qrc_files}
   "${PROJECT_SOURCE_DIR}/Visualization/Applications/mepp-gui.qrc")
 #set( qrc_files ${qrc_files} "add_here_your_qrc_file" )
 
-if( BUILD_USE_QT5 )
+if( BUILD_USE_QT6 )
+  qt6_wrap_cpp( MOC_FILES ${moc_files} )
+  qt6_wrap_cpp( MOC_FILES_osgQOpenGL ${osgQOpenGL_HEADER} ) # FOR_QT6
+  qt6_wrap_ui( UI_FILES ${ui_files} )
+  qt6_add_resources( QT_RESOURCE_FILES ${qrc_files} )
+elseif( BUILD_USE_QT5 )
   qt5_wrap_cpp( MOC_FILES ${moc_files} )
   qt5_wrap_cpp( MOC_FILES_osgQOpenGL ${osgQOpenGL_HEADER} ) # FOR_QT6
   qt5_wrap_ui( UI_FILES ${ui_files} )
@@ -266,6 +271,13 @@ if( MSVC )
   if( QT4_FOUND_MEPP )
     set( QT_PLUGINS_DIR "${QTDIR}/plugins" )
     set( QT_PLUGINS_DBG_DIR "${QTDIR}/plugins" )
+  elseif( QT6_FOUND_MEPP )
+    set( QT_PLUGINS_DIR "${QT6_DIR}/plugins" )
+    set( QT_PLUGINS_DBG_DIR "${QT6_DIR}/plugins" )
+
+    if( (DEFINED ENV{VCPKG}) OR (DEFINED VCPKG) )
+      set( QT_PLUGINS_DBG_DIR "${QT6_DIR}/debug/plugins" )
+    endif()
   elseif( QT5_FOUND_MEPP )
     set( QT_PLUGINS_DIR "${QT5_DIR}/plugins" )
     set( QT_PLUGINS_DBG_DIR "${QT5_DIR}/plugins" )

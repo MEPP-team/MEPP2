@@ -39,11 +39,17 @@ set(MPFR_LIBRARIES              ${MSVC_KIT_ROOT}/gmp/lib/libmpfr-4.lib)
 # -------
 message("--> CGAL_DIR used : ${CGAL_DIR}")
 
-set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-6.2)
-#set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-8.1) # for Qt6
+if(BUILD_USE_QT6)
+	set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-8.1) # for Qt6
+else()
+	set(OPENMESH_DIR				${MSVC_KIT_ROOT}/OpenMesh-6.2)
+endif()
 
-set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.2.8)
-#set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.3.9)  # for Qt6
+if(BUILD_USE_QT6)
+	set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.3.9)  # for Qt6
+else()
+	set(EIGEN3_INCLUDE_DIR			${MSVC_KIT_ROOT}/eigen-3.2.8)
+endif()
 
 # ---------------------------------------------------------------------------------
 set(IMG_DIR_3rdParty            ${MSVC_KIT_ROOT}/img-3rdparty)
@@ -66,20 +72,24 @@ set(TIFF_LIBRARY                ${IMG_DIR_3rdParty}/build/lib/Release/libtiff.li
 ### 'addon 01' : Qt4, OpenSceneGraph
 # and
 ### 'addon 02' : Qt5
+# and
+### 'addon 02BIS' : Qt6
 
 #set(BUILD_USE_QT5				TRUE)
 
-if(BUILD_USE_QT5)
+if(BUILD_USE_QT6)
+	# with qt6
+	set(QT6_DIR					${MSVC_KIT_ROOT}/Qt/Qt6.2.4/6.2.4/msvc2019_64)
+elseif(BUILD_USE_QT5)
 	# with qt5
 	set(QT5_DIR					${MSVC_KIT_ROOT}/Qt/Qt5.6.3/5.6.3/msvc2015_64)
 	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.12.11/5.12.11/msvc2017_64) # temp
 	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.15.2/5.15.2/msvc2015_64) # temp
 	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt5.15.2/5.15.2/msvc2019_64) # temp
-	#set(QT5_DIR					${MSVC_KIT_ROOT}/../Qt/Qt6.2.4/6.2.4/msvc2019_64) # temp
-else(BUILD_USE_QT5)
+else()
 	# with qt4
 	set(QTDIR					${MSVC_KIT_ROOT}/Qt/qt-4.8.7-x64-msvc2015)
-endif(BUILD_USE_QT5)
+endif()
 
 set(OSG_DIR						${MSVC_KIT_ROOT}/osg/OpenSceneGraph-3.6.4)
 
