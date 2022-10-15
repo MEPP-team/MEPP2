@@ -1,6 +1,10 @@
+v0.15.1 (TAGGED) - 15/10/2022 :
+ - minor small internal modifications
+ - support for Visual Studio 2022
+
 v0.15.0 - 07/10/2022 :
  - support for osgQOpenGL instead of osgQt for Qt5
- - support for Qt6
+ - support for Qt6 (with osgQOpenGL, like Qt5)
 
 v0.14.3 (TAGGED) - 11/07/2021 :
  - fix : meshes with vertex colors and face colors are now displayed correctly
