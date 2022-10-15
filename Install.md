@@ -264,9 +264,9 @@ Another example, building with CGAL, OpenMesh, GUI can be done like this:
 
 ### Prerequisites
 
- - Update Windows 10 (with Windows Update)
+ - Update Windows 10/11 (with Windows Update)
 
- - Download and install [Visual Studio Community 2017 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~2.4 GB) or [Visual Studio Community 2019 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 1.8 GB, installation size ~2.7 GB).
+ - Download and install [Visual Studio Community 2017 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2017/vslayout_2017_fr.7z) (download size 1.8 GB, installation size ~3.4 GB) or [Visual Studio Community 2019 (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2019/vslayout_2019_fr.7z) (download size 2.0 GB, installation size ~4.6 GB) or [Visual Studio Community 2022 * (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2022/vslayout_2022_fr.7z) (download size 2.7 GB, installation size ~5.7 GB). * With Visual Studio Community 2022, you need to upgrade [CMake (LIRIS host)](https://download.gforge.liris.cnrs.fr/meppbin/windows/vs2022/cmake/cmake-3.24.2-windows-x86_64.zip).
 
 ### Installing dependencies
 
