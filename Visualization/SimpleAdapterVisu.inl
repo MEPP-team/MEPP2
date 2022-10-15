@@ -85,65 +85,51 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
   // this->y(), this->width(),   this->height() );
 
 #if(FEVV_USE_QT5) // FOR_QT6
-  // !!! TODO CLEAN - TODO CLEAN - TODO CLEAN - TODO CLEAN - TODO CLEAN !!!
   osg::ref_ptr< osg::Node > _scene = static_cast< BaseViewerOSG * >(myViewer)->getRootNode();
 
-  // MIEUX DE L'AFFECTER à osgQOpenGLWidget ou osgQOpenGLWindow !!! RETROUVER EXEMPLE !!!
-    QSurfaceFormat format = QSurfaceFormat::defaultFormat();
-#ifdef OSG_GL3_AVAILABLE
-    format.setVersion(3, 2);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setOption(QSurfaceFormat::DebugContext);
-    std::cout << "----------------------> OSG_GL3_AVAILABLE : (3, 2) - CoreProfile" << std::endl;
-#else
-    format.setVersion(2, 0);
-    format.setProfile(QSurfaceFormat::CompatibilityProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setOption(QSurfaceFormat::DebugContext);
-    std::cout << "----------------------> QSurfaceFormat : (2, 0) - CompatibilityProfile" << std::endl;
-#endif
-    format.setDepthBufferSize(24);
-    //format.setAlphaBufferSize(8);
-    format.setSamples(8);
-    format.setStencilBufferSize(8);
-    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-    QSurfaceFormat::setDefaultFormat(format);
+  // MIEUX DE L'AFFECTER à osgQOpenGLWindow (ou osgQOpenGLWidget) !!! RETROUVER EXEMPLE !!!
+      QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+  #ifdef OSG_GL3_AVAILABLE
+      format.setVersion(3, 2);
+      format.setProfile(QSurfaceFormat::CoreProfile);
+      format.setRenderableType(QSurfaceFormat::OpenGL);
+      format.setOption(QSurfaceFormat::DebugContext);
+      //std::cout << "----------------------> OSG_GL3_AVAILABLE, QSurfaceFormat : (3, 2) - CoreProfile" << std::endl;
+  #else
+      format.setVersion(2, 0);
+      format.setProfile(QSurfaceFormat::CompatibilityProfile);
+      format.setRenderableType(QSurfaceFormat::OpenGL);
+      format.setOption(QSurfaceFormat::DebugContext);
+      //std::cout << "----------------------> QSurfaceFormat : (2, 0) - CompatibilityProfile" << std::endl;
+  #endif
+      format.setDepthBufferSize(24);
+      //format.setAlphaBufferSize(8);
+      format.setSamples(8);
+      format.setStencilBufferSize(8);
+      format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+      QSurfaceFormat::setDefaultFormat(format);
+  // ---
 
-  //osgQOpenGLWidget widget(this);
-  my_osgQOpenGLWindow = new osgQOpenGLWindow(/*this*/); // 2 ici
+  my_osgQOpenGLWindow = new osgQOpenGLWindow(/*this*/);
 
-  /*osgQOpenGLWidget widget(this);
-  layout->addWidget(&widget);
+  const osgQOpenGLWindow *my_osgQOpenGLWindow_const = my_osgQOpenGLWindow;
+  const Viewer *myViewer_const = myViewer;
 
-  QObject::connect(&widget, &osgQOpenGLWidget::initialized, [ &widget, _scene ]
+  QObject::connect(my_osgQOpenGLWindow_const, &osgQOpenGLWindow::initialized, [ my_osgQOpenGLWindow_const, _scene, myViewer_const ]
   {
-    std::cout << "----------------------> ----------------------> QObject::connect - QObject::connect -QObject::connect" << std::endl;
-    widget.getOsgViewer()->setSceneData(_scene);
-
-    return 0;
-  });
-
-  widget.show();*/
-
-  const osgQOpenGLWindow *my_osgQOpenGLWidget2 = my_osgQOpenGLWindow; // 2 ici
-  const Viewer *myViewer2 = myViewer;
-
-  QObject::connect(my_osgQOpenGLWidget2, &osgQOpenGLWindow::initialized, [ my_osgQOpenGLWidget2, _scene, myViewer2 ] // 1 ici
-  {
-    //std::cout << "----------------------> QObject::connect - QObject::connect -QObject::connect" << std::endl;
+    //std::cout << "----------------------> QObject::connect - QObject::connect - QObject::connect" << std::endl;
 
     //BoxT<T> * nonConstObj = const_cast<BoxT<T> *>(constObj); // https://stackoverflow.com/questions/7311041/const-to-non-const-conversion-in-c
-    osgQOpenGLWindow *my_osgQOpenGLWidget3 = const_cast<osgQOpenGLWindow *>(my_osgQOpenGLWidget2); // 2 ici
-    Viewer *myViewer3 = const_cast<Viewer *>(myViewer2);
+    osgQOpenGLWindow *my_osgQOpenGLWindow2 = const_cast<osgQOpenGLWindow *>(my_osgQOpenGLWindow_const);
+    Viewer *myViewer2 = const_cast<Viewer *>(myViewer_const);
 
-  osg::Camera *camera = my_osgQOpenGLWidget3->getOsgViewer()->getCamera();
+  osg::Camera *camera = my_osgQOpenGLWindow2->getOsgViewer()->getCamera();
   //camera->setGraphicsContext(myGraphicsWindow);
 
   //const osg::GraphicsContext::Traits *traits = myGraphicsWindow->getTraits();
 
   camera->setClearColor(osg::Vec4(0.2, /*0.2*/0.3, 0.6, 1.0));
-  //camera->setViewport( new osg::Viewport(0, 0, my_osgQOpenGLWidget3->width(), my_osgQOpenGLWidget3->height()) );
+  //camera->setViewport( new osg::Viewport(0, 0, my_osgQOpenGLWindow2->width(), my_osgQOpenGLWindow2->height()) );
 
   // set the draw and read buffers up for a double buffered window
   // with rendering going to back buffer
@@ -152,67 +138,32 @@ FEVV::SimpleAdapterVisu::init(const bool /*_useMdiWindows*/)
 
   camera->setProjectionMatrixAsPerspective(
       30.0f,
-      static_cast< double >(my_osgQOpenGLWidget3->width()) /
-          static_cast< double >(my_osgQOpenGLWidget3->height()),
+      static_cast< double >(my_osgQOpenGLWindow2->width()) /
+          static_cast< double >(my_osgQOpenGLWindow2->height()),
       1.0f,
       10000.0f);
 
   // picking
-  SimpleViewer *viewer = dynamic_cast< SimpleViewer* >(myViewer3);
+  SimpleViewer *viewer = dynamic_cast< SimpleViewer* >(myViewer2);
   viewer->hudText = new osgText::Text;
-  my_osgQOpenGLWidget3->getOsgViewer()->addEventHandler(
+  my_osgQOpenGLWindow2->getOsgViewer()->addEventHandler(
       new PickHandler(viewer, viewer->hudText.get()));
   // picking
 
-    my_osgQOpenGLWidget3->getOsgViewer()->setSceneData(_scene);
-    my_osgQOpenGLWidget3->getOsgViewer()->addEventHandler(new osgViewer::StatsHandler);
-    my_osgQOpenGLWidget3->getOsgViewer()->setCameraManipulator(new osgGA::MultiTouchTrackballManipulator);
+    my_osgQOpenGLWindow2->getOsgViewer()->setSceneData(_scene);
+    my_osgQOpenGLWindow2->getOsgViewer()->addEventHandler(new osgViewer::StatsHandler);
+    my_osgQOpenGLWindow2->getOsgViewer()->setCameraManipulator(new osgGA::MultiTouchTrackballManipulator);
 
-  // mais pour ces 2 fonctions revoir le positionnement des appels initiaux pour garder la compatibilité (et voir aussi si d'autres cas de fonctions similaires...)
-  /*SimpleViewer *viewer = dynamic_cast< SimpleViewer* >(myViewer3);*/ SimpleWindow *sw = static_cast< SimpleWindow * >(viewer->getWindow()); sw->centerHG(viewer);
+  // MAIS pour ces 2 fonctions, MIEUX (TODO) de revoir le positionnement des appels initiaux pour garder la compatibilité (et voir aussi si d'autres cas de fonctions similaires...)
+  SimpleWindow *sw = static_cast< SimpleWindow * >(viewer->getWindow()); sw->centerHG(viewer);
   viewer->changeBackgroundColor(Color::WetAsphalt());
 
     return 0;
   });
 
   //my_osgQOpenGLWindow->asWidget()->setParent(this);
-  layout->addWidget(my_osgQOpenGLWindow->asWidget()); //SimpleViewer *viewer = dynamic_cast< SimpleViewer* >(myViewer); SimpleWindow *sw = static_cast< SimpleWindow * >(viewer->getWindow()); sw->centerHG(viewer);
-  //layout->addWidget(my_osgQOpenGLWidget);
-  //----my_osgQOpenGLWindow->asWidget()->show();
-
-  /*my_osgQOpenGLWindow = new osgQOpenGLWindow(this); // comment this ?
-  auto *osgWidget = my_osgQOpenGLWindow->asWidget();
-  osgWidget->setParent(this);
-  layout->addWidget(osgWidget);*/
-
-  /*OSGRenderer *my_renderer = my_osgQOpenGLWindow->m_renderer;
-  Q_ASSERT(my_renderer);
-  osgViewer::Viewer *osgv = static_cast< osgViewer::Viewer * >(my_renderer);
-  Q_ASSERT(osgv);
-  osgViewer::View *view2 = dynamic_cast< osgViewer::View * >(osgv);
-  Q_ASSERT(view2);*/
-
-  //osgViewer::Viewer *osgv2 = my_osgQOpenGLWidget->getOsgViewer();
-  //Q_ASSERT(osgv2);
-  //osgViewer::View *view3 = dynamic_cast< osgViewer::View * >(osgv2);
-  //Q_ASSERT(view);
-
-/*BaseViewerOSG *bv = static_cast< BaseViewerOSG * >(myViewer);
-osgViewer::View *view = dynamic_cast< osgViewer::View * >(bv);*/
-
-  // picking
-  /*SimpleViewer *viewer =
-      dynamic_cast< SimpleViewer* >(myViewer);
-  viewer->hudText = new osgText::Text;
-  view->addEventHandler(
-      new PickHandler(viewer, viewer->hudText.get()));*/
-  // picking
-
-  //view->setSceneData(_scene);
-  //view->addEventHandler(new osgViewer::StatsHandler);
-  //view->setCameraManipulator(new osgGA::MultiTouchTrackballManipulator);
-
-  //layout->addWidget(my_osgQOpenGLWidget);
+  layout->addWidget(my_osgQOpenGLWindow->asWidget());
+  //my_osgQOpenGLWindow->asWidget()->show();
 #else
   addViewWidget(createGraphicsWindow(0, 0, 500, 500, "Viewer"),
                 static_cast< BaseViewerOSG * >(myViewer)->getRootNode());
