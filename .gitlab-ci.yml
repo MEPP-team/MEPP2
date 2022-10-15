@@ -1040,11 +1040,11 @@ dock-w2019 - Debug - QT4 - CONF3 (ALL):
   <<: *windows_build_definition_0x-powershell-qt4-debug
 
 # QT6 (temp)
-#dock-w2019 - Release - QT6 - CONF3 (ALL but PCL=OFF for the moment):
-#  tags:
-#    - MEPP2,windows,DOCKER-WIN
-#  image: mtola/vs2019-ltsc2019-mepp2-qt6
-#  <<: *windows_build_definition_0x-powershell-qt6-release
+dock-w2019 - Release - QT6 - CONF3 (ALL but PCL=OFF for the moment):
+  tags:
+    - MEPP2,windows,DOCKER-WIN
+  image: mtola/vs2019-ltsc2019-mepp2-qt6
+  <<: *windows_build_definition_0x-powershell-qt6-release
 #
 .windows_build_template_1x - MSBuild - Release - QT5 - CONF3 (ALL with VTK NOW OK): &windows_build_definition_1x-powershell-vcpkg-release
   rules:
