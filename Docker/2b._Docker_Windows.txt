@@ -1,9 +1,9 @@
-*** This guide applies ONLY to Docker for Windows 10 (AND ONLY in 'Windows containers' mode) ***
+*** This guide applies ONLY to Docker for Windows 10/11 (AND ONLY in 'Windows containers' mode) ***
 
 Use an already existing Docker image and run a Docker container to compile
----> IMPORTANT: the Docker image MUST match your version of Windows 10 (See menu 'Démarrer' then 'Paramètres' then 'Système' then 'À propos de' then down 'Version'), here are the supported versions of Windows 10 currently: 1809=ltsc2019/(1903)/(1909)/2004/20h2
-- docker pull mtola/vs2017-20h2-mepp2 (if your Windows is 20h2) or mtola/vs2017-20h2-mepp2-vcpkg (to use the VCPKG libraries)
----> start a container in interactive mode: docker run -it mtola/vs2017-20h2-mepp2 or mtola/vs2017-20h2-mepp2-vcpkg (to use the VCPKG libraries)
+---> IMPORTANT: the Docker image MUST match your version of Windows 10/11 (See menu 'Démarrer' then 'Paramètres' then 'Système' then 'À propos de' then down 'Version'), here are the supported versions of Windows 10/11 currently: 1809=ltsc2019 / (1903)/(1909)/(2004)/(20h2) / ltsc2022=win11
+- docker pull mtola/vs2017-ltsc2022-mepp2 (if your Windows is win11) or mtola/vs2017-ltsc2022-mepp2-vcpkg (to use the VCPKG libraries)
+---> start a container in interactive mode: docker run -it mtola/vs2017-ltsc2022-mepp2 or mtola/vs2017-ltsc2022-mepp2-vcpkg (to use the VCPKG libraries)
 - cmd
 - set DOCKER_RUN=YES
   - ONLY if you have chosen a vcpkg image: set VCPKG=YES
