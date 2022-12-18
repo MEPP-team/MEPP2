@@ -1,17 +1,20 @@
-*** This guide applies to Docker for Linux, Docker for macOS and Docker for Windows 10 (BUT ONLY in 'Linux containers' mode) ***
+--- This guide applies to Docker for Linux, Docker for macOS and Docker for Windows 10/11 (BUT ONLY in 'Linux containers' mode) ---
 
-Use an already existing Docker image and run a Docker container to compile
-- docker pull mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
----> start a container in interactive mode: docker run -it mtola/ubuntu-20.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+Use an already existing Docker image and run a Docker container to compile:
+
+  - docker pull mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+
+  ---> start a container in interactive mode: docker run -it mtola/ubuntu-22.04-cgal_5.x.y-pcl_1.1x.y-mepp2
+
   - export CGAL_DIR="$HOME/CGAL-4.14.3" (or else it is by default "$HOME/CGAL-5.2.1")
   - export PCL_DIR="$HOME/pcl-1.9.1/share/pcl-1.9" (or else it is by default "$HOME/pcl-1.11.1/share/pcl-1.11")
-- git clone https://github.com/MEPP-team/MEPP2.git
-- cd MEPP2
-- mkdir build; cd build
-- export CXX=clang++ CC=clang
-  - ONLY if you choose 'clang' instead of 'gcc' (default)
-- cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
-- make -j 3
-- xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
-- exit
----> if needed later, to restart a container in interactive mode: docker start CONTAINER_ID -i (to find CONTAINER_ID: docker ps -a)
+  - git clone https://github.com/MEPP-team/MEPP2.git
+  - cd MEPP2
+  - mkdir build; cd build
+  - ONLY if you choose 'clang' instead of 'gcc' (default): export CXX=clang++ CC=clang
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_USE_CGAL=ON -DBUILD_USE_OPENMESH=ON -DBUILD_USE_AIF=ON -DBUILD_USE_GUI=ON -DBUILD_USE_QT5=ON -DBUILD_USE_PCL=ON -DBUILD_USE_VTK=ON -DBUILD_USE_FBX=ON -DBUILD_USE_DRACO=ON -DBUILD_EXAMPLES=ON
+  - make -j 3
+  - xvfb-run --server-args="-screen 0, 1280x1024x24" ctest -j 3 --output-on-failure
+  - exit
+
+  ---> if needed later, to restart a container in interactive mode: docker start CONTAINER_ID -i (to find CONTAINER_ID: docker ps -a)

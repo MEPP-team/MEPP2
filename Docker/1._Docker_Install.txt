@@ -1,20 +1,27 @@
 1. Docker on Linux (Linux containers only)
 
-Installation:
-- sudo apt install docker.io
-- sudo usermod -aG docker $USER
-- reboot (because log out is not enough...)
+  - Installation:
+    - sudo apt install docker.io
+    - sudo usermod -aG docker $USER (to manage Docker as a non-root user)
+    - Reboot (because log out is not enough...)
 
 2. Docker on macOS (Linux containers only)
-- Installation: https://www.docker.com/products/docker-desktop
-- Then in menu 'Preferences...' ---> 'Resources / ADVANCED' ---> change CPUs (2) and Memory (4.00 GB)
+
+  - Installation: https://www.docker.com/products/docker-desktop
+  - Then in menu 'Preferences...' ---> 'Resources / ADVANCED' ---> change CPUs (2) and Memory (4.00 GB)
 
 3. Docker on Windows (Linux containers OR Windows containers !)
-- Installation: https://www.docker.com/products/docker-desktop ---> IMPORTANT: uncheck 'Use WSL 2 instead of Hyper-V'
-- When you start Docker for the first time, by default you are in 'Linux containers' mode
-- Then in menu 'Preferences...' ---> 'Resources / ADVANCED' ---> change CPUs (2) and Memory (4.00 GB)
-- You can switch from 'Linux containers' mode to 'Windows containers' mode using the menu 'Switch to Windows containers...' <---> 'Switch to Linux containers...' (right click on Docker instance) ---> existing containers will continue to run, but you will not be able to manage them until you switch back and no data will be lost
----> edit 'C:\Users\your_username\.docker\windows-daemon.json' and change (or add) the next line: "exec-opts": ["isolation=process"], (with the comma at the end of the line) to activate shared kernel (process) instead of VM (hyperv)
----> add also the next line: "storage-opts": ["size=50GB"], (with the comma at the end of the line)
----> restart Docker
----> to verify, open 'cmd.exe': docker info ---> see line 'Default Isolation: process' (for shared kernel) and no 'Default Isolation: hyperv' (for VM)
+
+  - Installation: https://www.docker.com/products/docker-desktop ---> IMPORTANT: uncheck 'Use WSL 2 instead of Hyper-V'
+  - Reboot
+  - When you start Docker for the first time, by default you are in 'Linux containers' mode
+  - Then in menu 'Preferences...' ---> 'Resources / ADVANCED' ---> change CPUs (2) and Memory (4.00 GB)
+  - You can switch from 'Linux containers' mode to 'Windows containers' mode using the menu 'Switch to Windows containers...' <---> 'Switch to Linux containers...' (right click on Docker instance) ---> existing containers will continue to run, but you will not be able to manage them until you switch back and no data will be lost
+
+  ---> edit 'C:\Users\your_username\.docker\windows-daemon.json' and change (or add) the next line: "exec-opts": ["isolation=process"], (with the comma at the end of the line) to activate shared kernel (process) instead of VM (hyperv)
+
+  ---> add also the next line: "storage-opts": ["size=50GB"], (with the comma at the end of the line)
+
+  ---> restart Docker
+
+  ---> to verify, open 'cmd.exe': docker info ---> see line 'Default Isolation: process' (for shared kernel) and no 'Default Isolation: hyperv' (for VM)
